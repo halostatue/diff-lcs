@@ -57,7 +57,7 @@ require 'ruwiki/page'
   #             Austin Ziegler (ruwiki@halostatue.ca)
   # Licence::   Ruby's
 class Ruwiki
-  VERSION         = '0.6.2.0'
+  VERSION         = '0.7'
 
   ALLOWED_ACTIONS = %w(edit create)
   EDIT_ACTIONS    = %w(save cancel)

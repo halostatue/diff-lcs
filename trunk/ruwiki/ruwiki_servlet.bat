@@ -1,9 +1,17 @@
 @echo off
-if "%OS%" == "Windows_NT" goto WinNT
-C:\Apps\Ruby\bin\ruby -x "ruwiki_servlet.bat" %1 %2 %3 %4 %5 %6 %7 %8 %9
+echo Ruwiki 0.7.0
+echo   Copyright © 2002 - 2004, Digikata and HaloStatue
+echo   Alan Chen (alan@digikata.com)
+echo   Austin Ziegler (ruwiki@halostatue.ca)
+echo.
+echo Licensed under the same terms as Ruby.
+echo $Id$
+echo.
+if "%OS%"=="Windows_NT" goto WinNT
+C:\Apps\Ruby\bin\ruby -x "ruwiki_servlet" %1 %2 %3 %4 %5 %6 %7 %8 %9
 goto endofruby
-C:\Apps\Ruby\bin\ruby -x "ruwiki_servlet.bat" %*
 :WinNT
+C:\Apps\Ruby\bin\ruby -x "ruwiki_servlet" %*
 goto endofruby
 #!/usr/bin/env ruby
 #--
