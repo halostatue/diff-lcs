@@ -1,0 +1,173 @@
+id: 0
+topic: WikiMarkup
+version: 1
+#EHDR
+= Wiki Markup
+A [http://c2.com/cgi/wiki Wiki] obeys certain formatting rules to make it easy
+to format text without needing to know HTML. This Wiki obeys the following
+rules by default. Because Ruwiki is extensible, there may be additional
+formatting rules.
+
+== \WikiWords, \WikiProjects, Links, and Images
+While reading stuff on this Wiki, you will see some words mashed together with
+capitalisation (like \WikiWords). While this may seem odd at first, this
+feature allows internal links to be created across the Wiki.
+
+There are several allowable forms for \WikiWords.
+# Two or more words concatenated directly. Each word must begin with a capital letter and be followed by zero or more lowercase letters. Thus, \FooBar, \CPlusPlus, and \AbC are all valid \WikiWords, but ABC is not.
+# Two or more words concatenated with underscores. The first word must begin with a capital letter. This makes \Foo_Bar, \C_Plus_Plus, and \A_b_C valid \WikiWords. These \WikiWords will be displayed with spaces instead of underscores.\C_Plus_Plus will be displayed as "C Plus Plus".
+# One or more words contained in double square brackets. This the form supported by [http://wikipedia.com/ Wikipedia], and looks like \[[A Wiki Phrase]]. These links will be displayed exactly as entered between the brackets.
+
+If a \WikiWord is found that does not have a page defining the \WikiWord, then
+the word will be shown with a hyperlink question mark following it, allowing
+the \WikiWord to be created.
+
+=== \WikiProjects
+This Wiki supports "projects." Within each project, a given \WikiWord is
+unique. Thus, if you have a Default project and a Ruwiki project, you can have
+two pages called \ReadMe. Any given \WikiWord refers only to topics within its
+project. That is, if I have \WikiWord in the \ReadMe topic of the Default
+project, it will refer to the \WikiWord topic of the Default project. (Another
+term for this capability is "namespaces.")
+
+A cross-project link is composed of the project's name, two colons (::), and
+the \WikiWord desired. Thus, from \Default::ReadMe, I can have \Ruwiki::ReadMe
+as a link. The project index can be referred to with \::Project. This is the
+same as doing \Project::ProjectIndex. Thus, \::Ruwiki becomes ::Ruwiki, which
+is the same as \Ruwiki::ProjectIndex (Ruwiki::ProjectIndex).
+
+=== External Links and Resources
+URLs to external resources are automatically detected for web addresses, FTP
+addresses, newsgroups, and email links. They are automatically converted to
+clickable URLs.
+
+* \http://www.ruby-lang.org becomes http://www.ruby-lang.org
+
+URLs may be named with the [url name] syntax. If the name is omitted, the URL will be numbered.
+
+* \[http://www.rubygarden.org RubyGarden] becomes [http://www.rubygarden.org RubyGarden].
+* \[http://www.halostatue.ca] and \[http://www.halostatue.ca/ruby] become [http://www.halostatue.ca] and [http://www.halostatue.ca/ruby].
+
+=== Images
+If URLs are to JPEG (.jpg, .jpeg), PNG (.png), or GIF (.gif) resources, they will be rendered as inline images. This works with automatically converted URLs, named URLs, or numbered URLs. Named and numbered URLs affect the TITLE and ALT attribute of the image.
+
+* \http://www.halostatue.ca/graphics/maple_leaf.gif http://www.halostatue.ca/graphics/maple_leaf.gif
+* \[http://www.halostatue.ca/graphics/maple_leaf.gif Maple Leaf] [http://www.halostatue.ca/graphics/maple_leaf.gif Maple Leaf]
+* \[http://www.halostatue.ca/graphics/maple_leaf.gif] [http://www.halostatue.ca/graphics/maple_leaf.gif]
+
+=== Ruby Mailing Lists
+If a Ruby mailing list message tag is provided, it will be converted appropriately.
+
+* \[ruby-talk:12345] will become [ruby-talk:12345]
+* \[ruby-core:12345] will become [ruby-core:12345]
+* \[ruby-doc:12345] will become [ruby-doc:12345]
+
+== Headings and Lists
+=== Headings
+Use equals signs (=) for headings. Up to six equals signs can be used for HTML
+headings 1 - 6.
+
+\===== Heading five<br />
+\====== Heading six
+
+===== Heading five
+====== Heading six
+
+=== Lists
+==== Bulleted Lists
+Use asterisks (*) to create bulleted lists. More asterisks means more levels.
+
+\* level 1<br />
+\** level 2<br />
+\*** level 3
+
+* level 1
+** level 2
+*** level 3
+==== Numbered Lists
+Use hash marks (#) for numbered lists. More hash marks means deeper levels.
+
+\# level 1<br />
+\## level 2<br />
+\### level 3<br />
+\# level 1.2
+
+# level 1
+## level 2
+### level 3
+# level 1.2
+==== Definition Lists
+Definitions can be created similar to other lists. Unlike "standard" lists,
+though, definition lists have both the term and the definition. They are
+specified like so. As with other lists, repeating the first item (;) will
+increase the indentation level.
+
+\; term : definition<br />
+\;; term2 : definition<br />
+\;;; term3 : definition
+
+; term : definition
+;; term2 : definition
+;;; term3 : definition
+== Paragraph Formatting
+=== Rules
+Four or more dashes ("----") on a line by itself makes a horizontal rule, like
+so:
+
+\----
+----
+=== Paragraphs
+A blank line (it may have whitespace on it) marks a new paragraph. All other
+lines are joined together (excepting headers, lists, and rules).
+
+This line is a new paragraph.
+=== Block Indent Paragraphs
+Paragraphs can be indented by beginning the paragraph with one or more colons
+(:).
+
+\: Indent Level 1<br />
+\:: Indent Level 2<br />
+\::: Indent Level 3
+
+: Indent Level 1
+:: Indent Level 2
+::: Indent Level 3
+=== Code
+Text that is indented will be presented as formatted in a monospaced font. The
+only change is to escape HTML entities &lt; (<), &gt; (>), and &amp; (&).
+
+  def replace
+    content = @match[1]
+    %Q{<pre>#{content}</pre>}
+  end
+
+== Miscellaneous Formatting
+=== HTML
+The Ruwiki engine passes through HTML without changes. Thus,
+&lt;b&gt;bold&lt;/b&gt; would be shown as <b>bold</b>. <b><i>Note:</i></b>
+This capability could be very dangerous as it could expose the Wiki to
+cross-site scripting (XSS) vulnerabilities. This will be remedied prior to the
+1.0 release of Ruwiki.
+
+=== Abbreviations
+Certain abbreviations may be known to the Wiki. While there is not yet any way
+for a user to query what abbreviations are known, if the abbreviations are
+told to the users, they may be used. Abbreviations are presented with @{key},
+where <i>key</i> is the abbreviation desired. This Wiki, for example, knows
+that \@{PM} means @{PM}. The special form \@{} will produce the current list
+of known abbreviations. Unknown abbreviations will simply be put back into the
+data stream unchanged. Thus, \@{unknownkey} results in @{unknownkey}.
+
+==== Known Abbreviations
+@{}
+
+=== Preventing Formatting
+If you wish to prevent a word or sequence from being interpreted, put a
+backslash (\) in front of it. This works on all formatting options except
+paragraph positioning. Thus, if I want to prevent a \WikiWord from being
+turned into a hyperlink, I need to backslash it: \\WikiWord.
+
+=== Other Possible Considerations
+I'm looking at adding styles similar to what is shown on the Wiki below.
+
+* http://www.pmichaud.com/wiki/PmWiki/WikiStyles
