@@ -890,7 +890,7 @@ module Archive::Tar::Minitar
       if entry.kind_of?(Hash)
         name = entry[:name]
 
-        entry.each { |kk, vv| opts[kk] = vv unless vv.nil? }
+        entry.each { |kk, vv| stats[kk] = vv unless vv.nil? }
       else
         name = entry
       end
