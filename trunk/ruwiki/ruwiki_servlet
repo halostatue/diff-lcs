@@ -103,11 +103,11 @@ ARGV.options do |o|
   o.on('--language LANGUAGE', 'The interface language for Ruwiki.', 'Defaults to "en". May be "en", "de", or', '"es".') { |lang|
     case lang
     when 'en'
-      opts.lang = Ruby::Lang::EN
+      opts.language = Ruwiki::Lang::EN
     when 'es'
-      opts.lang = Ruby::Lang::ES
+      opts.language = Ruwiki::Lang::ES
     when 'de'
-      opts.lang = Ruby::Lang::DE
+      opts.language = Ruwiki::Lang::DE
     end
   }
   o.on('--webmaster WEBMASTER', 'The Ruwiki webmaster email address.', 'Defaults to "webmaster@domain.com".') { |wm|

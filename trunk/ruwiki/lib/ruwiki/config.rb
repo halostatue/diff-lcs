@@ -88,7 +88,6 @@ class Ruwiki
     def language=(l) #:nodoc:
       @language = l
       @message = l::Message
-      @message.default = l::Message.default
     end
 
       # Returns the template string

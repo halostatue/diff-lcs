@@ -15,7 +15,7 @@ module Ruwiki::Lang
     # any method in the Ruwiki library. The messages are identified by a
     # Symbol.
   module DE
-    Message = Hash.new { |h, k| "Sprachdatei-FEHLER: Unbekannter Nachrichten-Typ #{k.inspect}." }
+    Message = Hash.new { |h, k| h[k] = "Sprachdatei-FEHLER: Unbekannter Nachrichten-Typ #{k.inspect}."; h[k] }
     message = {
         # The encoding for the webpages. This should match the encoding used
         # to create these messages.

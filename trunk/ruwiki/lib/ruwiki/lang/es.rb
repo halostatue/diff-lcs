@@ -15,7 +15,7 @@ module Ruwiki::Lang
     # any method in the Ruwiki library. The messages are identified by a
     # Symbol.
   module ES
-    Message = Hash.new { |h, k| "ERROR De la Lengua: Llave desconocida del mensaje #{k.inspect}." }
+    Message = Hash.new { |h, k| h[k] = "ERROR De la Lengua: Llave desconocida del mensaje #{k.inspect}."; h[k] }
     message = {
         # The encoding for the webpages. This should match the encoding used
         # to create these messages.
