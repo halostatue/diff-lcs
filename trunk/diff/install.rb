@@ -146,7 +146,7 @@ end
 # windows, we add an '.rb' extension and let file associations do their stuff.
 def install_binfile(from, op_file, target)
   tmp_dir = nil
-  [target, Config::CONFIG['bindir'], ENV['TMP'], ENV['TEMP'], '/tmp', 'C:/temp'].each do |t|
+  Install.bin_dirs.each do |t|
     if File.directory?(t) and File.writable?(t)
       tmp_dir = t
       break
@@ -179,7 +179,7 @@ def install_binfile(from, op_file, target)
 
     opfile += ".rb" if not installed_wrapper
   end
-  FileUtils.install(tmp_file, File.join(TargetBinDir, opfile), 0755, true)
+  FileUtils.install(tmp_file, File.join(InstallOptions.bin_dir, opfile), 0755, true)
   FileUtils.unlink(tmp_file)
 end
 

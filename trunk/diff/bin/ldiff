@@ -232,4 +232,6 @@ $Id$
   end
 end
 
-exit Diff::diffprog(ARGV, $stdout, $stderr)
+if $0 =~ /ldiff/
+  exit Diff::diffprog(ARGV, $stdout, $stderr)
+end

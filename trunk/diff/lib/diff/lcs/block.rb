@@ -12,9 +12,12 @@
 # 
 # $Id$
 #++
+# 
+# Contains Diff::LCS::Block for bin/ldiff.
+
   # A block is an operation removing, adding, or changing a group of items.
   # Basically, this is just a list of changes, where each change adds or
-  # deletes a single item. Used by bin/diff.
+  # deletes a single item. Used by bin/ldiff.
 class Diff::LCS::Block
   attr_reader :changes, :insert, :remove
 
@@ -42,7 +45,7 @@ class Diff::LCS::Block
       '-'
     when [true, false]
       '+'
-    else
+    else # [true, true]
       '^'
     end
   end

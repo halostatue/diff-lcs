@@ -12,6 +12,8 @@
 # 
 # $Id$
 #++
+#
+# Includes Diff::LCS into the String built-in class.
 
 require 'diff/array'
 

@@ -1,6 +1,9 @@
 Revision history for Ruby library Diff::LCS. Unless explicitly noted otherwise,
 all changes are produced by Austin Ziegler <diff-lcs@halostatue.ca>.
 
+== Difff::LCS 1.1.0
+* Eliminated the need for Diff::LCS::Event and removed it.
+
 == Diff::LCS 1.0.2
 * Fixed an issue with ldiff not working because actions were changed from
   symbols to strings.
