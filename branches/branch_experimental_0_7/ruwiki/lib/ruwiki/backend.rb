@@ -133,7 +133,29 @@ class Ruwiki
       p = [project, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
       raise Ruwiki::Backend::BackendError.new(e), @message[:cannot_destroy_project] % p
     end
+
+    # Return an array of projects
+    def list_projects()
+      @delegate.index_projects()
+    rescue Errno::EACCES => e
+      raise Ruwiki::Backend::BackendError.new(e), @message[:no_access_list_projects]
+    rescue Exception => e
+      p = ['', %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
+      raise Ruwiki::Backend::BackendError.new(e), @message[:cannot_list_projects] % p
+    end
+
+    # Return an array of projects
+    def list_topics( projname )
+      @delegate.list_topics(projname)
+    rescue Errno::EACCES => e
+      raise Ruwiki::Backend::BackendError.new(e), @message[:no_access_list_topics] % [projname]
+    rescue Exception => e
+      p = ['', %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
+      raise Ruwiki::Backend::BackendError.new(e), @message[:cannot_list_topics] % p
+    end
   end
+
+
 
     # The Ruwiki backend abstract class and factory.
   class Backend

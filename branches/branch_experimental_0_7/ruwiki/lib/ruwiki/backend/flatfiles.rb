@@ -138,6 +138,32 @@ class Ruwiki
         end
       end
 
+      # list projects found in data path
+      def list_projects()
+        projs = []
+        Dir[@data_path + "/*" ].each do |fpath|
+          next unless File.directory?( fpath )
+          pdir,projdir = File.split(fpath)
+          projs.push projdir
+        end
+        projs
+      end
+
+      # list topics found in data path
+      def list_topics(project)
+          pjdir =  project_directory(project)
+          unless File.exist?(pjdir)
+            raise Ruwiki::Backend::BackendError(:no_project)
+          end
+
+          topiclist = []
+          Dir[pjdir + "/*"].each do |pjfile|
+             next if( pjfile =~ /.rdiff$/ )
+             topiclist.push( File.split(pjfile)[1] )
+          end
+          topiclist
+      end
+
     private
       def project_directory(project)
         File.join(@data_path, project)
