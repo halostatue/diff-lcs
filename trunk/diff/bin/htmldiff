@@ -1,4 +1,4 @@
-#! /usr/bin/env ruby
+#!/usr/bin/env ruby
 #--
 # Copyright 2004 Austin Ziegler <diff-lcs@halostatue.ca>
 #   adapted from:
@@ -17,7 +17,7 @@ begin
   require 'rubygems'
   require_gem 'diff-lcs', "1.1.0"
   require 'diff/lcs/string'
-rescue
+rescue LoadError
   require 'diff/lcs/string'
 end
 

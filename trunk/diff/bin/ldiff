@@ -1,4 +1,4 @@
-#!/user/bin/env ruby
+#!/usr/bin/env ruby
 # = Diff::LCS 1.1.0
 # == ldiff Usage
 #   ldiff [options] oldfile newfile
@@ -33,7 +33,7 @@ require 'ostruct'
 begin
   require 'rubygems'
   require_gem 'diff-lcs', "1.1.0"
-rescue
+rescue LoadError
   require 'diff/lcs'
 end
 
