@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 #--
-# Ruwiki version 0.7.0
+# Ruwiki version 0.8.0
 #   Copyright © 2002 - 2004, Digikata and HaloStatue
 #   Alan Chen (alan@digikata.com)
 #   Austin Ziegler (ruwiki@halostatue.ca)
@@ -239,9 +239,7 @@ Ruwiki options:
 
 BANNER
 
-unless logger.nil?
-  banner.each { |b| logger.info(b) }
-end
+banner.each { |b| logger.info(b) } unless logger.nil?
 
 server = WEBrick::HTTPServer.new(:Port            => opts.port.to_i,
                                  :StartThreads    => opts.threads.to_i,

@@ -333,27 +333,29 @@ EPAGE
     @rendered_page = ""
     values = { "css_link"   => @config.css_link,
                "home_link"  => %Q(<a href="#{@request.script_url}">#{@config.title}</a>),
-               "encoding"   => @config.message[:encoding]
+               "encoding"   => @config.message[:charset_encoding],
+               "editable"   => true
              }
 
     case type
     when :content, :save, :search
-      values["wiki_title"]      = "#{self.message[:error]} - #{@config.title}" if @page.nil?
-      values["wiki_title"]    ||= "#{@page.project}::#{CGI.unescape(@page.topic)} - #{@config.title}"
-      values["page_topic"]      = CGI.unescape(@page.topic)
-      values["page_raw_topic"]  = @page.topic
-      values["page_project"]    = @page.project
-      values["cgi_url"]         = @request.script_url
-      values["content"]         = @content
+      values["wiki_title"]              = "#{self.message[:error]} - #{@config.title}" if @page.nil?
+      values["wiki_title"]            ||= "#{@page.project}::#{CGI.unescape(@page.topic)} - #{@config.title}"
+      values["page_topic"]              = CGI.unescape(@page.topic)
+      values["page_raw_topic"]          = @page.topic
+      values["page_project"]            = @page.project
+      values["cgi_url"]                 = @request.script_url
+      values["content"]                 = @content
+      values["label_topic_or_search"]   = self.message[:label_topic]
       if type == :content or type == :search
         template = TemplatePage.new(@config.template(:body), @config.template(:content), @config.template(:controls))
         if type == :search
-          values["page_topic_or_search"] = self.message[:tab_search] % [values["page_topic"]]
+          values["label_topic_or_search"] = self.message[:label_search]
         else
-          values["page_topic_or_search"] = self.message[:tab_topic] % [%Q(<a href='#{values["cgi_url"]}/#{values["page_project"]}/_search?q=#{values["page_topic"]}'><strong>#{values["page_topic"]}</strong></a>)]
+          values["page_topic"] = [%Q(<a href='#{values["cgi_url"]}/#{values["page_project"]}/_search?q=#{values["page_topic"]}'><strong>#{values["page_topic"]}</strong></a>)]
         end
       else
-        values["page_topic_or_search"] = self.message[:tab_topic] % [%Q(<a href='#{values["cgi_url"]}/#{values["page_project"]}/_search?q=#{values["page_topic"]}'><strong>#{values["page_topic"]}</strong></a>)]
+        values["page_topic"] = self.message[:tab_topic] % [%Q(<a href='#{values["cgi_url"]}/#{values["page_project"]}/_search?q=#{values["page_topic"]}'><strong>#{values["page_topic"]}</strong></a>)]
         template = TemplatePage.new(@config.template(:body), @config.template(:save), @config.template(:controls))
       end
     when :edit, :preview
@@ -377,7 +379,7 @@ EPAGE
       values["webmaster"]       = @config.webmaster
     end
 
-    template.process(@rendered_page, values)
+    template.process(@rendered_page, values, @config.message)
   end
 
     # Outputs the page.

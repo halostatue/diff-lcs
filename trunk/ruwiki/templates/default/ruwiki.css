@@ -192,3 +192,6 @@ pre { background-color: #FFFFA7; border: 1px solid black; }
 pre pre { border: 0 }
 
 .rw_minilink { font-size: 0.5em; font-weight: bold; }
+
+#rw_editing_tab { background-color: #C72; }
+#rw_saved_page_announcement { border-bottom: 1px solid black"; }

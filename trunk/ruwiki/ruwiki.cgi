@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 #--
-# Ruwiki version 0.7.0
+# Ruwiki version 0.8.0
 #   Copyright © 2002 - 2004, Digikata and HaloStatue
 #   Alan Chen (alan@digikata.com)
 #   Austin Ziegler (ruwiki@halostatue.ca)
@@ -10,6 +10,7 @@
 # This file may be renamed to change the URI for the wiki.
 #
 # $Id$
+#++
 
   # Customize this if you put the RuWiki files in a different location.
 $LOAD_PATH.unshift("lib")

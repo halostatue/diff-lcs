@@ -14,11 +14,11 @@ module Ruwiki::Lang
     # any method in the Ruwiki library. The messages are identified by a
     # Symbol.
   module EN
-    Message = Hash.new { |h, k| "Language ERROR: Unknown message key #{k.inspect}." }
+    Message = Hash.new { |h, k| h[k] = "Language ERROR: Unknown message key #{k.inspect}."; h[k] }
     message = {
         # The encoding for the webpages. This should match the encoding used
         # to create these messages.
-      :encoding                     => "iso-8859-1",
+      :charset_encoding             => "iso-8859-1",
         # Backend-related messages.
       :backend_unknown              => "Backend %s is unknown.",
       :cannot_create_project        => "Cannot create project %s: %s",
@@ -62,8 +62,33 @@ module Ruwiki::Lang
       :no_topics                    => "No topics in project.",
       :search_results_for           => "= Search results for: %s",
       :number_of_hits               => "%d Hits",
-      :tab_topic                    => "Topic: %s",
-      :tab_search                   => "Search: %s",
+
+          # Labels
+      :label_search_project         => "Search Project",
+      :label_search                 => "Search: ",
+      :label_project                => "Project: ",
+      :label_topic                  => "Topic: ",
+      :label_edit                   => "Edit",
+      :label_recent_changes         => "Recent Changes",
+      :label_topics                 => "Topics",
+      :label_projects               => "Projects",
+      :label_editing                => "Editing",
+      :label_text                   => "Text:",
+      :label_text_accelerator       => "T",
+      :label_edit_comment           => "Edit Comment: ",
+      :label_comment_accelerator    => "O",
+      :label_save                   => "Save",
+      :label_save_accelerator       => "S",
+      :label_cancel                 => "Cancel",
+      :label_cancel_accelerator     => "C",
+      :label_preview                => "Preview",
+      :label_preview_accelerator    => "P",
+      :label_original_text          => "Original Text",
+      :label_raw                    => "Raw",
+      :label_formatted              => "Formatted",
+      :label_send_report_by         => "Send the Wiki maintainer a report by email.",
+      :label_send_report            => "Send report.",
+      :label_saved_page             => "Saved page: ",
     }
     message.each { |k, v| Message[k] = v }
   end

@@ -1,13 +1,11 @@
 #!/usr/bin/env ruby
 #--
-# Ruwiki version 0.6.x
+# Ruwiki version 0.8.0
 #   Copyright © 2002 - 2004, Digikata and HaloStatue
 #   Alan Chen (alan@digikata.com)
 #   Austin Ziegler (ruwiki@halostatue.ca)
 #
 # Licensed under the same terms as Ruby.
-#
-# This file may be renamed to change the URI for the wiki.
 #
 # $Id$
 #++

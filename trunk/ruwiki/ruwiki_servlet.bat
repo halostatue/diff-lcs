@@ -1,5 +1,5 @@
 @echo off
-REM Ruwiki 0.7.0
+REM Ruwiki 0.8.0
 REM   Copyright © 2002 - 2004, Digikata and HaloStatue
 REM   Alan Chen (alan@digikata.com)
 REM   Austin Ziegler (ruwiki@halostatue.ca)

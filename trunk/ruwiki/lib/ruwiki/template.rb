@@ -254,9 +254,9 @@ class Ruwiki::TemplatePage
 
       case type
       when '?'
-        test = (not @context.lookup(name).nil?)
+        test = @context.lookup(name)
       when '!'
-        test = @context.lookup(name).nil?
+        test = (not @context.lookup(name))
       end
 
       if test
@@ -297,7 +297,7 @@ class Ruwiki::TemplatePage
       # Substitute in values for #xxx# constructs.
     line = line.gsub(LABEL_RE) do
       mandatory = $1.nil?
-      key = $2
+      key = $2.intern
       val = @message[key]
 
       if val.nil?
