@@ -72,6 +72,10 @@ class Ruwiki
   def config=(cc)
     raise self.message[:config_not_ruwiki_config] unless cc.kind_of?(Ruwiki::Config)
     @config = cc
+    self.config!
+  end
+
+  def config!
     @markup.default_project = @config.default_project
     @markup.message = self.message
   end
