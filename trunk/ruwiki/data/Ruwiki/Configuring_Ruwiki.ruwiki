@@ -2,7 +2,7 @@ id: 0
 topic: Configuring_Ruwiki
 version: 1
 #EHDR
-= Configuring Ruwiki 0.7.0
+= Configuring Ruwiki 0.8.0
 
 Ruwiki is configured similarly for both CGI and \WEBrick. The biggest
 distinction is that because the Wiki servlet is created after the \WEBrick
@@ -11,7 +11,7 @@ configure the wiki with a global \Ruwiki::Config object, <em>$config</em>.
 Thus, in the examples below, replace <em>wiki.config</em> with
 <em>$config</em> where necessary.
 
-: This will probably be changed in a future version prior to 1.8.
+: This will probably be changed in a future version prior to 0.9.
 
 == wiki.config Options
 

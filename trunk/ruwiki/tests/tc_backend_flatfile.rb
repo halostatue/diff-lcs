@@ -19,7 +19,7 @@ require 'fileutils'
 
 class TestBackendFlatfile < Test::Unit::TestCase
   def setup
-    @ffopts = { :data_path => "./test/data" }
+    @ffopts = { :data_path => "./test/data", :extension => nil }
 
       # generate a database
     raise "Setup Error: #{@ffopts[:data_path]} exists" if File.exists?(@ffopts[:data_path]) 
@@ -36,7 +36,7 @@ class TestBackendFlatfile < Test::Unit::TestCase
     
     @flatbase.each do |key, val|
       prjdir = "#{@ffopts[:data_path]}/#{key}"
-      FileUtils.mkdir_p(prjdir)
+      FileUtils.mkdir_p(prjdir) rescue nil
       val.each do |topcon|
         topic, content = topcon.split(":")
         File.open("#{prjdir}/#{topic}", "w") { |fh| fh.puts content }

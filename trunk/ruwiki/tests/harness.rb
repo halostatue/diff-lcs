@@ -13,6 +13,7 @@ $wiki = Ruwiki.new(Ruwiki::Handler.from_cgi(CGI.new))
   # The webmaster.
 $wiki.config.webmaster = "webmaster@domain.com"
 $wiki.config.storage_options[:flatfiles][:data_path] = "../data"
+$wiki.config.storage_options[:flatfiles][:extension] = "ruwiki"
 $wiki.config.template_path = "../templates/"
 $wiki.config.verify
 $wiki.set_backend
@@ -23,7 +24,6 @@ $wiki.set_backend
 # $wiki.config.default_project = "Default"
 # $wiki.config.storage_type    = :flatfiles
 # $wiki.config.storage_options[:flatfiles][:data_path] = "./data/"
-# $wiki.config.storage_options[:flatfiles][:extension] = nil
 # $wiki.config.template_path   = "./templates/"
 # $wiki.config.template_set    = "default"
 # $wiki.config.css             = "ruwiki.css"

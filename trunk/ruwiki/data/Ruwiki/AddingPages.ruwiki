@@ -1,0 +1,10 @@
+id: 0
+topic: AddingPages
+version: 1
+#EHDR
+To add a new page to Ruwiki, all you need to do is come up with a meaningful
+title, turn it into a \WikiWord (see WikiMarkup) and Ruwiki will automatically
+recognise it as a reference to a page that does not yet exist.
+
+At the end of the new \WikiWord is a hyperlinked question mark; Ruwiki will open
+the edit page for the new \WikiWord.

@@ -21,9 +21,14 @@ class Ruwiki
         # :extension::  The extension of the wiki files. By default, this is
         #               +nil+.
       def initialize(options)
-        options[:data_path] ||= "./data/"
-        @data_path  = options[:data_path]
-        @extension  = options[:extension]
+        @data_path      = options[:data_path] || File.join(".", "data")
+        @extension      = options[:extension]
+        if @extension.nil?
+          @extension_re = /$/
+        else
+          @extension_re = /\.#{@extension}$/
+        end
+        @default_page   = options[:default_page] || "ProjectIndex"
         if not (File.exists?(@data_path) and File.directory?(@data_path))
           raise Ruwiki::Backend::BackendError.new([:flatfiles_no_data_directory, [@data_path]])
         end
@@ -163,8 +168,8 @@ class Ruwiki
 
         # list projects found in data path
       def list_projects
-        Dir["#{@data_path}/*"].select do |d|
-          File.directory?(d) and File.exist?("#{d}/ProjectIndex")
+        Dir[File.join(@data_path, "*")].select do |d|
+          File.directory?(d) and File.exist?(page_file(@default_page, File.basename(d)))
         end.map { |d| File.basename(d) }
       end
 
@@ -173,9 +178,9 @@ class Ruwiki
         pd = project_directory(project)
         raise Ruwiki::Backend::BackendError(:no_project) unless File.exist?(pd)
 
-        Dir["#{pd}/*"].select do |f|
-          f !~ /.rdiff$/ and f !~ /.lock$/ and File.file?(f)
-        end.map { |f| File.basename(f) }
+        Dir[File.join(pd, "*")].select do |f|
+          f !~ /\.rdiff$/ and f !~ /\.lock$/ and File.file?(f) and f =~ @extension_re
+        end.map { |f| File.basename(f).sub(@extension_re, "") }
       end
 
     private

@@ -33,7 +33,7 @@ class TC_LicenseAndAuthorHang < Test::Unit::TestCase
     end
     assert_not_nil(@backend)
     assert_nothing_raised do
-      @pg = @backend.load('LicenseAndAuthorInfo', 'Ruwiki')
+      @pg = @backend.load('LicenseAndAuthorInfo.ruwiki', 'Ruwiki')
     end
     assert_not_nil(@pg)
   end

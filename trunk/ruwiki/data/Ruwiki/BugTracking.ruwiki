@@ -2,7 +2,7 @@ id: 0
 topic: BugTracking
 version: 1
 #EHDR
-= Ruwiki 0.7.0 Bug Tracking
+= Ruwiki 0.8.0 Bug Tracking
 This page is for tracking bugs in Ruwiki. Only bugs from recent distributions
 are tracked. In addition to this source-based bug tracking, there is the
 [http://rubyforge.org RubyForge]

@@ -1,16 +1,18 @@
 id: 0
 topic: ChangeLog
-version: 2
+version: 1
 #EHDR
-= Ruwiki 0.7.0 ChangeLog
+= Ruwiki 0.8.0 ChangeLog
 Uncompleted to-do items can be found in To_Do. Bugs in Ruwiki are tracked in
 BugTracking.
+
 == Version 0.8.0
-* AC: Added topic list (_topics) and project list (_projects) controls on template and backend.
+* AC: Added topic list (_topics) and project list (_projects) controls on templates and backend.
 * AC: Added simple project search on back-end; search strings must be validated and cleansed before being sent to the back-end (the back-end must prepare the string for its own search mechanism).
 * AC: Added RecentChanges list to backend and controls
-* AZ: Topic backlink search: searches for mentions of the topic in the other topics for the project.
+* AZ: Topic backlink search: searches for mentions of the topic in the other topics of the project.
 * AZ: New look! Ruwiki now sports a new look with CSS and template changes.
+* AZ: New templating engine. The Rdoc templating engine has been greatly enhanced in preparation for some changes that will happen surrounding antispam capabilities.
 
 == Version 0.7.0
 * Changed the tokenization API so that the #post_replace call is made at the Token class level instead of the instance level.

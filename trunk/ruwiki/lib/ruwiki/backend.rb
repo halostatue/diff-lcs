@@ -22,6 +22,7 @@ class Ruwiki
     def initialize(ruwiki, backend)
       @message = ruwiki.config.message
       options = ruwiki.config.storage_options
+      options[:default_page] = ruwiki.config.default_page
 
       unless Ruwiki::KNOWN_BACKENDS.include?(backend)
         raise RuntimeError, @message[:backend_unknown] % [backend] 
@@ -186,8 +187,6 @@ class Ruwiki
       raise Ruwiki::Backend::BackendError.new(e), @message[:cannot_list_topics] % p
     end
   end
-
-
 
     # The Ruwiki backend abstract class and factory.
   class Backend

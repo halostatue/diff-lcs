@@ -2,7 +2,7 @@ id: 0
 topic: ProjectIndex
 version: 1
 #EHDR
-= Ruwiki 0.7.0
+= Ruwiki 0.8.0
 This is the \ProjectIndex page for Ruwiki. For any given project, the
 \ProjectIndex topic will be the default topic for plain project links.
 
@@ -25,9 +25,9 @@ The development progress of Ruwiki is kept in the wiki itself.
 If this wiki doesn't have the right combination of features, (or if it just
 doesn't feel right) try these other Ruby-based Wikis:
 
-* Amrita Wiki - http://www.walrus-ruby.org/amrita/cgi-bin/aswiki/aswiki.cgi
-* \RWiki - http://rwiki.jin.gr.jp/cgi-bin/rw-cgi.rb?cmd=view;name=top
-* \MiniRubyWiki - http://www.xpsd.com/MiniRubyWiki
-* Instiki - http://instiki.rubyforge.org/
+* [http://www.walrus-ruby.org/amrita/cgi-bin/aswiki/aswiki.cgi Amrita Wiki]
+* [http://rwiki.jin.gr.jp/cgi-bin/rw-cgi.rb?cmd=view;name=top RWiki]
+* [http://www.xpsd.com/MiniRubyWiki MiniRubyWiki]
+* [http://instiki.rubyforge.org/ Instiki]
 
 $Id$

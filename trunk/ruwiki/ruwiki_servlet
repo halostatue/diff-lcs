@@ -62,7 +62,7 @@ opts.css              = "ruwiki.css"
 opts.storage_type    = :flatfiles
 opts.storage_options = Hash.new { |h, k| h[k] = {} }
 opts.storage_options[opts.storage_type][:data_path] = "./data/"
-opts.storage_options[opts.storage_type][:extension] = nil
+opts.storage_options[opts.storage_type][:extension] = "ruwiki"
 
 ARGV.options do |o|
   o.banner = "Usage: #{File.basename($0)} [options]"
@@ -158,7 +158,7 @@ ARGV.options do |o|
   end
   o.on('--flatfiles-extension EXT',
        'The extension for data files. Default',
-       'none.') do |ext|
+       '"ruwiki".') do |ext|
     opts.storage_options[:flatfiles][:extension] = ext
   end
   o.separator ""
