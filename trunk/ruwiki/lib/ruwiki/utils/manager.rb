@@ -523,6 +523,14 @@ module Ruwiki::Utils::Manager
 
       if options['data']
         unpackage(Ruwiki::Utils::Manager.ruwiki_pkg, dest)
+        if options['service']
+          cfn = File.join(dest, 'ruwiki.conf')
+          cfg = nil
+          File.open(cfn, "rb") { |f| cfg = f.read }
+          cfg.gsub!(%r{\./data}, File.join(File.expand_path(dest), "data"))
+          cfg.gsub!(%r{\./templates}, File.join(File.expand_path(dest), "templates"))
+          File.open(cfn, "wb") { |f| f.write(cfg) }
+        end
       end
     end
 

@@ -1,6 +1,13 @@
 page!content:	= Ruwiki %RV#% ChangeLog
 	Uncompleted to-do items can be found in To_Do. Bugs in Ruwiki are
 	tracked in BugTracking.
+
+	== 0.9.1
+	* Fixed a couple of problems with the Ruwiki deployment system surrounding Win32::Service management.
+	* Added a Google redirect exclusion list to the configuration. (TODO 20041217)
+	* Fixed a problem where last lines of ending code blocks disappear. (TODO 20041217)
+	* Changed relevant timestamps to UTC.
+	* Fixed a problem with Google redirection not working.
 	
 	== 0.9.0
 	* Created a Ruwiki deployment system. Various steps were required to accomplish this:
