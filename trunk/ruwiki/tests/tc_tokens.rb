@@ -12,7 +12,7 @@
 # $Id$
 #++
 require 'test/unit'
-require 'harness'
+require 'harness-cgi'
 
 class TokenTestCases < Test::Unit::TestCase
   def setup
