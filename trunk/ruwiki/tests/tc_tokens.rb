@@ -155,8 +155,8 @@ class TokenTestCases < Test::Unit::TestCase
     content = "[http://www.ruby-lang.org] \\[http://www.rubyforge.org]"
     tkv     = "TOKEN_0 \\TOKEN_1"
     uri     = CGI.escape("http://www.ruby-lang.org")
-    rpv     = %Q{<a class="rwtk_NumberedLinks" href="http://www.google.com/url?sa=D&q=#{uri}">[1]</a> [http://www.rubyforge.org]}
-    res     = %Q{<a class="rwtk_NumberedLinks" href="http://www.google.com/url?sa=D&q=#{uri}">[1]</a> [http://www.rubyforge.org]}
+    rpv     = %Q{<a class="rwtk_NumberedLinks" href="http://www.google.com/url?sa=D;q=#{uri}">[1]</a> [http://www.rubyforge.org]}
+    res     = %Q{<a class="rwtk_NumberedLinks" href="http://www.google.com/url?sa=D;q=#{uri}">[1]</a> [http://www.rubyforge.org]}
 
     __process(token, content, tkv, rpv, res)
   end
@@ -166,8 +166,8 @@ class TokenTestCases < Test::Unit::TestCase
     content = "[http://www.ruby-lang.org Ruby] \\[http://www.rubyforge.org RubyForge]"
     tkv     = "TOKEN_0 \\TOKEN_1"
     uri     = CGI.escape("http://www.ruby-lang.org")
-    rpv     = %Q{<a class="rwtk_NamedLinks" href="http://www.google.com/url?sa=D&q=#{uri}">Ruby</a> [http://www.rubyforge.org RubyForge]}
-    res     = %Q{<a class="rwtk_NamedLinks" href="http://www.google.com/url?sa=D&q=#{uri}">Ruby</a> [http://www.rubyforge.org RubyForge]}
+    rpv     = %Q{<a class="rwtk_NamedLinks" href="http://www.google.com/url?sa=D;q=#{uri}">Ruby</a> [http://www.rubyforge.org RubyForge]}
+    res     = %Q{<a class="rwtk_NamedLinks" href="http://www.google.com/url?sa=D;q=#{uri}">Ruby</a> [http://www.rubyforge.org RubyForge]}
 
     __process(token, content, tkv, rpv, res)
   end
@@ -177,8 +177,8 @@ class TokenTestCases < Test::Unit::TestCase
     content = "http://www.ruby-lang.org \\http://www.rubyforge.org"
     tkv     = "TOKEN_0 \\TOKEN_1"
     uri     = CGI.escape("http://www.ruby-lang.org")
-    rpv     = %Q{<a class="rwtk_ExternalLinks" href="http://www.google.com/url?sa=D&q=#{uri}">http://www.ruby-lang.org</a> http://www.rubyforge.org}
-    res     = %Q{<a class="rwtk_ExternalLinks" href="http://www.google.com/url?sa=D&q=#{uri}">http://www.ruby-lang.org</a> http://www.rubyforge.org}
+    rpv     = %Q{<a class="rwtk_ExternalLinks" href="http://www.google.com/url?sa=D;q=#{uri}">http://www.ruby-lang.org</a> http://www.rubyforge.org}
+    res     = %Q{<a class="rwtk_ExternalLinks" href="http://www.google.com/url?sa=D;q=#{uri}">http://www.ruby-lang.org</a> http://www.rubyforge.org}
 
     __process(token, content, tkv, rpv, res)
   end
