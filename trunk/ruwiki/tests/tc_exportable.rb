@@ -26,27 +26,26 @@ require 'test/unit'
       exportable :a
       exportable :long_name
       exportable :altname,  :name => 'alt-name'
-      exportable :xform, :transforms => [ :to_f ]
       exportable :group2, :group => 'group2'
     end
 
     def test_exportable
       __exportables = {
-        nil => {
-          'a'         => ['@a'.intern, nil],
-          'long-name' => ['@long_name'.intern, nil],
-          'alt-name'  => ['@altname'.intern, nil],
-          'xform'     => ['@xform'.intern, [:to_f]],
+        'default' => {
+          'a'         => '@a'.intern,
+          'long-name' => '@long_name'.intern,
+          'alt-name'  => '@altname'.intern,
         },
         'group2' => {
-          'group2'    => ['@group2'.intern, nil]
+          'group2'    => '@group2'.intern
         }
       }
       __values = {
-        'a'         => 'a',
-        'long-name' => 'c',
-        'xform'     => 3.0,
-        'alt-name'  => 'd',
+        'default' => {
+          'a'         => 'a',
+          'long-name' => 'c',
+          'alt-name'  => 'd',
+        },
         'group2'    => { 'group2' => 'e' }
       }
       xx = nil

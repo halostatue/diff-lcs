@@ -31,7 +31,7 @@ class Ruwiki::Page
     # Class:: +ruwiki+
     # ID::    +version+
   attr_reader :ruwiki_version
-  exportable :ruwiki_version
+  exportable :ruwiki_version, :name => 'version'
 
   exportable_group 'properties'
     # Returns or sets the displayed title of the page, which may differ from
@@ -175,7 +175,7 @@ class Ruwiki::Page
     # hash.
   def initialize(exported = {})
     ruwiki = exported['ruwiki']
-    @content_version  = ruwiki['content-version'] || Ruwiki::CONTENT_VERSION
+    @content_version  = (ruwiki['content-version'] || Ruwiki::CONTENT_VERSION).to_i
     @ruwiki_version   = ruwiki['version']         || Ruwiki::VERSION
 
     props = exported['properties']
@@ -184,18 +184,26 @@ class Ruwiki::Page
     @project      = props['project']      || "Default"
     @creator      = props['creator']      || ""
     @creator_ip   = props['creator-ip']   || "UNKNOWN"
-    @create_date  = props['create-date']  || Time.now
+    @create_date  = Time.at((props['create-date']  || Time.now).to_i)
     @editor       = props['editor']       || ""
     @editor_ip    = props['editor-ip']    || "UNKNOWN"
-    @edit_date    = props['edit-date']    || Time.now
+    @edit_date    = Time.at((props['edit-date']    || Time.now).to_i)
     @edit_comment = props['edit-comment'] || ""
-    @editable     = props['editable']
-    @editable     = true if @editable.nil?
-    @indexable    = props['indexable']
-    @indexable    = true if @indexable.nil?
-    @entropy      = props['entropy']      || 0
+    case props['editable']
+    when false
+      @editable = false
+    else
+      @editable = true
+    end
+    case props['indexable']
+    when false
+      @indexable = false
+    else
+      @indexable = true
+    end
+    @entropy      = (props['entropy']      || 0).to_f
     @html_headers = props['html-headers'] || []
-    @version      = props['version']      || 0
+    @version      = (props['version']      || 0).to_i
 
     page = exported['page']
     @header       = page['header']  || ""
@@ -218,8 +226,25 @@ class Ruwiki::Page
     # Provides the canonical export hash.
   def export
     sym = super
-    sym['ruwiki']['content-version'] = Ruwiki::CONTENT_VERSION
-    sym['ruwiki']['version'] = Ruwiki::VERSION
+
+    sym.each_key do |sect|
+      if sect == 'ruwiki'
+        sym[sect]['content-version'] = Ruwiki::CONTENT_VERSION
+        sym[sect]['version'] = Ruwiki::VERSION
+      else
+        sym[sect].each_key do |item|
+          case [sect, item]
+          when ['properties', 'create-date'], ['properties', 'edit-date']
+            sym[sect][item] = sym[sect][item].to_i
+          when ['properties', 'editable'], ['properties', 'indexable']
+            sym[sect][item] = (sym[sect][item] ? 'true' : 'false')
+          else
+            sym[sect][item] = sym[sect][item].to_s
+          end
+        end
+      end
+    end
+
     sym
   end
 

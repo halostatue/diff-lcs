@@ -8,6 +8,7 @@
 #
 # $Id$
 #++
+require 'ruwiki/exportable'
 require 'ruwiki/backend/_corefiles'
 
   # Stores Ruwiki pages as flatfiles.
@@ -29,12 +30,14 @@ class Ruwiki::Backend::Flatfiles < Ruwiki::Backend
   end
 
     # Provides a HEADER marker.
-  HEADER_RE = /^(?:([a-z][-a-z]+)!)?([a-z][-a-z]+):\t(.*)$/
-  FIRST_TAB = /^\t/
-
     # Loads the topic page from disk.
   def load(topic, project)
-    Ruwiki::Backend::Flatfiles.load(File.read(page_file(topic, project)))
+    page = Ruwiki::Page::NULL_PAGE.dup
+    hash = Ruwiki::Exportable.load(File.read(page_file(topic, project)))
+    page.merge(hash)
+    page
+  rescue Ruwiki::Exportable::InvalidFormatError
+    raise Ruwiki::Backend::InvalidFormatError
   end
 
     # Saves the topic page -- and its difference with the previous version
@@ -42,7 +45,7 @@ class Ruwiki::Backend::Flatfiles < Ruwiki::Backend
   def store(page)
     pagefile  = page_file(page.topic, page.project)
     export    = page.export
-    newpage   = Ruwiki::Backend::Flatfiles.dump(export)
+    newpage   = Ruwiki::Exportable.dump(export)
     make_rdiff(pagefile, export)
 
     File.open(pagefile, 'wb') { |f| f.puts newpage }
@@ -99,87 +102,51 @@ class Ruwiki::Backend::Flatfiles < Ruwiki::Backend
     super
   end
 
-  class << self
-    NL_RE       = /\n/
-    NL_END_RE   = /\n$/
+# class << self
+#   NL_RE       = /\n/
 
-    def dump(page_hash)
-      dumpstr = ""
+#   def dump(page_hash)
+#     dumpstr = ""
 
-      page_hash.keys.sort.each do |sect|
-        page_hash[sect].keys.sort.each do |item|
-          val = page_hash[sect][item]
+#     page_hash.keys.sort.each do |sect|
+#       page_hash[sect].keys.sort.each do |item|
+#         val = page_hash[sect][item].to_s.split(NL_RE).join("\n\t")
+#         dumpstr << "#{sect}!#{item}:\t#{val}\n"
+#       end
+#     end
 
-          case [sect, item]
-          when ['properties', 'create-date'], ['properties', 'edit-date']
-            val = val.to_i
-          when ['properties', 'editable'], ['properties', 'indexable']
-            val = (val ? 'true' : 'false')
-          else # string values
-            val = val.to_s
-            vala = val.split(NL_RE)
-            if vala.size == 1
-              line = val
-              line.gsub!(NL_END_RE) { "\\n" }
-            else
-              line = vala.shift
-              vala.each { |vl| line << "\n\t#{vl}" }
-            end
-          end
-          
-          dumpstr << "#{sect}!#{item}:\t#{line}\n"
-        end
-      end
+#     dumpstr
+#   end
 
-      dumpstr
-    end
+#   def load(buffer)
+#     page = Ruwiki::Page::NULL_PAGE.dup
+#     return page if buffer.empty?
 
-    def load(buffer)
-      page = Ruwiki::Page::NULL_PAGE.dup
-      return page if buffer.empty?
+#     buffer = buffer.split(NL_RE)
 
-      buffer = buffer.split(NL_RE)
+#     if HEADER_RE.match(buffer[0]).nil?
+#       raise Ruwiki::Backend::InvalidFormatError
+#     end
 
-      if HEADER_RE.match(buffer[0]).nil?
-        raise Ruwiki::Backend::InvalidFormatError
-      end
+#     sect = item = nil
+#     
+#     buffer.each do |line|
+#       line.chomp!
+#       match = HEADER_RE.match(line)
 
-      sect = item = nil
-      
-      buffer.each do |line|
-        line.chomp!
-        match = HEADER_RE.match(line)
+#         # If there is no match, add the current line to the previous match.
+#         # Remove the leading \t, though.
+#       if match.nil?
+#         raise Ruwiki::Backend::InvalidFormatError if FIRST_TAB.match(line).nil?
+#         page[sect][item] << "\n#{line.gsub(FIRST_TAB, '')}"
+#       else
+#         sect              = match.captures[0]
+#         item              = match.captures[1]
+#         page[sect][item]  = match.captures[2]
+#       end
+#     end
 
-          # If there is no match, add the current line to the previous match.
-          # Remove the leading \t, though.
-        if match.nil?
-          raise Ruwiki::Backend::InvalidFormatError if FIRST_TAB.match(line).nil?
-          page[sect][item] << "\n#{line.gsub(FIRST_TAB, '')}"
-        else
-          cap = match.captures
-            # Set the section, if provided.
-          sect = cap[0] unless cap[0].nil?
-          item = cap[1]
-          val  = cap[2]
-
-          case [sect, item]
-          when ['ruwiki', 'content-version'], ['properties', 'version']
-            val = val.to_i
-          when ['properties', 'entropy']
-            val = val.to_f
-          when ['properties', 'create-date'], ['properties', 'edit-date']
-            val = Time.at(val.to_i)
-          when ['properties', 'editable'], ['properties', 'indexable']
-            val = (val == 'true')
-          else # string values
-            nil
-          end
-
-          page[sect][item] = val
-        end
-      end
-
-      page
-    end
-  end
+#     page
+#   end
+# end
 end
