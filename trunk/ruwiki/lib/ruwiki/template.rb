@@ -12,7 +12,7 @@
 #++
 
   # Ruwiki templating, based originally on RDoc's "cheap-n-cheerful" HTML page
-  # template system, which is a line-oriented text-based templating system.
+  # template system, which is a line-oriented, text-based templating system.
   #
   # Templates can contain:
   # 
@@ -75,8 +75,8 @@ class Ruwiki::TemplatePage
   HREF_RE       = /HREF:(\w+?):(\w+?):/
   LABEL_RE      = /#(\?)?(\w+?)#/
   VARIABLE_RE   = /%(\?)?(\w+?)%/
-  IFLINE_RE     = /\[([?!])(\w+?)\|\s*(.*?)\s*\?\]/
-  BLOCKLINE_RE  = /\[:(\w+?)\|\s*(.*?)\s*:\]/
+  IFLINE_RE     = /\[([?!])(\w+?)\|(.*?)\?\]/
+  BLOCKLINE_RE  = /\[:(\w+?)\|(.*?):\]/
 
     # A context holds a stack of key/value pairs (like a symbol table). When
     # asked to resolve a key, it first searches the top of the stack, then the

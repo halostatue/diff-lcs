@@ -1,6 +1,6 @@
 page!content:	= Ruwiki 0.8.0 To Do Tracking
-	Completed to-do items can be found in the ChangeLog. Bugs in Ruwiki are
-	tracked in BugTracking.
+	Completed to-do items can be found in the ChangeLog. Bugs in Ruwiki
+	are tracked in BugTracking.
 	
 	== Well-Defined To Do Items
 	=== Ruwiki 0.9.0

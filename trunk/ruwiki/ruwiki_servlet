@@ -56,11 +56,13 @@ opts.time_format     = "%H:%M:%S"
 opts.date_format     = "%Y.%m.%d"
 opts.datetime_format = "%Y.%m.%d %H:%M:%S"
 
-if RUBY_VERSION >= "1.8.2"
-  opts.storage_type   = :yaml
-else
-  opts.storage_type   = :flatfiles
-end
+# if RUBY_VERSION >= "1.8.2"
+#   opts.storage_type   = :yaml
+# else
+#   opts.storage_type   = :flatfiles
+# end
+  # Temporarily disabled the above.
+opts.storage_type   = :flatfiles
 
 opts.storage_options = Hash.new { |h, k| h[k] = {} }
 opts.storage_options[opts.storage_type][:data_path] = "./data/"

@@ -7,21 +7,21 @@ page!content:	= Ruwiki Licence
 	licence or the [http://www.gnu.org/copyleft/gpl.html GNU General Public
 	Licence].
 	
-	* Ruwiki includes algorithm/diff by Lars Christensen, available for download from the RAA at: http://raa.ruby-lang.org/list.rhtml?name=diff
-	* Ruwiki includes template.rb from Dave Thomas's \RDoc system, included as part of the standard Ruby distribution since Ruby 1.8.
+	* Ruwiki includes parts of Diff::LCS by Austin.
+	* Ruwiki includes a modified version of rdoc/template.rb originally by Dave Thomas for use in \RDoc.
 	
 	== Translations
-	* Translation to German by [mailto:chneukirchen@yahoo.de Christian Neukirchen] on 2003.10.22. Note that the initial template translations (./templates/de/) were done via \AltaVista Babelfish and should not be blamed on Christian.
-	* Translation to Spanish by [mailto:batsman.geo@yahoo.com Mauricio Fernández] on 2003.10.22. Note that the initial template translations (./templates/es/) were done via \AltaVista Babelfish and should not be blamed on Mauricio.
+	* Translation to German by [mailto:chneukirchen@yahoo.de Christian Neukirchen] on 2003.10.22, with corrections by Mauricio Fern&aacute;ez. Note that the initial template translations (./templates/de/) were done via \AltaVista Babelfish and should not be blamed on Christian.
+	* Translation to Spanish by [mailto:batsman.geo@yahoo.com Mauricio Fern&aacute;ndez] on 2003.10.22. Note that the initial template translations (./templates/es/) were done via \AltaVista Babelfish and should not be blamed on Mauricio.
 	
-	
-	== Other Projects
+	== Austin's Other Projects
 	Austin has also released several other projects available on the RAA that you may be interested in:
-	* [http://raa.ruby-lang.org/list.rhtml?name=mime-types MIME::Types]
-	* [http://raa.ruby-lang.org/list.rhtml?name=pdf-writer PDF::Writer]
-	* [http://raa.ruby-lang.org/list.rhtml?name=text-format Text::Format]
-	* [http://raa.ruby-lang.org/list.rhtml?name=trans-simple Transaction::Simple]
-	* [http://raa.ruby-lang.org/list.rhtml?name=uninheritable Uninheritable]
+	* [http://raa.ruby-lang.org/list.rhtml?name=mime-types MIME::Types], RubyForge [http://rubyforge.org/projects/mime-types project].
+	* [http://raa.ruby-lang.org/list.rhtml?name=pdf-writer PDF::Writer], RubyForge [http://rubyforge.org/projects/ruby-pdf project].
+	* [http://raa.ruby-lang.org/list.rhtml?name=text-format Text::Format], RubyForge [http://rubyforge.org/projects/text-format project].
+	* [http://raa.ruby-lang.org/list.rhtml?name=trans-simple Transaction::Simple], RubyForge [http://rubyforge.org/projects/trans-simple project].
+	* [http://raa.ruby-lang.org/list.rhtml?name=uninheritable Uninheritable], Transaction::Simple's RubyForge [http://rubyforge.org/projects/trans-simple project].
+	* [http://raa.ruby-lang.org/list.rhtml?name=diff-lcs Diff::LCS], Ruwiki's RubyForge [http://rubyforge.org/projects/ruwiki project].
 	
 	$Id$
 properties!editable:	

@@ -6,7 +6,7 @@ page!content:	= Ruwiki 0.8.0
 	* This wiki supports a variety of WikiFeatures that you may be interested in. The rules for WikiMarkup are similar to some other wikis, but there are a few unique markup capabilities in Ruwiki.
 	* Configuring_Ruwiki is simple.
 	* Extending_Ruwiki is almost as simple.
-	* Who wrote Ruwiki? Look at the LicenseAndAuthorInfo.
+	* Who wrote Ruwiki? Read the LicenseAndAuthorInfo.
 	
 	== Tracking Ruwiki Development
 	The development progress of Ruwiki is kept primarily in the wiki

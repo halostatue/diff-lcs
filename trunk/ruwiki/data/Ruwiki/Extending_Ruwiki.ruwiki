@@ -1,7 +1,85 @@
 page!content:	= Extending Ruwiki 0.8.0
 	Ruwiki is relatively easily extended to support new features. There are
-	three primary ways in which Ruwiki can be extended by the end user:
-	markup, backends, and translating Ruwiki error messages.
+	four primary ways in which Ruwiki can be extended or modified by the
+	end user: templates, translating Ruwiki messages and labels, markup
+	tokens, and creating new backends.
+	
+	== Templates
+	Templating is done with a heavily modified version of the \RDoc
+	template.rb library included in the distribution of Ruwiki. The
+	templating library allows for nested templates, and this is used
+	extensively in Ruwiki. This library is documented in
+	RuwikiTemplatingLibrary.
+	
+	There are four major templates: content, edit, save, and error. Each of
+	these has a slightly different combination of template files used, and
+	this means that there are different sets of variables available.
+	
+	The major templates are "composite templates" that are defined as
+	follows:
+	; content or search : body.tmpl, content.tmpl, controls.tmpl, footer.tmpl
+	; edit or preview : body.tmpl, edit.tmpl
+	; save : body.tmpl, save.tmpl, controls.tmpl, footer.tmpl
+	; error : body.tmpl, error.tmpl
+	
+	=== Common Variables
+	The following template variables are presented for all composite
+	templates.
+	; <tt>%css_link%</tt> : The contents of the CSS file for the template set.
+	; <tt>%home_link%</tt> : A link to the root page of the Wiki.
+	; <tt>%editable%</tt> : A boolean value to mark the page as editable or not. Used in a conditional block in the templates.
+	; <tt>%cgi_url%</tt> : The URL for the Wiki.
+	; <tt>%content%</tt> : The formatted content of the current page.
+	; <tt>%page_project%</tt> : The project for the current page.
+	; <tt>%page_raw_topic%</tt> : The topic for the current page, escaped for safe transmission over the web.
+	; <tt>%page_topic%</tt> : The printable topic for the current page.
+	; <tt>%url_project%</tt> : The URL to the current page's project.
+	; <tt>%url_topic_search%</tt> : The URL to search for the current topic in the current project.
+	; <tt>%link_topic_search%</tt> : A link to the current topic search.
+	
+	=== Variables for :content, :save, :search
+	; <tt>%wiki_title%</tt> : The title of the Wiki.
+	; <tt>%label_topic_or_search%</tt> : Either <tt>#topic#</tt> or <tt>#search#</tt>.
+	; <tt>%page_topic_name%</tt> : The same as <tt>%page_topic%</tt>.
+	
+	=== Variables for :edit, :preview
+	; <tt>%wiki_title%</tt> : The title of the Wiki with a tag to indicate that the page is being edited.
+	; <tt>%page_content%</tt> : The content of the page.
+	; <tt>%page_version%</tt> : The current version number of the page.
+	; <tt>%unedited_page_content%</tt> : The formatted, unedited content of the page.
+	; <tt>%pre_page_content%</tt> : A Web-escaped form of the page content.
+	; <tt>%edit_comment%</tt> : The current edit comment.
+	
+	=== Variables for :error
+	; <tt>%wiki_title%</tt> : The title of the Wiki with an error message.
+	; <tt>%name%</tt> : The name of the error.
+	; <tt>%backtrace%</tt> : The backtrace of the error.
+	; <tt>%backtrace_email%</tt> : The backtrace of the error formatted for sending by email.
+	; <tt>%webmaster%</tt> : The email address of the webmaster.
+	
+	== Translating Ruwiki Messages
+	Ruwiki is internationalized. This method sets the Ruwiki error messages
+	(and a few other messages) to the specified language Module. The
+	language Module must have a constant Hash called <tt>Message</tt>
+	containing a set of symbols and localized versions of the messages
+	associated with them.
+	
+	If the file <em>ruwiki/lang/es.rb</em> contains the module
+	<tt>\Ruwiki::Lang::ES</tt>, the messages for RSS could be localized to
+	Spanish thus:
+	
+	  require 'ruwiki/lang/es'
+	  ...
+	  wiki.config.language = Ruwiki::Lang::ES
+	
+	Localization is currently per wiki instance. In a servlet environment,
+	this may mean that only a single language is recognised.
+	
+	It is recommended that the hash be created with a default proc that
+	reports unknown message keys.
+	
+	  Message = Hash.new { |h, k| "Language ERROR: Unknown message key #{k.inspect}." }
+	
 	
 	== Extending Ruwiki Markup
 	
@@ -133,7 +211,7 @@ page!content:	= Extending Ruwiki 0.8.0
 	=== Required Methods
 	==== #initialize(storage_options)
 	The backend may only obtain its configuration information from an
-	option hash provided by the BackendDelegate. This is obtained from
+	option hash provided by the \BackendDelegate. This is obtained from
 	<tt>wiki.config.options[backend]</tt>. If a configuration error is
 	detected during initialization, the backend should raise the
 	\Ruwiki::Backend exception class \BackendError. This would be done
@@ -181,7 +259,7 @@ page!content:	= Extending Ruwiki 0.8.0
 	==== #create_project(project)
 	Attempts to create the project.
 	
-	==== #search_project(project, searchstr)
+	==== #search_project(project, search_string)
 	String search all topic names and content in a project and return a
 	hash of topic hits:
 	
@@ -199,34 +277,23 @@ page!content:	= Extending Ruwiki 0.8.0
 	are implemented in Ruwiki.
 	
 	==== #destroy(page)
-	Removes the page from the wiki. This should <strong>not</strong> remove the change
-	history of the topic (in the event that the page has been removed
-	maliciously). There will be a separate method to remove the page history.
+	Removes the page from the wiki. This should <strong>not</strong> remove
+	the change history of the topic (in the event that the page has been
+	removed maliciously). There will be a separate method to remove the
+	page history.
 	
 	==== #destroy_project(project)
 	Attempts to destroy the project.
-	
-	== Translating Ruwiki Messages
-	Ruwiki is internationalized. This method sets the Ruwiki error messages
-	(and a few other messages) to the specified language Module. The
-	language Module must have a constant Hash called <tt>Message</tt>
-	containing a set of symbols and localized versions of the messages
-	associated with them.
-	
-	If the file <em>ruwiki/lang/es.rb</em> contains the module
-	<tt>\Ruwiki::Lang::ES</tt>, the messages for RSS could be localized to
-	Spanish thus:
-	
-	  require 'ruwiki/lang/es'
-	  ...
-	  wiki.config.language = Ruwiki::Lang::ES
-	
-	Localization is currently per wiki instance. In a servlet environment,
-	this may mean that only a single language is recognised.
-	
-	It is recommended that the hash be created with a default proc that reports unknown message keys.
-	
-	  Message = Hash.new { |h, k| "Language ERROR: Unknown message key #{k.inspect}." }
+
+	=== Optional Methods
+	These methods are completely optional. They are guarded in the
+	\BackendDelegate by a call to #respond_to?().
+
+	==== #global_search(search_string)
+	The global search in the backend delegate is by default implemented as
+	a looping search through all projects. A backend may have a more
+	efficient backend global search mechanism. If the backend responds to
+	#global_search, then the \BackendDelegate will use this method.
 	
 	$Id$
 properties!editable:	

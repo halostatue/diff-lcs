@@ -1,13 +1,15 @@
 page!content:	= Ruwiki Markup
-	A [http://c2.com/cgi/wiki Wiki] obeys certain formatting rules to make it easy
-	to format text without needing to know HTML. This Wiki obeys the following
-	rules by default. Because Ruwiki is extensible, there may be additional
-	formatting rules. These rules are those rules that apply as of Ruwiki 0.8.0.
+	A [http://c2.com/cgi/wiki Wiki] obeys certain formatting rules to make
+	it easy to format text without needing to know HTML. This Wiki obeys
+	the following rules by default. Because Ruwiki is extensible, there
+	may be additional formatting rules. These rules are those rules that
+	apply as of Ruwiki 0.8.0.
 	
 	== \WikiWords, \WikiProjects, Calendars, and External Resources
-	While reading stuff on this Wiki, you will see some words mashed together with
-	capitalisation (like \WikiWords). While this may seem odd at first, this
-	feature allows internal links to be created across the Wiki.
+	While reading stuff on this Wiki, you will see some words mashed
+	together with capitalisation (like \WikiWords). While this may seem
+	odd at first, this feature allows internal links to be created across
+	the Wiki.
 	
 	There are several allowable forms for \WikiWords.
 	# Two or more words concatenated directly. Each word must begin with a capital letter and be followed by zero or more lowercase letters. Thus, \FooBar, \CPlusPlus, and \AbC are all valid \WikiWords, but ABC is not.
@@ -15,56 +17,61 @@ page!content:	= Ruwiki Markup
 	# One or more words contained in double square brackets. This the form supported by [http://wikipedia.com/ Wikipedia], and looks like \[[A Wiki Phrase]]. These links will be displayed exactly as entered between the brackets.
 	# One or more words contained in double square brackets with display text separated by a vertical bar. These \WikiWords look like \[[A Wiki Phrase|but show this text]]. The link will be to the page "A Wiki Phrase" and "but show this text" will be the hyperlink.
 	
-	If a \WikiWord is found that does not have a page defining the \WikiWord, then
-	the word will be shown with a hyperlink question mark following it, allowing
-	the \WikiWord to be created.
+	If a \WikiWord is found that does not have a page defining the
+	\WikiWord, then the word will be shown with a hyperlink question mark
+	following it, allowing the \WikiWord to be created.
 	
 	=== \WikiProjects
-	This Wiki supports "projects." Within each project, a given \WikiWord is
-	unique. Thus, if you have a Default project and a Ruwiki project, you can have
-	two pages called \ReadMe. Any given \WikiWord refers only to topics within its
-	project. That is, if I have \WikiWord in the \ReadMe topic of the Default
-	project, it will refer to the \WikiWord topic of the Default project. (Another
-	term for this capability is "namespaces.")
+	This Wiki supports "projects." Within each project, a given \WikiWord
+	is unique. Thus, if you have a Default project and a Ruwiki project,
+	you can have two pages called \ReadMe. Any given \WikiWord refers only
+	to topics within its project. That is, if I have \WikiWord in the
+	\ReadMe topic of the Default project, it will refer to the \WikiWord
+	topic of the Default project. (Another term for this capability is
+	"namespaces.")
 	
-	A cross-project link is composed of the project's name, two colons (::), and
-	the \WikiWord desired. Thus, from \Default::ReadMe, I can have \Ruwiki::ReadMe
-	as a link. The project index can be referred to with \::Project. This is the
-	same as doing \Project::ProjectIndex. Thus, \::Ruwiki becomes ::Ruwiki, which
-	is the same as \Ruwiki::ProjectIndex (Ruwiki::ProjectIndex).
+	A cross-project link is composed of the project's name, two colons
+	(::), and the \WikiWord desired. Thus, from \Default::ReadMe, I can
+	have \Ruwiki::ReadMe as a link. The project index can be referred to
+	with \::Project. This is the same as doing \Project::ProjectIndex.
+	Thus, \::Ruwiki becomes ::Ruwiki, which is the same as
+	\Ruwiki::ProjectIndex (Ruwiki::ProjectIndex).
 	
 	=== Calendars
 	Ruwiki supports a miniature calendar. Future versions of Ruwiki will
-	allow for calendar aggregation. Using the %calendar function, a calendar
-	section will be generated:
+	allow for calendar aggregation. Using the %calendar function, a
+	calendar section will be generated:
 	
 	  %calendar(<year>, <month>[, <project>])
 	  %calendar(today[, <project>])
 	
-	%calendar accepts either the English word "today" (displaying the calendar for
-	the current month and year) or a specific month and year for display. A
-	calendar for the specified month will be generated where each date in the
-	month is treated as a \WikiWord (as are the links to the current month, the
-	previous month, and the next month) ready for display or editing. As with all
-	other \WikiWord links in Ruwiki, a project may be specified in %calendar,
-	making "%calendar(today, Ruwiki)" different from "%calendar(today, Default)".
+	%calendar accepts either the English word "today" (displaying the
+	calendar for the current month and year) or a specific month and year
+	for display. A calendar for the specified month will be generated
+	where each date in the month is treated as a \WikiWord (as are the
+	links to the current month, the previous month, and the next month)
+	ready for display or editing. As with all other \WikiWord links in
+	Ruwiki, a project may be specified in %calendar, making
+	"%calendar(today, Ruwiki)" different from "%calendar(today, Default)".
 	
 	%calendar(today)
 	%calendar(1999, 08, Default)
 	
 	=== External Resources
-	Ruwiki behaves intelligently about resources external to the Wiki itself.
+	Ruwiki behaves intelligently about resources external to the Wiki
+	itself.
 	
 	==== External Links
-	\URLs to external resources are automatically detected for web addresses, FTP
-	addresses, newsgroups, and email links. They are automatically converted to
-	clickable \URLs. Be aware that some things that look like URL schemas may be
-	make clickable but are not really \URLs.
+	\URLs to external resources are automatically detected for web
+	addresses, FTP addresses, newsgroups, and email links. They are
+	automatically converted to clickable \URLs. Be aware that some things
+	that look like URL schemas may be make clickable but are not really
+	\URLs.
 	
 	* \http://www.ruby-lang.org becomes http://www.ruby-lang.org
 	
-	\URLs may be named with the [url name] syntax. If the name is omitted, the URL
-	will be numbered. Numbering is contained to within the page.
+	\URLs may be named with the [url name] syntax. If the name is omitted,
+	the URL will be numbered. Numbering is contained to within the page.
 	
 	* \[http://www.rubygarden.org RubyGarden] becomes [http://www.rubygarden.org RubyGarden].
 	* \[http://www.halostatue.ca] and \[http://www.halostatue.ca/ruby] become [http://www.halostatue.ca] and [http://www.halostatue.ca/ruby].
@@ -73,13 +80,13 @@ page!content:	= Ruwiki Markup
 	: <strong>Changed in Ruwiki 0.8.0!</strong>
 	
 	In preparation for the anti-wiki-spam features of Ruwiki 0.9.0, it has
-	been necessary to remove the ability for \URLs to be converted into inline
-	images automatically. Inline images are now created with the image
-	markup format, generally of the format \[image:URI options]. The
+	been necessary to remove the ability for \URLs to be converted into
+	inline images automatically. Inline images are now created with the
+	image markup format, generally of the format \[image:URI options]. The
 	<em>options</em> format is generally the same format as an HTML
 	attribute (<em>name="value"</em>; the quotes are optional for
-	single-word option values) and any valid HTML attribute is also a valid
-	<em>option</em>. There is one special <em>option</em>,
+	single-word option values) and any valid HTML attribute is also a
+	valid <em>option</em>. There is one special <em>option</em>,
 	<tt>numbered</tt>. This value, if set to any other value than "false",
 	will set the <tt>title</tt> of the image to a numbered link.
 	
@@ -100,23 +107,10 @@ page!content:	= Ruwiki Markup
 	* \[ruby-core:12345] will become [ruby-core:12345]
 	* \[ruby-doc:12345] will become [ruby-doc:12345]
 	
-	==== ISBNs
-	The Ruwiki engine converts ISBN markup in the form of \[ISBN=isbn-no] to
-	Amazon.ca product listings (this can be changed, for the moment, by editing
-	the lookup token; a future version of Ruwiki will support token option
-	definition). The Amazon ID may be specified; a future version will allow this
-	to be controlled by security definition. Any of the following are valid ISBN
-	markups:
-	
-	* \[ISBN 0-201-61622-X] and \[ISBN 020161622X] both become [ISBN 020161622X], a reference to the book's ISBN without a title.
-	* \[ISBN 0-201-61622-X, The Pragmatic Programmer] becomes [ISBN 0-201-61622-X, The Pragmatic Programmer]; with a title.
-	* \[ISBN $<i>aid</i>, 0-201-61622-X] or \[ISBN $<i>aid</i>, 0-201-61622-X, The Pragmatic Programmer] refers to the book with the <i>Amazon Associate ID</i> specified.
-	* \[<ISBN 0-201-61622-X, The Pragmatic Programmer] has an image on the left: [<ISBN 0-201-61622-X, The Pragmatic Programmer]
-	* \[>ISBN 0-201-61622-X, The Pragmatic Programmer] has an image on the right: [<ISBN 0-201-61622-X, The Pragmatic Programmer]
-	
 	== Headings and Lists
 	=== Headings
-	Use equals signs (=) for headings. Up to six equals signs can be used for HTML headings 1 - 6.
+	Use equals signs (=) for headings. Up to six equals signs can be used
+	for HTML headings 1 - 6.
 	
 	\===== Heading five<br />
 	\====== Heading six
@@ -125,7 +119,8 @@ page!content:	= Ruwiki Markup
 	
 	=== Lists
 	==== Bulleted Lists
-	Use asterisks (*) to create bulleted lists. More asterisks means more levels.
+	Use asterisks (*) to create bulleted lists. More asterisks means more
+	levels.
 	
 	\* level 1<br />
 	\** level 2<br />
@@ -134,8 +129,10 @@ page!content:	= Ruwiki Markup
 	* level 1
 	** level 2
 	*** level 3
+	
 	==== Numbered Lists
-	Use hash marks (#) for numbered lists. More hash marks means deeper levels.
+	Use hash marks (#) for numbered lists. More hash marks means deeper
+	levels.
 	
 	\# level 1<br />
 	\## level 2<br />
@@ -150,11 +147,13 @@ page!content:	= Ruwiki Markup
 	### level 3.2
 	## level 2.2
 	# level 1.2
+	
 	==== Definition Lists
-	Definitions can be created similar to other lists. Unlike "standard" lists,
-	though, definition lists have both the term and the definition. They are
-	specified like so. As with other lists, repeating the first item (;) will
-	increase the indentation level.
+	Definitions can be created similar to other lists. Unlike "standard"
+	lists, though, definition lists have both the term and the definition.
+	They are specified like so. As with other lists, repeating the first
+	item (;) will increase the indentation level. The browser may not
+	respect this.
 	
 	\; term : definition<br />
 	\;; term2 : definition<br />
@@ -165,19 +164,20 @@ page!content:	= Ruwiki Markup
 	;;; term3 : definition
 	== Paragraph Formatting
 	=== Rules
-	Four or more dashes ("----") on a line by itself makes a horizontal rule, like
-	so:
+	Four or more dashes ("----") on a line by itself makes a horizontal
+	rule, like so:
 	
 	\----
 	----
 	=== Paragraphs
-	A blank line (it may have whitespace on it) marks a new paragraph. All other
-	lines are joined together (excepting headers, lists, and rules).
+	A blank line (it may have whitespace on it) marks a new paragraph. All
+	other lines are joined together (excepting headers, lists, and rules).
 	
 	This line is a new paragraph.
+	
 	=== Block Indent Paragraphs
-	Paragraphs can be indented by beginning the paragraph with one or more colons
-	(:).
+	Paragraphs can be indented by beginning the paragraph with one or more
+	colons (:).
 	
 	\: Indent Level 1<br />
 	\:: Indent Level 2<br />
@@ -187,8 +187,8 @@ page!content:	= Ruwiki Markup
 	:: Indent Level 2
 	::: Indent Level 3
 	
-	Paragraphs may be indented as "cites" by using one or more greater-than signs
-	(>) at the beginning of the line.
+	Paragraphs may be indented as "cites" by using one or more
+	greater-than signs (>) at the beginning of the line.
 	
 	\> Indent Level 1<br />
 	\>> Indent Level 2<br />
@@ -197,10 +197,11 @@ page!content:	= Ruwiki Markup
 	> Indent Level 1
 	>> Indent Level 2
 	>>> Indent Level 3
+	
 	=== Code
-	Text that is indented will be presented as formatted in a monospaced font. The
-	only change is to escape HTML entities < (&lt;), > (&gt;), and
-	& (&amp;).
+	Text that is indented will be presented as formatted in a monospaced
+	font. The only change is to escape HTML entities &lt; (&amp;lt;), &gt;
+	(&amp;gt;), and &amp; (&amp;amp;).
 	
 	  def replace
 	    content = @match[1]
@@ -213,29 +214,32 @@ page!content:	= Ruwiki Markup
 	&lt;strong&gt;strong&lt;/strong&gt; would be shown as
 	<strong>strong</strong>. <strong><em>Note:</em></strong> This
 	capability could be very dangerous as it could expose the Wiki to
-	cross-site scripting (XSS) vulnerabilities. This will be remedied prior
-	to the 1.0 release of Ruwiki.
+	cross-site scripting (XSS) vulnerabilities. This will be remedied
+	prior to the 1.0 release of Ruwiki.
 	
 	=== Abbreviations
-	Certain abbreviations may be known to the Wiki. While there is not yet any way
-	for a user to query what abbreviations are known, if the abbreviations are
-	told to the users, they may be used. Abbreviations are presented with @{key},
-	where <em>key</em> is the abbreviation desired. This Wiki, for example, knows
-	that \@{matz} means "@{matz}". The special form \@{} will produce the current list
-	of known abbreviations. Unknown abbreviations will simply be put back into the
+	Certain abbreviations may be known to the Wiki. While there is not yet
+	any way for a user to query what abbreviations are known, if the
+	abbreviations are told to the users, they may be used. Abbreviations
+	are presented with @{key}, where <em>key</em> is the abbreviation
+	desired. This Wiki, for example, knows that \@{matz} means "@{matz}".
+	The special form \@{} will produce the current list of known
+	abbreviations. Unknown abbreviations will simply be put back into the
 	data stream unchanged. Thus, \@{unknownkey} results in @{unknownkey}.
 	
 	==== Known Abbreviations
 	@{}
 	
 	=== Preventing Formatting
-	If you wish to prevent a word or sequence from being interpreted, put a
-	backslash (\) in front of it. This works on all formatting options except
-	paragraph positioning. Thus, if I want to prevent a \WikiWord from being
-	turned into a hyperlink, I need to backslash it: \\WikiWord.
+	If you wish to prevent a word or sequence from being interpreted, put
+	a backslash (\) in front of it. This works on all formatting options
+	except paragraph positioning. Thus, if I want to prevent a \WikiWord
+	from being turned into a hyperlink, I need to backslash it:
+	\\WikiWord.
 	
 	=== Other Possible Considerations
-	I'm looking at adding styles similar to what is shown on the Wiki below.
+	I'm looking at adding styles similar to what is shown on the Wiki
+	below.
 	
 	* http://www.pmichaud.com/wiki/PmWiki/WikiStyles
 	

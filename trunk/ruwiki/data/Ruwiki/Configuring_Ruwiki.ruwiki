@@ -9,6 +9,9 @@ page!content:	= Configuring Ruwiki 0.8.0
 	
 	: This may be changed prior to 1.0.
 	
+	If you are looking for the discussion on templates, this has been moved
+	to Extending_Ruwiki.
+	
 	== Ruwiki Configuration Options
 	=== wiki.config.title
 	
@@ -98,57 +101,6 @@ page!content:	= Configuring Ruwiki 0.8.0
 	; --storage-type TYPE : Select the storage type: flatfiles, yaml, marshal
 	; --flatfiles-data-path PATH : The path where data files are stored. Default is "./data". <em>--flatfiles</em> is used even for <em>yaml</em> and <em>marshal</em> because they are all flatfile oriented systems.
 	; --flatfiles-extension EXT The extension for data files. Default is "ruwiki". <em>--flatfiles</em> is used even for <em>yaml</em> and <em>marshal</em> because they are all flatfile oriented systems.
-	
-	== Templates
-	Templating is done with a heavily modified version of the \RDoc
-	template.rb library, included in the distribution of Ruwiki. The
-	templating library allows for nested templates, and this is used
-	extensively in Ruwiki. This library is documented in
-	RuwikiTemplatingLibrary.
-	
-	There are four major templates: content, edit, save, and error. Each
-	of these has a slightly different combination of template files used,
-	and this means that there are different sets of variables available.
-	
-	The major templates are "composite templates" that are defined as follows:
-	; content or search : body.tmpl, content.tmpl, controls.tmpl, footer.tmpl
-	; edit or preview : body.tmpl, edit.tmpl
-	; save : body.tmpl, save.tmpl, controls.tmpl, footer.tmpl
-	; error : body.tmpl, error.tmpl
-	
-	=== Common Variables
-	The following template variables are presented for all composite templates.
-	; <tt>%css_link%</tt> : The contents of the CSS file for the template set.
-	; <tt>%home_link%</tt> : A link to the root page of the Wiki.
-	; <tt>%editable%</tt> : A boolean value to mark the page as editable or not. Used in a conditional block in the templates.
-	; <tt>%cgi_url%</tt> : The URL for the Wiki.
-	; <tt>%content%</tt> : The formatted content of the current page.
-	; <tt>%page_project%</tt> : The project for the current page.
-	; <tt>%page_raw_topic%</tt> : The topic for the current page, escaped for safe transmission over the web.
-	; <tt>%page_topic%</tt> : The printable topic for the current page.
-	; <tt>%url_project%</tt> : The URL to the current page's project.
-	; <tt>%url_topic_search%</tt> : The URL to search for the current topic in the current project.
-	; <tt>%link_topic_search%</tt> : A link to the current topic search.
-	
-	=== Variables for :content, :save, :search
-	; <tt>%wiki_title%</tt> : The title of the Wiki.
-	; <tt>%label_topic_or_search%</tt> : Either <tt>#topic#</tt> or <tt>#search#</tt>.
-	; <tt>%page_topic_name%</tt> : The same as <tt>%page_topic%</tt>.
-	
-	=== Variables for :edit, :preview
-	; <tt>%wiki_title%</tt> : The title of the Wiki with a tag to indicate that the page is being edited.
-	; <tt>%page_content%</tt> : The content of the page.
-	; <tt>%page_version%</tt> : The current version number of the page.
-	; <tt>%unedited_page_content%</tt> : The formatted, unedited content of the page.
-	; <tt>%pre_page_content%</tt> : A Web-escaped form of the page content.
-	; <tt>%edit_comment%</tt> : The current edit comment.
-	
-	=== Variables for :error
-	; <tt>%wiki_title%</tt> : The title of the Wiki with an error message.
-	; <tt>%name%</tt> : The name of the error.
-	; <tt>%backtrace%</tt> : The backtrace of the error.
-	; <tt>%backtrace_email%</tt> : The backtrace of the error formatted for sending by email.
-	; <tt>%webmaster%</tt> : The email address of the webmaster.
 	
 	$Id$
 properties!editable:	

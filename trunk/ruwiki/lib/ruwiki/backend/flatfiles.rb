@@ -29,7 +29,7 @@ class Ruwiki::Backend::Flatfiles < Ruwiki::Backend
   end
 
     # Provides a HEADER marker.
-  HEADER_RE = /^(?:([a-z]+)!)?([a-z][-a-z]+):\t(.*)$/
+  HEADER_RE = /^(?:([a-z][-a-z]+)!)?([a-z][-a-z]+):\t(.*)$/
   FIRST_TAB = /^\t/
 
     # Loads the topic page from disk.

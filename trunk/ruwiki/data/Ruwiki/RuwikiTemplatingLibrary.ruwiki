@@ -1,36 +1,107 @@
 page!content:	= Ruwiki 0.8.0 Templating
-	
-	= TODO: CHANGE THIS! IT IS DIFFERENT!
-	
-	Ruwiki uses the \RDoc templating system, described by its creator as:
-	
-	> \RDoc's cheap-n-cheerful HTML page template system.
+	Ruwiki uses a heavily modified version of the \RDoc "cheap-n-cheerful"
+	HTML page template system. This a line-oriented, text-based templating
+	system.
 	
 	== Templates
 	Templates in the templating system are essentially plain strings with
 	particular references to templating keys or an include directive.
 	
-	=== Templating Keys
-	The template interacts with a value hash provided by ruwiki. The keys known to
-	the templates expected by Ruwiki are detailed in Configuring_Ruwiki. Nested
-	key references are found from the inside-out. That is, the closest resolving
-	key to the current level is found, not the furthest resolving key.
+	The template interacts with value and message hashes provided by
+	Ruwiki. The keys known to the templates expected by Ruwiki are
+	detailed in Extending_Ruwiki. Nested key references are found from the
+	inside-out. That is, the closest resolving key to the current level is
+	found, not the furthest resolving key.
 	
-	==== Simple Templating Keys
-	Ruwiki only uses the simplest form of \RDoc templating at this point, which is
-	the enclosing of variable names between percent signs (e.g.,
-	<tt>%wiki_title%</tt>).
+	=== Including Other Templates
+	Templates may include other templates to any arbitrary level by using the
+	<tt>!INCLUDE!</tt> directive. When the \TemplatePage is created, an
+	array of template strings are provided; these will be used to satisfy
+	<tt>!INCLUDE!</tt> directives. If there are not enough template
+	strings provided, <tt>!INCLUDE!</tt> won't be translated.
 	
-	==== Repeating Block Keys
-	The \RDoc templating library supports a block format:
+	: This may change before Ruwiki reaches 1.0, so that templates are
+	: named instead of iterated.
+	
+	=== Simple Template Keys
+	Strings of the format <tt>%<em>key</em>%</tt> or
+	<tt>%?<em>key</em>%</tt> are simple template keys. <em>key</em> is
+	looked up in the provided value hash and is presented as the string
+	value of the result. <tt>%key%</tt> template keys are mandatory; if
+	the key is not found in the value hash, an exception will be raised.
+	<tt>%?key%</tt> template keys are optional; if they key is not found
+	in the value hash, an empty string ("") will be used.
+	
+	=== Labels
+	Strings of the format <tt>#<em>key</tm>#</tt> or
+	<tt>#?<em>key</em>#</tt> are labels. <em>key</em> is looked up in the
+	provided message hash as a Symbol (e.g.,
+	<tt><em>key</em>.intern</tt>). As with simple template keys,
+	<tt>#key#</tt> labels are mandatory and <tt>#?key#</tt> labels are
+	optional.
+	
+	=== Links
+	Strings of the format <tt>HREF:ref:name</tt> will become HTML links.
+	Both <em>ref</em> and <em>name</em> are keys to be looked up.
+	<em>name</em> is mandatory; an exception will be raised if it is not
+	found.
+	
+	=== Control Structures
+	The templating library supports both looping and conditional control
+	structures in both single-line and multi-line forms. Single-line
+	control structures <strong>may not</strong> be nested; multi-line
+	control structures <strong>may</strong> be nested arbitrarily deeply.
+	
+	==== Looping Control Structures
+	There are two forms of looping control structures.
+	
+	  [:key|stuff:]
 	
 	  START:key
 	    ... stuff ...
 	  END:key
 	
-	The block between <tt>\START:key</tt> and <tt>\END:key</tt> will be repeated
-	once for each hash entry found in the array at <tt>key</tt> in the main value
-	hash. Blocks may be nested arbitrarily deeply.
+	===== Single-Line Looping
+	  [:key|stuff:]
+	
+	The value of <em>key</em> may be <tt>nil</tt>, an integer value, a
+	range, or an array. When <em>key</em> represents:
+	# <tt>nil</tt>, the looping structure will be replaced with an empty string.
+	# An integer, <em>stuff</em> will be repeated <em>key</em> times. Values from 1 to <em>key</em> will be provided to the text of <em>stuff</em> to be substituted as a simple template key of the form <tt>%key%</tt>.
+	# A range, <em>stuff</em> will be repeated once for each successive value in the range of <em>key</em>. Each value will be provided to the text of <em>stuff</em> to be substituted as a simple template key of the form <tt>%key%</tt>.
+	# An array, the behaviour will differ depending on the contents of the array.
+	## If the array contains hashes, the behaviour is the same as a multi-line looping construct. See below for details.
+	## Otherwise, the template iterates through the array, providing each value to the text of <em>stuff</em> to be substituted as a simple template key of the form <tt>%key%</tt>.
+	
+	As an example, if we have:
+	
+	  "[:b|%b% ]"
+	
+	# <tt>val["b"] = 3 -> "1&nbsp;2&nbsp;3&nbsp;"</tt>
+	# <tt>val["b"] = (0..2) -> "0&nbsp;2&nbsp;3&nbsp;"</tt>
+	# <tt>val["b"] = ["a", "B"] -> "a&nbsp;B&nbsp;"</tt>
+	  
+	==== Multi-Line Looping
+	  START:key
+	    ... stuff ....
+	  END:key
+	
+	The value of <tt>key</tt> must be an array of hashes. <tt>... stuff
+	...</tt> will be repeated once for each entry in the array. The hashes
+	will be passed as nested value hashes.
+	
+	  %a% [:b|%a% ]%a%
+	
+	When the above template string is run with the following hash:
+	
+	  val["a"] = 1
+	  val["b"] = [ { "a" => 2 }, { "a" => 3 } ]
+	
+	The result is:
+	
+	  1 2 3 1
+	
+	The behaviour is the same for multi-line blocks.
 	
 	==== Conditional Block Keys
 	  IF:key
@@ -39,10 +110,6 @@ page!content:	= Ruwiki 0.8.0 Templating
 	
 	The block between <tt>\IF:key</tt> and <tt>\ENDIF:key</tt> will be included in
 	the output only if the corresponding key is set in the value hash.
-	
-	=== Including Other Templates
-	Templates may include other templates to any arbitrary level by using the
-	!INCLUDE! directive. 
 	
 	== Example
 	Given the set of templates T1, T2, and T3 (shown below), here's how we would
