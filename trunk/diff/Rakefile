@@ -50,7 +50,8 @@ end
 
 spec = eval(File.read("diff-lcs.gemspec"))
 desc "Build the RubyGem for Diff::LCS."
-Rake::GemPackageTask.new(spec) => [ :test ] do |g|
+task :gem => [ :test ]
+Rake::GemPackageTask.new(spec) do |g|
   g.need_tar    = false
   g.need_zip    = false
   g.package_dir = ".."
