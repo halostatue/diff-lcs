@@ -86,6 +86,23 @@ class Ruwiki::Wiki
     @title            = title
   end
 
+    # A regular expression that will prevent redirection.
+  class << self
+    attr_accessor :no_redirect
+
+    def redirect(uri)
+      if uri =~ %r{^https?://}
+        if self.no_redirect and uri =~ self.no_redirect
+          uri
+        else
+          "http://www.google.com/url?sa=D&amp;q=#{CGI.escape(uri)}"
+        end
+      else
+        uri
+      end
+    end
+  end
+
 private
     # Find HTML tags
   SIMPLE_TAG_RE = %r{<[^<>]+?>}   # Ensure that only the tag is grabbed.

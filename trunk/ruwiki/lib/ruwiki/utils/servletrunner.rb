@@ -288,8 +288,9 @@ COPYRIGHT
       Ruwiki::Servlet.config = @rc
 
       server.mount(@sc.mount, Ruwiki::Servlet)
-      trap("INT") { server.shutdown; return }
+      trap("INT") { server.shutdown; return 0 }
       server.start
+      return 0
     end
   end
 end

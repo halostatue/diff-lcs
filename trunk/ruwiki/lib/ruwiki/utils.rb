@@ -7,8 +7,6 @@
 #
 # Licensed under the same terms as Ruby.
 #
-# This file may be renamed to change the URI for the wiki.
-#
 # $Id$
 #++
 

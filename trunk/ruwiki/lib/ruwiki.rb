@@ -10,7 +10,7 @@
 #++
 
 class Ruwiki
-  VERSION         = '0.9.0'
+  VERSION         = '0.9.1'
   CONTENT_VERSION = 2
 end
 
@@ -30,7 +30,7 @@ require 'ruwiki/page'
   # it supports project namespaces, so that two pages can be named the same
   # for differing projects without colliding or having to resort to odd
   # naming conventions. Please see the ::Ruwiki project in the running Wiki
-  # for more information. Ruwiki 0.9.0 has German and Spanish translations
+  # for more information. Ruwiki 0.9.1 has German and Spanish translations
   # available.
   #
   # == Quick Start (CGI)
@@ -118,6 +118,8 @@ class Ruwiki
     @banned_hostip    = load_blacklist('hostip.banned')
     @readonly_agents  = load_blacklist('agents.readonly')
     @readonly_hostip  = load_blacklist('hostip.readonly')
+      # Prevent Google redirection against these URIs.
+    Ruwiki::Wiki.no_redirect = load_blacklist('clean.uri')
   end
 
   def load_blacklist(filename)
@@ -146,6 +148,8 @@ class Ruwiki
     else
       Regexp.new(data.join("|"), Regexp::EXTENDED)
     end
+  rescue
+    return nil
   end
 
   def check_useragent
@@ -322,7 +326,7 @@ class Ruwiki
       else
         topic_list.map! do |tt|
           uu = CGI.unescape(tt)
-          if (uu != tt) or (tt =~ /^[A-Z][a-z]+$/)
+          if (uu != tt) or (tt !~ Ruwiki::Wiki::RE_WIKI_WORDS)
             "[[#{CGI.unescape(tt)}]]"
           else
             tt

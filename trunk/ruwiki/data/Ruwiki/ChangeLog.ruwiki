@@ -4,10 +4,12 @@ page!content:	= Ruwiki %RV#% ChangeLog
 
 	== 0.9.1
 	* Fixed a couple of problems with the Ruwiki deployment system surrounding Win32::Service management.
-	* Added a Google redirect exclusion list to the configuration. (TODO 20041217)
-	* Fixed a problem where last lines of ending code blocks disappear. (TODO 20041217)
+	* Added a Google redirect exclusion list to the configuration.
+	* Fixed a problem where last lines of code blocks may not be properly marked.
 	* Changed relevant timestamps to UTC.
 	* Fixed a problem with Google redirection not working.
+	* Fixed a problem with some pages not being displayed as links in the topic listing; only affected some pages created with the Wikipedia form of naming.
+	* Fixed a problem with tokens being redefined. Once a token is defined, its class is frozen; the token reader will silently ignore TypeError exceptions.
 	
 	== 0.9.0
 	* Created a Ruwiki deployment system. Various steps were required to accomplish this:

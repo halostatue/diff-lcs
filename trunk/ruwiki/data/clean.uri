@@ -1,0 +1,37 @@
+#--
+# Ruwiki
+#   Copyright © 2002 - 2004, Digikata and HaloStatue
+#   Alan Chen (alan@digikata.com)
+#   Austin Ziegler (ruwiki@halostatue.ca)
+#
+# Licensed under the same terms as Ruby.
+#
+# $Id$
+#
+# This file contains the list of URIs or partial URIs that will not be
+# redirected by the automatic redirection technique. It is recommended that the
+# Regular Expression be specific and be anchored to prevent "similar" URIs from
+# being handled poorly. Non HTTP/HTTPS URIs are not redirected at this time.
+#
+# This file is in "extended" regular expression format, one optional expression
+# to a line. Spaces are not significant and comments are allowed. If you want
+# to recognise a space in your regular expression, do so either with a
+# character class ([ ]) or the whitespace meta-character (\s). Hash marks must
+# be escaped (\#) or they will be treated as comment markers. Blank or
+# comment-only lines are ignored. All other lines will be joined together:
+#
+#       ^http://[^/]*?ruby-lang.org/?.*$
+#       ^http://[^/]*?rubyforge.org/?.*$
+#
+# becomes:
+#
+#       %r{^http://[^/]*?ruby-lang.org/?.*$|^http://[^/]*?rubyforge.org/?.*$}
+#++
+(?ix-m:^http://[^/]*?ruby-lang.org/?.*$)
+(?ix-m:^http://[^/]*?rubyforge.org/?.*$)
+(?ix-m:^http://rubyforge.halostatue.info/?.*$)
+(?ix-m:^http://[^/]*?ruwiki.org/?.*$)
+(?ix-m:^http://[^/]*?ruby-doc.org/?.*$)
+(?ix-m:^http://[^/]*?pragmaticprogrammers.com/?.*$)
+(?ix-m:^http://127\.0\.0\.(\d|\d\d|1\d\d|2[0-4]\d|25[0-5])/?.*$)
+(?ix-m:^http://localhost/?.*$)

@@ -8,10 +8,10 @@
 #
 # $Id$
 #
-# This file contains the list of User Agent strings which will be greeted
-# with "403 Forbidden" responses by Ruwiki. These are generally known email
-# harvesters or link directory builders for reciprocal link partners. These
-# may also be robots that routinely ignore the robots.txt file.
+# This file contains the list of IP address strings which will be greeted with
+# "403 Forbidden" responses by Ruwiki. These are generally known email
+# harvesters or link directory builders for reciprocal link partners. These may
+# also be robots that routinely ignore the robots.txt file.
 #
 # This file is in "extended" regular expression format, one optional
 # expression to a line. Spaces are not significant and comments are

@@ -54,7 +54,8 @@ class Ruwiki::Wiki
 
       # Matches indented text. %r{^(\s+\S?.*)$}
     def self.regexp
-      %r{^([ \t]+[^\n]*)\n}
+      %r{^(\s+.*)$}
+#     %r{^([ \t]+[^\n]*)\n?}
     end
 
       # Replaces the text to <pre>content</pre>.
@@ -78,10 +79,6 @@ class Ruwiki::Wiki
   RE_URI_SCHEME = %r{[-a-z0-9+.]{3,}?:}
   RE_URI_PATH   = %r{[^\s<>\]]}
   RE_URI_TEXT   = %r{[^\]]*}
-
-  def self.redirect(uri)
-    "http://www.google.com/url?sa=D&amp;q=#{CGI.escape(uri)}"
-  end
 
     # Converts URLs in the form of [url] to numbered links.
   class NumberedLinks < Ruwiki::Wiki::Token

@@ -8,7 +8,7 @@
 #
 # $Id$
 #
-# This file contains the list of User Agent strings which will be given
+# This file contains the list of IP address strings which will be given
 # readonly versions of the wiki instance.
 #
 # This file is in "extended" regular expression format, one optional
