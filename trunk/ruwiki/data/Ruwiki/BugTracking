@@ -2,15 +2,16 @@ id: 0
 topic: BugTracking
 version: 1
 #EHDR
-= Ruwiki 0.6.2 Bug Tracking
-This page is for tracking bugs in the Ruwiki project. Because of the extensive
-nature of the changes between Ruwiki 0.3.0 and Ruwiki 0.5.0 (and 0.6.x), the
-previously listed bugs have been erased.
+= Ruwiki 0.7.0 Bug Tracking
+This page is for tracking bugs in the Ruwiki project. Because of the extensive nature of the changes between Ruwiki 0.3.0 and Ruwiki 0.5.0 (and 0.6.x), the previously listed bugs have been erased.
 
 You may also be interested in the Ruwiki::To_Do list.
 
 ----
 == Closed Bugs
+* Fixed a link detection problem in \[wikiword] format. Thanks to [mailto:eivind@FreeBSD.org Eivind Eklund] for the patch.
+* Fixed a problem with &lt;pre&gt; paragraph detection and generation.
+* Fixed a problem with &lt;p&gt; generation.
 * Projects aren't created appropriately. Fixed in 0.6.1.
 * Saving without editing (or repost) appears to cause problems. A fix has been applied to attempt to address this. Pages that have not been changed will not be saved.
 

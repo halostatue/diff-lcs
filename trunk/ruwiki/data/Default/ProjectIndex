@@ -9,13 +9,16 @@ project namespaces, so that two pages can be named the same for differing
 projects without colliding or having to resort to odd naming conventions.
 Please see ::Ruwiki for more information.
 
-The current version is 0.6.2. German and Spanish translations have been added
-in this version. Note that the APIs for Ruwiki should not at this point be
-considered stable, but will be stable in 1.0.
+The current version is 0.7.0. Several fixes have been made to text
+preservation. More importantly, there has been an API change to plugins.
+Please read Ruwiki::Extending_Ruwiki for details.
+
+German and Spanish translations have been added in this version. Note that the
+\APIs for Ruwiki should not at this point be considered stable, but will be
+stable in 1.0.
 
 Projects:
 * ::Default
 * ::Ruwiki
 
-Please go to ::Ruwiki if you are unfamiliar with the concept of Wikis in
-general. If you want to play with \WikiFormatting, use the Ruwiki::SandBox.
+Please go to ::Ruwiki if you are unfamiliar with the concept of Wikis in general. If you want to play with \WikiFormatting, use the Ruwiki::SandBox.

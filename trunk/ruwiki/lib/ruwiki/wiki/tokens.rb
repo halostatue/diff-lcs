@@ -19,18 +19,19 @@ class Ruwiki
       #                 results.
       #
       # Token classes <i>should</i> implement the following method:
-      # [self.rank]     Default: <tt>5000</tt>. Affects the sort order. Must
-      #                 return an integer.
+      # [self.rank]          Default: <tt>5000</tt>. Affects the sort order.
+      #                      Must return an integer.
       #
       # Token classes <i>may</i> implement the following methods:
-      # [restore]       Restores the token without replacement. Implements the
-      #                 results of the escape character. NOTE: each Token
-      #                 class is responsible for its own restore. Tokens that
-      #                 are anchored to the beginning of a line are the most
-      #                 likely to need to reimplement this.
-      # [post_replace]  Performs any necessary massaging of the data. See the
-      #                 implementation of Ruwiki::Wiki::Lists for more
-      #                 information.
+      # [restore]            Restores the token without replacement.
+      #                      Implements the results of the escape character.
+      #                      NOTE: each Token class is responsible for its own
+      #                      restore. Tokens that are anchored to the
+      #                      beginning of a line are the most likely to need
+      #                      to reimplement this.
+      # [self.post_replace]  Performs any necessary massaging of the data. See
+      #                      the implementation of Ruwiki::Wiki::Lists for
+      #                      more information.
     class Token
       @@tokenlist = []
       @@sorted    = false
@@ -62,7 +63,7 @@ class Ruwiki
             # don't want to propogate the currently defined post_replace.
             # The current post_replace is specific to Token_Base only.
           class << child_class
-            def post_replace(content)
+            def self.post_replace(content)
               content
             end
           end
@@ -107,7 +108,7 @@ class Ruwiki
       end
 
         # The content may need massaging after processing.
-      def post_replace(content)
+      def self.post_replace(content)
         content
       end
     end

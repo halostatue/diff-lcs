@@ -2,9 +2,13 @@ id: 0
 version: 1
 topic: ChangeLog
 #EHDR
-= Ruwiki 0.6.2 ChangeLog
-Uncompleted to-do items can be found in To_Do. Bugs in Ruwiki are tracked in
-BugTracking.
+= Ruwiki 0.7.0 ChangeLog
+Uncompleted to-do items can be found in To_Do. Bugs in Ruwiki are tracked in BugTracking.
+
+== Version 0.7.0
+* Changed the tokenization API so that the #post_replace call is made at the Token class level instead of the instance level.
+* Improved HTML code generation.
+* Added servlet runners for Windows.
 
 == Version 0.6.2
 * Removed dependencies on Ruwiki from a number of classes (Ruwiki::Backend, Ruwiki::Backend::Flatfiles, Ruwiki::Page, Ruwiki::Wiki, Ruwiki::Wiki::Tokens, and various tokens).

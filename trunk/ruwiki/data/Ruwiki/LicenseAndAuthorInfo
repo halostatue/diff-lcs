@@ -3,12 +3,9 @@ topic: LicenseAndAuthorInfo
 version: 1
 #EHDR
 = Ruwiki Licence
-Ruwiki is copyright © 2002 - 2003 [mailto:alan@digikata.com Alan Chen] and
-[mailto:ruwiki@halostatue.ca Austin Ziegler].
+Ruwiki is copyright © 2002 - 2004 [mailto:alan@digikata.com Alan Chen] and [mailto:ruwiki@halostatue.ca Austin Ziegler].
 
-Ruwiki is provided free of use and without any warranty express or implied. You may use,
-distribute, or modify Ruwiki under the conditions of Ruby's licence or the
-[http://www.gnu.org/copyleft/gpl.html GNU General Public Licence].
+Ruwiki is provided free of use and without any warranty express or implied. You may use, distribute, or modify Ruwiki under the conditions of Ruby's licence or the [http://www.gnu.org/copyleft/gpl.html GNU General Public Licence].
 
 * Ruwiki includes algorithm/diff by Lars Christensen, available for download from the RAA at: http://raa.ruby-lang.org/list.rhtml?name=diff
 * Ruwiki includes template.rb from Dave Thomas's RDoc system, available for download from SourceForge: http://rdoc.sourceforge.net
@@ -18,8 +15,7 @@ distribute, or modify Ruwiki under the conditions of Ruby's licence or the
 * Translation to Spanish by [mailto:batsman.geo@yahoo.com Mauricio Fernández] on 2003.10.22. Note that the initial template translations (./templates/es/) were done via AltaVista Babelfish and should not be blamed on Mauricio.
 
 == Other Projects
-Austin has also released several other projects available on the RAA that you
-may be interested in:
+Austin has also released several other projects available on the RAA that you may be interested in:
 * [http://raa.ruby-lang.org/list.rhtml?name=mime-types MIME::Types]
 * [http://raa.ruby-lang.org/list.rhtml?name=pdf-writer PDF::Writer]
 * [http://raa.ruby-lang.org/list.rhtml?name=text-format Text::Format]

@@ -9,13 +9,16 @@
 # $Id$
 #++
 
+$debug = File.open("output.txt", "w")
+
 class Ruwiki
   class Wiki
       # The Paragraph Token class changes blank lines to <p> tags. This class,
       # under the current implementation, should be *first* in the Token list
       # after Token.
     class Paragraph < Ruwiki::Wiki::Token
-        # This Token is #rank 0, because it should be first in the Token list.
+        # This Token is #rank 0, because it should be second in the Token list
+        # after ParaBreak.
       def self.rank
         0
       end
@@ -30,21 +33,19 @@ class Ruwiki
         "</p><p>"
       end
 
-        # Ensures that <p> won't be surrounded by <br> tags.
-      def post_replace(content)
+      def self.post_replace(content)
+        content.gsub!(%r{\A}, '<p>')
+        content.gsub!(%r{\z}, '</p>')
         content.gsub!(%r{^}, '<p>')
-        content.gsub!(%r{\n$}, '</p>')
-        content.gsub!(%r{<p>\n}, '<p>')
+        content.gsub!(%r{\n}, "</p>\n")
         content.gsub!(%r{<p>(<p>)+}, '<p>')
-        content.gsub!(%r{<p>}, "</p><p>")
-        content.gsub!(%r{<p>(\n)*</p>}, '')
-        content.gsub!(%r{</p>(</p>)+}, '</p>')
-        content.gsub!(%r{(</h\d>)</p>}, '\1')
-        content.gsub!(%r{\A</p>}, '')
-        content.gsub!(%r{<p>(<h\d>)}, '\1')
-        content.gsub!(%r{\n</p>}, '</p>')
-        content.gsub!(%r{</p>}, "</p>\n")
-        content.gsub!(%r{\n</p>}, '')
+        content.gsub!(%r{((?:<p>(?:.*?)</p>\n)+?<p></p><p></p>)}) do |m|
+          r = m.gsub(%r{</p>\n<p>}, "\n<p>")
+          r.gsub!(%r{<p></p><p></p>}, "</p>")
+          r.gsub!(%r{\n<p>}, "\n")
+          r.gsub!(%r{\n</p>}, '</p>')
+          r
+        end
         content
     end
   end
@@ -69,7 +70,7 @@ class Ruwiki
       end
 
         # Converts cases of %r{</pre>(\n|<br ?/?>)<pre>} to \1.
-      def post_replace(content)
+      def self.post_replace(content)
         content.gsub!(%r{</pre>((\n)*</p>(\n)*)?<pre>}, "\n")
         content.gsub!(%r{</pre>(\n|<br ?/?>)?<pre>}, '\1')
         content.gsub!(%r{<p><pre>}, '<pre>')
@@ -137,7 +138,7 @@ class Ruwiki
       # Converts URLs to links where the "name" of the link is the URL itself.
     class ExternalLinks < Ruwiki::Wiki::Token
       def self.rank
-        504
+        501
       end
 
       def self.regexp
@@ -169,8 +170,9 @@ class Ruwiki
         @match[0][1 .. -1]
       end
 
-      def post_replace(content)
+      def self.post_replace(content)
         content.gsub!(%r{(<p>)*<hr ?/?>(</p>)*}, "<hr />")
+        content.gsub!(%r{\n<hr />}, "</p>\n<hr />")
         content.gsub!(%r{<hr ?/?>\n<br ?/?>}, "<hr />")
         content.gsub!(%r{(\n|<br ?/?>)?<hr>(\n|<br ?/?>)?}, "<hr />")
         content

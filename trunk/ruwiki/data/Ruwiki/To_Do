@@ -2,18 +2,21 @@ id: 0
 topic: To_Do
 version: 1
 #EHDR
-= Ruwiki 0.6.2 To Do Tracking
-Completed to-do items can be found in the ChangeLog. Bugs in Ruwiki are
-tracked in BugTracking.
+= Ruwiki 0.7.0 To Do Tracking
+Completed to-do items can be found in the ChangeLog. Bugs in Ruwiki are tracked in BugTracking.
+
+Note that Ruwiki 0.7.0 was originally supposed to be 0.6.3, but the
+Tokenization API change demanded a full version change instead. Thus, there
+are still three planned API-changing releases between now and 1.0.
 
 == Well-Defined To Do Items
-=== Ruwiki 0.7.0
-; Versioning : complete the change history. Change history is currently stored in a file <i>topic</i>.rdiff. There is no way to display the change history at this point.
 === Ruwiki 0.8.0
+; Versioning : complete the change history. Change history is currently stored in a file <i>topic</i>.rdiff. There is no way to display the change history at this point.
+=== Ruwiki 0.9.0
 ; In-project topic search : searches for mentions of the topic in the other topics for the project.
 ; Project topic listing : provide a special link (perhaps Project::Project) that displays the list of topics known to that project.
 ; Project listing : provide a special link (perhaps ::*) that displays the list of known projects.
-=== Ruwiki 0.9.0
+=== Ruwiki 0.10.0
 ; Topic renaming : add the ability to rename a topic within a project. Topic change history should be maintained.
 ; Topic moving : add the ability to move and/or rename a topic between projects. Topic change history should be maintained.
 ; Complete documentation : Complete the documentation of Ruwiki.

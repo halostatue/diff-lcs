@@ -29,7 +29,7 @@ class Ruwiki
       # Creates a crosslink for a Project::WikiPage.
     class ProjectCrossLink < Ruwiki::Wiki::Token
       def self.rank
-        502
+        500
       end
 
       def self.regexp
@@ -54,7 +54,7 @@ class Ruwiki
       # format.
     class ProjectCrossLinkWikipedia < Ruwiki::Wiki::Token
       def self.rank
-        502
+        500
       end
 
       def self.regexp
@@ -145,12 +145,21 @@ class Ruwiki
         @match[0][1..-1]
       end
 
+      ALT_TEXT = %{(.*?)\|(.*)}o
+
       def replace
         captures = @match.captures
-        link     = CGI.escape(captures[1])
-        topic    = captures[1]
+        at = ALT_TEXT.match(captures[1])
+        
+        if at.nil?
+          link  = CGI.escape(captures[1])
+          topic = captures[1]
+        else
+          topic = at.captures[1]
+          link  = CGI.escape(at.captures[0])
+        end
 
-        if @backend.page_exists?(topic, @project)
+        if @backend.page_exists?(link, @project)
           VIEW_LINK % ["#{@script}/#{@project}/#{link}", topic]
         else
           EDIT_LINK % [topic, "#{@script}/#{@project}/#{link}/_edit"]

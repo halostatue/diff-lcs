@@ -31,8 +31,10 @@ class Ruwiki
         "<h#{level}>#{content}</h#{level}>"
       end
 
-      def post_replace(content)
+      def self.post_replace(content)
         content.gsub!(%r{<p>(<h\d>)}, '\1')
+        content.gsub!(%r{(</h\d>)\n}) { |m| "#{$1}\n<p>" }
+        content.gsub!(%r{(</h\d>)</p>\n<p>}) { |m| "#{$1}\n<p>" }
         content.gsub!(%r{(</h\d>)</p>}, '\1')
         content
       end
