@@ -25,6 +25,10 @@ class Ruwiki
     attr_reader   :content
       # Formatted page text.
     attr_accessor :formatted
+      # need access to markup object for RecentChanges
+    attr_accessor :markup
+      # on save, the form may provide an edit comment for RecentChanges
+    attr_accessor :edit_comment
 
       # The IP address of the person who made the last change.
     def change_ip
@@ -51,6 +55,8 @@ class Ruwiki
       @page_id      = init[:page_id] || 0
       @version      = init[:version] || 0
       @old_version  = @version - 1
+      
+      @edit_comment = init[:edit_comment] || ""
 
       if init.has_key?(:rawtext)
         @rawtext    = init[:rawtext].dup

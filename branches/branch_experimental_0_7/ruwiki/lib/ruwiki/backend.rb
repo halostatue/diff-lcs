@@ -65,6 +65,29 @@ class Ruwiki
       # Stores the specified topic and project page.
     def store(page)
       @delegate.store(page)
+
+      # update change page
+      begin
+        recent_changes = nil
+        if( page.topic == 'RecentChanges' )
+          recent_changes = page.dup
+        else
+          rawpage = retrieve( 'RecentChanges', page.project )
+          rawpage[:markup] = page.markup
+          recent_changes = Page.new(rawpage)
+        end
+
+        changeline = "* #{Time.now}, #{page.topic}"
+        changeline += " : #{page.edit_comment}" unless page.edit_comment == ''
+        changeline += "\n"
+
+        # add changeline to top of page
+        recent_changes.content = changeline + recent_changes.content
+        @delegate.store(recent_changes)
+      rescue Exception => e
+        throw "Couldn't save RecentChanges\n#{e.backtrace}"
+      end
+
     rescue Errno::EACCES => e
       raise Ruwiki::Backend::BackendError.new(e), @message[:no_access_to_store_topic] % [page.project, page.topic]
     rescue Exception => e
@@ -134,9 +157,18 @@ class Ruwiki
       raise Ruwiki::Backend::BackendError.new(e), @message[:cannot_destroy_project] % p
     end
 
+    # search a project
+    def search_project(project, searchstr)
+      #TODO: Validate searchstr is a safe regexp?
+      @delegate.search_project(project, searchstr)
+    rescue Exception => e
+      p = [project, searchstr, e.class, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
+      raise Ruwiki::Backend::BackendError.new(e), @message[:search_project_fail] % p
+    end
+
     # Return an array of projects
     def list_projects()
-      @delegate.index_projects()
+      @delegate.list_projects()
     rescue Errno::EACCES => e
       raise Ruwiki::Backend::BackendError.new(e), @message[:no_access_list_projects]
     rescue Exception => e

@@ -1,6 +1,6 @@
 id: 0
 topic: To_Do
-version: 1
+version: 3
 #EHDR
 = Ruwiki 0.7.0 To Do Tracking
 Completed to-do items can be found in the ChangeLog. Bugs in Ruwiki are
@@ -33,7 +33,7 @@ are still three planned API-changing releases between now and 1.0.
 ; Topic moving : add the ability to move and/or rename a topic between projects. Topic change history should be maintained.
 ; Complete documentation : Complete the documentation of Ruwiki.
 === Ruwiki 1.0.0
-; Escape HTML Entities : HTML Entities such as &amp;, &lt;, and &gt; are not currently escaped. This may cause problems with some browsers and should be fixed <strong>without</strong> impairing the ability to add at least some raw HTML. Note that the current engine does not check raw HTML and thus could potentially be vulnerable to cross-site-scripting attacks.
+; Escape HTML Entities : HTML Entities such as &, <, and > are not currently escaped. This may cause problems with some browsers and should be fixed <strong>without</strong> impairing the ability to add at least some raw HTML. Note that the current engine does not check raw HTML and thus could potentially be vulnerable to cross-site-scripting attacks.
 ; Features : Ruwiki will be programmatically extensible with entirely new features: commands, \ACLs, and more. This is planned for 1.0.0.
 
 == General To Do Items

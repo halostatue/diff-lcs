@@ -178,9 +178,71 @@ class Ruwiki
 
       # TODO Detect if @action has already been set.
     @action = @request.parameters['action'].downcase if @request.parameters['action']
-
+    # TODO: can we remove this if and put the else logic under the 
+    # case-else logic?
     if @action
       case @action
+      when 'searchproj'
+        # get search string
+        srchstr = @request.parameters['searchstr']
+        # validate and cleanse search string
+        vsrchstr = validate_search_string(srchstr)
+        @page.content = "Search results for: #{vsrchstr}"
+        hits = @backend.search_project(@page.project, vsrchstr)
+
+        # debug hit returns
+        # hits.each { |key,val| @page.content += "\n  #{key} : #{val}" }
+
+        # turn hit hash into content
+        hitarr = []
+        # organize by number of hits
+        hits.each do |key,val| 
+          hitarr[val] ||= []
+          hitarr[val].push key
+        end
+        rhitarr = hitarr.reverse
+        maxhits = hitarr.size
+        rhitarr.each_with_index do |tarray,rnhits|
+          next if( tarray.nil? || tarray.size == 0 )
+          nhits = maxhits - rnhits - 1
+          @page.content += "\n== #{nhits} Hits\n* " + tarray.join("\n* ") unless nhits <= 0
+        end
+
+        content = @page.to_html
+        @type = :content
+
+      when 'topiclist'
+        topic_list = @backend.list_topics(@page.project)
+
+        # todo: make this localized
+        if( topic_list.size == 0 )
+          @page.content = "No topics"
+        else
+          @page.content = <<EPAGE
+= Topics for ::#{@page.project}
+* #{topic_list.join("\n* ")}
+EPAGE
+        end
+
+        content = @page.to_html
+        @type = :content
+ 
+      when 'projectlist'
+        proj_list = @backend.list_projects
+
+        if( proj_list.size == 0 )
+          @page.content = "No projects"
+        else
+          #todo: make this localized
+          @page.content = <<EPAGE
+= Projects in #{@config.title}
+* ::#{proj_list.join("\n* ::")}
+EPAGE
+        end
+
+        content = @page.to_html
+        @type = :content
+ 
       when 'edit', 'create'
           # Automatically create the project if it doesn't exist or if the
           # action is 'create'.
@@ -202,10 +264,19 @@ class Ruwiki
           @type = :content
         else
           @page.content = np
-          @page.old_version = @request.parameters['old_version'].to_i + 1
-          @page.version = @request.parameters['version'].to_i + 1
+          @page.old_version  = @request.parameters['old_version'].to_i + 1
+          @page.version      = @request.parameters['version'].to_i + 1
+          @page.edit_comment = @request.parameters['edcomment']
           @type = :save
           @backend.store(@page)
+          
+          # hack to ensure that Recent Changes are updated correctly
+          if( @page.topic == 'RecentChanges' )
+            recentraw = @backend.retrieve(@page.topic, @page.project)
+            recentraw[:markup] = @page.markup
+            recentpg = Page.new(recentraw)
+            @page.content = recentpg.content
+          end
         end
         @backend.release_lock(@page, @request.environment['REMOTE_ADDR'])
 
@@ -303,6 +374,17 @@ class Ruwiki
     @response.add_header("Cache-Control", "max_age=0")
     @response.write_headers
     @response << @rendered_page
+  end
+
+  # nil if string is invalid
+  def validate_search_string(instr)
+    return nil if( instr == '' )
+
+    modstr = instr.dup
+
+    #TODO: add validation of modstr
+
+    return modstr
   end
 
 private

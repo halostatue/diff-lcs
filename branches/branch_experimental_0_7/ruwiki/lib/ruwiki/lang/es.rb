@@ -39,6 +39,10 @@ class Ruwiki
         :no_access_to_store_topic     => "Permiso denegado al salvar el nodo %s::%s.",
         :project_already_exists       => "El proyecto %s ya existe.",
         :project_does_not_exist       => "El proyecto %s no existe.",
+        :no_access_list_projects      => "Permiso denegado al lista del proyecto.",
+        :no_access_list_topics        => "Permiso denagado al lista del nodo, procecto: %s.",
+        :search_project_fail          => "Falta que busca proyecto %s con la secuencia %s.",
+
           # Config-related messages.
         :config_not_ruwiki_config     => "La configuración debe ser de clase Ruwiki::Config.",
         :invalid_template_dir         => "El path especificado para plantillas (%s) no existe o no es un directorio.",
