@@ -63,24 +63,27 @@ class Ruwiki
     end
 
       # Stores the specified topic and project page.
-    def store(page, edit_comment='')
+    def store(page)
       @delegate.store(page)
 
       # update change page
       begin
-        unless( page.topic == 'RecentChanges' )
+        recent_changes = nil
+        if( page.topic == 'RecentChanges' )
+          recent_changes = page.dup
+        else
           rawpage = retrieve( 'RecentChanges', page.project )
           rawpage[:markup] = page.markup
           recent_changes = Page.new(rawpage)
-
-          changeline = "* #{page.topic}, #{Time.now}"
-          changeline += " : #{edit_comment}" unless edit_comment == ''
-          changeline += "\n"
-
-          # add changeline to top of page
-          recent_changes.content = changeline + recent_changes.content
-          store(recent_changes)
         end
+
+        changeline = "* #{Time.now}, #{page.topic}"
+        changeline += " : #{page.edit_comment}" unless page.edit_comment == ''
+        changeline += "\n"
+
+        # add changeline to top of page
+        recent_changes.content = changeline + recent_changes.content
+        @delegate.store(recent_changes)
       rescue Exception => e
         throw "Couldn't save RecentChanges\n#{e.backtrace}"
       end
