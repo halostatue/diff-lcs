@@ -82,7 +82,7 @@ class Ruwiki::Wiki
     # Produces definition lists. Does not completely work correctly.
   class Definitions < Ruwiki::Wiki::Token
     def self.regexp
-      %r{^\\?(;+)\s+([^:]+)\s+:\s+(.*)}
+      %r{^\\?(;+)\s+(.+?)\s+:\s+(.*)}
     end
 
     def replace

@@ -13,6 +13,7 @@ page!content:	= Ruwiki 0.8.0 ChangeLog
 	* AZ: Defined a canonical, format-independent diff format.
 	* AZ: Fixed list numbering problem. Modified lists to allow for mixed lists. See WikiMarkup for restrictions.
 	* AZ: Removed automatic image conversion for URIs that look like images. Now, images must be specified with the [image:uri] format. See WikiMarkup for more details.
+	* AZ: Fixed minor bugs in several tokens.
 	* AZ: New look! Ruwiki now sports a new default look with CSS and template changes.
 	* AZ: New look! Ruwiki has a "simple" template set.
 	* AZ: New look! Ruwiki has a "sidebar" template set.

@@ -107,15 +107,14 @@ class Ruwiki
           recent_changes = Page.new(retrieve('RecentChanges', page.project))
         end
 
-        changeline = "; #{Time.now.strftime(@datetime_format)}, #{page.topic} : #{page.edit_comment}\n"
+        changeline = "\n; #{Time.now.strftime(@datetime_format)}, #{page.topic} : #{page.edit_comment}"
 
         # add changeline to top of page
-        recent_changes.content = changeline + recent_changes.content
+        recent_changes.content = changeline + (recent_changes.content || "")
         @delegate.store(recent_changes)
       rescue Exception => e
         raise "Couldn't save RecentChanges\n#{e.backtrace}"
       end
-
     rescue Errno::EACCES => e
       raise Ruwiki::Backend::BackendError.new(e), @message[:no_access_to_store_topic] % [page.project, page.topic]
     rescue Exception => e
@@ -246,32 +245,17 @@ class Ruwiki
       attr_reader :reason
 
       def initialize(reason, *args)
-        @reason = reason
+        if @reason.respond_to?(:message)
+          @reason = reason.message
+        else
+          @reason = reason
+        end
       end
     end
     def initialize(storage_options)
     end
 
   private
-    {
-      'properties' => {
-        'title'         => @title,
-        'topic'         => @topic,
-        'project'       => @project,
-        'creator'       => @creator,
-        'creator-ip'    => @creator_ip,
-        'create-date'   => @create_date,
-        'editor'        => @editor,
-        'editor-ip'     => @editor_ip,
-        'edit-date'     => @edit_date,
-        'edit-comment'  => @edit_comment,
-        'editable'      => @editable,
-        'entropy'       => @entropy,
-        'html-headers'  => @html_header,
-        'version'       => @version
-      },
-    }
-
     NL_RE = %r{\n} #:nodoc:
 
     def map_diffset(diffset)

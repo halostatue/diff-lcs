@@ -1,14 +1,17 @@
 /* $Id$ */
 body
 {
-  margin: 0.5em;
   color: black;
   font-size: medium;
-  font-family: "Trebuchet MS", "Verdana", sans-serif;
-  background-color: #CCCCCC;
+  background-color: #fafafa;
 }
 
-.rw_navbar { font-weight: bold; }
+.rw_navbar
+{
+  font-weight: bold;
+  font-size: 1.1em;
+  padding: 0.3em;
+}
 
 .rw_navbar a
 {
@@ -20,12 +23,15 @@ body
   color: maroon;
   border-bottom: 1px dashed maroon;
 }
-.rw_navbar a:hover { background-color: #AAAAAA; }
+.rw_navbar a:hover { background-color: #afafaf; }
 
 .rw_content
 {
-  margin-left: 2em;
-  margin-right: 2em;
+  background-color: white;
+  border: 1px dashed grey;
+  padding: 0.5em;
+  margin-left: 1em;
+  margin-right: 1em;
 }
 
 .rw_edit_content
@@ -61,7 +67,7 @@ body
   max-width: 80%;
 }
 
-.rw_edit_form { margin-top: 1em; }
+.rw_edit_form { }
 
 .rw_edit_form_button
 {
@@ -69,7 +75,7 @@ body
   border: 1px solid black;
 }
 
-.rw_pagelink { }
+.rw_pagelink { text-decoration: none; }
 .rw_projectxlink { }
 .rw_projectindex { }
 
@@ -166,8 +172,8 @@ div.rwtk_Calendar {
 .rwtk_Calendar_day { }
 .rwtk_Calendar_today { background-color: #FFFFA7; }
 
-.rwtk_EditWikiLink { border: 1px dotted blue }
-.rwtk_WikiLink { }
+.rwtk_EditWikiLink { border: 1px dashed grey; }
+.rwtk_WikiLink { text-decoration: none; }
 
 .rwtk_Headings { }
 .rwtk_Lists { }

@@ -79,7 +79,7 @@ class Ruwiki::Wiki
     end
 
     def self.regexp
-      %r{(\B|\\)::(#{RE_PROJECT_WORD})}
+      %r{(\B|\\)::(#{RE_PROJECT_WORD})\b}
     end
 
     def restore
