@@ -139,7 +139,7 @@ class Ruwiki
       #TODO: Validate searchstr is a safe regexp?
       @delegate.search_project(project, searchstr)
     rescue Exception => e
-      p = [project, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
+      p = [project, searchstr, e.class, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
       raise Ruwiki::Backend::BackendError.new(e), @message[:search_project_fail] % p
     end
 

@@ -38,6 +38,10 @@ class Ruwiki
         :no_access_to_store_topic     => "No permission to store the %s::%s.",
         :project_already_exists       => "Project %s already exists.",
         :project_does_not_exist       => "Project %s does not exist.",
+        :no_access_list_projects     => "No permission to list projects.",
+        :no_access_list_topics       => "No permission to list topics in project %s.",
+        :search_project_fail          => "Failure searching project %s with string %s.",
+
           # Config-related messages.
         :config_not_ruwiki_config     => "Configuration must be of class Ruwiki::Config.",
         :invalid_template_dir         => "The specified path for templates (%s) does not exist or is not a directory.",

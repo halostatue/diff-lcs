@@ -28,7 +28,8 @@ class TC_Backend_Flatfile < Test::Unit::TestCase
     @flatbase = { 'Proj1' => ['P1TopicOne:this is the content', 
                              'P1TopicTwo:more content'],
                  'Proj2' => ['P2TopicOne:this is the content', 
-                             'P2TopicTwo:more content']
+                             'P2TopicTwo:more content',
+                             'P2TopicThree:even more more content']
     }
     
     @flatbase.each do |key,val|
@@ -72,7 +73,7 @@ class TC_Backend_Flatfile < Test::Unit::TestCase
   end
 
   # test simple one word lookups
-  # need to add more complex cases
+  # need to add more complex search strings
   def test_search_project
     assert_nothing_raised do
       @backend = ::Ruwiki::Backend::Flatfiles.new(@ffopts)
@@ -82,5 +83,6 @@ class TC_Backend_Flatfile < Test::Unit::TestCase
     assert_equal( { 'P1TopicOne'=>0, 'P1TopicTwo'=>1 }, @backend.search_project('Proj1', 'more')    )
     assert_equal( { 'P1TopicOne'=>1, 'P1TopicTwo'=>1 }, @backend.search_project('Proj1', 'topic')   )
     assert_equal( { 'P1TopicOne'=>1, 'P1TopicTwo'=>1 }, @backend.search_project('Proj1', 'content') )
+    assert_equal( { 'P2TopicOne'=>0, 'P2TopicTwo'=>1, 'P2TopicThree'=>2 }, @backend.search_project('Proj2', 'more') )
   end
 end

@@ -181,6 +181,35 @@ class Ruwiki
 
     if @action
       case @action
+      when 'searchproj'
+        # get search string
+        srchstr = @request.parameters['searchstr']
+        # validate and cleanse search string
+        vsrchstr = validate_search_string(srchstr)
+        @page.content = "Search results for: #{vsrchstr}"
+        hits = @backend.search_project(@page.project, vsrchstr)
+
+        # debug hit returns
+        # hits.each { |key,val| @page.content += "\n  #{key} : #{val}" }
+
+        # turn hit hash into content
+        hitarr = []
+        # organize by number of hits
+        hits.each do |key,val| 
+          hitarr[val] ||= []
+          hitarr[val].push key
+        end
+        rhitarr = hitarr.reverse
+        maxhits = hitarr.size
+        rhitarr.each_with_index do |tarray,rnhits|
+          next if( tarray.nil? || tarray.size == 0 )
+          nhits = maxhits - rnhits - 1
+          @page.content += "\n== #{nhits} Hits\n* " + tarray.join("\n* ") unless nhits <= 0
+        end
+
+        content = @page.to_html
+        @type = :content
+
       when 'topiclist'
         topic_list = @backend.list_topics(@page.project)
 
@@ -335,6 +364,17 @@ EPAGE
     @response.add_header("Cache-Control", "max_age=0")
     @response.write_headers
     @response << @rendered_page
+  end
+
+  # nil if string is invalid
+  def validate_search_string(instr)
+    return nil if( instr == '' )
+
+    modstr = instr.dup
+
+    #TODO: add validation of modstr
+
+    return modstr
   end
 
 private

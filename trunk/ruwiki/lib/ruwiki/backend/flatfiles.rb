@@ -103,14 +103,17 @@ class Ruwiki
         # search topic content
         topic_list.each do |topicname|
           # search name
-          if( topicname.grep( re_search ).size > 0 )
-            hits[topicname] += 1
-          end            
+          topicname.gsub(re_search) { |mtxt| hits[topicname] += 1 }
 
           # check content
-          buf = load( topicname, project )
-          if( buf.grep( re_search ).size > 0 )
-            hits[topicname] += 1
+          begin
+            buf = load( topicname, project )
+          rescue
+            # in dev CVS is a directory and fails...
+            buf = ['']
+          end
+          buf.each do |line|
+            line.gsub(re_search) { |mtxt| hits[topicname] += 1 }
           end
         end
 
@@ -187,9 +190,10 @@ class Ruwiki
           end
 
           topiclist = []
-          Dir[pjdir + "/*"].each do |pjfile|
-             next if( pjfile =~ /.rdiff$/ )
-             topiclist.push( File.split(pjfile)[1] )
+          Dir[pjdir + "/*"].each do |tpfile|
+             next if( tpfile =~ /.rdiff$/ )
+             next unless( File.file?( tpfile ) )
+             topiclist.push( File.split(tpfile)[1] )
           end
           topiclist
       end

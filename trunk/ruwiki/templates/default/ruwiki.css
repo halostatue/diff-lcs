@@ -30,6 +30,9 @@ pre pre { border: 0 }
   max-width: 48%;
   clear: none;
 }
+.rw_searchbox {
+}
+
 div.rw_calendar {
   border: 1px solid black;
   float: right;
