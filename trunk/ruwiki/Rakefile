@@ -9,7 +9,9 @@ require 'ruwiki/utils'
 require 'ruwiki/utils/manager'
 require 'zlib'
 
-TARDIST = "../ruwiki-#{Ruwiki::VERSION}.tar.gz"
+DISTDIR = "ruwiki-#{Ruwiki::VERSION}"
+TARDIST = "../#{DISTDIR}.tar.gz"
+
 
 DATE_RE = %r<(\d{4})[./-]?(\d{2})[./-]?(\d{2})(?:[\sT]?(\d{2})[:.]?(\d{2})[:.]?(\d{2})?)?>
 
@@ -35,7 +37,6 @@ end
   #    +false+.
   # 4. 
 
-  # XXX: Get assistance from Nathaniel to actually use a real TestSuite.
 task :test do |t|
   require 'test/unit/testsuite'
   require 'test/unit/ui/console/testrunner'
@@ -81,6 +82,11 @@ task :make_readonly do
   end
 end
 
+file "Readme" => [ "Readme.rubygems", "Readme.tarfile" ] do
+  FileUtils.mv("Readme.rubygems", "Readme")
+  FileUtils.rm_f("Readme.tarfile")
+end
+
 spec = Gem::Specification.new do |s|
   s.name      = %q(ruwiki)
   s.version   = %q(0.8.1)
@@ -90,8 +96,8 @@ spec = Gem::Specification.new do |s|
   s.add_dependency('archive-tar-minitar', '~> 0.5.1')
 
   s.has_rdoc          = true
-  s.rdoc_options      = ["--title", "Ruwiki - An Extensible Wiki", "--main", "README", "--line-numbers"]
-  s.extra_rdoc_files  = %w(README)
+  s.rdoc_options      = ["--title", "Ruwiki - An Extensible Wiki", "--main", "Readme", "--line-numbers"]
+  s.extra_rdoc_files  = %w(Readme)
 
   s.bindir        = 'bin'
   s.executables   = Dir['files/*'].delete_if do |item|
@@ -103,8 +109,9 @@ spec = Gem::Specification.new do |s|
   s.test_files    = %w{tests/testall.rb}
 
   s.files = Dir["**/*"].delete_if do |item|
-    item =~ %r{(?:\bCVS\b|\.svn\b|[Rr]akefile|install.rb$|~$|gem(?:spec)?$|lib/archive|lib/diff)}
+    item =~ %r{(?:\bCVS\b|\.svn\b|Readme.*$|[Rr]akefile|install.rb$|~$|gem(?:spec)?$|lib/archive|lib/diff)}
   end
+  s.files << "Readme"
 
   s.author            = %q{Austin Ziegler and Alan Chen}
   s.email             = %q{ruwiki-discuss@rubyforge.org}
@@ -112,7 +119,7 @@ spec = Gem::Specification.new do |s|
   s.homepage          = %q{http://ruwiki.rubyforge.org/}
 
   description   = []
-  File.open("README") do |file|
+  File.open("Readme.rubygems") do |file|
     file.each do |line|
       line.chomp!
       break if line.empty?
@@ -122,6 +129,7 @@ spec = Gem::Specification.new do |s|
   s.description = description[2..-1].join(" ")
 end
 desc "Build the RubyGem for Ruwiki."
+task :gem => [ "Readme" ]
 task :gem => [ :package_data ]
 task :gem => [ :make_readonly ]
 Rake::GemPackageTask.new(spec) do |g|
@@ -134,7 +142,7 @@ VERSION_STRING_RE = %r{\\?%RV#%}
 
 desc "Update the version of Ruwiki to #{Ruwiki::VERSION} in documentation files."
 task :update_version do
-  FileList["data/**/*.ruwiki", "Readme*", "Install"].to_a.each do |file|
+  FileList["data/**/*.ruwiki", "Readme*"].to_a.each do |file|
     data = File.read(file)
     data.gsub!(VERSION_STRING_RE) do |match|
       if match[0] == '\\'
@@ -143,6 +151,7 @@ task :update_version do
         Ruwiki::VERSION
       end
     end
+    File.open(file, "wb") { |f| f.write(data) }
   end
 end
 
@@ -152,11 +161,13 @@ file TARDIST do |t|
   current = File.basename(Dir.pwd)
   Dir.chdir("..") do
     begin
-      files = Dir["#{current}/**/*"].select { |dd| dd !~ %r{CVS/} }
+      files = Dir["#{current}/**/*"].select { |dd| dd !~ %r{(?:/CVS/?|~$)} }
+      files.delete_if { |dd| dd =~ %r{Readme.rubygems} }
       files.map! do |dd|
-        mtime = File.stat(dd).mtime unless ENV['RELEASE_DATE']
+        mtime = ReleaseDate || File.stat(dd).mtime
+        ddnew = dd.gsub(/^#{current}/, DISTDIR)
         if File.directory?(dd)
-          { :name =>dd, :mode => 0555, :dir => true, :mtime => stat.mtime }
+          { :name =>ddnew, :mode => 0555, :dir => true, :mtime => mtime }
         else
           if dd =~ %r{bin/}
             mode = 0755
@@ -164,9 +175,9 @@ file TARDIST do |t|
             mode = 0644
           end
           data = File.read(dd)
-          dd = "Readme" if dd == "Readme.tarfile"
-          { :name => dd, :mode => mode, :data => data, :size => data.size,
-            :mtime => stat.mtime }
+          ddnew.gsub!(/Readme.tarfile$/, "Readme")
+          { :name => ddnew, :mode => mode, :data => data, :size => data.size,
+            :mtime => mtime }
         end
       end
 
@@ -176,7 +187,7 @@ file TARDIST do |t|
 
       files.each do |entry|
         if entry[:dir]
-          tw.mkdir(entry[:name], 0555)
+          tw.mkdir(entry[:name], entry)
         else
           tw.add_file_simple(entry[:name], entry) { |os| os.write(entry[:data]) }
         end
@@ -186,9 +197,8 @@ file TARDIST do |t|
       gz.close if gz
     end
   end
-  FileUtils.rm_f("Readme.tarfile")
-  FileUtils.mv("Readme.rubygems", "Readme")
 end
+
 
 desc "Build everything."
 task :default => [ :test, :update_version, :tar, :gem ]
