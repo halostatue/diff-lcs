@@ -1,0 +1,321 @@
+#--
+# Ruwiki
+#   Copyright © 2002 - 2004, Digikata and HaloStatue
+#   Alan Chen (alan@digikata.com)
+#   Austin Ziegler (ruwiki@halostatue.ca)
+#
+# Licensed under the same terms as Ruby.
+#
+# $Id$
+#
+# This file contains the list of User Agent strings which will be given
+# readonly versions of the wiki instance.
+#
+# This list is generated from a wide variety of sources including:
+# * http://www.clockwatchers.com/robots_list.html
+# * http://searchenginewatch.com/webmasters/article.php/2167991
+# * http://www.neilgunton.com/spambot_trap/
+# * http://www.robotstxt.org/wc/active/all.txt
+#
+# This file is in "extended" regular expression format, one optional
+# expression to a line. Spaces are not significant and comments are
+# allowed. If you want to recognise a space in your regular expression, do
+# so either with a character class ([ ]) or the whitespace meta-character
+# (\s). Hash marks must be escaped (\#) or they will be treated as comment
+# markers. Blank or comment-only lines are ignored. All other lines will
+# be joined together:
+#
+#       foo
+#       bar
+#
+# becomes:
+#
+#       %r{foo|bar}x
+#++
+
+(?:^.*HTTrack)
+(?:^.*LWP)
+(?:^Digimarc)
+(?:ChristCrawler.com|ChristCrawler@ChristCENTRAL.com)
+(?:Net|Web)Mechanic
+(?:PerlCrawler|Xavatoria)/
+(?:pjspider|PortalJuice.com)
+(?:spider_monkey|mouse.house)
+(?:tach_bw|Black\sWidow)
+(?:topiclink|TLSpider)
+(?i:(?-i:ComputingSite\s)?Robi)
+(?i:^curl)
+(?i:^googlebot)
+(?i:^gulliver) # NorthernLight
+(?i:^Scooter) # Altavista
+(?i:^w[@a]pSpider)
+(?i:infoseek) # InfoSeek
+^ABCdatos\sBotLink # http://www.abcdatos.com/botlink/
+^AITCSRobot/
+^anthill
+^appie
+^Arachnoidea # Euroseek
+^Arachnophilia
+^arale
+^araneo
+^AraybOt
+^ArchitextSpider # Excite, WebCrawler
+^ariadne
+^arks
+^Ask\s?Jeeves/Teoma
+^ASpider/
+^ATN_Worldwide
+^Atomz
+^AURESYS/
+^BackRub/
+^BaySpider
+^bbot
+^Big\sBrother
+^Bjaaland
+^BlackWidow
+^borg-bot/
+^(?i:boxseabot)
+^BSpider/
+^CACTVS\sChemistry\sSpider
+^calif
+^Checkbot/
+^cienciaficcion.net
+^CMCM/
+^combine
+(?i:^confuzzledbot)
+^CoolBot
+^cosmos
+^crawlpaper
+^cusco
+^cyberspyder
+(?i:^cydralspider)
+^desert\s?realm
+^Deweb
+^Die\sBlinde\sKuh
+^dienstspider/
+^digger
+^Digger
+^DIIbot
+^dlw3robot/
+^DNAbot/
+^downloadexpress
+^DragonBot
+^Duppies
+^dwcp
+^ebiness
+^ecollector
+^EIT-Link-Verifier-Robot/
+^elfinbot
+^Emacs-w3/
+^EMC\sSpider
+(?i:^esculapio)
+^ESI
+^esther
+^Evliya\sCelebi
+^explorersearch
+^fast # Fast/AllTheWeb
+^fastcrawler
+^FDSE
+^FELIX\s?IDE
+^fido
+^Fish-Search-Robot
+^fouineur
+^Freecrawl
+^FunnelWeb-
+^gammaSpider
+^gazz
+^gcreep
+^gestalttIconoclast/
+^Getterrobo-?Plus
+^GetURL\.rexx
+^golem
+^grabber
+^griffon
+^Gromit
+^gulper
+^hambot
+^havIndex
+^HKU\sWWW\sRobot
+^Hometown\sSpider\sPro
+^Hämähäkki
+^hotwired
+^htdig
+^htmlgobble
+^IAGENT/
+^iajabot
+^IBM_Planetwide
+^image\.kapsi\.net
+^IncyWincy
+^Informant
+^InfoSpiders
+^INGRID/
+^inspectorwww
+^Internet\sCruiser\sRobot
+^irobot
+^Iron33
+^IsraeliSearch/
+^JavaBee
+^JBot
+^jcrawler
+^jobo
+^Jobot/
+^JoeBot/
+^JubiiRobot/
+^jumpstation
+^Katipo/
+^KDD-Explorer
+^KIT-Fireball # Fireball.de
+^ko_yappo_robot
+^label-grabber
+^LabelGrab/
+^larbin
+^legs
+^Linkidator
+^LinkScan\s(?:Server|Workstation)
+^Lockon
+^logo\.gif\scrawler
+^logo_gif_crawler
+^Lycos_Spider_(T-Rex) # Lycos
+^M/
+^Magpie/
+^marvin
+^mattie
+^mediafox
+^MerzScope
+^MindCrawler
+^moget
+^MOMspider/
+^Monster
+^Motor
+^Mozilla/3\.01\s(Win95;\sI) # InfoSeek
+^Mozilla\/3.0.+Indy\sLibrary
+^msnbot
+^muncher
+(?i:^muninn)
+^MuscatFerret
+^MwdSearch
+^NDSpider/
+^NEC-MeshExplorer
+^Nederland.zoek
+^Net.Vampire
+^NetCarta
+^NetScoop
+^newscan-online
+^NHSEWalker/
+^Nomad
+^NorthStar
+^NPBot # Detects IP violations(?)
+^ObjectsSearch
+^Occam
+^Openbot # OpenFind
+^Openfind
+^Orbsearch
+^PackRat
+^pageboy
+^parasite
+^patric
+^PBWF
+^pegasus
+^Peregrinator-Mathematics/
+^PGP-KA/
+^phpdig
+^piltdownman
+^Pimptrain
+^Pioneer
+^Plucker
+^PlumtreeWebAccessor
+^Poppi/
+^PortalBSpider
+^psbot
+^Raven
+^Resume\sRobot
+^RHCS
+^RixBot
+^Road\s?Runner
+^Robbie
+^RoboCrawl
+^robofox
+^Robot\sdu\sCRIM
+^Robozilla/
+^root/
+^Roverbot
+^RuLeS/
+^SafetyNet\sRobot
+^Search-AU
+^searchprocess
+^searchterms\.it
+^Senrigan
+^SG-Scout
+^Shagseeker
+^Shai'Hulud
+^sharp-info-agent
+^SimBot
+^Site\sValet
+^sitecheck
+^SiteTech-Rover
+^SLCrawler
+^Sleek\sSpider
+^Slurp # Inktomi, AOL
+^snooper
+^solbot
+^speedy
+^SpiderBot
+^spiderline
+^SpiderMan
+^SpiderView
+^ssearcher
+^suke
+^suntek
+(?i:http://www.sygol.com)
+^T-H-U-N-D-E-R-S-T-O-N-E
+^Tarantula/
+^tarspider
+^TechBOT
+^Templeton
+^TeomaAgent # Teoma
+^TITAN
+^titin
+^TurnitinBot # Plagiarism detector
+^UCSD-Crawler
+^UdmSearch
+^udmsearch
+^Ukonline
+^uptimebot
+^URL\sSpider\sPro
+^urlck
+^Valkyrie
+^verticrawl
+^Victoria
+^vision-search
+^void-bot
+^Voyager
+^VWbot_K
+^w3index
+^W3M2/
+^w3mir
+^WebBandit
+^webcatcher
+^WebCopier
+^WebCopy
+^WebFetcher/
+^weblayers/
+^WebLinker/
+^WebMoose
+^webquest
+^WebReaper
+^webs
+^webspider
+^webvac
+^webwalk
+^WebWalker
+^WebWatch
+^wget
+^whowhere
+^winona
+^wired-digital-newsbot/
+^wlm
+^WOLP
+^WWWC
+^WWWWanderer
+^XGET
+^ZyBorg # WiseNut/LookSmart

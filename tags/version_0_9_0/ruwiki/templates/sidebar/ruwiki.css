@@ -1,0 +1,347 @@
+/* $Id$ */
+/*
+ * The fixed positioning for what we're doing is based on:
+ * http://www.456bereastreet.com/lab/cssframes/
+ */
+body, html { margin: 0; padding: 0; }
+  /* Prevents content from becoming unreachable in Gecko */
+body { min-width: 720px; }
+
+  /*
+   * position: absolute - scrolls the whole page for all browsers. This also
+   * makes the background invisible, so the text doesn't appear between tabs.
+   */
+div#rw_header
+{
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  height: 2.25em;
+  background-color: #F7FEFF;
+}
+
+  /* position: fixed - header and footer don't scroll; modern browsers */
+body > div#rw_header { position: fixed; }
+
+.rw_titlebar
+{
+    margin: 0 auto;
+    height: 0.5em;
+}
+
+  /* Normal styling from here on out. */
+body
+{
+  color: black;
+  font-size: medium;
+  font-family: "Trebuchet MS", "Verdana", sans-serif;
+  background-color: #F7FEFF;
+}
+
+.rw_titlebar
+{
+  font-size: 0.7em;
+  border: 1px solid #059;
+  color: white;
+  background-color: #5C9;
+  height: 0.5em;
+  width: 100%;
+}
+
+.rw_titlebar a
+{
+  color: white;
+  border-bottom: 1px dashed white;
+  font-weight: bold;
+}
+
+.rw_titlebar a:visited
+{
+  color: #A11;
+  font-weight: bold;
+  border-bottom: 1px dashed #A00;
+}
+
+.rw_titlebar a:hover
+{
+  text-decoration: none;
+}
+
+.rw_titlebar_tab
+{
+  float: left;
+  background-color: #595;
+  padding-left: 0.8em;
+  padding-right: 0.8em;
+  padding-top: 0.3em;
+  border: 1px solid #059;
+  margin: 0 0.3em;
+  height: 2em;
+  vertical-align: center;
+}
+
+.rw_titlebar_tab:hover
+{
+  background-color: #4E9;
+}
+
+div.rw_footer
+{
+  position: fixed;
+  left: 72%;
+  width: 20%;
+  height: 100%;
+  padding: 0.2em;
+  padding-top: 0.5em;
+//background-color: #95C;
+  font-size: 0.9em;
+}
+
+.rw_footer
+{
+}
+
+.rw_footer a
+{
+  color: white;
+  border-bottom: 1px dashed white;
+  font-weight: bold;
+}
+
+.rw_footer a:visited
+{
+  color: #A11;
+  font-weight: bold;
+  border-bottom: 1px dashed #A00;
+}
+
+.rw_footer a:hover
+{
+  text-decoration: none;
+}
+
+.rw_footer_tab
+{
+  color: yellow;
+  background-color: #595;
+  padding-left: 0.8em;
+  padding-right: 0.8em;
+  padding-top: 0.3em;
+  border: 1px solid #059;
+  margin: 0.3em;
+  min-height: 2em;
+  clear: both;
+}
+
+.rw_footer_tab div
+{
+  text-align: right;
+}
+
+div#rw_content 
+{
+  padding: 50px 0 0 0;
+  margin-left: 0;
+  voice-family: "\"}\""; /* fake out IE5/Win */
+  voice-family: inherit;
+  margin-left: 16px;
+}
+
+body > div#rw_content
+{
+  margin-left: 0;
+}
+
+.rw_content
+{
+  padding-top: 0;
+  margin-left: 3em;
+  width: 65%;
+  float: left;
+}
+
+.rw_content_edit
+{
+  width: 90%;
+  margin: 0 auto;
+  padding: 2em;
+  padding-top: 0;
+  float: left;
+}
+
+.rw_message
+{
+  background-color: #fab;
+  border: 3px dotted red;
+  float: left;
+  font-weight: bolder;
+  font-size: 90%;
+  padding: 0.5em;
+  width: 65%;
+  margin-top: 3em;
+}
+
+.rw_edit_content
+{
+  border: 1px dashed #059;
+  padding: 0.3em;
+  width: 100%;
+  min-height: 20.5em;
+}
+
+.rw_accelerator { text-decoration: underline; }
+
+.rw_edit_content textarea
+{
+  border: 1px dashed #059;
+  padding: 0.3em;
+  width: 100%;
+  min-height: 20.5em;
+  height: 20.5em;
+}
+
+.rw_edit_comment
+{
+  clear: both;
+  margin-top: 1em;
+}
+
+.rw_edit_comment input
+{
+  border: 1px dashed #059;
+  min-width: 50%;
+  width: 70%;
+  max-width: 80%;
+}
+
+.rw_edit_form_button
+{
+  font-size: 0.8em;
+  border: 1px dotted #59C;
+}
+
+.rw_edit_raw
+{
+  font-size: 0.8em;
+  float: left;
+  max-width: 48%;
+  width: 48%;
+  margin: 0;
+}
+
+.rw_edit_raw pre
+{
+  border: 3px double #72C;
+  overflow: scroll;
+  clear: right;
+}
+
+.rw_edit_format
+{
+  font-size: 0.8em;
+  float: right;
+  max-width: 48%;
+  width: 48%;
+  margin: 0;
+}
+
+.rw_edit_title
+{
+  margin: 0;
+}
+
+.rw_edit_format div
+{
+  border: 3px double #59C;
+}
+
+.rw_search_button
+{
+  border: 1px dotted #59C;
+  margin: 0.1em;
+}
+
+.rw_search_box
+{
+  border: 1px dotted #59C;
+  width: 100%;
+  margin: 0.1em;
+}
+
+.rw_search_box:hover
+{
+  background-color: #999;
+}
+
+li { margin-top: 0.25em; margin-bottom: 0.25em; }
+
+.rw_minilink { font-size: 0.5em; font-weight: bold; }
+
+#rw_editing_tab
+{
+  background-color: #C72;
+  text-align: right;
+  margin-right: 2em;
+  float: right;
+}
+
+#rw_saved_page_announcement { border-bottom: 1px solid black; }
+
+  /* Token Classes */
+.rwtk_Paragraph { }
+.rwtk_Code
+{
+  border-left: 1em solid #999;
+}
+.rwtk_Image { }
+.rwtk_NumberedLinks
+{
+  border: 1px dashed #72C;
+  background-color: #C7CECF;
+}
+.rwtk_NamedLinks
+{
+  border: 1px dashed #72C;
+  background-color: #C7CECF;
+}
+.rwtk_ExternalLinks
+{
+  border: 1px dashed #72C;
+  background-color: #C7CECF;
+}
+.rwtk_RubyTalkLinks
+{
+  border: 1px dashed #72C;
+  background-color: #C7CECF;
+}
+.rwtk_OtherRubyLinks
+{
+  border: 1px dashed #72C;
+  background-color: #C7CECF;
+}
+.rwtk_HRule { }
+
+.rwtk_Abbreviations { }
+
+div.rwtk_Calendar {
+  border: 1px solid black;
+  float: right;
+  clear: none;
+}
+.rwtk_Calendar_current_month { }
+.rwtk_Calendar_prev_month { }
+.rwtk_Calendar_next_month { }
+.rwtk_Calendar_weekend { }
+.rwtk_Calendar_weekday { }
+.rwtk_Calendar_day { }
+.rwtk_Calendar_today { background-color: #FFFFA7; }
+
+.rwtk_EditWikiLink { border: 1px dotted blue }
+.rwtk_WikiLink { }
+
+.rwtk_Headings { }
+.rwtk_Lists { }
+.rwtk_Blockquotes { }
+.rwtk_Definitions { }
+.rwtk_Definitions dt { font-weight: bold; }
