@@ -161,12 +161,12 @@ class Ruwiki::Handler
       cgi.params.each { |kk, vv| @parameters[kk] = vv[0] }
       @cookies        = {}
       cgi.cookies.each do |name, cookie|
-        @cookies[name] = Handler::Cookie.new(name, cookie.value) do |oc|
-          oc.version  = cookie.version
+        @cookies[name] = Ruwiki::Handler::Cookie.new(name, cookie.value) do |oc|
+          oc.version  = cookie.version if cookie.respond_to?(:version)
           oc.domain   = cookie.domain
           oc.path     = cookie.path
           oc.secure   = cookie.secure
-          oc.comment  = cookie.comment
+          oc.comment  = cookie.comment if cookie.respond_to?(:comment)
           oc.expires  = cookie.expires
         end
       end

@@ -124,7 +124,7 @@ private
             attributes = attributes.scan(ATTRIBUTES_RE).map do |set|
               if ALLOWED_ATTR.include?(set[0].downcase)
                 if set[0] == 'style'
-                  set[1].gsub!(%r{(?: ?(visibility|display):[^'";]+;?)}, '')
+                  set[1].gsub!(STYLE_NOVD_RE, '')
                 end
                 set.join
               else

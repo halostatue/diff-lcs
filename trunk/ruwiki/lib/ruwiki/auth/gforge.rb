@@ -60,9 +60,15 @@ class Ruwiki::Auth::Gforge < Ruwiki::Auth
   def self.authenticate(request, response, options = {})
     options['user'] = options['user'].gsub!(%r{^(\w+)}, '\1')
     options['pass'] = options['pass'].gsub!(%r{^(\w+)}, '\1')
-    session_key = request.cookies['session_ser'].value
+    session_key = request.cookies['session_ser'].value[0].split(%r{=-\*-})[-1]
+    $stderr.puts session_key.inspect
     token = GForgeAuthenticator.authenticate(session_key, options)
-    token = Ruwiki::Auth::Token(token.user_name, token.groups)
+    token = Ruwiki::Auth::Token.new(token.user_name, token.groups)
     token.permissions.default = true if token.found?
+  rescue
+    token = Ruwiki::Auth::Token.new
+    token.permissions.default = false
+  ensure
+    return token
   end
 end

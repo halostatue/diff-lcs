@@ -232,7 +232,7 @@ class Ruwiki::Config
       if file.respond_to?(:read)
         data = file.read
       else
-        File.open(file, 'rb') { |ff| ff.read }
+        File.open(file, 'rb') { |ff| data = ff.read }
       end
       hash = Ruwiki::Exportable.load(data)
 
