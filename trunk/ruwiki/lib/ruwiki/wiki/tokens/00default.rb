@@ -27,20 +27,24 @@ class Ruwiki
 
         # Replaces with "<p>"
       def replace
-        "<p>"
+        "</p><p>"
       end
 
         # Ensures that <p> won't be surrounded by <br> tags.
       def post_replace(content)
+        content.gsub!(%r{^}, '<p>')
         content.gsub!(%r{\n$}, '</p>')
-        content.gsub!(%r{(\n|<br ?/?>)?<p>(\n|<br ?/?>)?}, '<p>')
-        content.gsub!(%r{<p>}, '</p><p>')
+        content.gsub!(%r{<p>\n}, '<p>')
+        content.gsub!(%r{<p>(<p>)+}, '<p>')
+        content.gsub!(%r{<p>}, "</p><p>")
+        content.gsub!(%r{<p>(\n)*</p>}, '')
         content.gsub!(%r{</p>(</p>)+}, '</p>')
-        content.gsub!(%r{<body></p>}, '<body>')
-        content.gsub!(%r{</body>}, '</p></body>')
-        content.gsub!(%r{<p></p>}, '')
         content.gsub!(%r{(</h\d>)</p>}, '\1')
-        content.gsub!(%r{^</p>}, '')
+        content.gsub!(%r{\A</p>}, '')
+        content.gsub!(%r{<p>(<h\d>)}, '\1')
+        content.gsub!(%r{\n</p>}, '</p>')
+        content.gsub!(%r{</p>}, "</p>\n")
+        content.gsub!(%r{\n</p>}, '')
         content
     end
   end
@@ -61,11 +65,12 @@ class Ruwiki
         # Replaces the text to <pre>content</pre>.
       def replace
         content = @match[1].gsub(/&/) { "&amp;" }.gsub(/</) { "&lt;" }.gsub(/>/) { "&gt;" }
-        %Q{<pre>#{content}</pre>}
+        %Q{</p><pre>#{content}</pre>}
       end
 
         # Converts cases of %r{</pre>(\n|<br ?/?>)<pre>} to \1.
       def post_replace(content)
+        content.gsub!(%r{</pre>((\n)*</p>(\n)*)?<pre>}, "\n")
         content.gsub!(%r{</pre>(\n|<br ?/?>)?<pre>}, '\1')
         content.gsub!(%r{<p><pre>}, '<pre>')
         content.gsub!(%r{</pre></p>}, '</pre>')
@@ -165,6 +170,7 @@ class Ruwiki
       end
 
       def post_replace(content)
+        content.gsub!(%r{(<p>)*<hr ?/?>(</p>)*}, "<hr />")
         content.gsub!(%r{<hr ?/?>\n<br ?/?>}, "<hr />")
         content.gsub!(%r{(\n|<br ?/?>)?<hr>(\n|<br ?/?>)?}, "<hr />")
         content

@@ -69,9 +69,10 @@ class Ruwiki
         }
       end
 
-      3.times do
-        tokens.reverse_each { |token| token.post_replace(content) }
-      end
+      tokens.each { |token| token.post_replace(content) }
+#     3.times do
+#       tokens.reverse_each { |token| token.post_replace(content) }
+#     end
 
       content
     end

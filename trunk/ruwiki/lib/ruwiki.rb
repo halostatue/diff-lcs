@@ -159,6 +159,8 @@ class Ruwiki
       end
     end
 
+#@request.each_parameter { |key, val| puts "#{key} :: #{val.class}" }
+
     @request.each_parameter do |key, val|
       next if RESERVED.include?(key)
       @topic = key
