@@ -1,22 +1,109 @@
 /* $Id$ */
 body
 {
+  margin: 0.5em;
   color: black;
   font-size: medium;
-  background-color: #F2FFA7;
+  font-family: "Trebuchet MS", "Verdana", sans-serif;
+  background-color: #F7FEFF;
 }
 
-li { margin-top: 0.25em; margin-bottom: 0.25em; }
-pre { background-color: #FFFFA7; border: 1px solid black; }
-pre pre { border: 0 }
+.rw_navbar
+{
+  width: 100%;
+  margin: 0;
+  padding: 0.1em;
+  font-size: 0.8em;
+  border: 1px solid black;
+  color: white;
+  background-color: #27C;
+  height: 0.5em;
+  z-index: 2;
+}
 
-.rw_nav { background-color: #E9967A }
+.rw_navbar a
+{
+  color: white;
+  border-bottom: 1px dashed white;
+  font-weight: bold;
+}
+
+.rw_navbar a:visited
+{
+  color: #2E7;
+  font-weight: normal;
+  border-bottom: 1px dashed #2E7;
+}
+
+.rw_navbar a:hover
+{
+  text-decoration: none;
+}
+
+.rw_navbar button
+{
+  font-size: 0.8em;
+}
+
+.rw_navbar_tab
+{
+  float: left;
+  background-color: #27C;
+  padding-left: 0.8em;
+  padding-right: 0.8em;
+  padding-top: 0.3em;
+  border: 1px solid #059;
+  margin: 0 0.3em;
+  height: 2em;
+  vertical-align: center;
+}
+
+.rw_navbar_tab:hover
+{
+  background-color: #49E;
+}
+
+.rw_navbar_righttab
+{
+  float: right;
+  padding-left: 0.8em;
+  padding-top: 0.3em;
+  padding-right: 0.8em;
+  border: 1px solid #059;
+  background-color: #27C;
+  margin: 0 0.3em;
+  height: 2em;
+}
+
+.rw_navbar_righttab:hover
+{
+  background-color: #49E;
+}
+
+.rw_content
+{
+  clear: both;
+  margin-top: 2em;
+  margin-left: 3em;
+  margin-right: 3em;
+}
+
+.rw_edit_input
+{
+  border: 1px dashed #059;
+  padding: 0.3em;
+}
+
 .rw_edittext { border: 1px dotted blue }
 .rw_pagelink { }
 .rw_extlink { border: 1px solid red }
 .rw_projectxlink { }
 .rw_projectindex { }
+
 .rw_edit_form { }
+
+.rw_edit_form button:after { content: " (" attr(accesskey) ")" }
+
 .rw_edit_raw {
   border: 2px solid green;
   float: left;
@@ -30,8 +117,20 @@ pre pre { border: 0 }
   max-width: 48%;
   clear: none;
 }
-.rw_searchbox {
+
+.rw_search_button
+{
+  border: 1px solid #27C;
 }
+
+.rw_search_box
+{
+  border: 1px dotted #27C;
+}
+
+.rw_search_box:hover
+{
+  background-color: #
 
 div.rw_calendar {
   border: 1px solid black;
@@ -39,3 +138,8 @@ div.rw_calendar {
   clear: none;
 }
 .rw_calendar-today { background-color: #FFFFA7; }
+
+li { margin-top: 0.25em; margin-bottom: 0.25em; }
+pre { background-color: #FFFFA7; border: 1px solid black; }
+pre pre { border: 0 }
+

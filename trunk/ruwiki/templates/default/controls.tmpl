@@ -1,14 +1,20 @@
-<form class="rw_nav" action="_search">
-  %home_link% 
-   |
-  Topic: <b>%page_topic%</b>
-  Project: <a href="%cgi_url%/%page_project%/"><b>%page_project%</b></a>
-   <br/>
-  <a href="%cgi_url%/%page_project%/RecentChanges">Recent Changes</a>  
-  <a href="%cgi_url%/%page_project%/_topics">Topic List</a>
-  <a href="%cgi_url%/_projects">Project List</a>
-   |
-  <a href="%cgi_url%/%page_project%/%page_raw_topic%/_edit">Edit</a>
-   |
-  Search Project:<input type="text" name="q" size="10">
+<form class="rw_navbar" action="_search">
+  <div class="rw_navbar_tab">%home_link%</div>
+  <div class="rw_navbar_tab">Topic: <strong>%page_topic%</strong></div>
+  <div class="rw_navbar_tab">Project: <a href="%cgi_url%/%page_project%/"><strong>%page_project%</strong></a></div>
+  <div class="rw_navbar_tab"><a href="%cgi_url%/%page_project%/%page_raw_topic%/_edit">Edit</a></div>
+    <!-- Right-hand tabs must go in reverse order! -->
+  <div class="rw_navbar_righttab">
+    <input class="rw_search_box" type="text" name="q" size="10">
+    <button class="rw_search_button" type="submit" name="submit" value="submit">Search Project</button>
+  </div>
+  <div class="rw_navbar_righttab">
+    <a href="%cgi_url%/%page_project%/RecentChanges">Recent Changes</a>  
+  </div>
+  <div class="rw_navbar_righttab">
+    <a href="%cgi_url%/%page_project%/_topics">Topic List</a>
+  </div>
+  <div class="rw_navbar_righttab">
+    <a href="%cgi_url%/_projects">Project List</a>
+  </div>
 </form>
