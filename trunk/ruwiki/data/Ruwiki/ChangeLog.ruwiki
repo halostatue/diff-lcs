@@ -1,10 +1,13 @@
 page!content:	= Ruwiki %RV#% ChangeLog
 	Uncompleted to-do items can be found in To_Do. Bugs in Ruwiki are
 	tracked in BugTracking.
-
+	
+	== 0.9.3
+	* Fixed a deployment problem because a RPA-modified file was checked in, preventing it from working on RubyGems.
+	
 	== 0.9.2
 	* Fixed a problem with token handling where the first token was nil.
-
+	
 	== 0.9.1
 	* Fixed a couple of problems with the Ruwiki deployment system surrounding Win32::Service management.
 	* Added a Google redirect exclusion list to the configuration.
