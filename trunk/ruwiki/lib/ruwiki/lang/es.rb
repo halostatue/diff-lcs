@@ -45,6 +45,12 @@ module Ruwiki::Lang
       :project_does_not_exist       => "El proyecto %1$s no existe.",
       :search_project_fail          => "Error al buscar la cadena %2$s en el proyecto %1$s.",
       :yaml_requires_182_or_higher  => "El soporte para archivos YAML sólo está disponible en Ruby versión 1.8.2 o superior.",
+      :not_editing_current_version  => <<EOM ,
+Ha enviado una versión antigua de %1$s::%2$s. Las diferencias entre su versión
+y la actual han sido fusionadas. En caso de conflicto, las líneas de ambas 
+versiones serán mostradas. Asegúrese de editar la página en su totalidad
+antes de salvar de nuevo.
+EOM
 
         # Config-related messages.
       :config_not_ruwiki_config     => "La configuración debe ser de clase Ruwiki::Config.",
@@ -134,6 +140,7 @@ module Ruwiki::Lang
       :converter_done               => "hecho.",
       :converter_not_ruwiki         => "no es un fichero de Ruwiki; ignorando.",
       :converter_nosave_modified    => "no pudo salvarse %1$s.",
+      :converter_page_format_error  => "Error: No pudo detectarse el formato de la página.",
 
         # Messages from Ruwiki::Utils::Manager
       :manager_unknown_command      => "Comando desconocido: %1$s",
