@@ -292,7 +292,6 @@ EOH
       :runner_version_desc          => [ "Shows the version of Ruwiki." ],
       :runner_rejected_address      => "Rejected peer address %1$s. Connections are only accepted from %2$s.",
       :runner_banner                => <<-BANNER ,
-      banner = <<-"BANNER"
 %1$s
 
 WEBrick options:

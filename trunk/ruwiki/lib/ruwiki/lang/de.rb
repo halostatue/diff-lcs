@@ -296,7 +296,6 @@ EOH
       :runner_version_desc          => [ "Zeigt die Ruwuki-Version." ],
       :runner_rejected_address      => "Adresse %1$s abgewiesen. Nur Verbindungen von %2$s werden akzeptiert.",
       :runner_banner                => <<-BANNER ,
-      banner = <<-"BANNER"
 %1$s
 
 WEBrick-Optionen:
