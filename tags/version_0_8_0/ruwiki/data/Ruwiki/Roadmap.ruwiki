@@ -1,0 +1,223 @@
+page!content:	= Ruwiki 0.8.0: The Road Ahead
+	What lies ahead for Ruwiki? The To_Do list will give a detailed list of
+	what is to follow, but this list is not the roadmap. There is no clear
+	indication of the reason for &mdash; and in some cases, the meaning of
+	&mdash; the items on the list. The intention of this document is to
+	expand on that list. As items are completed, they will be removed from
+	this document.
+	
+	== Development Input
+	The primary driver of development on Ruwiki is the needs of a few groups
+	of people. First, both Alan and Austin use or will use Ruwiki at work.
+	There are particular needs that both have. Austin will be replacing an
+	installation of \PhpWiki with an installation of Ruwiki sometime in
+	September or October 2004.
+	
+	Second, both [http://www.rubygarden.org/ruby RubyGarden] and
+	[http://www.rubyforge.org RubyForge] have expressed an intention to
+	replace the Perl-based \UseMod wiki with a Ruby-based wiki. The popular
+	and easy-to-use Instiki (&ldquo;there is no step 2&rdquo;) is not an
+	ideal choice for either because they either require or prefer a
+	CGI-based wiki. Ruwiki has the desired level of performance and
+	implemenation simplicity that impresses both groups, and it is the
+	current preferred choice. Thus, the needs of both websites factor highly
+	into the goals for Ruwiki.
+	
+	Third, Austin is giving a talk on Ruwiki at \RubyConf 2004. This
+	requires that the API must be mostly stable so that the talk,
+	&ldquo;Using and Extending Ruwiki&rdquo;, has relevance to current and
+	potential users of Ruwiki without having to worry that the API may
+	change significantly.
+	
+	Last, and certainly not least, feature requests and bug reports are a
+	factor. One of the things that changed in Ruwiki 0.8.0 was the look and
+	feel; admittedly, the look and feel in earlier versions was a bit
+	garish, designed to fit in with a particular website more than be a
+	general wiki theme. Users complained, and we changed this. The
+	continual spam defacement of the \RubyGarden wiki suggested several
+	possible improvements that could be made in Ruwiki to fight wiki spam;
+	initial work has been implemented in Ruwiki 0.8.0 and other work will be
+	implemented in 0.9.0 through to the release of 1.0.
+	
+	== Ruwiki 0.8.1: &ldquo;Keeping Up Appearances&rdquo;
+	Ruwiki 0.8.1 is planned for release a week or so after the release of
+	Ruwiki 0.8.0. This will mean little change for users of the standalone
+	release, but some work will be done to prepare for versions of Ruwiki
+	that can be installed with \RubyGems or <acronym title="Ruby Production
+	Archive">RPA</acronym>&rsquo;s rpa-base.
+	
+	Both installation systems present a particular challenge to Ruwiki, as
+	simply running &ldquo;ruwiki_servlet&rdquo; with no arguments will look
+	for the data files and the template files relative to the current
+	directory. With \RubyGems, though, this would require that the user
+	specify something like:
+	
+	  ruwiki_servlet \
+	    --template-path /usr/local/lib/ruby/gems/1.8/ruwiki-0.8.1/templates \
+	    --flatfiles-data-path /usr/local/lib/ruby/gems/1.8/ruwiki-0.8.1/data
+	
+	Instiki does this better, by creating the templates and data files on
+	the fly when a new instance is created. This will certainly be an
+	option, but it will not be the only option. Since a Wiki instance may be
+	private, and since Ruwiki supports CGI execution where this may not be
+	an option, we need a secondary installation mechanism that copies the
+	default data to a local directory. Ideally, as well, instead of
+	providing all of the configuration options on the command-line, we will
+	also provide a configuration file mechanism.
+	
+	Daniel Berger has provided instructions for users of Instiki to install
+	it as a service on Win32. There is no reason that this cannot also be
+	applied to Ruwiki&rsquo;s \WEBrick servlet, so it will, and it will be
+	offered as an option.
+	
+	After all of this, Ruwiki will be offered as a \RubyGem and the RPA team
+	will be asked to offer Ruwiki in the RPA.
+	
+	Chad Fowler&rsquo;s port of \RubLog&rsquo;s vector search may be added
+	to this version if it is ready.
+	
+	== Ruwiki 0.9.0: &ldquo;Are You Being Served?&rdquo;
+	Ruwiki 0.8.0 introduced an incompatible change in the way that page
+	diffs were stored, so users were advised to remove any existing .rdiff
+	files. This isn&rsquo;t as problematic as it may sound, as until 0.9.0,
+	there is no way to actually view the page diffs from Ruwiki itself. One
+	of the major goals 
+	
+	In Ruwiki 0.7.0, a new token was introduced: %calendar(). The concept
+	here is a sound one that can be extended to make token addition easier.
+	Currently, it is necessary for token writers to create their own regular
+	expressions. The &ldquo;function token&rdquo; will be added &mdash;
+	although the form may not be &ldquo;%<em>function-name</em>&rdquo;
+	&mdash; that will work with either a line replacement or a word
+	replacement so that the regular expression does not need to be written.
+	Tests for the replacement will still need to be written, but
+	standardizing new custom tokens will be a good thing.
+	
+	If it has not been added already, Chad Fowler&rsquo;s port of
+	\RubLog&rsquo;s vector search will be added.
+	
+	The presence of static HTML content (headers and footers) per page has
+	been accounted for in Ruwiki 0.8.0, but it will not be displayed.
+	Further, there is currently no way to specify or display static content
+	for the wiki or the project. (A related problem here is that projects do
+	not have any properties. This will become important as projects should
+	be able to be marked private within a wiki in the future.)
+	
+	The purpose of the \WikiWikiWeb is to provide a collaborative, community
+	knowledge editing environment. Unfortunately, the pondscum also known as
+	spammers have figured out that the \WikiWikiWeb provides a positive
+	Google \PageRank, and having their links on our Wikis is benefits them.
+	Just as they don&rsquo;t care about filling our mailboxes, they
+	don&rsquo;t care about defacing our community knowledge. Thus, Ruwiki
+	0.9.0 will also see the introduction of antispam techniques. They will
+	include IP or hostname blacklisting (with timeouts); external URL
+	redirection with an exception list; and robot exclusion. Partial robot
+	exclusion is implemented in Ruwiki 0.8.0, but there is no transformation
+	on actions, which is necessary.
+	
+	The \RecentChanges mechanism will be updated to make it possible to see
+	the \GlobalRecentChanges list.
+	
+	The most significant change in Ruwiki 0.9.0 will be the modification of
+	the request pipeline. This will not be visible to the end user, but it
+	will be significant to users who wish to extend Ruwiki. Currently,
+	Ruwiki processes all commands in ruwiki.rb. In Ruwiki 0.9.0, this will
+	be changed to a dispatch mechanism, where Action objects are introduced,
+	and ruwiki.rb dispatches requests to Action objects.
+	
+	  .---------.          .--------------------.
+	  | Request +--------->| Process [Request]  |
+	  ·---------·          ·----+---------------·
+	                            |
+	                            v
+	                       .--------------------.
+	                       | Perform [Action]   |
+	                       ·----+---------------·
+	                            |
+	                            v
+	                       .--------------------.
+	                       | Prepare [Response] |
+	                       ·----+---------------·
+	                            |
+	                            v
+	  .--------.           .----+---------------.
+	  | Page   |<----------+ Send [Page]        |  
+	  ·--------·           ·--------------------·
+	
+	The diagram above shows the general pipeline. The difference is that the
+	action will be its own object. In general, it will need to know how to
+	process certain URL formats.
+	
+	In the process of defining the action objects, ActionCards will be
+	created. Below is an example \ActionCard for the default action,
+	<tt>_show</tt>. In ActionCards, everything is relative to the Ruwiki
+	root URI. Important to note is that ActionCards are an ideal: they may
+	not represent something that can be accomplished for 0.9, 0.10, or even
+	1.0. They do, however, represent the ultimate target.
+	
+	=== Action: Show [_show] <strong>DEFAULT</strong>
+	;; /Topic, /Topic/_show : Show <em>Topic</em> in the <em>Default</em> project.
+	;; /Project/, /Project/_show : Show <em>Project</em>::\ProjectIndex.
+	;; /Project/Topic, /Project/Topic/_show : Show <em>Project</em>::<em>Topic</em>.
+	;; /Topic?<em>yyyymmdd</em>[&t=<em>hh[mm[ss]]</em>], /Topic/_show?<em>yyyymmdd</em>[&t=<em>hh[mm[ss]]</em>] : Show the content of <em>Topic</em> as of the specified date, and optionally time.
+	;; /Project/?<em>yyyymmdd</em>[&t=<em>hh[mm[ss]]</em>], /Project/_show?<em>yyyymmdd</em>[&t=<em>hh[mm[ss]]</em>] : Show the content of <em>Project</em>::\ProjectIndex as of the specified date, and optionally time.
+	;; /Project/Topic/?<em>yyyymmdd</em>[&t=<em>hh[mm[ss]]</em>], /Project/Topic/_show?<em>yyyymmdd</em>[&t=<em>hh[mm[ss]]</em>] : Show the content of <em>Project</em>::<em>Topic/</em> as of the specified date, and optionally time.
+	;; /Topic?v=<em>version#</em>, /Topic/_show?v=<em>version#</em> : Show the specified version of <em>Topic</em>.
+	;; /Project/?v=<em>version#</em>, /Project/_show?v=<em>version#</em> : Show the specified version of <em>Project</em>::\ProjectIndex.
+	;; /Project/Topic?v=<em>version#</em>, /Project/Topic/_show?v=<em>version#</em> : Show the specified version of <em>Project</em>::<em>Topic</em>.
+	;; /Topic?s=<em>set-id#</em>, /Topic/_show?s=<em>set-id#</em> : Show the specified set of <em>Topic</em>. This is a possible action that will work with &ldquo;changesets&rdquo;.
+	;; /Project/?s=<em>set-id#</em>, /Project/_show?s=<em>set-id#</em> : Show the specified set of <em>Project</em>::\ProjectIndex. This is a possible action that will work with &ldquo;changesets&rdquo;.
+	;; /Project/Topic?s=<em>set-id#</em>, /Project/Topic/_show?s=<em>set-id#</em> : Show the specified set of <em>Project</em>::<em>Topic</em>. This is a possible action that will work with &ldquo;changesets&rdquo;.
+	
+	== Ruwiki 0.10.0: &ldquo;What&rsquo;s Your Line?&rdquo;
+	The antispam techniques introduced in 0.9.0 are positive steps in the
+	fight against wiki defacement. They are hopefully effective, too. The
+	problem is that because 0.9.0 doesn&rsquo;t offer users or user
+	authentication, there&rsquo;s no way of safely allowing the edit of the
+	antispam lists. Thus, to allow this and other potentially dangerous
+	actions, a user and capability framework will be added to Ruwiki. This
+	framework will allow for user identification, authentication, and
+	authorization to indicate what users are allowed to perform what
+	actions.
+	
+	Authenticated users will be able to bypass blacklist checking; thus, if
+	&ldquo;msn.com&rdquo; is blocked, &ldquo;joe.blog@msn.com&rdquo; could
+	still authenticate with Ruwiki and edit the pages. Some users will be
+	able to manage user permissions (including user management), edit
+	antispam lists, etc.
+	
+	Other actions will be added, including the ability to rename topics and
+	move topics between projects. In both cases, the topic change history
+	must be maintained.
+	
+	The documentation for Ruwiki will be substantially complete with this
+	version, lacking only specific information on the features that will be
+	added in Ruwiki 1.0.0.
+	
+	== Ruwiki 1.0.0: &ldquo;Yes, Minister&rdquo;
+	A combined strength and weakness of Ruwiki is that it currently does
+	little to protect against arbitrary HTML being inserted into the current
+	topic. The allowed subset of HTML should be restricted to a safe subset
+	to prevent cross-site-scripting attacks.
+	
+	Pages and projects have properties: we need to provide the ability to
+	edit those properties. Part of the properties that should be editable
+	include whether a page is frozen &mdash; this means that the page is no
+	longer editable by any user (unless it is unfrozen) and is effectively a
+	plain HTML page. Other properties include the static header and footer
+	information in a page or project.
+	
+	Modern Wikis require an RSS feed. Ruwiki will provide one.
+	
+	== The Future: &ldquo;Yes, Prime Minister&rdquo;
+	Ruwiki 1.0.0 does not represent the end of the line for Ruwiki, but what
+	the future holds is unclear. We&rsquo;ll see what the future brings.
+	
+	$Id$
+properties!editable:	false
+properties!project:	Ruwiki
+properties!title:	Roadmap
+properties!topic:	Roadmap
+properties!version:	1
+ruwiki!content-version:	2
+ruwiki!version:	0.8.0

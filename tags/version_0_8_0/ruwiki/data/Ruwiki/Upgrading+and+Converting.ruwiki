@@ -1,0 +1,37 @@
+page!content:	= Ruwiki 0.8.0: Upgrading and Converting
+	The flatfile backend format in Ruwiki 0.8.0 is not compatible with that
+	of earlier versions of Ruwiki. There are a number of reasons for this,
+	but because of this and that there are now three different backends,
+	Ruwiki now has a converter utility between backends.
+	
+	There are two other incompatibilities of note:
+	# Ruwiki now defaults to &ldquo;ruwiki&rdquo; as an extension (e.g., \ProjectIndex.ruwiki) to the storage files. This is, of course, is something that can be modified with a configuration option, but you may find it desirable to rename your files to match this naming convention.
+	# The rdiff format is incompatible. It is recommended that you remove all .rdiff files from your data directory before using Ruwiki.
+	
+	== bin/convert [options] &lt;directory&gt;+
+	The converter utility will work on all files in a directory and its
+	subdirectories.
+	
+	When a file is encountered, it will be examined to be a known form of a
+	Ruwiki backend (marshal, yaml, flatfiles, or "old" flatfiles). If the
+	file is not one of these forms, then the file is skipped. Otherwise, it
+	is converted to the specified format. By default, the converted files
+	will be backed up.
+	
+	=== bin/convert Options
+	; --format=FORMAT : Converts encountered files (regardless of the current format), to the specified format. Default is yaml. Allowed formats are: yaml marshal flatfiles
+	; --[no-]backup : Create backups of upgraded files. Default is --backup.
+	; --backup-extension=EXTENSION : Specify the backup extension. Default is "~", which is appended to the data filename.
+	; --extension=EXTENSION : Specifies the extension of Ruwiki data files. The default is .ruwiki
+	; --no-extension : Indicates that the Ruwiki data files have no extension.
+	; --quiet : Runs quietly. Default is to run with normal messages.
+	; --verbose : Runs with full messages. Default is to run with normal messages.
+	; --help : Shows this text.
+	
+	$Id$
+properties!project:	Ruwiki
+properties!title:	Upgrading+and+Converting
+properties!topic:	Upgrading+and+Converting
+properties!version:	1
+ruwiki!content-version:	2
+ruwiki!version:	0.8.0
