@@ -14,7 +14,7 @@ InstallOptions = OpenStruct.new
 
   # Set these values to what you want installed.
 bins  = %w{bin/**/*}
-rdoc  = %w{bin/**/*.rb lib/**/*.rb}
+rdoc  = %w{bin/**/*.rb lib/**/*.rb README ChangeLog Install}
 ri    = %w(bin/**/*.rb lib/**/*.rb)
 libs  = %w{lib/**/*.rb}
 tests = %w{tests/**/*.rb}
@@ -105,7 +105,9 @@ end
 #
 def build_rdoc(files)
   r = RDoc::RDoc.new
-  r.document(%w{--line-numbers --show-hash} + files)
+  r.document(["--main", "README", "--title", "Diff::LCS -- A Diff Algorithm",
+              "--line-numbers", "--show-hash"] + files)
+
 rescue RDoc::RDocError => e
   $stderr.puts e.message
 end
