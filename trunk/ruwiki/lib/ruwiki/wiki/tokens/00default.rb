@@ -80,7 +80,7 @@ class Ruwiki::Wiki
   RE_URI_TEXT   = %r{[^\]]*}
 
   def self.redirect(uri)
-    "http://www.google.com/url?sa=D;q=#{CGI.escape(uri)}"
+    "http://www.google.com/url?sa=D&amp;q=#{CGI.escape(uri)}"
   end
 
     # Converts URLs in the form of [url] to numbered links.
