@@ -352,6 +352,7 @@ EPAGE
           values["page_topic_or_search"] = self.message[:tab_topic] % [%Q(<a href='#{values["cgi_url"]}/#{values["page_project"]}/_search?q=#{values["page_topic"]}'><strong>#{values["page_topic"]}</strong></a>)]
         end
       else
+        values["page_topic_or_search"] = self.message[:tab_topic] % [%Q(<a href='#{values["cgi_url"]}/#{values["page_project"]}/_search?q=#{values["page_topic"]}'><strong>#{values["page_topic"]}</strong></a>)]
         template = TemplatePage.new(@config.template(:body), @config.template(:save), @config.template(:controls))
       end
     when :edit, :preview

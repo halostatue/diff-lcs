@@ -46,12 +46,14 @@ class Ruwiki
         content.gsub!(%r{<p><([uo]l)>}, '<\1>')
         content.gsub!(%r{</([uo]l)></p>}, '</\1>')
         content.gsub!(%r{</[uo]l>\n?<[uo]l>}, '')
-        content.gsub!(%r{</ol>(\n|(<br ?/?>))?<ol>}, '')
-        content.gsub!(%r{</ul>(\n|(<br ?/?>))?<ul>}, '')
+        content.gsub!(%r{</ol>(\n|<br ?/?>)?<ol>}, '')
+        content.gsub!(%r{</ul>(\n|<br ?/?>)?<ul>}, '')
         content.gsub!(%r{<li><([uo]l)>}, '<\1>')
         content.gsub!(%r{</li><li>}, "</li>\n<li>")
         content.gsub!(%r{</([uo]l)></li>}, '</\1>')
         content.gsub!(%r{([^>])\n<([uo]l)>}) { |m| "#{$1}</p>\n<#{$2}>" }
+        content.gsub!(%r{</ol><ol>}, '')
+        content.gsub!(%r{</ul><ul>}, '')
         content
       end
     end
