@@ -136,7 +136,7 @@ class Ruwiki
 
     # Return an array of projects
     def list_projects()
-      @delegate.index_projects()
+      @delegate.list_projects()
     rescue Errno::EACCES => e
       raise Ruwiki::Backend::BackendError.new(e), @message[:no_access_list_projects]
     rescue Exception => e

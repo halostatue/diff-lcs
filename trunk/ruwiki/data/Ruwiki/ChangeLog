@@ -1,10 +1,12 @@
 id: 0
-version: 1
 topic: ChangeLog
+version: 2
 #EHDR
 = Ruwiki 0.7.0 ChangeLog
 Uncompleted to-do items can be found in To_Do. Bugs in Ruwiki are tracked in
 BugTracking.
+== Version 0.7.0+
+* Added Topic List and Project List controls
 
 == Version 0.7.0
 * Changed the tokenization API so that the #post_replace call is made at the Token class level instead of the instance level.

@@ -181,6 +181,38 @@ class Ruwiki
 
     if @action
       case @action
+      when 'topiclist'
+        topic_list = @backend.list_topics(@page.project)
+
+        # todo: make this localized
+        if( topic_list.size == 0 )
+          @page.content = "No topics"
+        else
+          @page.content = <<EPAGE
+= Topics for ::#{@page.project}
+* #{topic_list.join("\n* ")}
+EPAGE
+        end
+
+        content = @page.to_html
+        @type = :content
+ 
+      when 'projectlist'
+        proj_list = @backend.list_projects
+
+        if( proj_list.size == 0 )
+          @page.content = "No projects"
+        else
+          #todo: make this localized
+          @page.content = <<EPAGE
+= Projects in #{@config.title}
+* ::#{proj_list.join("\n* ::")}
+EPAGE
+        end
+
+        content = @page.to_html
+        @type = :content
+ 
       when 'edit', 'create'
           # Automatically create the project if it doesn't exist or if the
           # action is 'create'.
