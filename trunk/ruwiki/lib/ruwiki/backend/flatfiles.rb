@@ -20,8 +20,7 @@ class Ruwiki
         #               By default, this is "./data/"
         # :extension::  The extension of the wiki files. By default, this is
         #               +nil+.
-      def initialize(storage_options)
-        options = storage_options[:flatfiles]
+      def initialize(options)
         options[:data_path] ||= "./data/"
         @data_path  = options[:data_path]
         @extension  = options[:extension]

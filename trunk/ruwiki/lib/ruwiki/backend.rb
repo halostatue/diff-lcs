@@ -23,12 +23,16 @@ class Ruwiki
       @message = ruwiki.config.message
       options = ruwiki.config.storage_options
 
-      raise RuntimeError, @message[:backend_unknown] % [backend] unless Ruwiki::KNOWN_BACKENDS.include?(backend)
+      unless Ruwiki::KNOWN_BACKENDS.include?(backend)
+        raise RuntimeError, @message[:backend_unknown] % [backend] 
+      end
+
       beconst = (befile = backend.id2name).capitalize
 
       require "ruwiki/backend/#{befile}"
 
-      @delegate = Ruwiki::Backend.const_get(beconst).new(options)
+      beoptions = options[backend]
+      @delegate = Ruwiki::Backend.const_get(beconst).new(beoptions)
     rescue Ruwiki::Backend::BackendError => e
       if e.kind_of?(Array)
         raise Ruwiki::Backend::BackendError.new(nil), @message[e.reason[0]] % e.reason[1]
