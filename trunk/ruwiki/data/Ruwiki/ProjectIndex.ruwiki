@@ -9,8 +9,9 @@ page!content:	= Ruwiki %RV#%
 	* Who wrote Ruwiki? Read the LicenseAndAuthorInfo.
 	
 	== Requirements
-	Ruwiki currently requires Ruby 1.8, Diff::LCS 1.1.0 (portions
-	included). The YAML backend requires Ruby 1.8.2.
+	Ruwiki currently requires Ruby 1.8, Diff::LCS 1.2.0 (portions
+	included), and Archive::Tar::Minitar 0.5.1. The YAML backend requires
+	Ruby 1.8.2.
 	
 	== Getting Started
 	=== QuickStart (CGI)

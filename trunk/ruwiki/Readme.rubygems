@@ -15,7 +15,9 @@ Ruwiki. If you are upgrading from one of these versions, you must use the
 bin/convert. The simple case will be (assuming that your data files are in
 ./data):
 
-  % bin/convert ./data
+  % convert ./data
+
+The convert utility is automatically installed by RubyGems.
 
 Requirements
 ------------
@@ -24,20 +26,38 @@ Ruwiki currently requires:
   * Diff::LCS 1.2.0
   * Archive::Tar::Minitar 0.5.1
 
-The YAML backend requires Ruby 1.8.2 after preview2. If you have downloaded
-the .tar.gz version of Ruwiki, portions of Diff::LCS and Archive::Tar::Minitar
-are included. RPA and RubyGems versions of Ruwiki will prompt to store
+The YAML backend requires Ruby 1.8.2 after preview2. You should have been
+prompted to load these dependencies on installation.
+
+Quick Start (WEBrick Readonly)
+------------------------------
+1. Type:
+
+   % ruwiki_servlet --gem-data
+
+2. Point your web browser to <http://localhost:8808/>.
 
 Quick Start (CGI)
 -----------------
-1. Place the Ruwiki directory in a place that your webserver can execute CGI
-   programs and ensure that ruwiki.cgi is executable on your webserver.
-2. Point your web browser to the appropriate URL.
+1. Create a directory in a place that your webserver can execute CGI programs
+   and type:
+
+   % ruwiki install cgi,data --to <directory>
+
+2. Ensure that ruwiki.cgi is executable on your webserver.
+3. Point your web browser to the appropriate URL.
 
 Quick Start (WEBrick)
 ---------------------
-1. Run ruwiki_servlet (ruwiki_servlet.bat under Windows).
-2. Point your web browser to <http://localhost:8808/>.
+1. Create a directory to store your data and templates and type:
+
+   % ruwiki install data --to <directory>
+
+2. Type:
+
+   % ruwiki_servlet
+
+3. Point your web browser to <http://localhost:8808/>.
 
 Configuration
 -------------
@@ -60,11 +80,7 @@ Credits
 * Portions of this software are derived from Dave Thomas's RDoc system, now
   part of the Ruby distribution.
 
-* Translation to German by [mailto:chneukirchen@yahoo.de Christian Neukirchen]
-  on 2003.10.22. Note that the initial template translations (./templates/de/)
-  were done via AltaVista Babelfish and should not be blamed on Christian.
-* Translation to Spanish by [mailto:batsman.geo@yahoo.com Mauricio Fernández]
-  on 2003.10.22. Note that the initial template translations (./templates/es/)
-  were done via AltaVista Babelfish and should not be blamed on Mauricio.
+* Translation to German by [mailto:chneukirchen@yahoo.de Christian Neukirchen].
+* Translation to Spanish by [mailto:batsman.geo@yahoo.com Mauricio Fernández].
 
 $Id$

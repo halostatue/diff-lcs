@@ -177,6 +177,18 @@ COPYRIGHT
           @rc.storage_options[:yaml]['extension'] = ext
           @rc.storage_options[:marshal]['extension'] = ext
         }
+        if defined?(Gem::Cache)
+          o.separator ""
+          o.on('--gem-data',
+               'Runs Ruwiki with the data in the default',
+               'RubyGem location.') {
+            gempath = Gem::Cache.from_installed_gems.search("ruwiki", "=#{Ruwiki::VERSION}").last.full_gem_path
+            @rc.storage_type    = :flatfiles
+            @rc.storage_options[:flatfiles]['data-path'] = "#{gempath}/data"
+            @rc.storage_options[:flatfiles]['extension'] = "ruwiki"
+            @rc.template_path   = "#{gempath}/templates"
+          }
+        end
 
         # TODO: Add options for time, date, and datetime formats.
         o.separator ""

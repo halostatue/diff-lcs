@@ -3,13 +3,6 @@ page!content:	= Ruwiki %RV#% To Do Tracking
 	are tracked in BugTracking.
 	
 	== Well-Defined To Do Items
-	=== Ruwiki 0.8.1
-	; Non-local installation : current Ruwiki can support a non-local configuration (that is, where the data and templates are in a separate directory from the startup program), but there is no mechanism to automate this. In order to enable a \RubyGem or <acronym title="Ruby Production Archive">RPA</acronym> installation of Ruwiki, this mechanism will be necessary.
-	; Stored configurations : allow for configuration objects to be stored. This will make it easier to support non-local installations and configurations.
-	; Ruwiki installer : add a command-line program to create a new deployment of Ruwiki; this will copy the default data to the local installation.
-	; Central location : add the ability to use the data in the central installation that is provided by a \RubyGem or <acronym title="Ruby Production Archive">RPA</acronym> installation.
-	; Windows service : allow Ruwiki to be run as a Windows service for users of the Win32 build of Ruby.
-	; \RubyGem : Offer Ruwiki as a \RubyGem.
 	=== Ruwiki 0.9.0
 	; Versioning : complete the change history interface. Change history is currently stored in a file <em>topic[.extension]</em>.rdiff. There is no way to display the change history at this point.
 	; Action objects : Actions will be generalised to pull the processing out of the main ruwiki.rb inasmuch as is possible.

@@ -2,7 +2,20 @@ page!content:	= Ruwiki %RV#% ChangeLog
 	Uncompleted to-do items can be found in To_Do. Bugs in Ruwiki are
 	tracked in BugTracking.
 	
-	== Version 0.8.0
+	== 0.8.1
+	* Moved executable files to bin/.
+	* Moved core servlet code and other utilities to Ruwiki::Utils::*.
+	* Refactored Flatfiles format (section!item:<Tab>value) to Ruwiki::Exportable.
+	* Incorporated Ruwiki::Exportable into Ruwiki::Config to allow for the saving of configuration files.
+	* Incorporated Ruwiki::Exportable into Ruwiki::Utils::ServletRunner to allow for the saving of configuration files.
+	* Added Ruwiki manager code for installation and management of Ruwiki deployments.
+	* Added code for running the Ruwiki servlet as a Windows service on Win32. (Currently untested.)
+	* Added a draft authentication API and RubyForge authentication.
+	* Added draft robot exclusion code.
+	* Added draft HTML cleaning code.
+	* Added Rakefile to generate Rubygem and tarfile.
+	
+	== 0.8.0
 	* AC: Added topic list (_topics) and project list (_projects) controls on templates and backend.
 	* AZ: Added %topics() and %projects() tokens. See WikiMarkup for details.
 	* AC: Added simple search on back-end (both project and global); search strings must be validated and cleansed before being sent to the back-end (the back-end must prepare the string for its own search mechanism). The back-end is wholly responsible for the searching of the pages.
@@ -22,18 +35,18 @@ page!content:	= Ruwiki %RV#% ChangeLog
 	* AZ: New look! Ruwiki has a &ldquo;sidebar&rdquo; template set.
 	* AZ: Fixed a long-standing bug with code tokens.
 	
-	== Version 0.7.0
+	== 0.7.0
 	* Changed the tokenization API so that the #post_replace call is made at the Token class level instead of the instance level.
 	* Improved HTML code generation.
 	* Added servlet runner batch files for Windows. They <strong>will</strong> require modification to run properly.
 	* Added %calendar(...) support. See WikiMarkup for more information.
 	
-	== Version 0.6.2
+	== 0.6.2
 	* Removed dependencies on Ruwiki from a number of classes (Ruwiki::Backend, Ruwiki::Backend::Flatfiles, Ruwiki::Page, Ruwiki::Wiki, Ruwiki::Wiki::Tokens, and various tokens).
 	* Ruwiki now initializes a \Ruwiki::BackendDelegator, which creates the requisite Ruwiki::Backend instance with Ruwiki::Config#storage_options.
 	* Added German (Christian Neukirchen &lt;cneukirchin@yahoo.de&gt;) and Spanish translations (Mauricio Fernández &lt;batsman.geo@yahoo.com&gt;).
 	
-	== Version 0.6.1
+	== 0.6.1
 	* Changed Ruwiki::Config#data_path to Ruwiki::Config#storage_options[:flatfiles][:data_path]. This represents a generalisation of storage type options so that the Ruwiki::Config object is not polluted with storage type options. Ruwiki::Config#storage_options keys should be the same Ruby Symbol as is used in Ruwiki::Config#storage_type.
 	* Added Ruwiki::Config#storage_options[:flatfiles][:extension], based on a request by Chad Fowler. This allows you to have Project/\TopicFile actually stored as Project/\TopicFile.wiki if Ruwiki::Config#storage_options[:flatfiles][:extension] is set to <tt>wiki</tt>. The default for Ruwiki::Config#storage_options[:flatfiles][:extension] is <tt>nil</tt>.
 	* Fixed incorrect references. I had been incorrectly attributing [http://sourceforge.net/projects/rdoc-wiki RDoc Wiki] to Dave Thomas. \RDoc Wiki is by Michael Neumann. However, the project I pulled from <strong>is</strong> by Dave Thomas, but it&rsquo;s [http://sourceforge.net/projects/rublog RubLog]. Apologies to both developers.
@@ -46,7 +59,7 @@ page!content:	= Ruwiki %RV#% ChangeLog
 	* Fixed a potential problem with re-posted data or saving without editing.
 	* Added the ability to put commands in the URL.
 	
-	== Version 0.6.0
+	== 0.6.0
 	* Added Ruby mailing list reference support (e.g., \[ruby-talk:12345]).
 	* Reorganised the code (again) to better support alternative frontends. Based, in part, on [http://sourceforge.net/projects/rublog RubLog] by Dave Thomas. (Reference corrected in 0.6.1.)
 	* Added a [http://www.webrick.org WEBrick] servlet interface. Based, in part, on the \WEBrick servlet interface provided with \RubLog by Chad Fowler.
@@ -57,7 +70,7 @@ page!content:	= Ruwiki %RV#% ChangeLog
 	* Updated the save page.
 	* Fixed a problem with the linking of project specific pages.
 	
-	== Version 0.5.0
+	== 0.5.0
 	* Reorganized the code significantly to be easier to edit and extend.
 	* Added abbreviation capabilities.
 	* Cleaned up a lot of tokenizing code.

@@ -24,9 +24,8 @@ Ruwiki currently requires:
   * Diff::LCS 1.2.0
   * Archive::Tar::Minitar 0.5.1
 
-The YAML backend requires Ruby 1.8.2 after preview2. If you have downloaded
-the .tar.gz version of Ruwiki, portions of Diff::LCS and Archive::Tar::Minitar
-are included. RPA and RubyGems versions of Ruwiki will prompt to store
+The YAML backend requires Ruby 1.8.2 after preview2. Portions of Diff::LCS and
+Archive::Tar::Minitar have been included in this version of Ruwiki.
 
 Quick Start (CGI)
 -----------------
@@ -36,7 +35,7 @@ Quick Start (CGI)
 
 Quick Start (WEBrick)
 ---------------------
-1. Run ruwiki_servlet (ruwiki_servlet.bat under Windows).
+1. Run bin/ruwiki_servlet (ruby bin/ruwiki_servlet under Windows).
 2. Point your web browser to <http://localhost:8808/>.
 
 Configuration
@@ -54,17 +53,13 @@ Licence:    Ruby's
 
 Credits
 -------
-* This software includes portions of Diff::LCS by Austin Ziegler, available
-  for download from the Ruwiki RubyForge project:
+* This software includes portions of Diff::LCS and Archive::Tar::Minitar by
+  Austin Ziegler, available for download from the Ruwiki RubyForge project:
   [http://rubyforge.org/projects/ruwiki/]
 * Portions of this software are derived from Dave Thomas's RDoc system, now
   part of the Ruby distribution.
 
-* Translation to German by [mailto:chneukirchen@yahoo.de Christian Neukirchen]
-  on 2003.10.22. Note that the initial template translations (./templates/de/)
-  were done via AltaVista Babelfish and should not be blamed on Christian.
-* Translation to Spanish by [mailto:batsman.geo@yahoo.com Mauricio Fernández]
-  on 2003.10.22. Note that the initial template translations (./templates/es/)
-  were done via AltaVista Babelfish and should not be blamed on Mauricio.
+* Translation to German by [mailto:chneukirchen@yahoo.de Christian Neukirchen].
+* Translation to Spanish by [mailto:batsman.geo@yahoo.com Mauricio Fernández].
 
 $Id$

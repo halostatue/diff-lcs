@@ -28,8 +28,8 @@ end
 
   # This rakefile must do the following:
   # 1. Run the unit tests, successfully.
-  # 2. Modify the Readme, Readme.rubygems, and data files to include the
-  #    proper version #.
+  # 2. Modify the Readme.tarfile, Readme.rubygems, and data files to include
+  #    the proper version #.
   # 2. Create a package.
   # 3. Modify the existing pages so that properties!editable is set to
   #    +false+.
@@ -103,7 +103,7 @@ spec = Gem::Specification.new do |s|
   s.test_files    = %w{tests/testall.rb}
 
   s.files = Dir["**/*"].delete_if do |item|
-    item =~ %r{(?:\bCVS\b|\.svn\b|[Rr]akefile|install.rb$|~$|gem(?:spec)?$)}
+    item =~ %r{(?:\bCVS\b|\.svn\b|[Rr]akefile|install.rb$|~$|gem(?:spec)?$|lib/archive|lib/diff)}
   end
 
   s.author            = %q{Austin Ziegler and Alan Chen}
@@ -164,6 +164,7 @@ file TARDIST do |t|
             mode = 0644
           end
           data = File.read(dd)
+          dd = "Readme" if dd == "Readme.tarfile"
           { :name => dd, :mode => mode, :data => data, :size => data.size,
             :mtime => stat.mtime }
         end
@@ -185,6 +186,8 @@ file TARDIST do |t|
       gz.close if gz
     end
   end
+  FileUtils.rm_f("Readme.tarfile")
+  FileUtils.mv("Readme.rubygems", "Readme")
 end
 
 desc "Build everything."

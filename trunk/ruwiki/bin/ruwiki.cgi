@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 #--
-# Ruwiki version 0.8.0
+# Ruwiki version 0.8.1
 #   Copyright © 2002 - 2004, Digikata and HaloStatue
 #   Alan Chen (alan@digikata.com)
 #   Austin Ziegler (ruwiki@halostatue.ca)
@@ -20,7 +20,7 @@ load_state = 1
 begin
   if 1 == load_state
     require 'rubygems'
-    require_gem 'ruwiki'
+    require_gem 'ruwiki', '= 0.8.1'
   else
     require 'ruwiki'
   end

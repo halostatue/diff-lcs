@@ -7,9 +7,7 @@ page!content:	= Configuring Ruwiki %RV#%
 	replace <em>wiki.config</em> with <em>$config</em> where necessary.
 	
 	: Additional configuration options will be added from time to time. The
-	: form for specifying configuration may be changed prior to 1.0. In
-	: 0.8.1, it will be possible to initialise the configuration object
-	: from storage.
+	: form for specifying configuration may be changed prior to 1.0.
 	
 	If you are looking for the discussion on templates, this has been moved
 	to Extending_Ruwiki.
