@@ -10,7 +10,7 @@
 #++
 
 class Ruwiki
-  VERSION         = '0.9.1'
+  VERSION         = '0.9.2'
   CONTENT_VERSION = 2
 end
 
@@ -30,7 +30,7 @@ require 'ruwiki/page'
   # it supports project namespaces, so that two pages can be named the same
   # for differing projects without colliding or having to resort to odd
   # naming conventions. Please see the ::Ruwiki project in the running Wiki
-  # for more information. Ruwiki 0.9.1 has German and Spanish translations
+  # for more information. Ruwiki has German and Spanish translations
   # available.
   #
   # == Quick Start (CGI)
