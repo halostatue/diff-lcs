@@ -19,7 +19,7 @@ module Ruwiki::Lang
     message = {
         # The encoding for the webpages. This should match the encoding used
         # to create these messages.
-      :encoding                     => "iso-8859-1",
+      :charset_encoding             => "iso-8859-15",
         # Backend-related messages.
       :backend_unknown              => "Clase Backend desconocida: %s.",
       :cannot_create_project        => "No puede crearse el proyecto %s: %s",
@@ -56,6 +56,34 @@ module Ruwiki::Lang
       :invalid_path_info_value      => "Algo huele a podrido en su entorno Web. PATH_INFO = %s",
       :render_arguments             => "Ruwiki#render debe ser llamado con cero o dos argumentos.",
       :unknown_feature              => "Clase Feature desconocida: %s."
+
+          # Labels
+      :label_search_project         => "Proyecto De la Búsqueda",
+      :label_search_all             => "<all>",
+      :label_search                 => "Suchc: ",
+      :label_project                => "Proyecto: ",
+      :label_topic                  => "Nodo: ",
+      :label_edit                   => "Editar",
+      :label_recent_changes         => "Cambios Recientes",
+      :label_topics                 => "Lista del Nodo",
+      :label_projects               => "Lista del Proyecto",
+      :label_editing                => "Editando",
+      :label_text                   => "Text:",
+      :label_text_accelerator       => "T",
+      :label_edit_comment           => "Corrija el Commentario: ",
+      :label_comment_accelerator    => "O",
+      :label_save                   => "Salvar",
+      :label_save_accelerator       => "S",
+      :label_cancel                 => "Cancelar",
+      :label_cancel_accelerator     => "C",
+      :label_preview                => "Preview",
+      :label_preview_accelerator    => "P",
+      :label_original_text          => "Texto Original",
+      :label_raw                    => "Version sin formato",
+      :label_formatted              => "Version con formato",
+      :label_send_report_by         => "Envie al admistrador de este sitio una notificación por correo electrónico.",
+      :label_send_report            => "Envie notificación."
+      :label_saved_page             => "Página salvaguardada: ",
     }
     message.each { |k, v| Message[k] = v }
   end

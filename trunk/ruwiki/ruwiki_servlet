@@ -6,6 +6,9 @@ $LOAD_PATH.unshift("lib")
 require 'webrick'
 require 'ruwiki'
 require 'ruwiki/servlet'
+require 'ruwiki/lang/en'
+require 'ruwiki/lang/de'
+require 'ruwiki/lang/es'
 
 require 'optparse'
 require 'ostruct'
@@ -38,6 +41,7 @@ opts.mount      = '/'
 opts.do_log     = true
 opts.log_dest   = $stderr
 opts.threads    = 1
+opts.language   = Ruwiki::Lang::EN
 
   # Ruwiki::Config options.
 opts.webmaster        = 'webmaster@domain.com'
@@ -89,7 +93,10 @@ ARGV.options do |o|
   }
   o.separator ""
   o.separator "Ruwiki options:"
-  o.on('--webmaster WEBMASTER', 'The Ruwiki webmaster email address.', 'Defaults to "webmaster@{main.com".') { |wm|
+  o.on('--language LANGUAGE', 'The interface language for Ruwiki.', 'Defaults to "en". May be "en", "de", or', '"es".') { |lang|
+    opts.language = lang
+  }
+  o.on('--webmaster WEBMASTER', 'The Ruwiki webmaster email address.', 'Defaults to "webmaster@domain.com".') { |wm|
     opts.webmaster = wm
   }
   o.on('--[no-]debug', 'Turns on Ruwiki debugging. Defaults', 'to --no-debug.') { |d|
@@ -158,6 +165,7 @@ $config.css             = opts.css
 $config.time_format     = opts.time_format
 $config.date_format     = opts.date_format
 $config.datetime_format = opts.datetime_format
+$config.language        = opts.language
 
   # If the list of accepted addresses is not empty, provide IP-based
   # restrictions.
@@ -217,6 +225,7 @@ server = WEBrick::HTTPServer.new(:Port            => opts.port.to_i,
                                  :StartThreads    => opts.threads.to_i,
                                  :AcceptCallback  => localonly,
                                  :Logger          => logger)
+$config.logger = logger
 server.mount(opts.mount, Ruwiki::Servlet)
 trap("INT") { server.shutdown; exit }
 server.start

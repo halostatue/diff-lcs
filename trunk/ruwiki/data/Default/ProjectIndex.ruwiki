@@ -3,39 +3,44 @@ page!content:	= Ruwiki
 	\WEBrick interfaces, templates, and CSS formatting. Additionally, it supports
 	project namespaces, so that two pages can be named the same for differing
 	projects without colliding or having to resort to odd naming conventions.
-	Please see ::Ruwiki for more information.
+	Please see the ::Ruwiki project for more information.
 	
-	The current version is 0.8.0. Several fixes have been made to text
-	preservation, an API change to plugins has been made (please read
-	Ruwiki::Extending_Ruwiki for details), and a calendar plugin has been added
-	(please read Ruwiki::WikiMarkup for details).
+	Ruwiki is also a partially internationalised Wiki, although more testing,
+	especially testing with multibyte character encodings and Unicode (UTF-8) is
+	required. There are German and Spanish translations of the messages included with
+	the Ruwiki distribution.
 	
-	The \APIs for Ruwiki should not at this point be considered stable; a large
-	number of \APIs will be changing explicitly in 0.8.0 leading up to Ruwiki 1.0.
+	The current version is 0.8.0. Numerous enhancements have been made in this
+	version, ranging from a new default look (and two additional schemes) to new
+	backend format support to searching and topic listing. The full list of changes
+	can be found in Ruwiki::ChangeLog, with discussions of various features in
+	Ruwiki::WikiMarkup, Ruwiki::Configuring_Ruwiki, and Ruwiki::Extending_Ruwiki.
+	
+	If you are upgrading from an older version of Ruwiki, please see
+	Ruwiki::[[Upgrading and Converting]].
+	
+	Certain Ruwiki \APIs are considered stable at this point, others will be changing
+	leading up to 1.0. Some of this is discussed in Ruwiki::To_Do, with further
+	architectural discussions in Ruwiki::[[Roadmap]].
 	
 	Known Projects:
 	* ::Default
 	* ::Ruwiki
 	
-	Please go to ::Ruwiki if you are unfamiliar with the concept of Wikis in
-	general. If you want to play with \WikiFormatting, use the Ruwiki::SandBox.
+	Please review ::Ruwiki if you are unfamiliar with the concept of Wikis in
+	general. If you want to play with \WikiFormatting for Ruwiki, use the
+	Ruwiki::SandBox.
+	
+	[http://rubyforge.org/projects/ruwiki Ruwiki development] is hosted at
+	[http://rubyforge.org RubyForge]. The current release of Ruwiki can
+	always be [http://rubyforge.org/frs/?group_id=84 downloaded] from
+	RubyForge or the development (unstable) version can be obtained from
+	CVS.
 	
 	$Id$
-page!footer:	
-page!header:	
-properties!create-date:	
-properties!creator:	
-properties!creator-ip:	UNKNOWN
-properties!edit-comment:	Revert.
-properties!edit-date:	
-properties!editable:	
-properties!editor:	
-properties!editor-ip:	UNKNOWN
-properties!entropy:	0.0
-properties!html-headers:	
 properties!project:	Default
 properties!title:	ProjectIndex
 properties!topic:	ProjectIndex
-properties!version:	4
+properties!version:	1
 ruwiki!content-version:	2
 ruwiki!version:	0.8.0

@@ -6,7 +6,10 @@ page!content:	= Ruwiki 0.8.0 Bug Tracking
 	for Ruwiki.
 	
 	Those interested in Ruwiki development may also find the Ruwiki::To_Do list
-	useful. The format of this list is "fix-version: description".
+	and the Ruwiki::[[Roadmap]] useful. The format of the bug list is
+	"version: description". For open bugs, the version is the version in
+	which the bug was first reported. For closed bugs, the version is the
+	version in which the bug was closed.
 	
 	----
 	== Open Bugs
@@ -23,8 +26,6 @@ page!content:	= Ruwiki 0.8.0 Bug Tracking
 	* 0.6.1: Saving without editing (or repost) appears to cause problems. A fix has been applied to attempt to address this. Pages that have not been changed will not be saved.
 	
 	$Id$
-properties!editable:	
-properties!entropy:	0
 properties!project:	Ruwiki
 properties!title:	BugTracking
 properties!topic:	BugTracking

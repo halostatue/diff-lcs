@@ -2,8 +2,6 @@ page!content:	= Ruwiki 0.8.0
 	This is the \ProjectIndex page for Ruwiki. For any given project, the
 	\ProjectIndex topic will be the default topic for plain project links.
 	
-	----
-	
 	== Features and Information
 	* This wiki supports a variety of WikiFeatures that you may be interested in. The rules for WikiMarkup are similar to some other wikis, but there are a few unique markup capabilities in Ruwiki.
 	* Configuring_Ruwiki is simple.
@@ -11,24 +9,24 @@ page!content:	= Ruwiki 0.8.0
 	* Who wrote Ruwiki? Look at the LicenseAndAuthorInfo.
 	
 	== Tracking Ruwiki Development
-	The development progress of Ruwiki is kept in the wiki itself.
-	* The BugTracking page in Ruwiki keeps track of open and closed bugs in Ruwiki.
-	* The To_Do list keeps track of major development goals for Ruwiki.
-	
-	----
+	The development progress of Ruwiki is kept primarily in the wiki
+	itself, but the services of [http://rubyforge.org RubyForge] are used
+	as well.
+	* The BugTracking page in Ruwiki keeps track of open and closed bugs in Ruwiki. Bugs can also be found in the \RubyForge [http://rubyforge.org/tracker/?atid=407&group_id=84&func=browse bug tracker] and [http://rubyforge.org/tracker/?atid=408&group_id=84&func=browse Support Requests].
+	* The To_Do list keeps track of major development goals for Ruwiki. Items for this list can be found on \RubyForge in [http://rubyforge.org/tracker/?atid=410&group_id=84&func=browse Feature Requests] and [http://rubyforge.org/tracker/?atid=409&group_id=84&func=browse Patches].
+	* The [http://rubyforge.org/forum/?group_id=84 Ruwiki Public Forum] exists, but it rarely used. It is recommended to use the new mailing list, [http://rubyforge.org/mailman/listinfo/ruwiki-discuss ruwiki-discuss] ([http://rubyforge.org/pipermail/ruwiki-discuss/ archives]), instead.
+	* There is a mailing list to track CVS changes: [http://rubyforge.org/mailman/listinfo/ruwiki-checkin ruwiki-checkin] ([http://rubyforge.org/pipermail/ruwiki-checkin/ archives]).
 	
 	== Different Features?
-	If this wiki doesn't have the right combination of features, (or if it just
-	doesn't feel right) try these other Ruby-based Wikis:
+	If this wiki doesn't have the right combination of features, (or if it
+	just doesn't feel right) try these other Ruby-based Wikis:
 	
+	* [http://instiki.rubyforge.org/ Instiki]
 	* [http://www.walrus-ruby.org/amrita/cgi-bin/aswiki/aswiki.cgi Amrita Wiki]
 	* [http://rwiki.jin.gr.jp/cgi-bin/rw-cgi.rb?cmd=view;name=top RWiki]
 	* [http://www.xpsd.com/MiniRubyWiki MiniRubyWiki]
-	* [http://instiki.rubyforge.org/ Instiki]
 	
 	$Id$
-properties!editable:	
-properties!entropy:	0
 properties!project:	Ruwiki
 properties!title:	ProjectIndex
 properties!topic:	ProjectIndex

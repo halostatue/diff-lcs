@@ -18,7 +18,7 @@ module Ruwiki::Lang
     message = {
         # The encoding for the webpages. This should match the encoding used
         # to create these messages.
-      :charset_encoding             => "iso-8859-1",
+      :charset_encoding             => "iso-8859-15",
         # Backend-related messages.
       :backend_unknown              => "Backend %s is unknown.",
       :cannot_create_project        => "Cannot create project %s: %s",

@@ -19,7 +19,7 @@ module Ruwiki::Lang
     message = {
         # The encoding for the webpages. This should match the encoding used
         # to create these messages.
-      :encoding                     => "iso-8859-1",
+      :charset_encoding             => "iso-8859-15",
         # Backend-related messages.
       :backend_unknown              => "Unbekanntes Backend %s.",
       :cannot_create_project        => "Kann %s nicht erstellen: %s",
@@ -57,6 +57,34 @@ module Ruwiki::Lang
         # Should this really get translated?  --chris
       :render_arguments             => "Ruwiki#render muss mit zwei oder mehr Argumenten aufgerufen werden.",
       :unknown_feature              => "Unbekanntes Feature %s."
+
+          # Labels
+      :label_search_project         => "SuchcProjeckt",
+      :label_search_all             => "Alles",
+      :label_search                 => "Suchc: ",
+      :label_project                => "Projekt: ",
+      :label_topic                  => "Thema: ",
+      :label_edit                   => "Edit",
+      :label_recent_changes         => "Neue Änderungen",
+      :label_topics                 => "Themaliste",
+      :label_projects               => "ProjektListe",
+      :label_editing                => "Editieren",
+      :label_text                   => "Text:",
+      :label_text_accelerator       => "T",
+      :label_edit_comment           => "Redigieren Sie Anmerkung: ",
+      :label_comment_accelerator    => "R",
+      :label_save                   => "Außer",
+      :label_save_accelerator       => "A",
+      :label_cancel                 => "Löschen",
+      :label_cancel_accelerator     => "L",
+      :label_preview                => "Preview",
+      :label_preview_accelerator    => "P",
+      :label_original_text          => "Ursprüngliche Version",
+      :label_raw                    => "Formatfreie",
+      :label_formatted              => "Formatierte",
+      :label_send_report_by         => "Schicken Sie dem webmaster einen Report durch email.",
+      :label_send_report            => "Schicken Report.",
+      :label_saved_page             => "Gespeicherte Seite: ",
     }
     message.each { |k, v| Message[k] = v }
   end

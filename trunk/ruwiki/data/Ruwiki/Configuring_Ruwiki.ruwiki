@@ -1,129 +1,160 @@
 page!content:	= Configuring Ruwiki 0.8.0
 	
-	Ruwiki is configured similarly for both CGI and \WEBrick. The biggest
-	distinction is that because the Wiki servlet is created after the \WEBrick
-	server is created (during the dispatch to the servlet), it is necessary to
-	configure the wiki with a global \Ruwiki::Config object, <em>$config</em>.
-	Thus, in the examples below, replace <em>wiki.config</em> with
-	<em>$config</em> where necessary.
+	Ruwiki is configured similarly as both a CGI and a \WEBrick servlet.
+	The biggest distinction is that because the Wiki servlet is created
+	after the \WEBrick server is created (during the dispatch to the
+	servlet), it is necessary to configure the wiki with a global
+	\Ruwiki::Config object, <em>$config</em>. Thus, in the examples below,
+	replace <em>wiki.config</em> with <em>$config</em> where necessary.
 	
-	: This will probably be changed in a future version prior to 0.9.
+	: This may be changed prior to 1.0.
 	
-	== wiki.config Options
-	
+	== Ruwiki Configuration Options
 	=== wiki.config.title
 	
-	This configuration option names the Wiki, by default this is <tt>Ruwiki</tt>.
-	This affects the display of the home link and the &lt;title&gt; element of
-	pages.
+	This configuration option names the Wiki; by default this is
+	<tt>Ruwiki</tt>. This affects the display of the home link and the
+	&lt;title&gt; element of pages.
 	
 	=== wiki.config.webmaster
 	
-	The email address for the webmaster. This is used in generating error reports
-	that can be emailed to the wiki's webmaster.
+	The email address for the webmaster. This is used in generating error
+	reports that can be emailed to the wiki's webmaster.
 	
 	=== wiki.config.default_page, wiki.config.default_project
 	
-	These options indicate what will happen when the wiki's URL is specified
-	without any parameters (the default page in the default project is opened),
-	when a topic is specified without a project (the topic is opened in the
-	default project), and when a project is specified without a topic (the default
-	page is opened in the project).
+	These options indicate what will happen when the wiki's URL is
+	specified without any parameters (the default page in the default
+	project is opened), when a topic is specified without a project (the
+	topic is opened in the default project), and when a project is
+	specified without a topic (the default page is opened in the project).
 	
 	=== wiki.config.storage_type, wiki.config.storage_options
 	
-	<tt>wiki.config.storage_type</tt> specifies the back-end storage mechanism as
-	a Ruby Symbol. Currently, only <tt>:flatfiles</tt> is implemented. See
-	Extending_Ruwiki for more information.
+	<tt>wiki.config.storage_type</tt> specifies the back-end storage
+	mechanism as a Ruby Symbol. Currently, <tt>:flatfiles</tt>,
+	<tt>:marshal</tt>, and <tt>:yaml</tt> are supported. YAML is the
+	default format for Ruby version 1.8.2 or later; :flatfiles for earlier
+	versions. Because of this, the Ruwiki data is stored by default in
+	:flatfiles format. See Extending_Ruwiki for more information.
 	
 	<tt>wiki.config.storage_options</tt> is a hash of option hashes for each known
 	storage type known to the Wiki. This must use the same Symbol as
 	<tt>wiki.config.storage_type</tt> as the top-level hash key.
 	
-	==== ...storage_options[:flatfiles][:data_path]
+	==== ...storage_options[:flatfiles][:data_path], ...storage_options[:yaml][:data_path], ...storage_options[:marshal][:data_path]
 	
 	The directory in which the wiki files will be found. By default, this is
 	<tt>"./data/"</tt>.
 	
 	==== ...storage_options[:flatfiles][:extension]
 	
-	The extension of the wiki files. By default, this is +nil+ (no extension).
+	The extension of the wiki files. By default, this is "ruwiki". For
+	those upgrading from a previous version of Ruwiki, note that you must
+	explicitly set this value to <tt>nil</tt> if you wish to have no
+	extension.
 	
 	=== wiki.config.template_path
-	This specifies the paths where the Wiki templates will be found. The process
-	running the Wiki must have read access to the template_path.
+	This specifies the paths where the Wiki templates will be found. The
+	process running the Wiki must have read access to the template_path.
 	
 	=== wiki.config.template_set, wiki.config.css
-	These two options indicate which template set will be used. Three template
-	sets are provided in the release package, "default", "es", and "de". The only
-	CSS file used initially is "ruwiki.css". Templates work such that they will be
-	found in <em>template_path</em>/<em>template_set</em>. All CSS files are
-	loaded from the template set directory and emitted as part of the output
+	These two options indicate which template set will be used. Three
+	template sets are provided in the release package, "default", "simple",
+	and "sidebar". The only CSS file used initially is "ruwiki.css".
+	Templates work such that they will be found in
+	<em>template_path</em>/<em>template_set</em>. All CSS files are loaded
+	from the template set directory and emitted as part of the output
 	stream.
 	
-	: The bad news is that this means that the CSS never caches on the client side
-	: as it would if it were a separate file. However, because the templates may
-	: not be in a web-accessible directory, this is necessary.
+	: The bad news is that this means that the CSS never caches on the
+	: client side as it would if it were a separate file. However, because
+	: the templates may not be in a web-accessible directory, this is
+	: necessary.
 	
-	> Template paths will be modified in the future to be based on the template
-	> set name and the language, e.g., "default/en", "default/es", and
-	> "default/de".
+	== Ruwiki Servlet Options
+	Most, if not all, of the configuration above can be achieved through
+	command-line options of the ruwiki servlet. 
+	
+	=== Servlet Command-Line Options
+	; -P, --port PORT : Runs the Ruwiki servlet on the specified port. Default 8808.
+	; -A, --accept ADDRESSES : Restricts the Ruwiki servlet to accepting connections from the specified address or (comma-separated) addresses. May be specified multiple times. Defaults to all addresses.
+	; -L, --local : Restricts the Ruwiki servlet to accepting only local connections (12.0.0.1). Overrides any previous --accept addresses.
+	; -M, --mount MOUNT_POINT : The relative URI from which Ruwiki will be accessible. Defaults to "/".
+	; --[no-]log : Log \WEBrick activity. Default is --log.
+	; --logfile LOGFILE : The file to which \WEBrick logs are written. Default is standard error.
+	; -T, --threads THREADS : Sets the \WEBrick threadcount.
+	
+	=== Ruwiki Command-Line Options
+	; --language LANGUAGE : The interface language for Ruwiki. Defaults to "en". May be "en", "de", or "es".
+	; --webmaster WEBMASTER : The Ruwiki webmaster email address. Defaults to "webmaster@domain.com".
+	; --[no-]debug : Turns on Ruwiki debugging. Defaults to --no-debug.
+	; --title TITLE : Provides the Ruwiki title. Default is "Ruwiki".
+	; --default-page PAGENAME : An alternate default page. Default is "ProjectIndex".
+	; --default-project PAGENAME : An alternate default project. Default is "Default".
+	; --template-path TEMPLATE_PATH : The location of Ruwiki templates. Default is "./templates".
+	; --templates TEMPLATES : The name of the Ruwiki templates. Default is "default".
+	; --css CSS_NAME : The name of the CSS file in the template path. Default is "ruwiki.css".
+	; --storage-type TYPE : Select the storage type: flatfiles, yaml, marshal
+	; --flatfiles-data-path PATH : The path where data files are stored. Default is "./data". <em>--flatfiles</em> is used even for <em>yaml</em> and <em>marshal</em> because they are all flatfile oriented systems.
+	; --flatfiles-extension EXT The extension for data files. Default is "ruwiki". <em>--flatfiles</em> is used even for <em>yaml</em> and <em>marshal</em> because they are all flatfile oriented systems.
 	
 	== Templates
-	Templating is done with the \RDoc template.rb library, included in the
-	distribution of Ruwiki. The templating library allows for nested templates,
-	and this is used extensively in Ruwiki. This library is documented in
+	Templating is done with a heavily modified version of the \RDoc
+	template.rb library, included in the distribution of Ruwiki. The
+	templating library allows for nested templates, and this is used
+	extensively in Ruwiki. This library is documented in
 	RuwikiTemplatingLibrary.
 	
-	There are four major templates: content, edit, save, and error. Each of these
-	has a slightly different combination of template files used, and this means
-	that there are different sets of variables available.
+	There are four major templates: content, edit, save, and error. Each
+	of these has a slightly different combination of template files used,
+	and this means that there are different sets of variables available.
 	
 	The major templates are combined templates that are defined as follows:
-	; content : body.tmpl, content.tmpl, controls.tmpl
+	; content : body.tmpl, content.tmpl, controls.tmpl, footer.tmpl
 	; edit : body.tmpl, edit.tmpl
-	; save : body.tmpl, save.tmpl, controls.tmpl
+	; save : body.tmpl, save.tmpl, controls.tmpl, footer.tmpl
 	; error : body.tmpl, error.tmpl
 	
 	=== body.tmpl
-	The body template knows two template keys (<tt>%wiki_title%</tt> and
-	<tt>%css_link%</tt>) and includes one other template. The values for
-	%wiki_title% key differs depending on context, but no other key should be used
-	or expected in the body template.
+	The body template knows two printable template keys
+	(<tt>%wiki_title%</tt> and <tt>%css_link%</tt>), one label
+	(<tt>#charset_encoding#</tt>), one boolean template key
+	(<tt>editable</tt>), and includes one other template. The values for
+	%wiki_title% key differs depending on context, but no other key should
+	be used or expected in the body template.
 	
-	  <html>
-	    <head>
-	      <title>%wiki_title%</title>
-	      %css_link%
-	    </head>
-	    <body>
-	      !INCLUDE!
-	    </body>
-	  </html>
+	There are no CSS specifiers on the default templates.
 	
 	=== content.tmpl
-	The content template knows one template key (<tt>%content%</tt>) and includes
-	one other template. (This may change moving forward so that there's a footer
-	as well as a control header.)
+	The content template knows one template key (<tt>%content%</tt>) and
+	includes two other templates (controls.tmpl and footer.tmpl). The
+	content portion is contained in an HTML &lt;div&gt; with a CSS class
+	of <tt>rw_content</tt>.
 	
-	  !INCLUDE!
-	  <!-- topic content -->
-	  %content%
-	  <!-- topic content -->
+	=== controls.tmpl, footer.tmpl
+	The controls and footer templates vary by template set. They is
+	intended to provide a navigation section or breadcrumbs. The variables
+	provided to the controls and footer templates are:
 	
-	=== controls.tmpl
-	The controls template offers a navigation bar. It knows four template keys:
+	; <tt>%home_link%</tt> : The root URL of the wiki.
+	; <tt>%cgi_url%</tt> : The URL to the wiki, suitable for building further links from.
+	; <tt>%page_project%</tt> : The project for the current page topic.
+	; <tt>%page_topic%</tt> : The topic of the current page.
+	; <tt>%page_raw_topic%</tt> : The raw version of the topic; suitable for use in an URI.
+	; <tt>%label_topic_or_search%</tt> : A localized version of "Topic: " (<tt>#label_topic#</tt>) or "Search: " (<tt>#label_search#</tt>), as appropriate for the action being taken.
 	
-	; %cgi_url% : The URL to the wiki, suitable for building further links from.
-	; %home_link% : The root topic of the wiki.
-	; %page_project% : The project for the current page topic.
-	; %page_topic% : The topic of the current page.
+	The labels provided are <tt>#label_projects#</tt>,
+	<tt>#label_edit#</tt>, <tt>#label_search_project#</tt>,
+	<tt>#label_search_all#</tt>, <tt>#label_recent_changes#</tt>,
+	and <tt>#label_topics#</tt>. There is one control variable,
+	<tt>editable</tt>.
 	
-	  <div class="rw_nav">
-	    %home_link% |
-	    Topic: <strong>%page_topic%</strong> Project: <a href="%cgi_url%/%page_project%/"><strong>%page_project%</strong></a> |
-	    <a href="%cgi_url%?action=edit&amp;project=%page_project%&amp;%page_topic%">Edit</a>
-	  </div>
+	The controls section is in a &lt;form&gt; or &lt;div&gt; with a CSS
+	class of <tt>rw_navbar</tt>. There may be additional &lt;div&gt;s with
+	classes like <tt>rw_navbar_tab</tt> or <tt>rw_navbar_righttab</tt>.
+	The search box, button, and checkbox are <tt>rw_search_box</tt>,
+	<tt>rw_search_button</tt>, and <tt>rw_search_all_check</tt>.
 	
 	=== edit.tmpl
 	The edit template is the most complex template with the most keys. Of

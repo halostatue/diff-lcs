@@ -16,7 +16,6 @@ page!content:	= Ruwiki 0.8.0 ChangeLog
 	* AZ: New look! Ruwiki now sports a new default look with CSS and template changes.
 	* AZ: New look! Ruwiki has a "simple" template set.
 	* AZ: New look! Ruwiki has a "sidebar" template set.
-	; Tokens : Fix token bugs (newline problem?), add ISBN token(?).
 	
 	== Version 0.7.0
 	* Changed the tokenization API so that the #post_replace call is made at the Token class level instead of the instance level.
