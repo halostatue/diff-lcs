@@ -54,8 +54,8 @@ class Ruwiki::Wiki
 
       # Matches indented text. %r{^(\s+\S?.*)$}
     def self.regexp
-      %r{^(\s+.*)$}
-#     %r{^([ \t]+[^\n]*)\n?}
+#     %r{^(\s+.*)$}
+      %r{^([ \t]+[^\n]*)\n?}
     end
 
       # Replaces the text to <pre>content</pre>.
@@ -80,18 +80,19 @@ class Ruwiki::Wiki
   RE_URI_PATH   = %r{[^\s<>\]]}
   RE_URI_TEXT   = %r{[^\]]*}
 
+  class << self
+    def increment_numbered_links
+      @numbered_links_count ||= 0
+      @numbered_links_count += 1
+    end
+
+    def reset_numbered_links
+      @numbered_links_count = 0
+    end
+  end
+
     # Converts URLs in the form of [url] to numbered links.
   class NumberedLinks < Ruwiki::Wiki::Token
-    class << self
-      def increment
-        @count ||= 0
-        @count += 1
-      end
-
-      def reset
-        @count = 0
-      end
-    end
 
     def self.rank
       2
@@ -104,7 +105,7 @@ class Ruwiki::Wiki
     def replace
       extlink = @match.captures[0]
 
-      name = "[#{NumberedLinks.increment}]"
+      name = "[#{Ruwiki::Wiki.increment_numbered_links}]"
 
       %Q{<a class="rwtk_NumberedLinks" href="#{Ruwiki::Wiki.redirect(extlink)}">#{name}</a>}
     end
@@ -129,7 +130,7 @@ class Ruwiki::Wiki
       end
 
       unless options['numbered'].nil? or options['numbered'] == "false"
-        options['title'] = %Q("[#{NumberedLinks.increment}]")
+        options['title'] = %Q("[#{Ruwiki::Wiki.increment_numbered_links}]")
         options.delete('numbered')
       end
 

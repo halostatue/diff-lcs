@@ -151,34 +151,34 @@ class TokenTestCases < Test::Unit::TestCase
 
   def test_NumberedLinks
     token   = Ruwiki::Wiki::NumberedLinks
-    Ruwiki::Wiki::NumberedLinks.reset
-    content = "[http://www.ruby-lang.org] \\[http://www.rubyforge.org]"
-    tkv     = "TOKEN_0 \\TOKEN_1"
-    uri     = CGI.escape("http://www.ruby-lang.org")
-    rpv     = %Q{<a class="rwtk_NumberedLinks" href="http://www.google.com/url?sa=D&amp;q=#{uri}">[1]</a> [http://www.rubyforge.org]}
-    res     = %Q{<a class="rwtk_NumberedLinks" href="http://www.google.com/url?sa=D&amp;q=#{uri}">[1]</a> [http://www.rubyforge.org]}
+    Ruwiki::Wiki.reset_numbered_links
+    content = "[http://www.yahoo.com] [http://www.ruby-lang.org] \\[http://www.rubyforge.org]"
+    tkv     = "TOKEN_0 TOKEN_1 \\TOKEN_2"
+    uri     = CGI.escape("http://www.yahoo.com")
+    rpv     = %Q{<a class="rwtk_NumberedLinks" href="http://www.google.com/url?sa=D&amp;q=#{uri}">[1]</a> <a class="rwtk_NumberedLinks" href="http://www.ruby-lang.org">[2]</a> [http://www.rubyforge.org]}
+    res     = %Q{<a class="rwtk_NumberedLinks" href="http://www.google.com/url?sa=D&amp;q=#{uri}">[1]</a> <a class="rwtk_NumberedLinks" href="http://www.ruby-lang.org">[2]</a> [http://www.rubyforge.org]}
 
     __process(token, content, tkv, rpv, res)
   end
 
   def test_NamedLinks
     token   = Ruwiki::Wiki::NamedLinks
-    content = "[http://www.ruby-lang.org Ruby] \\[http://www.rubyforge.org RubyForge]"
-    tkv     = "TOKEN_0 \\TOKEN_1"
-    uri     = CGI.escape("http://www.ruby-lang.org")
-    rpv     = %Q{<a class="rwtk_NamedLinks" href="http://www.google.com/url?sa=D&amp;q=#{uri}">Ruby</a> [http://www.rubyforge.org RubyForge]}
-    res     = %Q{<a class="rwtk_NamedLinks" href="http://www.google.com/url?sa=D&amp;q=#{uri}">Ruby</a> [http://www.rubyforge.org RubyForge]}
+    content = "[http://www.yahoo.com Yahoo!] [http://www.ruby-lang.org Ruby] \\[http://www.rubyforge.org RubyForge]"
+    tkv     = "TOKEN_0 TOKEN_1 \\TOKEN_2"
+    uri     = CGI.escape("http://www.yahoo.com")
+    rpv     = %Q{<a class="rwtk_NamedLinks" href="http://www.google.com/url?sa=D&amp;q=#{uri}">Yahoo!</a> <a class="rwtk_NamedLinks" href="http://www.ruby-lang.org">Ruby</a> [http://www.rubyforge.org RubyForge]}
+    res     = %Q{<a class="rwtk_NamedLinks" href="http://www.google.com/url?sa=D&amp;q=#{uri}">Yahoo!</a> <a class="rwtk_NamedLinks" href="http://www.ruby-lang.org">Ruby</a> [http://www.rubyforge.org RubyForge]}
 
     __process(token, content, tkv, rpv, res)
   end
 
   def test_ExternalLinks
     token   = Ruwiki::Wiki::ExternalLinks
-    content = "http://www.ruby-lang.org \\http://www.rubyforge.org"
-    tkv     = "TOKEN_0 \\TOKEN_1"
-    uri     = CGI.escape("http://www.ruby-lang.org")
-    rpv     = %Q{<a class="rwtk_ExternalLinks" href="http://www.google.com/url?sa=D&amp;q=#{uri}">http://www.ruby-lang.org</a> http://www.rubyforge.org}
-    res     = %Q{<a class="rwtk_ExternalLinks" href="http://www.google.com/url?sa=D&amp;q=#{uri}">http://www.ruby-lang.org</a> http://www.rubyforge.org}
+    content = "http://www.yahoo.com http://www.ruby-lang.org \\http://www.rubyforge.org"
+    tkv     = "TOKEN_0 TOKEN_1 \\TOKEN_2"
+    uri     = CGI.escape("http://www.yahoo.com")
+    rpv     = %Q{<a class="rwtk_ExternalLinks" href="http://www.google.com/url?sa=D&amp;q=#{uri}">http://www.yahoo.com</a> <a class="rwtk_ExternalLinks" href="http://www.ruby-lang.org">http://www.ruby-lang.org</a> http://www.rubyforge.org}
+    res     = %Q{<a class="rwtk_ExternalLinks" href="http://www.google.com/url?sa=D&amp;q=#{uri}">http://www.yahoo.com</a> <a class="rwtk_ExternalLinks" href="http://www.ruby-lang.org">http://www.ruby-lang.org</a> http://www.rubyforge.org}
 
     __process(token, content, tkv, rpv, res)
   end
