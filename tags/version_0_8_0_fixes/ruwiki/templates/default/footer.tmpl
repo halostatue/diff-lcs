@@ -1,0 +1,23 @@
+<div id="rw_footer">
+  <form class="rw_navbar" action="_search">
+    <div class="rw_navbar_tab">%home_link%</div>
+    <div class="rw_navbar_tab">#label_project#<a href="%cgi_url%/%page_project%/"><strong>%page_project%</strong></a></div>
+    <div class="rw_navbar_tab">%label_topic_or_search% %page_topic%</div>
+    [?editable|<div class="rw_navbar_tab"><a href="%cgi_url%/%page_project%/%page_raw_topic%/_edit">#label_edit#</a></div>?]
+      <!-- Right-hand tabs must go in reverse order! -->
+    <div class="rw_navbar_righttab">
+      <input class="rw_search_box" type="text" name="q" size="10">
+      <button class="rw_search_button" type="submit">#label_search_project#</button>
+      <input class="rw_search_all_check" type="checkbox" name="a">#label_search_all#</input>
+    </div>
+    <div class="rw_navbar_righttab">
+      <a href="%cgi_url%/%page_project%/RecentChanges">#label_recent_changes#</a>  
+    </div>
+    <div class="rw_navbar_righttab">
+      %page_project%::<a href="%cgi_url%/%page_project%/_topics">#label_topics#</a>
+    </div>
+    <div class="rw_navbar_righttab">
+      <a href="%cgi_url%/_projects">#label_projects#</a>
+    </div>
+  </form>
+</div>

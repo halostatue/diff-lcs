@@ -1,0 +1,114 @@
+page!content:	= Configuring Ruwiki 0.8.0
+	Ruwiki is configured similarly as both a CGI and a \WEBrick servlet.
+	The biggest distinction is that because the Wiki servlet is created
+	after the \WEBrick server is created (during the dispatch to the
+	servlet), it is necessary to configure the wiki with a global
+	Ruwiki::Config object, <em>$config</em>. Thus, in the examples below,
+	replace <em>wiki.config</em> with <em>$config</em> where necessary.
+	
+	: Additional configuration options will be added from time to time. The
+	: form for specifying configuration may be changed prior to 1.0. In
+	: 0.8.1, it will be possible to initialise the configuration object
+	: from storage.
+	
+	If you are looking for the discussion on templates, this has been moved
+	to Extending_Ruwiki.
+	
+	== Ruwiki Configuration Options
+	=== wiki.config.title
+	
+	This configuration option names the Wiki; by default this is
+	<tt>Ruwiki</tt>. This affects the display of the home link and the
+	&lt;title&gt; element of pages.
+	
+	=== wiki.config.webmaster
+	
+	The email address for the webmaster. This is used in generating error
+	reports that can be emailed to the wiki&rsquo;s webmaster.
+	
+	=== wiki.config.default_page, wiki.config.default_project
+	
+	These options indicate what will happen when the wiki&rsquo;s URL is
+	specified without any parameters (the default page in the default
+	project is opened), when a topic is specified without a project (the
+	topic is opened in the default project), and when a project is
+	specified without a topic (the default page is opened in the project).
+	
+	=== wiki.config.storage_type, wiki.config.storage_options
+	
+	<tt>wiki.config.storage_type</tt> specifies the back-end storage
+	mechanism as a Ruby Symbol. Currently, <tt>:flatfiles</tt>,
+	<tt>:marshal</tt>, and <tt>:yaml</tt> are supported. YAML is the
+	default format for Ruby version 1.8.2 or later; :flatfiles for earlier
+	versions. Because of this, the Ruwiki data is stored by default in
+	:flatfiles format. See Extending_Ruwiki for more information.
+	
+	<tt>wiki.config.storage_options</tt> is a hash of option hashes for
+	each known storage type known to the Wiki. This must use the same
+	Symbol as <tt>wiki.config.storage_type</tt> as the top-level hash key.
+	
+	==== ...storage_options[:flatfiles][:data_path], ...storage_options[:yaml][:data_path], ...storage_options[:marshal][:data_path]
+	
+	The directory in which the wiki files will be found. By default, this
+	is &ldquo;<tt>./data/</tt>&rdquo;.
+	
+	==== ...storage_options[:flatfiles][:extension]
+	
+	The extension of the wiki files. By default, this is
+	&ldquo;ruwiki&rdquo;. For those upgrading from a previous version of
+	Ruwiki, note that you must explicitly set this value to <tt>nil</tt> if
+	you wish to have no extension.
+	
+	=== wiki.config.template_path
+	This specifies the paths where the Wiki templates will be found. The
+	process running the Wiki must have read access to the template_path.
+	
+	=== wiki.config.template_set, wiki.config.css
+	These two options indicate which template set will be used. Three
+	template sets are provided in the release package:
+	&ldquo;default&rdquo;, &ldquo;simple&rdquo;, and &ldquo;sidebar&rdquo;.
+	The only CSS file used initially is &ldquo;ruwiki.css&rdquo;. Templates
+	work such that they will be found in
+	<em>template_path</em>/<em>template_set</em>. All CSS files are loaded
+	from the template set directory and emitted as part of the output
+	stream.
+	
+	: The bad that this means that the CSS never caches on the client side
+	: as it would if it were a separate file. However, as templates may not
+	: be in a web-accessible directory, this is necessary.
+	
+	== Ruwiki Servlet Options
+	Most, if not all, of the configuration above can be achieved through
+	command-line options of the ruwiki servlet. 
+	
+	=== Servlet Command-Line Options
+	; -P, --port <em>PORT</em> : Runs the Ruwiki servlet on the specified port. Default 8808.
+	; -A, --accept <em>ADDRESSES</em> : Restricts the Ruwiki servlet to accepting connections from the specified address or (comma-separated) addresses. May be specified multiple times. Defaults to all addresses.
+	; -L, --local : Restricts the Ruwiki servlet to accepting only local connections (127.0.0.1). Overrides any previous --accept addresses.
+	; -M, --mount <em>MOUNT_POINT</em> : The relative URI from which Ruwiki will be accessible. Defaults to &ldquo;/&rdquo;.
+	; --[no-]log : Log \WEBrick activity. Default is --log.
+	; --logfile <em>LOGFILE</em> : The file to which \WEBrick logs are written. Default is standard error.
+	; -T, --threads <em>THREADS</em> : Sets the \WEBrick threadcount.
+	
+	=== Ruwiki Command-Line Options
+	; --language <em>LANGUAGE</em> : The interface language for Ruwiki. Defaults to &ldquo;en&rdquo;. May be &ldquo;en&rdquo;, &ldquo;de&rdquo;, or &ldquo;es&rdquo;.
+	; --webmaster <em>WEBMASTER</em> : The Ruwiki webmaster email address. Defaults to &ldquo;webmaster@domain.com&rdquo;.
+	; --[no-]debug : Turns on Ruwiki debugging. Defaults to --no-debug.
+	; --title <em>TITLE</em> : Provides the Ruwiki title. Default is &ldquo;Ruwiki&rdquo;.
+	; --default-page <em>PAGENAME</em> : An alternate default page. Default is &ldquo;\ProjectIndex&rdquo;.
+	; --default-project <em>PAGENAME</em> : An alternate default project. Default is &ldquo;Default&rdquo;.
+	; --template-path <em>TEMPLATE_PATH</em> : The location of Ruwiki templates. Default is &ldquo;./templates&rdquo;.
+	; --templates <em>TEMPLATES</em> : The name of the Ruwiki templates. Default is &ldquo;default&rdquo;.
+	; --css <em>CSS_NAME</em> : The name of the <acronym title="Cascading Style Sheets">CSS</acronym> file in the template path. Default is &ldquo;ruwiki.css&rdquo;.
+	; --storage-type <em>TYPE</em> : Select the storage type: flatfiles, yaml, marshal
+	; --flatfiles-data-path <em>PATH</em> : The path where data files are stored. Default is &ldquo;./data&rdquo;. <em>--flatfiles</em> is used even for <em>yaml</em> and <em>marshal</em> because they are all flatfile oriented systems.
+	; --flatfiles-extension <em>EXT</em> : The extension for data files. Default is &ldquo;ruwiki&rdquo;. <em>--flatfiles</em> is used even for <em>yaml</em> and <em>marshal</em> because they are all flatfile oriented systems.
+	
+	$Id$
+properties!editable:	false
+properties!project:	Ruwiki
+properties!title:	Configuring_Ruwiki
+properties!topic:	Configuring_Ruwiki
+properties!version:	1
+ruwiki!content-version:	2
+ruwiki!version:	0.8.0

@@ -1,0 +1,245 @@
+#!/usr/bin/env ruby
+
+  # Customize this if you put the RuWiki files in a different location.
+require 'webrick'
+
+begin
+  require 'ruwiki'
+rescue LoadError
+  $LOAD_PATH.unshift "#{File.dirname($0)}/lib"
+  require 'ruwiki'
+end
+
+require 'ruwiki/servlet'
+require 'ruwiki/lang/en'
+require 'ruwiki/lang/de'
+require 'ruwiki/lang/es'
+
+require 'optparse'
+require 'ostruct'
+
+copyright_banner = <<-"COPYRIGHT"
+Ruwiki #{Ruwiki::VERSION}
+  Copyright © 2002 - 2004, Digikata and HaloStatue
+
+  http://rubyforge.org/projects/ruwiki/
+
+  Alan Chen (alan@digikata.com)
+  Austin Ziegler (ruwiki@halostatue.ca)
+
+Licensed under the same terms as Ruby.
+
+$Id$
+COPYRIGHT
+
+  # This is for the WEBrick version of Ruwiki. This has been abstracted to
+  # accept a Config global variable to reconfigure Ruwiki after initial
+  # creation.
+$config = Ruwiki::Config.new
+
+  # Because the servlet can be started from the command-line, provide defaults
+  # for all possible configuration options.
+opts = OpenStruct.new
+opts.port       = 8808
+opts.addresses  = []
+opts.mount      = '/'
+opts.do_log     = true
+opts.log_dest   = $stderr
+opts.threads    = 1
+opts.language   = Ruwiki::Lang::EN
+
+  # Ruwiki::Config options.
+opts.webmaster        = 'webmaster@domain.com'
+opts.debug            = false
+opts.title            = "Ruwiki"
+opts.default_page     = "ProjectIndex"
+opts.default_project  = "Default"
+opts.template_path    = "./templates/"
+opts.template_set     = "default"
+opts.css              = "ruwiki.css"
+opts.time_format     = "%H:%M:%S"
+opts.date_format     = "%Y.%m.%d"
+opts.datetime_format = "%Y.%m.%d %H:%M:%S"
+
+# if RUBY_VERSION >= "1.8.2"
+#   opts.storage_type   = :yaml
+# else
+#   opts.storage_type   = :flatfiles
+# end
+  # Temporarily disabled the above.
+opts.storage_type   = :flatfiles
+
+opts.storage_options = Hash.new { |h, k| h[k] = {} }
+opts.storage_options[opts.storage_type][:data_path] = "./data/"
+opts.storage_options[opts.storage_type][:extension] = "ruwiki"
+
+ARGV.options do |o|
+  o.banner = "Usage: #{File.basename($0)} [options]"
+  o.separator ""
+  o.separator "WEBrick options:"
+  o.on('-P', '--port PORT', Numeric, 'Runs the Ruwiki servlet on the specified', 'port. Default 8808.') { |port|
+    opts.port = port
+  }
+  o.on('-A', '--accept ADDRESS,ADDRESS,ADDRESS', Array, 'Restricts the Ruwiki servlet to accepting', 'connections from the specified address or', '(comma-separated) addresses. May be', 'specified multiple times. Defaults to all', 'addresses.') { |address|
+    opts.addresses += address
+  }
+  o.on('-L', '--local', 'Restricts the Ruwiki servlet to accepting', 'only local connections (127.0.0.1).', 'Overrides any previous --accept addresses.') { |local|
+    opts.addresses = ["127.0.0.1"]
+  }
+  o.on('-M', '--mount MOUNT-POINT', 'The relative URI from which Ruwiki ', 'will be accessible. Defaults to "/".') { |mp|
+    opts.mount = mp
+  }
+  o.on('--[no-]log', 'Log WEBrick activity. Default is --log.') { |log|
+    opts.do_log = log
+  }
+  o.on('--logfile LOGFILE', 'The file to which WEBrick logs are', 'written. Default is standard error.') { |lf|
+    opts.log_dest = lf
+  }
+  o.on('-T', '--threads THREADS', Integer, 'Sets the WEBrick threadcount.') { |tc|
+    opts.threads = tc
+  }
+  o.separator ""
+  o.separator "Ruwiki options:"
+  o.on('--language LANGUAGE', 'The interface language for Ruwiki.', 'Defaults to "en". May be "en", "de", or', '"es".') { |lang|
+    case lang
+    when 'en'
+      opts.language = Ruwiki::Lang::EN
+    when 'es'
+      opts.language = Ruwiki::Lang::ES
+    when 'de'
+      opts.language = Ruwiki::Lang::DE
+    end
+  }
+  o.on('--webmaster WEBMASTER', 'The Ruwiki webmaster email address.', 'Defaults to "webmaster@domain.com".') { |wm|
+    opts.webmaster = wm
+  }
+  o.on('--[no-]debug', 'Turns on Ruwiki debugging. Defaults', 'to --no-debug.') { |d|
+    opts.debug = d
+  }
+  o.on('--title TITLE', 'Provides the Ruwiki title. Default is', '"Ruwiki".') { |t|
+    opts.title = t
+  }
+  o.on('--default-page PAGENAME', 'An alternate default page. Default is', '"ProjectIndex".') { |dp|
+    opts.default_page = dp
+  }
+  o.on('--default-project PAGENAME', 'An alternate default project. Default is', '"Default".') { |dp|
+    opts.default_project = dp
+  }
+  o.on('--template-path TEMPLATE_PATH', 'The location of Ruwiki templates. Default', 'is "./templates".') { |tp|
+    opts.template_path = tp
+  }
+  o.on('--templates TEMPLATES', 'The name of the Ruwiki templates. Default', 'is "default".') { |tp|
+    opts.template_set = tp
+  }
+  o.on('--css CSS_NAME', 'The name of the CSS file in the template', 'path. Default is "ruwiki.css".') { |css|
+    opts.css = css
+  }
+  o.on('--storage-type TYPE', Ruwiki::KNOWN_BACKENDS, 'Select the storage type:', "#{Ruwiki::KNOWN_BACKENDS.join(", ")}") { |st|
+    opts.storage_type = st
+    opts.storage_options[opts.storage_type][:data_path] ||= "./data/"
+    opts.storage_options[opts.storage_type][:extension] ||= "ruwiki"
+  }
+  o.on('--flatfiles-data-path PATH', 'The path where data files are stored.', 'Default is "./data".') { |fdp|
+    opts.storage_options[:flatfiles][:data_path] = fdp
+    opts.storage_options[:yaml][:data_path] = fdp
+    opts.storage_options[:marshal][:data_path] = fdp
+  }
+  o.on('--flatfiles-extension EXT', 'The extension for data files.', 'Default is "ruwiki".') { |ext|
+    opts.storage_options[:flatfiles][:extension] = ext
+    opts.storage_options[:yaml][:extension] = ext
+    opts.storage_options[:marshal][:extension] = ext
+  }
+  
+    # TODO: Add options for time, date, and datetime formats.
+  o.separator ""
+  o.separator "General info:"
+  o.on_tail('--help', 'Shows this text.') {
+    $stderr.puts o
+    exit
+  }
+  o.on_tail('--version', 'Shows the version of Ruwiki.') {
+    $stderr.puts copyright_banner
+    exit
+  }
+  o.parse!
+end
+
+  # Configuration defaults to certain values. This overrides the defaults. The
+  # webmaster.
+$config.webmaster       = opts.webmaster
+$config.debug           = opts.debug
+$config.title           = opts.title
+$config.default_page    = opts.default_page
+$config.default_project = opts.default_project
+$config.storage_type    = opts.storage_type
+$config.storage_options[opts.storage_type] = opts.storage_options[opts.storage_type]
+$config.template_path   = opts.template_path
+$config.template_set    = opts.template_set
+$config.css             = opts.css
+$config.time_format     = opts.time_format
+$config.date_format     = opts.date_format
+$config.datetime_format = opts.datetime_format
+$config.language        = opts.language
+
+  # If the list of accepted addresses is not empty, provide IP-based
+  # restrictions.
+if not opts.addresses.empty?
+  localonly = proc do |sock|
+    if not opts.addresses.include?(sock.peeraddr[3])
+      msg = "Rejected peer address #{sock.peeraddr[3]}. Connections are only accepted from: #{opts.addresses.join(", ")}."
+      raise WEBrick::ServerError, msg
+    end
+  end
+else
+  localonly = nil
+end
+
+if opts.do_log
+  if opts.log_dest = $stderr
+    dest = $stderr
+    opts.log_dest = "stderr"
+  else
+    dest = File.open(opts.log_dest, "wb+")
+  end
+  logger = WEBrick::Log.new(dest, WEBrick::Log::DEBUG)
+else
+  logger = nil
+end
+
+banner = <<-"BANNER"
+#{copyright_banner}
+
+WEBrick options:
+  Port                  #{opts.port}
+  Accepted Addresses    #{opts.addresses.join(", ")}
+  Mount Point           #{opts.mount}
+  Logging?              #{opts.do_log}
+  Log Destination       #{opts.log_dest}
+  Threads               #{opts.threads}
+
+Ruwiki options:
+  Webmaster             #{opts.webmaster}
+  Debugging?            #{opts.debug}
+  Title                 #{opts.title}
+  Default Project       #{opts.default_project}
+  Default Page          #{opts.default_page}
+  Template Path         #{opts.template_path}
+  Template Set          #{opts.template_set}
+  CSS Source            #{opts.css}
+
+  Storage Type          #{opts.storage_type}
+  Data Path             #{opts.storage_options[opts.storage_type][:data_path]}
+  Extension             #{opts.storage_options[opts.storage_type][:extension]}
+
+BANNER
+
+banner.each { |b| logger.info(b) } unless logger.nil?
+
+server = WEBrick::HTTPServer.new(:Port            => opts.port.to_i,
+                                 :StartThreads    => opts.threads.to_i,
+                                 :AcceptCallback  => localonly,
+                                 :Logger          => logger)
+$config.logger = logger
+server.mount(opts.mount, Ruwiki::Servlet)
+trap("INT") { server.shutdown; exit }
+server.start
