@@ -49,31 +49,22 @@ class Ruwiki
       # after verifying that the project exists.
     def retrieve(topic, project = 'Default')
       unless page_exists?(topic, project)
-        exported = {
-          'ruwiki' => {
-            'content-version' => Ruwiki::CONTENT_VERSION,
-            'version'         => Ruwiki::VERSION
-          },
-          'properties' => {
-            'title'         => topic,
-            'topic'         => topic,
-            'project'       => project,
-            'creator'       => nil,
-            'creator-ip'    => nil,
-            'create-date'   => Time.now,
-            'editor'        => nil,
-            'editor-ip'     => nil,
-            'edit-date'     => Time.now,
-            'edit-comment'  => nil,
-            'editable'      => true,
-            'entropy'       => 0,
-            'html-headers'  => [],
-            'version'       => 0
-          },
-          'page' => {
-            'header'  => nil,
-            'footer'  => nil
-          },
+        exported = Ruwiki::Page::NULL_PAGE.dup
+        exported['properties'] = {
+          'title'         => topic,
+          'topic'         => topic,
+          'project'       => project,
+          'create-date'   => Time.now,
+          'edit-date'     => Time.now,
+          'editable'      => true,
+          'indexable'     => true,
+          'entropy'       => 0.0,
+          'html-headers'  => [],
+          'version'       => 0
+        }
+        exported['page'] = {
+          'header'  => nil,
+          'footer'  => nil
         }
 
         if project_exists?(project)
@@ -230,7 +221,8 @@ class Ruwiki
     rescue Errno::EACCES => e
       raise Ruwiki::Backend::BackendError.new(e), @message[:no_access_list_topics] % [projname]
     rescue Exception => e
-      p = ['', %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
+#     p = [projname, %Q~#{e.mes}<br />\n#{e.backtrace.join('<br />\n')}~]
+      p = [projname, e.message]
       raise Ruwiki::Backend::BackendError.new(e), @message[:cannot_list_topics] % p
     end
   end

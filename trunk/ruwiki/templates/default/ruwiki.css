@@ -1,4 +1,49 @@
 /* $Id$ */
+/*
+ * The fixed positioning for what we're doing is based on:
+ * http://www.456bereastreet.com/lab/cssframes/
+ */
+body, html { margin: 0; padding: 0; }
+  /* Prevents content from becoming unreachable in Gecko */
+body { min-width: 720px; }
+
+  /*
+   * position: absolute - scrolls the whole page for all browsers. This also
+   * makes the background invisible, so the text doesn't appear between tabs.
+   */
+div#rw_header
+{
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  height: 2.25em;
+  background-color: #F7FEFF;
+}
+
+  /* position: fixed - header and footer don't scroll; modern browsers */
+body > div#rw_header { position: fixed; }
+
+  /*
+   * position: absolute - scrolls the whole page for all browsers. This also
+   * makes the background invisible, so the text doesn't appear between tabs.
+   */
+div#rw_footer
+{
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  height: 2.25em;
+  background-color: #F7FEFF;
+}
+
+  /* position: fixed - header and footer don't scroll; modern browsers */
+body > div#rw_footer { position: fixed; }
+
+body > div#rw_footer > .rw_navbar { position: fixed; bottom: 0; }
+body > div#rw_footer > .rw_navbar > div { position: relative; top: -2em; }
+
 body
 {
   margin: 0.5em;
@@ -236,3 +281,5 @@ div.rwtk_Calendar {
 .rwtk_Lists { }
 .rwtk_Blockquotes { }
 .rwtk_Definitions { }
+.rwtk_Definitions dt { font-weight: bold; }
+

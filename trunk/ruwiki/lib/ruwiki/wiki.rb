@@ -39,7 +39,7 @@ class Ruwiki
       Token.tokenlist.each do |token|
         content.gsub!(token.regexp) do |m|
           match = Regexp.last_match
-          tc = token.new(match, project, @backend, @script)
+          tc = token.new(match, project, @backend, @script, @message, @title)
           tokens << tc
           if m[0, 1] == '\\'
             "\\TOKEN_#{tokens.size - 1}"
@@ -78,11 +78,13 @@ class Ruwiki
     attr_accessor :default_project
     attr_accessor :script
     attr_accessor :backend
+    attr_accessor :message
 
       # Creates the markup class.
-    def initialize(default_project, script)
+    def initialize(default_project, script, title)
       @default_project  = default_project
       @script           = script
+      @title            = title
     end
   end
 end

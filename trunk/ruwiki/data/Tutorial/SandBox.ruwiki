@@ -2,8 +2,7 @@ page!content:	This page is intended for users to play with freely to
 	practice their \WikiFormatting.
 	
 	$Id$
-properties!indexable:	false
-properties!project:	Ruwiki
+properties!project:	Tutorial
 properties!title:	SandBox
 properties!topic:	SandBox
 properties!version:	1

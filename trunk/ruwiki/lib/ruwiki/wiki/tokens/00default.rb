@@ -21,9 +21,9 @@ class Ruwiki::Wiki
       0
     end
 
-      # Matches blank lines. %r{^\s*$}
+      # Matches blank lines. %r{^$}
     def self.regexp
-      %r{(^\s*$)}
+      %r{(^$)}
     end
 
     def replace
@@ -37,6 +37,7 @@ class Ruwiki::Wiki
       content.gsub!(%r{\n(</p>)}, '\1')
       content.gsub!(%r{(<p[^>]*>)\n}, '\1')
       content.gsub!(%r{(</p>)(<p[^>]*>)}) { "#{$1}\n#{$2}" }
+      content.gsub!(%r{(<pre[^>]*>.*?)<p[^>]*></p>(.*?</pre>)}) { "#{$1}\n#{$2}" }
       content.gsub!(%r{<p[^>]*></p>}, '')
       content.gsub!(%r{^\n(<p[^>]*>)}, '\1')
       content
@@ -51,9 +52,9 @@ class Ruwiki::Wiki
       1
     end
 
-      # Matches indented text. %r{^(\s+\S.*)$}
+      # Matches indented text. %r{^(\s+\S?.*)$}
     def self.regexp
-      %r{^(\s+\S.*)$}
+      %r{^([ \t]+[^\n]*)\n}
     end
 
       # Replaces the text to <pre>content</pre>.
@@ -63,7 +64,7 @@ class Ruwiki::Wiki
       content.gsub!(/</, '&lt;')
       content.gsub!(/>/, '&gt;')
 
-      %Q{</p><pre class="rwtk_Code">#{content}</pre>}
+      %Q{</p><pre class="rwtk_Code">#{content}</pre>\n}
     end
 
       # Converts cases of %r{</pre>(\n|<br ?/?>)<pre>} to \1.
@@ -72,6 +73,7 @@ class Ruwiki::Wiki
       content.gsub!(%r{</pre>(\n|<br ?/?>)?<pre[^>]*>}, '\1')
       content.gsub!(%r{<p[^>]*>(<pre[^>]*>)}, '\1')
       content.gsub!(%r{</pre></p>}, '</pre>')
+#     content.gsub!(%r{(<pre[^>]*>.*?)<p[^>]*></p>(.*?</pre>)}) { "#{$1}\n#{$2}" }
       content
     end
   end

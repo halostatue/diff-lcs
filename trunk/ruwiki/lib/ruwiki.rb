@@ -69,10 +69,11 @@ class Ruwiki
   attr_reader :backend
 
     # Sets the configuration object to a new configuration object.
-  def config=(c)
-    raise self.message[:config_not_ruwiki_config] unless c.kind_of?(Ruwiki::Config)
-    @config = c
+  def config=(cc)
+    raise self.message[:config_not_ruwiki_config] unless cc.kind_of?(Ruwiki::Config)
+    @config = cc
     @markup.default_project = @config.default_project
+    @markup.message = self.message
   end
 
     # The message hash.
@@ -93,7 +94,8 @@ class Ruwiki
     @error      = {}
 
     @markup     = Ruwiki::Wiki.new(@config.default_project,
-                                   @request.script_url)
+                                   @request.script_url,
+                                   @config.title)
   end
 
     # Initializes the backend for Ruwiki.
@@ -109,15 +111,15 @@ class Ruwiki
     set_page
     process_page
     render
-  rescue Exception => e
-    render(:error, e)
+  rescue Exception => ee
+    render(:error, ee)
   ensure
     output
   end
 
     # Initializes current page for Ruwiki.
   def set_page
-    path_info = @path_info.split(%r{/}, -1).map { |e| e.empty? ? nil : e }
+    path_info = @path_info.split(%r{/}, -1).map { |ee| ee.empty? ? nil : ee }
 
     if path_info.size == 1 or (path_info.size > 1 and path_info[0])
       raise self.message[:invalid_path_info_value] % [@path_info] unless path_info[0].nil?
@@ -211,16 +213,29 @@ class Ruwiki
 
       @type = :search
     when 'topics'
-      topic_list = @backend.list_topics(@page.project)
+      if @backend.project_exists?(@page.project)
+        topic_list = @backend.list_topics(@page.project)
+      else
+        topic_list = []
+      end
 
         # todo: make this localized
       if topic_list.empty?
-        @page.content = self.message[:no_topics]
+        @page.content = self.message[:no_topics] % [@page.project]
       else
+        topic_list.map! do |tt|
+          uu = CGI.unescape(tt)
+          if (uu != tt) or (tt =~ /^[A-Z][a-z]+$/)
+            "[[#{CGI.unescape(tt)}]]"
+          else
+            tt
+          end
+        end
         @page.content = <<EPAGE
 = #{self.message[:topics_for_project] % [@page.project]}
 * #{topic_list.join("\n* ")}
 EPAGE
+$stderr.puts @page.content.inspect
       end
 
       @type = :content
@@ -256,6 +271,7 @@ EPAGE
       np = @request.parameters['newpage'].gsub(/\r/, '').chomp
       @page.topic = @request.parameters['topic']
       @page.project = @request.parameters['project']
+      @page.editor_ip = @request.environment['REMOTE_ADDR']
 
       if @action == 'save'
         op = @page.content
@@ -304,15 +320,15 @@ EPAGE
       nil
     end
     content = @page.to_html(@markup) if not formatted
-  rescue Exception => e  # rescue for def process_page
+  rescue Exception => ee  # rescue for def process_page
     @type = :error
-    if e.kind_of?(Ruwiki::Backend::BackendError)
-      name = "#{self.message[:error]}: #{e.to_s}"
+    if ee.kind_of?(Ruwiki::Backend::BackendError)
+      name = "#{self.message[:error]}: #{ee.to_s}"
     else
-      name = "#{self.message[:complete_utter_failure]}: #{e.to_s}"
+      name = "#{self.message[:complete_utter_failure]}: #{ee.to_s}"
     end
     @error[:name] = CGI.escapeHTML(name)
-    @error[:backtrace] = e.backtrace.map { |el| CGI.escapeHTML(el) }.join("<br />\n")
+    @error[:backtrace] = ee.backtrace.map { |el| CGI.escapeHTML(el) }.join("<br />\n")
     content = nil
   ensure
     @content = content
@@ -337,7 +353,8 @@ EPAGE
     values = {
       "css_link"  => @config.css_link,
       "home_link" => %Q(<a href="#{@request.script_url}">#{@config.title}</a>),
-      "editable"  => true,
+      "editable"  => @page.editable,
+      "indexable" => @page.indexable,
       "cgi_url"   => @request.script_url,
       "content"   => @content,
     }

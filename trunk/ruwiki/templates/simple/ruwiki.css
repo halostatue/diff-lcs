@@ -38,7 +38,7 @@ body
 {
   border: 1px solid black;
   padding: 0.3em;
-  width: 100%;
+  width: 95%;
   min-height: 20.5em;
 }
 
@@ -48,7 +48,6 @@ body
 {
   border: 1px solid black;
   padding: 0.3em;
-  width: 100%;
   min-height: 20.5em;
   height: 20.5em;
 }
@@ -179,3 +178,4 @@ div.rwtk_Calendar {
 .rwtk_Lists { }
 .rwtk_Blockquotes { }
 .rwtk_Definitions { }
+.rwtk_Definitions dt { font-weight: bold; }

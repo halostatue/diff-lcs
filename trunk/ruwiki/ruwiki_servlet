@@ -1,10 +1,15 @@
 #!/usr/bin/env ruby
 
   # Customize this if you put the RuWiki files in a different location.
-$LOAD_PATH.unshift("lib")
-
 require 'webrick'
-require 'ruwiki'
+
+begin
+  require 'ruwiki'
+rescue LoadError
+  $LOAD_PATH.unshift "#{File.dirname($0)}/lib"
+  require 'ruwiki'
+end
+
 require 'ruwiki/servlet'
 require 'ruwiki/lang/en'
 require 'ruwiki/lang/de'
@@ -78,7 +83,7 @@ ARGV.options do |o|
   o.on('-A', '--accept ADDRESS,ADDRESS,ADDRESS', Array, 'Restricts the Ruwiki servlet to accepting', 'connections from the specified address or', '(comma-separated) addresses. May be', 'specified multiple times. Defaults to all', 'addresses.') { |address|
     opts.addresses += address
   }
-  o.on('-L', '--local', 'Restricts the Ruwiki servlet to accepting', 'only local connections (12.0.0.1).', 'Overrides any previous --accept addresses.') { |local|
+  o.on('-L', '--local', 'Restricts the Ruwiki servlet to accepting', 'only local connections (127.0.0.1).', 'Overrides any previous --accept addresses.') { |local|
     opts.addresses = ["127.0.0.1"]
   }
   o.on('-M', '--mount MOUNT-POINT', 'The relative URI from which Ruwiki ', 'will be accessible. Defaults to "/".') { |mp|
@@ -96,7 +101,14 @@ ARGV.options do |o|
   o.separator ""
   o.separator "Ruwiki options:"
   o.on('--language LANGUAGE', 'The interface language for Ruwiki.', 'Defaults to "en". May be "en", "de", or', '"es".') { |lang|
-    opts.language = lang
+    case lang
+    when 'en'
+      opts.lang = Ruby::Lang::EN
+    when 'es'
+      opts.lang = Ruby::Lang::ES
+    when 'de'
+      opts.lang = Ruby::Lang::DE
+    end
   }
   o.on('--webmaster WEBMASTER', 'The Ruwiki webmaster email address.', 'Defaults to "webmaster@domain.com".') { |wm|
     opts.webmaster = wm

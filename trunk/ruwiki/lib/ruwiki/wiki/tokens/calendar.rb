@@ -10,10 +10,10 @@
 #++
 class Ruwiki
   class Wiki
-      # Produces Lists
+      # Produces a mini-calendar with dates as WikiWords.
     class Calendar < Ruwiki::Wiki::Token
       def self.regexp
-        %r{^\\?%calendar\s*\((?:(today)|(\d+),\s*(\d+))(?:,\s*(#{RE_PROJECT_WORD}))?\)}
+        %r{^\\?%calendar\((?:(today)|(\d+),\s*(\d+))(?:,\s*(#{RE_PROJECT_WORD}))?\)}
       end
 
       def self.make(year, month)

@@ -12,13 +12,19 @@
 # $Id$
 #++
 
+module RuwikiConverter #:nodoc:
+  PROGRAM = File.basename($0)
+  PATH    = File.dirname($0)
+end
+
 begin
   require 'ruwiki'
 rescue LoadError
-  $LOAD_PATH.unshift "../lib"
+  $LOAD_PATH.unshift "#{RuwikiConverter::PATH}/../lib"
     # Fail hard if it fails again.
   require 'ruwiki'
 end
+
   # Load all of the known backends.
 require 'ruwiki/backend/flatfiles'
 require 'ruwiki/backend/yaml'
@@ -29,9 +35,6 @@ require 'ostruct'
 require 'fileutils'
 
 module RuwikiConverter #:nodoc:
-  PROGRAM = File.basename($0)
-  PATH    = File.dirname($0)
-
   TARGETS = %w(flatfiles yaml marshal)
 
     # Create the regular expressions that are used in Ruwiki 0.6.2
@@ -57,7 +60,8 @@ module RuwikiConverter #:nodoc:
       o.quiet                 = false
       o.verbose               = false
       o.extension             = 'ruwiki'
-      o.target_format         = 'yaml'
+#     o.target_format         = 'yaml'
+      o.target_format         = 'flatfiles'
     end
   end
 
@@ -74,18 +78,20 @@ module RuwikiConverter #:nodoc:
     @err = err
 
     argv.options do |opts|
-      opts.banner = "Usage: #{PROGRAM} [options] <file|directory>+"
+      opts.banner = "Usage: #{PROGRAM} [options] <directory>+"
       opts.separator ''
       opts.on('--format=FORMAT', 'Converts encountered files (regardless', 'of the current format), to the specified', 'format. Default is yaml. Allowed formats', 'are:     yaml marshal flatfiles') do |ff|
         @options.target_format = ff
-      end
-      opts.on('--[no-]traverse', 'Process subdirectories as well as the', 'specified file(s) or directory. Default', 'is --traverse.') do |tt|
-        @options.traverse_directories = tt
       end
       opts.on('--[no-]backup', 'Create backups of upgraded files.', 'Default is --backup.') do |bb|
         @options.backup_old_files = bb
       end
       opts.on('--backup-extension=EXTENSION', 'Specify the backup extension. Default', 'is "~", which is appended to the data', 'filename.') do |ee|
+        if ee.nil? or ee.empty?
+          @err << "The backup extension must not be empty." if ee.nil? or ee.empty?
+          @err << "#{opts}\n"
+          return 0
+        end
         @options.backup_extension = ee
       end
       opts.on('--extension=EXTENSION', 'Specifies the extension of Ruwiki data', 'files. The default is .ruwiki') do |ee|
@@ -128,6 +134,9 @@ module RuwikiConverter #:nodoc:
 
     # Process a single file.
   def process_file(file)
+    if @options.backup_old_files
+      return if file =~ /#{@options.backup_extension}/
+    end
     @out << "#{file}: " unless @options.quiet
 
     if File.directory?(file) and @options.traverse_directories
@@ -184,9 +193,10 @@ module RuwikiConverter #:nodoc:
         page['page']['content'] = rawbuf.join("\n")
 
         with page['properties'] do |p|
-          p['project']  = File.basename(File.dirname(File.expand_path(file)))
-          p['editable'] = true
-          p['entropy']  = 0
+          p['project']    = File.basename(File.dirname(File.expand_path(file)))
+          p['editable']   = true
+          p['indexable']  = true
+          p['entropy']    = 0.0
         end
       end
     end

@@ -3,7 +3,7 @@ page!content:	= Ruwiki Licence
 	[mailto:ruwiki@halostatue.ca Austin Ziegler].
 	
 	Ruwiki is provided free of use and without any warranty express or implied.
-	You may use, distribute, or modify Ruwiki under the conditions of Ruby's
+	You may use, distribute, or modify Ruwiki under the conditions of Ruby&rsquo;s
 	licence or the [http://www.gnu.org/copyleft/gpl.html GNU General Public
 	Licence].
 	
@@ -14,18 +14,17 @@ page!content:	= Ruwiki Licence
 	* Translation to German by [mailto:chneukirchen@yahoo.de Christian Neukirchen] on 2003.10.22, with corrections by Mauricio Fern&aacute;ez. Note that the initial template translations (./templates/de/) were done via \AltaVista Babelfish and should not be blamed on Christian.
 	* Translation to Spanish by [mailto:batsman.geo@yahoo.com Mauricio Fern&aacute;ndez] on 2003.10.22. Note that the initial template translations (./templates/es/) were done via \AltaVista Babelfish and should not be blamed on Mauricio.
 	
-	== Austin's Other Projects
+	== Austin&rsquo;s Other Projects
 	Austin has also released several other projects available on the RAA that you may be interested in:
-	* [http://raa.ruby-lang.org/list.rhtml?name=mime-types MIME::Types], RubyForge [http://rubyforge.org/projects/mime-types project].
-	* [http://raa.ruby-lang.org/list.rhtml?name=pdf-writer PDF::Writer], RubyForge [http://rubyforge.org/projects/ruby-pdf project].
-	* [http://raa.ruby-lang.org/list.rhtml?name=text-format Text::Format], RubyForge [http://rubyforge.org/projects/text-format project].
-	* [http://raa.ruby-lang.org/list.rhtml?name=trans-simple Transaction::Simple], RubyForge [http://rubyforge.org/projects/trans-simple project].
-	* [http://raa.ruby-lang.org/list.rhtml?name=uninheritable Uninheritable], Transaction::Simple's RubyForge [http://rubyforge.org/projects/trans-simple project].
-	* [http://raa.ruby-lang.org/list.rhtml?name=diff-lcs Diff::LCS], Ruwiki's RubyForge [http://rubyforge.org/projects/ruwiki project].
+	* [http://raa.ruby-lang.org/list.rhtml?name=mime-types MIME::Types], \RubyForge [http://rubyforge.org/projects/mime-types project].
+	* [http://raa.ruby-lang.org/list.rhtml?name=pdf-writer PDF::Writer], \RubyForge [http://rubyforge.org/projects/ruby-pdf project].
+	* [http://raa.ruby-lang.org/list.rhtml?name=text-format Text::Format], \RubyForge [http://rubyforge.org/projects/text-format project].
+	* [http://raa.ruby-lang.org/list.rhtml?name=trans-simple Transaction::Simple], \RubyForge [http://rubyforge.org/projects/trans-simple project].
+	* [http://raa.ruby-lang.org/list.rhtml?name=uninheritable Uninheritable], Transaction::Simple&rsquo;s \RubyForge [http://rubyforge.org/projects/trans-simple project].
+	* [http://raa.ruby-lang.org/list.rhtml?name=diff-lcs Diff::LCS], Ruwiki&rsquo;s \RubyForge [http://rubyforge.org/projects/ruwiki project].
 	
 	$Id$
-properties!editable:	
-properties!entropy:	0
+properties!editable:	false
 properties!project:	Ruwiki
 properties!title:	LicenseAndAuthorInfo
 properties!topic:	LicenseAndAuthorInfo

@@ -15,8 +15,8 @@ page!content:	= Extending Ruwiki 0.8.0
 	these has a slightly different combination of template files used, and
 	this means that there are different sets of variables available.
 	
-	The major templates are "composite templates" that are defined as
-	follows:
+	The major templates are &ldquo;composite templates&rdquo; that are
+	defined as follows:
 	; content or search : body.tmpl, content.tmpl, controls.tmpl, footer.tmpl
 	; edit or preview : body.tmpl, edit.tmpl
 	; save : body.tmpl, save.tmpl, controls.tmpl, footer.tmpl
@@ -33,7 +33,7 @@ page!content:	= Extending Ruwiki 0.8.0
 	; <tt>%page_project%</tt> : The project for the current page.
 	; <tt>%page_raw_topic%</tt> : The topic for the current page, escaped for safe transmission over the web.
 	; <tt>%page_topic%</tt> : The printable topic for the current page.
-	; <tt>%url_project%</tt> : The URL to the current page's project.
+	; <tt>%url_project%</tt> : The URL to the current page&rsquo;s project.
 	; <tt>%url_topic_search%</tt> : The URL to search for the current topic in the current project.
 	; <tt>%link_topic_search%</tt> : A link to the current topic search.
 	
@@ -65,7 +65,7 @@ page!content:	= Extending Ruwiki 0.8.0
 	associated with them.
 	
 	If the file <em>ruwiki/lang/es.rb</em> contains the module
-	<tt>\Ruwiki::Lang::ES</tt>, the messages for RSS could be localized to
+	<tt>Ruwiki::Lang::ES</tt>, the messages for RSS could be localized to
 	Spanish thus:
 	
 	  require 'ruwiki/lang/es'
@@ -80,21 +80,20 @@ page!content:	= Extending Ruwiki 0.8.0
 	
 	  Message = Hash.new { |h, k| "Language ERROR: Unknown message key #{k.inspect}." }
 	
-	
 	== Extending Ruwiki Markup
 	
 	: <strong>WARNING:</strong> These \APIs will change in Ruwiki 0.9.0,
 	: replacing the instance variables @project, @backend, and @script with
 	: a Handler object. There may be other changes as well.
 	
-	Ruwiki's WikiMarkup can be extended by creating a new
-	\Ruwiki::Wiki::Token. Tokens will be automatically loaded if they are
+	Ruwiki&rsquo;s WikiMarkup can be extended by creating a new
+	Ruwiki::Wiki::Token. Tokens will be automatically loaded if they are
 	placed in <em>ruwiki/wiki/tokens</em>.
 	
 	It is recommended that new tokens be added to the test cases in
 	<tt>tests/tc_tokens.rb</tt>.
 	
-	The following \Ruwiki::Wiki::Token class will convert strings in the
+	The following Ruwiki::Wiki::Token class will convert strings in the
 	forms of \[ruby-talk:12345] to links.
 	
 	  class RubyTalkLinks < Ruwiki::Wiki::Token
@@ -127,6 +126,12 @@ page!content:	= Extending Ruwiki 0.8.0
 	
 	==== @script
 	The URI to the script.
+
+	==== @message
+	The message hash for displaying localised messages.
+
+	==== @title
+	The title of the wiki instance.
 	
 	=== Required Methods
 	==== ::regexp
@@ -204,9 +209,9 @@ page!content:	= Extending Ruwiki 0.8.0
 	<strong>must</strong>:
 	
 	# reside in <em>ruwiki/backends/</em> as <em>backend_name</em>.rb.
-	# be registered by adding the <em>backend_name</em> as a symbol (e.g., :<em>backend_name</em>) to \Ruwiki::KNOWN_BACKENDS.
-	# inherit from \Ruwiki::Backend.
-	# exist as \Ruwiki::Backend::<em>\Backend_name</em>.
+	# be registered by adding the <em>backend_name</em> as a symbol (e.g., :<em>backend_name</em>) to Ruwiki::KNOWN_BACKENDS.
+	# inherit from Ruwiki::Backend.
+	# exist as Ruwiki::Backend::<em>\Backend_name</em>.
 	
 	=== Required Methods
 	==== #initialize(storage_options)
@@ -284,11 +289,11 @@ page!content:	= Extending Ruwiki 0.8.0
 	
 	==== #destroy_project(project)
 	Attempts to destroy the project.
-
+	
 	=== Optional Methods
 	These methods are completely optional. They are guarded in the
 	\BackendDelegate by a call to #respond_to?().
-
+	
 	==== #global_search(search_string)
 	The global search in the backend delegate is by default implemented as
 	a looping search through all projects. A backend may have a more
@@ -296,8 +301,7 @@ page!content:	= Extending Ruwiki 0.8.0
 	#global_search, then the \BackendDelegate will use this method.
 	
 	$Id$
-properties!editable:	
-properties!entropy:	0
+properties!editable:	false
 properties!project:	Ruwiki
 properties!title:	Extending_Ruwiki
 properties!topic:	Extending_Ruwiki

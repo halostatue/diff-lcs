@@ -3,54 +3,59 @@ page!content:	= Ruwiki 0.8.0 To Do Tracking
 	are tracked in BugTracking.
 	
 	== Well-Defined To Do Items
+	=== Ruwiki 0.8.1
+	; Non-local installation : current Ruwiki can support a non-local configuration (that is, where the data and templates are in a separate directory from the startup program), but there is no mechanism to automate this. In order to enable a \RubyGem or <acronym title="Ruby Production Archive">RPA</acronym> installation of Ruwiki, this mechanism will be necessary.
+	; Stored configurations : allow for configuration objects to be stored. This will make it easier to support non-local installations and configurations.
+	; Ruwiki installer : add a command-line program to create a new deployment of Ruwiki; this will copy the default data to the local installation.
+	; Central location : add the ability to use the data in the central installation that is provided by a \RubyGem or <acronym title="Ruby Production Archive">RPA</acronym> installation.
+	; Windows service : allow Ruwiki to be run as a Windows service for users of the Win32 build of Ruby.
+	; \RubyGem : Offer Ruwiki as a \RubyGem.
 	=== Ruwiki 0.9.0
-	; Versioning : complete the change history interface. Change history is currently stored in a file <em>topic[.extension]</em>.rdiff. There is no way to display the change history at this point. The change history will need further work, as the default make_diffs is not necessarily appropriate for all backend formats.
+	; Versioning : complete the change history interface. Change history is currently stored in a file <em>topic[.extension]</em>.rdiff. There is no way to display the change history at this point.
 	; Action objects : Actions will be generalised to pull the processing out of the main ruwiki.rb inasmuch as is possible.
 	; Function tokens : generalize the %&lt;function-name&gt;[(&lt;args&gt;)] calling method so that function tokens can be created without having to create a custom regular expression.
-        ; Search work : There is further search work required. The current mechanism is effective, but inefficient, as it must load and convert each file in a project to a page and then search selectively within that page. The search mechanism must be improved.
-	; Frozen content : make it so that frozen content can be provided on a per-page or Wiki basis. Will provide both headers and footers. <strong>Note:</strong> Ruwiki 0.9.0 will only provide the ability to present the information, not create it.
-	; Frozen pages : provide the ability to freeze content in place; the page is no longer "wiki" editable and is effectively a plain HTML page.
-	; Page properties : provide the ability to generally edit the properties of a given page.
-	; Blacklisting : Allow the specification of an allow/deny list for IPs or hostnames, aimed at blocking known spammers. Entries in this list can be permanent or temporary (e.g., "* DENY", "spammer.com DENY UNTIL 20040723", "139.244.33.25 ALLOW"). Allow the editing of the list on-line (this is of limited utility until 0.10.0 with user authentication). Denied addresses will be prohibited from editing the pages of the Wiki.
-	; External URL redirection : Force URIs that allow redirection (e.g., HTTP and HTTPS) are redirected through a single point on an instance of Ruwiki (e.g., &lt;ruwiki-uri&gt;_redirect?&lt;url&gt;) unless the specific URIs or hosts are whitelisted (e.g., rubycentral.com, rubyforge.org, ruby-lang.org, etc.). This includes the ability to manage the URI or host list.
+	; Search work : There is further search work required. The current mechanism is effective, but inefficient, as it must load and convert each file in a project to a page and then search selectively within that page. The search mechanism must be improved.
+	; Frozen content : make it so that frozen content can be provided on a per-page or Wiki basis. Will provide both headers and footers. <strong>Note:</strong> Ruwiki 0.9.0 will only provide the ability to present the information, not create or modify it.
+	; Blacklisting : Allow the specification of an allow/deny list for \IPs or hostnames, aimed at blocking known spammers. Entries in this list can be permanent or temporary (e.g., &ldquo;* DENY&rdquo;, &ldquo;spammer.com DENY UNTIL 20040723&rdquo;, &ldquo;139.244.33.25 ALLOW&rdquo;).
+	; External URL redirection : Force \URIs that allow redirection (e.g., HTTP and HTTPS) are redirected through a single point on an instance of Ruwiki (e.g., &lt;ruwiki-uri&gt;_redirect?&lt;url&gt;) unless the specific \URIs or hosts are whitelisted (e.g., rubycentral.com, rubyforge.org, ruby-lang.org, etc.).
 	; Robot exclusion : Recognise known robot user agents; when found, allow them to index and follow links on all pages except command pages (e.g., Project/Topic/_edit, Project/_create, etc.).
+	; \GlobalRecentChanges : Recent changes for all projects.
 	=== Ruwiki 0.10.0
-	; Authentication : allow user creation and authentication. Authenticate users bypass blacklist checking; thus, if "msn.com" is blocked, joe.blog@msn.com could still authenticate with Ruwiki and edit the pages.
+	; Authentication : allow user creation and authentication. Authenticate users bypass blacklist checking; thus, if &ldquo;msn.com&rdquo; is blocked, joe.blog@msn.com could still authenticate with Ruwiki and edit the pages.
 	; Topic renaming : add the ability to rename a topic within a project. Topic change history should be maintained.
 	; Topic moving : add the ability to move and/or rename a topic between projects. Topic change history should be maintained.
 	; Complete documentation : Complete the documentation of Ruwiki.
+	; Antispam : Allow the on-line editing of antispam lists to authenticated and authorised users.
 	=== Ruwiki 1.0.0
 	; Escape HTML Entities : HTML Entities such as &amp;, &lt;, and &gt; are not currently escaped. This may cause problems with some browsers and should be fixed <strong>without</strong> impairing the ability to add at least some raw HTML. Note that the current engine does not check raw HTML and thus could potentially be vulnerable to cross-site-scripting attacks.
-	; Features : Ruwiki will be programmatically extensible with entirely new features: commands, \ACLs, and more. This is planned for 1.0.0.
+	; RSS Feed : Ruwiki must be able to offer \RecentChanges and \GlobalRecentChanges as RSS feeds. This may not be ideal with the current \RecentChanges format. It may be easier to move to a two-stage \RecentChanges format.
+	; Static content : Allow the creation and editing of static content.
+	; Frozen pages : provide the ability to freeze content in place; the page is no longer &ldquo;wiki&rdquo; editable and is effectively a plain HTML page.
+	; Page properties : provide the ability to generally edit the properties of a given page.
 	
-	== General To Do Items
+	== General Future To Do Items
+	; E-mail gateway : accept topic appends via e-mail.
+	; alternative backends : access other wiki data storage, or other formats, e.g. e-mail boxes in mh or mbox formats
+	; bug tracker backend : with alternate markup
+	; add setup and user config methods : for backend plugin classes, then we can use them with an interactive or gui tool frontend to setup data storage backends. The user might have to run as root or other user with database create permissions.
+	; add id="" to various markup elements (make id specific to topic) : Later we can allow users to tweak a page using uploaded css fragments which might get appended onto the standard css contents. 
+	; ruby action : upload a ruby code fragment to add a smart &ldquo;action&rdquo; to that wiki page. Need some sort of security + approval system to handle this safely.
 	; Preview button : add a preview button to the save page.
-	; Alternative templating systems : not as high priority now that there's a real templating system in place.
+	; Alternative templating systems : not as high priority now that there&rsquo;s a real templating system in place.
 	; Alternative markup systems : potentially allow \RedCloth (Textile) and/or \BlueCloth (Markdown) to be processed for a page. This could be implemented as a %function.
 	; Project/topic security : allow certain projects to be restricted/authenticated for read/write based on user.
-	; RSS Feed : 
 	; Track last <em>n</em> links/topics : ?
 	; Write a markup debugger : ?
 	; Validate topic formatting from cgi : ?
 	; Validate project from cgi : ?
 	; Project-based backend : Allow different projects to have different backends.
-	; Hierachical project namespaces : ?
-	
-	== Future To Do Items
-	; E-mail gateway : accept topic appends via e-mail.
-	; alternative backends : access other wiki data storage, or other formats, e.g. e-mail boxes in mh or mbox formats
-	; backend-to-backend storage format conversion : as noted
-	; bug tracker backend : with alternate markup
-	; add setup and user config methods : for backend plugin classes, then we can use them with an interactive or gui tool frontend to setup data storage backends. The user might have to run as root or other user with database create permissions.
-	; add id="" to various markup elements (make id specific to topic) : Later we can allow users to tweak a page using uploaded css fragments which might get appended onto the standard css contents. 
-	; ruby action : upload a ruby code fragment to add a smart "action" to that wiki page. Need some sort of security + approval system to handle this safely.
+	; Arbitrary-depth project namespace support : Foo::Bar::\BazPage.
 	
 	$Id$
-properties!editable:	
-properties!entropy:	0
+properties!editable:	false
 properties!project:	Ruwiki
 properties!title:	To_Do
 properties!topic:	To_Do
-properties!version:	3
+properties!version:	1
 ruwiki!content-version:	2
 ruwiki!version:	0.8.0

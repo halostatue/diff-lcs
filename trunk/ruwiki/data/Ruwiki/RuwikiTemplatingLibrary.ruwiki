@@ -1,7 +1,7 @@
 page!content:	= Ruwiki 0.8.0 Templating
-	Ruwiki uses a heavily modified version of the \RDoc "cheap-n-cheerful"
-	HTML page template system. This a line-oriented, text-based templating
-	system.
+	Ruwiki uses a heavily modified version of the \RDoc
+	&ldquo;cheap-n-cheerful&rdquo; HTML page template system. This a
+	line-oriented, text-based templating system.
 	
 	== Templates
 	Templates in the templating system are essentially plain strings with
@@ -18,7 +18,7 @@ page!content:	= Ruwiki 0.8.0 Templating
 	<tt>!INCLUDE!</tt> directive. When the \TemplatePage is created, an
 	array of template strings are provided; these will be used to satisfy
 	<tt>!INCLUDE!</tt> directives. If there are not enough template
-	strings provided, <tt>!INCLUDE!</tt> won't be translated.
+	strings provided, <tt>!INCLUDE!</tt> won&rsquo;t be translated.
 	
 	: This may change before Ruwiki reaches 1.0, so that templates are
 	: named instead of iterated.
@@ -30,10 +30,10 @@ page!content:	= Ruwiki 0.8.0 Templating
 	value of the result. <tt>%key%</tt> template keys are mandatory; if
 	the key is not found in the value hash, an exception will be raised.
 	<tt>%?key%</tt> template keys are optional; if they key is not found
-	in the value hash, an empty string ("") will be used.
+	in the value hash, an empty string (&ldquo;&rdquo;) will be used.
 	
 	=== Labels
-	Strings of the format <tt>#<em>key</tm>#</tt> or
+	Strings of the format <tt>#<em>key</em>#</tt> or
 	<tt>#?<em>key</em>#</tt> are labels. <em>key</em> is looked up in the
 	provided message hash as a Symbol (e.g.,
 	<tt><em>key</em>.intern</tt>). As with simple template keys,
@@ -41,7 +41,7 @@ page!content:	= Ruwiki 0.8.0 Templating
 	optional.
 	
 	=== Links
-	Strings of the format <tt>HREF:ref:name</tt> will become HTML links.
+	Strings of the format <tt>HREF:\ref:name</tt> will become HTML links.
 	Both <em>ref</em> and <em>name</em> are keys to be looked up.
 	<em>name</em> is mandatory; an exception will be raised if it is not
 	found.
@@ -80,7 +80,7 @@ page!content:	= Ruwiki 0.8.0 Templating
 	# <tt>val["b"] = 3 -> "1&nbsp;2&nbsp;3&nbsp;"</tt>
 	# <tt>val["b"] = (0..2) -> "0&nbsp;2&nbsp;3&nbsp;"</tt>
 	# <tt>val["b"] = ["a", "B"] -> "a&nbsp;B&nbsp;"</tt>
-	  
+	
 	==== Multi-Line Looping
 	  START:key
 	    ... stuff ....
@@ -112,34 +112,43 @@ page!content:	= Ruwiki 0.8.0 Templating
 	the output only if the corresponding key is set in the value hash.
 	
 	== Example
-	Given the set of templates T1, T2, and T3 (shown below), here's how we would
+	Given the set of templates T1, T2, and T3 (shown below), here&rsquo;s how we would
 	use the templating system.
 	
 	  values = { "name" => "Dave", "state" => "TX" }
 	  t = TemplatePage.new(T1, T2, T3)
-	  File.open(name, w) { |f| t.write_html_on(f, values) }
+	  File.open(name, w) { |f| t.process(f, values) }
 	
 	or:
 	
-	  values = { "name" => "Dave" }
+	  <!-- Source -->
+	  val1 = { "name" => "Dave", "state" => "TX" }
+	  val2 = { "name" => "Dave" }
+	  msgs = { }
 	  res = ""
-	  t.write_html_on(res, values)
-	
-	=== T1
+	  t.process(res, values, msgs)
+	 
+	  <!-- T1 -->
 	  Templates can subsitute a wide variety of values.
 	  !INCLUDE!
-	
-	=== T2
+	 
+	  <!-- T2 -->
 	  Name: %name% !INCLUDE!
-	
-	=== T3
+	 
+	  <!-- T3 -->
 	  IF:state
 	  State: %state%
 	  ENDIF:state
 	
+	The result will be:
+	
+	  Name: Dave
+	  State: TX
+	 
+	  Name: Dave
+	
 	$Id$
-properties!editable:	
-properties!entropy:	0
+properties!editable:	false
 properties!project:	Ruwiki
 properties!title:	RuwikiTemplatingLibrary
 properties!topic:	RuwikiTemplatingLibrary

@@ -8,6 +8,20 @@ having to resort to odd naming conventions. Please see the ::Ruwiki project
 in the running Wiki for more information. Ruwiki 0.8.0 has German and
 Spanish translations available.
 
+Upgrading
+---------
+Ruwiki 0.8.0 has a flatfile format that is incompatible with older versions of
+Ruwiki. If you are upgrading from one of these versions, you must use the
+bin/convert. The simple case will be (assuming that your data files are in
+./data):
+
+  % bin/convert ./data
+
+Requirements
+------------
+Ruwiki currently requires Ruby 1.8, Diff::LCS 1.1.0 (portions included). The
+YAML backend requires Ruby 1.8.2.
+
 Quick Start (CGI)
 -----------------
 1. Place the Ruwiki directory in a place that your webserver can execute CGI

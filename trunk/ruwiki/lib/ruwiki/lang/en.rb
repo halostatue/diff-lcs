@@ -27,7 +27,8 @@ module Ruwiki::Lang
       :cannot_obtain_lock           => "Unable to obtain a lock on %s::%s. Try again shortly.",
       :cannot_release_lock          => "Unable to release the lock on %s::%s. Try again shortly.",
       :cannot_retrieve_topic        => "Cannot retrieve %s::%s: %s",
-      :cannot_store_topic           => "Cannot store project %s::%s: %s",
+      :cannot_store_topic           => "Cannot store %s::%s: %s",
+      :cannot_list_topics           => "Cannot list topics for project %s: %s",
       :error_creating_lock          => "Error creating lock on %s::%s: %s",
       :error_releasing_lock         => "Error releasing lock on %s::%s: %s",
       :flatfiles_no_data_directory  => "The data directory (%s) does not exist.",
@@ -61,7 +62,7 @@ module Ruwiki::Lang
       :project_topics_link          => "(topics)",
       :wiki_projects                => "Projects in %s",
       :no_projects                  => "No known projects.",
-      :no_topics                    => "No topics in project.",
+      :no_topics                    => "No topics in project %s.",
       :search_results_for           => "= Search results for: %s",
       :number_of_hits               => "%d Hits",
 

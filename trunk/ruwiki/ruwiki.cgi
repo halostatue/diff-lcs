@@ -13,9 +13,12 @@
 #++
 
   # Customize this if you put the RuWiki files in a different location.
-$LOAD_PATH.unshift("lib")
-
-require 'ruwiki'
+begin
+  require 'ruwiki'
+rescue LoadError
+  $LOAD_PATH.unshift "#{File.dirname($0)}/lib"
+  require 'ruwiki'
+end
 
   # This is the CGI version of Ruwiki. Therefore, when we create the Ruwiki
   # instance, we specify that the request and response handlers are to be

@@ -8,18 +8,34 @@ page!content:	= Ruwiki 0.8.0
 	* Extending_Ruwiki is almost as simple.
 	* Who wrote Ruwiki? Read the LicenseAndAuthorInfo.
 	
+	== Requirements
+	Ruwiki currently requires Ruby 1.8, Diff::LCS 1.1.0 (portions
+	included). The YAML backend requires Ruby 1.8.2.
+	
+	== Getting Started
+	=== QuickStart (CGI)
+	# Place the Ruwiki directory in a place that your webserver can execute CGI programs and ensure that ruwiki.cgi is executable on your webserver.
+	# Point your web browser to the appropriate URL.
+	=== QuickStart (\WEBrick)
+	# Run ruwiki_servlet (ruwiki_servlet.bat under Windows).
+	# Point your web browser to <http://localhost:8808/>.
+	
+	== Support
+	* Troubles with Ruwiki? See TroubleShooting for some suggestions. Have a new problem? Add it to the main [http://ruwiki.rubyforge.org/ruwiki.cgi/Ruwiki/TroubleShooting TroubleShooting] page.
+	* Subscribe to [http://rubyforge.org/mailman/listinfo/ruwiki-discuss ruwiki-discuss] ([http://rubyforge.org/pipermail/ruwiki-discuss/ archives]).
+	* You can also use the [http://rubyforge.org/forum/?group_id=84 Ruwiki Public Forum] or the on \RubyForge.
+	
 	== Tracking Ruwiki Development
 	The development progress of Ruwiki is kept primarily in the wiki
 	itself, but the services of [http://rubyforge.org RubyForge] are used
 	as well.
 	* The BugTracking page in Ruwiki keeps track of open and closed bugs in Ruwiki. Bugs can also be found in the \RubyForge [http://rubyforge.org/tracker/?atid=407&group_id=84&func=browse bug tracker] and [http://rubyforge.org/tracker/?atid=408&group_id=84&func=browse Support Requests].
 	* The To_Do list keeps track of major development goals for Ruwiki. Items for this list can be found on \RubyForge in [http://rubyforge.org/tracker/?atid=410&group_id=84&func=browse Feature Requests] and [http://rubyforge.org/tracker/?atid=409&group_id=84&func=browse Patches].
-	* The [http://rubyforge.org/forum/?group_id=84 Ruwiki Public Forum] exists, but it rarely used. It is recommended to use the new mailing list, [http://rubyforge.org/mailman/listinfo/ruwiki-discuss ruwiki-discuss] ([http://rubyforge.org/pipermail/ruwiki-discuss/ archives]), instead.
 	* There is a mailing list to track CVS changes: [http://rubyforge.org/mailman/listinfo/ruwiki-checkin ruwiki-checkin] ([http://rubyforge.org/pipermail/ruwiki-checkin/ archives]).
 	
 	== Different Features?
-	If this wiki doesn't have the right combination of features, (or if it
-	just doesn't feel right) try these other Ruby-based Wikis:
+	If this wiki doesn&rsquo;t have the right combination of features, (or if it
+	just doesn&rsquo;t feel right) try these other Ruby-based Wikis:
 	
 	* [http://instiki.rubyforge.org/ Instiki]
 	* [http://www.walrus-ruby.org/amrita/cgi-bin/aswiki/aswiki.cgi Amrita Wiki]

@@ -88,11 +88,15 @@ class Ruwiki
         #             respond to #project_exists?(project) and
         #             #page_exists?(page, project).
         # [script]    The URI to the script.
-      def initialize(match, project, backend, script)
+        # [message]   The message hash for localized messages.
+        # [title]     The title of the Wiki.
+      def initialize(match, project, backend, script, message, title)
         @match    = match
         @project  = project
         @backend  = backend
         @script   = script
+        @message  = message
+        @title    = title
       end
 
         # The replacement method. Uses @match to replace the token with the

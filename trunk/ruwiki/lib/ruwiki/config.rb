@@ -113,7 +113,7 @@ class Ruwiki
       # block in the head so that the CSS is kept with the template set, which
       # may be kept outside of the HTML area.
     def css_link
-      %Q[<style>#{File.read(File.join(@template_path, @template_set, @css))}</style>]
+      %Q[<style type="text/css" media="screen,print">#{File.read(File.join(@template_path, @template_set, @css))}</style>]
     end
 
       # Creates a new configuration object.

@@ -47,128 +47,53 @@ class Ruwiki::Backend::Yaml < Ruwiki::Backend
 
     # Destroys the topic page.
   def destroy(page)
-    pf = page_file(page.topic, page.project)
-    File.unlink(pf) if File.exists?(pf)
+    super
   end
 
     # Checks to see if the project exists.
   def project_exists?(project)
-    pd = project_directory(project)
-    File.exists?(pd) and File.directory?(pd)
+    super
   end
 
     # Checks to see if the page exists.
   def page_exists?(topic, project = 'Default')
-    pf = page_file(topic, project)
-    project_exists?(project) and File.exists?(pf)
+    super
   end
 
     # Tries to create the project.
   def create_project(project)
-    pd = project_directory(project)
-    raise Ruwiki::Backend::ProjectExists if File.exists?(pd)
-    Dir.mkdir(pd)
+    super
   end
 
     # Tries to destroy the project.
   def destroy_project(project)
-    pd = project_directory(project)
-    Dir.rmdir(pd) if File.exists?(pd) and File.directory?(pd)
+    super
   end
 
     # String search all topic names and content in a project and return a
     # has of topic hits
   def search_project(project, searchstr)
-    re_search = Regexp.new(searchstr, Regexp::IGNORECASE)
-
-    hits = Hash.new { |h, k| h[k] = 0 }
-    topic_list = list_topics(project)
-
-    return hits if topic_list.empty?
-
-      # search topic content
-    topic_list.each do |topic|
-        # search name
-      hits[topic] += topic.scan(re_search).size
-
-        # check content
-      page = load(topic, project) rescue {}
-      page['page'].each_value do |item|
-        item = item.join("") if item.kind_of?(Array)
-        item ||= ""
-        hits[topic] += item.scan(re_search).size
-      end
-    end
-
-    hits
+    super
   end
 
     # Attempts to obtain a lock on the topic page.
   def obtain_lock(page, address = 'UNKNOWN', timeout = 600)
-    pf = page_file(page.topic, page.project)
-    lf = "#{pf}.lock"
-    time = Time.now.to_i
-
-    lock_okay = false
-      # See if we have the lock already.
-    if File.exists?(lf)
-      data = File.readlines(lf)
-        # If the lock belongs to this address, we don't care how old it
-        # is. Thus, release it.
-      lock_okay ||= (data[0].chomp == address)
-        # If the lock is older than 10 minutes, release it.
-      lock_okay ||= (data[1].to_i < time)
-    else
-      lock_okay = true
-    end
-
-    if lock_okay
-      open(lf, 'w') { |lfh| lfh.puts "#{address}\n#{time + timeout}" }
-    else
-      raise Ruwiki::Backend::BackendError(nil)
-    end
+    super
   end
 
     # Releases the lock on the topic page.
   def release_lock(page, address = 'UNKNOWN')
-    pf = page_file(page.topic, page.project)
-    lf = "#{pf}.lock"
-    time = Time.now.to_i
-
-    lock_okay = false
-    if File.exists?(lf)
-      data = File.readlines(lf)
-        # If the lock belongs to this address, then we can safely remove
-        # it.
-      lock_okay ||= (data[0].chomp == address)
-        # If the lock is older than 10 minutes, release it.
-      lock_okay ||= (data[1].to_i < time)
-    else
-      lock_okay = true
-    end
-
-    if lock_okay
-      File.unlink(lf) if File.exists?(lf)
-    else
-      raise Ruwiki::Backend::BackendError.new(nil)
-    end
+    super
   end
 
     # list projects found in data path
   def list_projects
-    Dir[File.join(@data_path, "*")].select do |d|
-      File.directory?(d) and File.exist?(page_file(@default_page, File.basename(d)))
-    end.map { |d| File.basename(d) }
+    super
   end
 
     # list topics found in data path
   def list_topics(project)
-    pd = project_directory(project)
-    raise Ruwiki::Backend::BackendError.new(:no_project) unless File.exist?(pd)
-
-    Dir[File.join(pd, "*")].select do |f|
-      f !~ /\.rdiff$/ and f !~ /\.lock$/ and File.file?(f) and f =~ @extension_re
-    end.map { |f| File.basename(f).sub(@extension_re, "") }
+    super
   end
 
   class << self

@@ -23,7 +23,7 @@ class Ruwiki::Wiki
 
     # This provides the Wiki view link format:
   VIEW_LINK = %Q[<a class="rwtk_WikiLink" href="%s">%s</a>]
-  EDIT_LINK = %Q[<span class="rwtk_EditWikiLink">%s</span><a class="rw_pagelink" href="%s">?</a>]
+  EDIT_LINK = %Q[<span class="rwtk_EditWikiLink">%s</span><a class="rwtk_WikiLink" href="%s">?</a>]
 
     # Creates a crosslink for a Project::WikiPage.
   class ProjectCrossLink < Ruwiki::Wiki::Token
@@ -40,7 +40,7 @@ class Ruwiki::Wiki
       topic   = @match.captures[1]
       link    = CGI.escape(topic.dup)
 
-      if @backend.page_exists?(topic, project)
+      if @backend.page_exists?(topic, project) or @backend.page_exists?(link, project)
         VIEW_LINK % ["#{@script}/#{project}/#{link}", "#{project}::#{topic.gsub(/_/, ' ')}"]
       else
         EDIT_LINK % ["#{project}::#{topic.gsub(/_/, ' ')}", "#{@script}/#{project}/#{link}/_edit"]
@@ -64,7 +64,7 @@ class Ruwiki::Wiki
       topic   = @match.captures[1]
       link    = CGI.escape(topic)
 
-      if @backend.page_exists?(topic, project)
+      if @backend.page_exists?(topic, project) or @backend.page_exists?(link, project)
         VIEW_LINK % ["#{@script}/#{project}/#{link}", "#{project}::#{topic}"]
       else
         EDIT_LINK % ["#{project}::#{topic}", "#{@script}/#{project}/#{link}/_edit"]
@@ -89,7 +89,7 @@ class Ruwiki::Wiki
     def replace
       project = @match.captures[1]
 
-      if @backend.page_exists?('ProjectIndex', project)
+      if @backend.page_exists?('ProjectIndex', project) or @backend.page_exists?(link, project)
         VIEW_LINK % ["#{@script}/#{project}/ProjectIndex", project]
       else
         if @backend.project_exists?(project)
@@ -119,7 +119,7 @@ class Ruwiki::Wiki
       topic = @match.captures[1]
       link  = CGI.escape(topic.dup)
 
-      if @backend.page_exists?(topic, @project)
+      if @backend.page_exists?(topic, @project) or @backend.page_exists?(link, project)
         VIEW_LINK % ["#{@script}/#{@project}/#{link}", topic.gsub(/_/, ' ')]
       else
         EDIT_LINK % [topic.gsub(/_/, ' '), "#{@script}/#{@project}/#{link}/_edit"]
@@ -156,7 +156,7 @@ class Ruwiki::Wiki
         link  = CGI.escape(at.captures[0])
       end
 
-      if @backend.page_exists?(link, @project)
+      if @backend.page_exists?(link, @project) or @backend.page_exists?(link, project)
         VIEW_LINK % ["#{@script}/#{@project}/#{link}", topic]
       else
         EDIT_LINK % [topic, "#{@script}/#{@project}/#{link}/_edit"]

@@ -21,12 +21,15 @@ class TokenTestCases < Test::Unit::TestCase
     def initialize
       @project  = "Default"
       @tokens   = []
+      @script   = "<uri>"
+      @message  = Hash.new { |h, k| h[k] = "#{k.inspect}" }
+      @title    = "Ruwiki"
     end
 
     def __tokenize(content, token)
       content.gsub!(token.regexp) do |m|
         match = Regexp.last_match
-        tc    = token.new(match, @project, $wiki.backend, $wiki.request.script_url)
+        tc    = token.new(match, @project, $wiki.backend, @script, @message, @title)
         @tokens << tc
         if m[0, 1] == '\\'
           "\\TOKEN_#{@tokens.size - 1}"
@@ -126,11 +129,19 @@ class TokenTestCases < Test::Unit::TestCase
   end
 
   def test_Code
-    content = "  line 1\n    line 2\nline3\n"
+    content = "  line 1\n    line 2\nline 3\n"
     token   = Ruwiki::Wiki::Code
-    tkv     = "TOKEN_0\nTOKEN_1\nline3\n"
-    rpv     = %Q(</p><pre class="rwtk_Code">  line 1</pre>\n</p><pre class="rwtk_Code">    line 2</pre>\nline3\n)
-    res     = %Q(</p><pre class="rwtk_Code">  line 1\n    line 2</pre>\nline3\n)
+    tkv     = "TOKEN_0TOKEN_1line 3\n"
+    rpv     = %Q(</p><pre class="rwtk_Code">  line 1</pre>\n</p><pre class="rwtk_Code">    line 2</pre>\nline 3\n)
+    res     = %Q(</p><pre class="rwtk_Code">  line 1\n    line 2</pre>\nline 3\n)
+
+    __process(token, content, tkv, rpv, res)
+
+    content = "  line 1\n    line 2\n  \n\nline 3\n"
+    token   = Ruwiki::Wiki::Code
+    tkv     = "TOKEN_2TOKEN_3TOKEN_4\nline 3\n"
+    rpv     = %Q(</p><pre class="rwtk_Code">  line 1</pre>\n</p><pre class="rwtk_Code">    line 2</pre>\n</p><pre class="rwtk_Code">  </pre>\n\nline 3\n)
+    res     = %Q(</p><pre class="rwtk_Code">  line 1\n    line 2\n  </pre>\n\nline 3\n)
 
     __process(token, content, tkv, rpv, res)
   end
@@ -180,8 +191,8 @@ class TokenTestCases < Test::Unit::TestCase
     token   = Ruwiki::Wiki::ProjectCrossLink
     content = "Ruwiki::ChangeLog \\Ruwiki::To_Do Ruwiki::NotExist \\Ruwiki::NotExist"
     tkv     = "TOKEN_0 \\TOKEN_1 TOKEN_2 \\TOKEN_3"
-    rpv     = %Q{<a class="rw_pagelink" href="http://:/Ruwiki/ChangeLog">Ruwiki::ChangeLog</a> Ruwiki::To_Do <span class="rw_edittext">Ruwiki::NotExist</span><a class="rw_pagelink" href="http://:/Ruwiki/NotExist/_edit">?</a> Ruwiki::NotExist}
-    res     = %Q{<a class="rw_pagelink" href="http://:/Ruwiki/ChangeLog">Ruwiki::ChangeLog</a> Ruwiki::To_Do <span class="rw_edittext">Ruwiki::NotExist</span><a class="rw_pagelink" href="http://:/Ruwiki/NotExist/_edit">?</a> Ruwiki::NotExist}
+    rpv     = %Q{<a class="rwtk_WikiLink" href="<uri>/Ruwiki/ChangeLog">Ruwiki::ChangeLog</a> Ruwiki::To_Do <span class="rwtk_EditWikiLink">Ruwiki::NotExist</span><a class="rwtk_WikiLink" href="<uri>/Ruwiki/NotExist/_edit">?</a> Ruwiki::NotExist}
+    res     = %Q{<a class="rwtk_WikiLink" href="<uri>/Ruwiki/ChangeLog">Ruwiki::ChangeLog</a> Ruwiki::To_Do <span class="rwtk_EditWikiLink">Ruwiki::NotExist</span><a class="rwtk_WikiLink" href="<uri>/Ruwiki/NotExist/_edit">?</a> Ruwiki::NotExist}
 
     __process(token, content, tkv, rpv, res)
   end
@@ -190,8 +201,8 @@ class TokenTestCases < Test::Unit::TestCase
     token   = Ruwiki::Wiki::ProjectCrossLinkWikipedia
     content = "Ruwiki::[[ChangeLog]] \\Ruwiki::[[To_Do]] Ruwiki::[[Does Not Exist]] \\Ruwiki::[[Does Not Exist]] Ruwiki::[[_invalid]]"
     tkv     = "TOKEN_0 \\TOKEN_1 TOKEN_2 \\TOKEN_3 Ruwiki::[[_invalid]]"
-    rpv     = %Q{<a class="rw_pagelink" href="http://:/Ruwiki/ChangeLog">Ruwiki::ChangeLog</a> Ruwiki::[[To_Do]] <span class="rw_edittext">Ruwiki::Does Not Exist</span><a class="rw_pagelink" href="http://:/Ruwiki/Does+Not+Exist/_edit">?</a> Ruwiki::[[Does Not Exist]] Ruwiki::[[_invalid]]}
-    res     = %Q{<a class="rw_pagelink" href="http://:/Ruwiki/ChangeLog">Ruwiki::ChangeLog</a> Ruwiki::[[To_Do]] <span class="rw_edittext">Ruwiki::Does Not Exist</span><a class="rw_pagelink" href="http://:/Ruwiki/Does+Not+Exist/_edit">?</a> Ruwiki::[[Does Not Exist]] Ruwiki::[[_invalid]]}
+    rpv     = %Q{<a class="rwtk_WikiLink" href="<uri>/Ruwiki/ChangeLog">Ruwiki::ChangeLog</a> Ruwiki::[[To_Do]] <span class="rwtk_EditWikiLink">Ruwiki::Does Not Exist</span><a class="rwtk_WikiLink" href="<uri>/Ruwiki/Does+Not+Exist/_edit">?</a> Ruwiki::[[Does Not Exist]] Ruwiki::[[_invalid]]}
+    res     = %Q{<a class="rwtk_WikiLink" href="<uri>/Ruwiki/ChangeLog">Ruwiki::ChangeLog</a> Ruwiki::[[To_Do]] <span class="rwtk_EditWikiLink">Ruwiki::Does Not Exist</span><a class="rwtk_WikiLink" href="<uri>/Ruwiki/Does+Not+Exist/_edit">?</a> Ruwiki::[[Does Not Exist]] Ruwiki::[[_invalid]]}
 
     __process(token, content, tkv, rpv, res)
   end
@@ -200,8 +211,8 @@ class TokenTestCases < Test::Unit::TestCase
     token   = Ruwiki::Wiki::ProjectIndex
     content = "::Ruwiki \\::Ruwiki ::Newproject \\::Newproject"
     tkv     = "TOKEN_0 \\TOKEN_1 TOKEN_2 \\TOKEN_3"
-    rpv     = %Q{<a class="rw_pagelink" href="http://:/Ruwiki/ProjectIndex">Ruwiki</a> ::Ruwiki <span class="rw_edittext">Newproject</span><a class="rw_pagelink" href="http://:/Newproject/_create">?</a> ::Newproject}
-    res     = %Q{<a class="rw_pagelink" href="http://:/Ruwiki/ProjectIndex">Ruwiki</a> ::Ruwiki <span class="rw_edittext">Newproject</span><a class="rw_pagelink" href="http://:/Newproject/_create">?</a> ::Newproject}
+    rpv     = %Q{<a class="rwtk_WikiLink" href="<uri>/Ruwiki/ProjectIndex">Ruwiki</a> ::Ruwiki <span class="rwtk_EditWikiLink">Newproject</span><a class="rwtk_WikiLink" href="<uri>/Newproject/_create">?</a> ::Newproject}
+    res     = %Q{<a class="rwtk_WikiLink" href="<uri>/Ruwiki/ProjectIndex">Ruwiki</a> ::Ruwiki <span class="rwtk_EditWikiLink">Newproject</span><a class="rwtk_WikiLink" href="<uri>/Newproject/_create">?</a> ::Newproject}
 
     __process(token, content, tkv, rpv, res)
   end
@@ -210,8 +221,8 @@ class TokenTestCases < Test::Unit::TestCase
     token   = Ruwiki::Wiki::WikiLinks
     content = "ProjectIndex \\ProjectIndex AustinZiegler \\AustinZiegler Alan_Chen \\Alan_Chen"
     tkv     = "TOKEN_0 \\TOKEN_1 TOKEN_2 \\TOKEN_3 TOKEN_4 \\TOKEN_5"
-    rpv     = %Q{<a class="rw_pagelink" href="http://:/Default/ProjectIndex">ProjectIndex</a> ProjectIndex <span class="rw_edittext">AustinZiegler</span><a class="rw_pagelink" href="http://:/Default/AustinZiegler/_edit">?</a> AustinZiegler <span class="rw_edittext">Alan Chen</span><a class="rw_pagelink" href="http://:/Default/Alan_Chen/_edit">?</a> Alan_Chen}
-    res     = %Q{<a class="rw_pagelink" href="http://:/Default/ProjectIndex">ProjectIndex</a> ProjectIndex <span class="rw_edittext">AustinZiegler</span><a class="rw_pagelink" href="http://:/Default/AustinZiegler/_edit">?</a> AustinZiegler <span class="rw_edittext">Alan Chen</span><a class="rw_pagelink" href="http://:/Default/Alan_Chen/_edit">?</a> Alan_Chen}
+    rpv     = %Q{<a class="rwtk_WikiLink" href="<uri>/Default/ProjectIndex">ProjectIndex</a> ProjectIndex <span class="rwtk_EditWikiLink">AustinZiegler</span><a class="rwtk_WikiLink" href="<uri>/Default/AustinZiegler/_edit">?</a> AustinZiegler <span class="rwtk_EditWikiLink">Alan Chen</span><a class="rwtk_WikiLink" href="<uri>/Default/Alan_Chen/_edit">?</a> Alan_Chen}
+    res     = %Q{<a class="rwtk_WikiLink" href="<uri>/Default/ProjectIndex">ProjectIndex</a> ProjectIndex <span class="rwtk_EditWikiLink">AustinZiegler</span><a class="rwtk_WikiLink" href="<uri>/Default/AustinZiegler/_edit">?</a> AustinZiegler <span class="rwtk_EditWikiLink">Alan Chen</span><a class="rwtk_WikiLink" href="<uri>/Default/Alan_Chen/_edit">?</a> Alan_Chen}
 
     __process(token, content, tkv, rpv, res)
   end
@@ -220,8 +231,8 @@ class TokenTestCases < Test::Unit::TestCase
     token   = Ruwiki::Wiki::WikipediaLinks
     content = "[[ProjectIndex]] \\[[ProjectIndex]] [[Austin Ziegler]] \\[[Austin Ziegler]] [[_Alan Chen]]"
     tkv     = "TOKEN_0 \\TOKEN_1 TOKEN_2 \\TOKEN_3 [[_Alan Chen]]"
-    rpv     = %Q{<a class="rw_pagelink" href="http://:/Default/ProjectIndex">ProjectIndex</a> [[ProjectIndex]] <span class="rw_edittext">Austin Ziegler</span><a class="rw_pagelink" href="http://:/Default/Austin+Ziegler/_edit">?</a> [[Austin Ziegler]] [[_Alan Chen]]}
-    res     = %Q{<a class="rw_pagelink" href="http://:/Default/ProjectIndex">ProjectIndex</a> [[ProjectIndex]] <span class="rw_edittext">Austin Ziegler</span><a class="rw_pagelink" href="http://:/Default/Austin+Ziegler/_edit">?</a> [[Austin Ziegler]] [[_Alan Chen]]}
+    rpv     = %Q{<a class="rwtk_WikiLink" href="<uri>/Default/ProjectIndex">ProjectIndex</a> [[ProjectIndex]] <span class="rwtk_EditWikiLink">Austin Ziegler</span><a class="rwtk_WikiLink" href="<uri>/Default/Austin+Ziegler/_edit">?</a> [[Austin Ziegler]] [[_Alan Chen]]}
+    res     = %Q{<a class="rwtk_WikiLink" href="<uri>/Default/ProjectIndex">ProjectIndex</a> [[ProjectIndex]] <span class="rwtk_EditWikiLink">Austin Ziegler</span><a class="rwtk_WikiLink" href="<uri>/Default/Austin+Ziegler/_edit">?</a> [[Austin Ziegler]] [[_Alan Chen]]}
 
     __process(token, content, tkv, rpv, res)
   end
