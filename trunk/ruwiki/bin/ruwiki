@@ -7,8 +7,6 @@
 #
 # Licensed under the same terms as Ruby.
 #
-# This file may be renamed to change the URI for the wiki.
-#
 # $Id$
 #++
 
@@ -20,7 +18,7 @@ load_state = 1
 begin
   if 1 == load_state
     require 'rubygems'
-    require_gem 'ruwiki'
+    require_gem 'ruwiki', '=0.8.1'
   else
     require 'ruwiki'
   end
@@ -39,11 +37,13 @@ rescue LoadError
   retry
 end
 
-  # Load all of the known backends.
 require 'ruwiki/utils'
-require 'ruwiki/backend/flatfiles'
-require 'ruwiki/backend/yaml'
-require 'ruwiki/backend/marshal'
-require 'ruwiki/utils/converter'
+require 'ruwiki/utils/manager'
 
-exit Ruwiki::Utils::Converter.run(ARGV)
+  # RPA Maintainers: Change this to the appropriate location on installation.
+  # This is the right place for RubyGems, basically.
+ss = "#{File.dirname(File.expand_path(__FILE__))}/shared"
+
+Ruwiki::Utils::Manager.shared = ss
+
+exit Ruwiki::Utils::Manager.run(ARGV)

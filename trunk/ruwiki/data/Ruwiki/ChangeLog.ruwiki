@@ -1,4 +1,4 @@
-page!content:	= Ruwiki 0.8.0 ChangeLog
+page!content:	= Ruwiki %RV#% ChangeLog
 	Uncompleted to-do items can be found in To_Do. Bugs in Ruwiki are
 	tracked in BugTracking.
 	
@@ -69,4 +69,4 @@ properties!title:	ChangeLog
 properties!topic:	ChangeLog
 properties!version:	1
 ruwiki!content-version:	2
-ruwiki!version:	0.8.0
+ruwiki!version:	%RV#%

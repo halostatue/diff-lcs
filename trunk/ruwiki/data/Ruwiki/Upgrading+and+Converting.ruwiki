@@ -1,5 +1,5 @@
-page!content:	= Ruwiki 0.8.0: Upgrading and Converting
-	The flatfile backend format in Ruwiki 0.8.0 is not compatible with that
+page!content:	= Ruwiki %RV#%: Upgrading and Converting
+	The flatfile backend format in Ruwiki %RV#% is not compatible with that
 	of earlier versions of Ruwiki. There are a number of reasons for this,
 	but because of this and that there are now three different backends,
 	Ruwiki now has a converter utility between backends.
@@ -34,4 +34,5 @@ properties!title:	Upgrading+and+Converting
 properties!topic:	Upgrading+and+Converting
 properties!version:	1
 ruwiki!content-version:	2
-ruwiki!version:	0.8.0
+ruwiki!version:	%RV#%
+properties!editable:	false

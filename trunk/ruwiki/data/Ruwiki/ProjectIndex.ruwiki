@@ -1,4 +1,4 @@
-page!content:	= Ruwiki 0.8.0
+page!content:	= Ruwiki %RV#%
 	This is the \ProjectIndex page for Ruwiki. For any given project, the
 	\ProjectIndex topic will be the default topic for plain project links.
 	
@@ -48,4 +48,5 @@ properties!title:	ProjectIndex
 properties!topic:	ProjectIndex
 properties!version:	1
 ruwiki!content-version:	2
-ruwiki!version:	0.8.0
+ruwiki!version:	%RV#%
+properties!editable:	false

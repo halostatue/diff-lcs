@@ -1,4 +1,4 @@
-page!content:	= Configuring Ruwiki 0.8.0
+page!content:	= Configuring Ruwiki %RV#%
 	Ruwiki is configured similarly as both a CGI and a \WEBrick servlet.
 	The biggest distinction is that because the Wiki servlet is created
 	after the \WEBrick server is created (during the dispatch to the
@@ -111,4 +111,4 @@ properties!title:	Configuring_Ruwiki
 properties!topic:	Configuring_Ruwiki
 properties!version:	1
 ruwiki!content-version:	2
-ruwiki!version:	0.8.0
+ruwiki!version:	%RV#%

@@ -14,6 +14,8 @@ require 'ruwiki/exportable'
 class Ruwiki::Config
   include Ruwiki::Exportable
 
+  CONFIG_NAME = 'ruwiki.conf'
+
   exportable_group 'ruwiki-config'
     # Sets or returns the logger. The logger, if set, must respond to the same
     # methods as WEBrick::Logger.
@@ -42,12 +44,22 @@ class Ruwiki::Config
     # arguments or a project specification. Defaults to +Default+
   attr_accessor :default_project
   exportable :default_project
-    # The storage type as a Symbol. Corresponds to a filename that will be
+    # The authentication mechanism as a String. Corresponds to a filename that
+    # will be found in ruwiki/auth. In this version of Ruwiki, only one
+    # authentication mechanism will be found -- for dealing with authenticating
+    # users already logged into RubyForge.
+  attr_accessor :auth_mechanism
+  exportable :auth_mechanism
+    # Options for the authentication mechanism as a Hash. This will be
+    # passed to the authenticator defined in :auth_mechanism. 
+  attr_accessor :auth_options
+  exportable :auth_options
+    # The storage type as a String. Corresponds to a filename that will be
     # found in ruwiki/backend. In this version of Ruwiki, versions for handling
     # three different types of flat files will be found. The canonical default
-    # format is YAML (:yaml). Also supported in this version is :flatfiles (the
-    # old flatfile format with some additions), and a format based on
-    # Marshal::Dump (:marshal).
+    # format is a tagged data format ('flatfiles'). Also supported in this
+    # version is YAML ('yaml'), and a format based on Marshal::Dump
+    # ('marshal').
   attr_accessor :storage_type
   exportable :storage_type
     # The options for the specified storage type. This is a hash of hashes with
@@ -115,28 +127,67 @@ class Ruwiki::Config
   end
 
   # Creates a new configuration object.
-  def initialize
-    @debug            = false
-    @default_project  = "Default"
-    @default_page     = "ProjectIndex"
-    @storage_type     = :yaml
-    @storage_options  = Hash.new { |h, k| h[k] = {} }
-    @template_path    = "./templates/"
-    @template_set     = "default"
-    @css              = "ruwiki.css"
-    @webmaster        = nil
-    @title            = "Ruwiki"
-    @time_format      = "%H:%M:%S"
-    @date_format      = "%Y.%m.%d"
-    @datetime_format  = "#{@date_format} #{@time_format}"
+  def initialize(exportable = {})
+    rc = exportable['ruwiki-config'] || {}
+    @debug            = (rc['debug'] == "false") ? false : true
+    @default_project  = rc['default-project'] || "Default"
+    @default_page     = rc['default-page']    || "ProjectIndex"
+    @auth_mechanism   = rc['auth-mechanism']  || nil
 
-    self.language     = Ruwiki::Lang::EN
+    case rc['auth-options']
+    when nil, ""
+      @auth_options   = {}
+    else
+      @auth_options   = Ruwiki::Exportable.load(rc['auth-options'])['default']
+    end
+
+    case rc['storage-type']
+    when nil, ""
+      @storage_type   = :flatfiles
+    else
+      @storage_type   = rc['storage-type'].intern
+    end
+
+      # in 'type!name:<Tab>value\n' format.
+    if rc['storage-options'].nil? or rc['storage-options'].empty?
+      @storage_options = Hash.new { |hh, kk| hh[kk] = {} }
+    else
+      @storage_options = Ruwiki::Exportable.load(rc['storage-options'])
+    end
+    if @storage_options.empty?
+      @storage_options[@storage_type]['extension'] = "ruwiki"
+      @storage_options[@storage_type]['data-path'] = "./data"
+    end
+
+    @storage_options.each_value do |vv|
+      if vv['extension'].nil? or vv['extension'].empty?
+        vv['extension'] = "ruwiki"
+      end
+      if vv['data-path'].nil? or vv['data-path'].empty?
+        vv['data-path'] = "./data"
+      end
+    end
+
+    @template_path    = rc['template-path']   || "./templates/"
+    @template_set     = rc['template-set']    || "default"
+    @css              = rc['css']             || "ruwiki.css"
+    @webmaster        = rc['webmaster']
+    @title            = rc['title']           || "Ruwiki"
+    @time_format      = rc['time-format']     || "%H:%M:%S"
+    @date_format      = rc['date-format']     || "%Y.%m.%d"
+    @datetime_format  = rc['datetime-format'] || "#{@date_format} #{@time_format}"
+    case rc['language']
+    when nil, ""
+      self.language   = Ruwiki::Lang::EN
+    else
+      self.language   = Ruwiki::Lang::const_get(rc['language'].upcase)
+    end
   end
 
   # Verifies that required configuration options are actually set. Right
   # now, it only checks the values that are defaulted to +nil+.
   def verify
-    raise ConfigError, message[:no_webmaster_defined] if @webmaster.nil?
+    raise ConfigError, message[:no_webmaster_defined] if @webmaster.nil? or @webmaster.empty?
     raise ConfigError, message[:invalid_template_dir] % [@template_path] unless File.exists?(@template_path) and File.directory?(@template_path)
     t = File.join(@template_path, @template_set)
     raise ConfigError, message[:no_template_set] % [@template_set] unless File.exists?(t) and File.directory?(t)
@@ -144,7 +195,38 @@ class Ruwiki::Config
 
   # Provides the canonical export hash.
   def export
-    super
+    exportable = super
+
+    rc = exportable['ruwiki-config']
+
+    rc['auth-options'] = Ruwiki::Exportable.dump({ 'default' => rc['auth-options']})
+
+    rc['storage-options'] = Ruwiki::Exportable.dump(rc['storage-options'])
+    rc['storage-type'] = rc['storage-type'].to_s
+    rc['language']  = "#{rc['language']}".sub(/^.*?::([A-Z]+)$/, '\1').downcase
+    exportable
+  end
+
+  class << self
+    def write(file, config)
+      if file.respond_to?(:write)
+        file.puts(config.dump)
+      else
+        File.open(file, 'wb') { |ff| ff.puts(config.dump) }
+      end
+    end
+
+    def read(file)
+      data = nil
+      if file.respond_to?(:read)
+        data = file.read
+      else
+        File.open(file, 'rb') { |ff| ff.read }
+      end
+      hash = Ruwiki::Config.load(data)
+
+      rc = Ruwiki::Config.new(hash)
+    end
   end
 
   class ConfigError < StandardError; end

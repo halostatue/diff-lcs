@@ -7,4 +7,5 @@ properties!title:	SandBox
 properties!topic:	SandBox
 properties!version:	1
 ruwiki!content-version:	2
-ruwiki!version:	0.8.0
+ruwiki!version:	%RV#%
+properties!editable:	false

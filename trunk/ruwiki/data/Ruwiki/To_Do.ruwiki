@@ -1,4 +1,4 @@
-page!content:	= Ruwiki 0.8.0 To Do Tracking
+page!content:	= Ruwiki %RV#% To Do Tracking
 	Completed to-do items can be found in the ChangeLog. Bugs in Ruwiki
 	are tracked in BugTracking.
 	
@@ -58,4 +58,4 @@ properties!title:	To_Do
 properties!topic:	To_Do
 properties!version:	1
 ruwiki!content-version:	2
-ruwiki!version:	0.8.0
+ruwiki!version:	%RV#%

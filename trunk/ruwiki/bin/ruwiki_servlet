@@ -39,11 +39,6 @@ rescue LoadError
   retry
 end
 
-  # Load all of the known backends.
-require 'ruwiki/utils'
-require 'ruwiki/backend/flatfiles'
-require 'ruwiki/backend/yaml'
-require 'ruwiki/backend/marshal'
-require 'ruwiki/utils/converter'
+require 'ruwiki/utils/servletrunner'
 
-exit Ruwiki::Utils::Converter.run(ARGV)
+exit Ruwiki::Utils::ServletRunner.run(ARGV)

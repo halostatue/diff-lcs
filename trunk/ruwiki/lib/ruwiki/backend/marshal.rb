@@ -16,11 +16,11 @@ class Ruwiki::Backend::Marshal < Ruwiki::Backend
 
     # Initializes the Marshal backend. The known options are known for Marshal:
     #
-    # :data_path::    The directory in which the wiki files will be found. By
+    # data_path::     The directory in which the wiki files will be found. By
     #                 default, this is "./data/"
-    # :extension::    The extension of the wiki files. By default, this is
+    # extension::     The extension of the wiki files. By default, this is
     #                 +nil+ in the backend.
-    # :default_page:: The default page for a project. By default, this is
+    # default_page::  The default page for a project. By default, this is
     #                 ProjectIndex. This is provided only so that the backend
     #                 can make reasonable guesses.
   def initialize(options)

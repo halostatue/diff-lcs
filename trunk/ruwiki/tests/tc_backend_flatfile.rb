@@ -9,6 +9,9 @@
 #
 # $Id$
 #++
+
+$LOAD_PATH.unshift("#{File.dirname(__FILE__)}/../lib") if __FILE__ == $0
+
 require 'harness'
 require 'ruwiki/backend/flatfiles'
 require 'ostruct'
@@ -17,10 +20,10 @@ require 'fileutils'
 
 class TestBackendFlatfiles < Test::Unit::TestCase
   def setup
-    @ffopts = { :data_path => "./test/data", :extension => nil }
+    @ffopts = { 'data-path' => "./test/data", 'extension' => nil }
 
       # generate a database
-    raise "Setup Error: #{@ffopts[:data_path]} exists" if File.exists?(@ffopts[:data_path]) 
+    raise "Setup Error: #{@ffopts['data-path']} exists" if File.exists?(@ffopts['data-path']) 
 
     @flatbase = {
       'Proj1' => ['ProjectIndex:all projects must have this',
@@ -33,11 +36,13 @@ class TestBackendFlatfiles < Test::Unit::TestCase
     }
     
     @flatbase.each do |key, val|
-      prjdir = "#{@ffopts[:data_path]}/#{key}"
+      prjdir = "#{@ffopts['data-path']}/#{key}"
       FileUtils.mkdir_p(prjdir) rescue nil
       val.each do |topcon|
         topic, content = topcon.split(":")
-        File.open("#{prjdir}/#{topic}", "w") { |fh| fh.puts "page!content:	#{content}" }
+        File.open("#{prjdir}/#{topic}", "w") do |fh|
+          fh.puts "page!content:\x09#{content}"
+        end
       end
     end
 
@@ -47,7 +52,7 @@ class TestBackendFlatfiles < Test::Unit::TestCase
 
   def teardown
       # remove testing flatabase
-    FileUtils.rm_rf(@ffopts[:data_path])
+    FileUtils.rm_rf(@ffopts['data-path'])
     Dir.rmdir("./test") # ugly but it works
   end
 

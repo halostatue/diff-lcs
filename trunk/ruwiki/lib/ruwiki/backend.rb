@@ -25,7 +25,7 @@ class Ruwiki
       @date_format = ruwiki.config.date_format || "%Y.%m.%d"
       @datetime_format = ruwiki.config.datetime_format || "#{@date_format} #{@time_format}"
       options = ruwiki.config.storage_options
-      options[:default_page] = ruwiki.config.default_page
+      options['default-page'] = ruwiki.config.default_page
 
       unless Ruwiki::KNOWN_BACKENDS.include?(backend)
         raise RuntimeError, @message[:backend_unknown] % [backend] 

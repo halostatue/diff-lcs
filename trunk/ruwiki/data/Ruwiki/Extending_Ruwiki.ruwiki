@@ -1,4 +1,4 @@
-page!content:	= Extending Ruwiki 0.8.0
+page!content:	= Extending Ruwiki %RV#%
 	Ruwiki is relatively easily extended to support new features. There are
 	four primary ways in which Ruwiki can be extended or modified by the
 	end user: templates, translating Ruwiki messages and labels, markup
@@ -307,4 +307,4 @@ properties!title:	Extending_Ruwiki
 properties!topic:	Extending_Ruwiki
 properties!version:	1
 ruwiki!content-version:	2
-ruwiki!version:	0.8.0
+ruwiki!version:	%RV#%

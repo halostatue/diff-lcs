@@ -10,10 +10,8 @@
 # $Id$
 #++
 
-if __FILE__ == $0
-  $LOAD_PATH.unshift("#{File.dirname(__FILE__)}/../lib")
-  class Ruwiki; end
-end
+$LOAD_PATH.unshift("#{File.dirname(__FILE__)}/../lib") if __FILE__ == $0
+class Ruwiki; end if __FILE__ == $0
 
 require 'ruwiki/exportable'
 require 'test/unit'

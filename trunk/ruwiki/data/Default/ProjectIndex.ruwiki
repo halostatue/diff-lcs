@@ -10,7 +10,7 @@ page!content:	= Ruwiki
 	Unicode (UTF-8) is required. There are German and Spanish translations
 	of the messages included with the Ruwiki distribution.
 	
-	The current version is 0.8.0. Numerous enhancements have been made in
+	The current version is %RV#%. Numerous enhancements have been made in
 	this version, ranging from a new default look (and two additional
 	schemes) to new backend format support to searching and topic listing.
 	The full list of changes can be found in Ruwiki::ChangeLog, with
@@ -45,4 +45,5 @@ properties!title:	ProjectIndex
 properties!topic:	ProjectIndex
 properties!version:	1
 ruwiki!content-version:	2
-ruwiki!version:	0.8.0
+ruwiki!version:	%RV#%
+properties!editable:	false

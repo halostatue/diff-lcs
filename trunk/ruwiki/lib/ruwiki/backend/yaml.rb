@@ -17,11 +17,11 @@ class Ruwiki::Backend::Yaml < Ruwiki::Backend
 
     # Initializes the Yaml backend. The known options are known for Yaml:
     #
-    # :data_path::    The directory in which the wiki files will be found. By
+    # data_path::     The directory in which the wiki files will be found. By
     #                 default, this is "./data/"
-    # :extension::    The extension of the wiki files. By default, this is
+    # extension::     The extension of the wiki files. By default, this is
     #                 +nil+ in the backend.
-    # :default_page:: The default page for a project. By default, this is
+    # default_page::  The default page for a project. By default, this is
     #                 ProjectIndex. This is provided only so that the backend
     #                 can make reasonable guesses.
   def initialize(options)
@@ -102,7 +102,7 @@ class Ruwiki::Backend::Yaml < Ruwiki::Backend
     end
 
     def load(buffer)
-      ::YAML.load(buffer)
+      page = ::YAML.load(buffer)
     rescue ArgumentError
       raise Ruwiki::Backend::InvalidFormatError
     end

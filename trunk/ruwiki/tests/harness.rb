@@ -9,8 +9,6 @@
 #
 # $Id$
 #++
-$LOAD_PATH.unshift("../lib")
-
 ENV["REQUEST_METHOD"] = "HEAD"
 
 require 'ruwiki'
@@ -24,9 +22,21 @@ $wiki = Ruwiki.new(Ruwiki::Handler.from_cgi(CGI.new))
   # The webmaster.
 $wiki.config.webmaster = "webmaster@domain.com"
 $wiki.config.storage_type = :flatfiles
-$wiki.config.storage_options[:flatfiles][:data_path] = "../data"
-$wiki.config.storage_options[:flatfiles][:extension] = "ruwiki"
-$wiki.config.template_path = "../templates/"
+
+dp = nil
+dp = "../data" if File.exists?("../data")
+dp = "./data" if File.exists?("./data")
+raise "Cannot find either ./data or ../data for tests. Aborting." if dp.nil?
+
+$wiki.config.storage_options[:flatfiles]['data-path'] = dp
+$wiki.config.storage_options[:flatfiles]['extension'] = "ruwiki"
+
+tp = nil
+tp = "../templates" if File.exists?("../templates")
+tp = "./templates" if File.exists?("./templates")
+raise "Cannot find either ./templates or ../templates for tests. Aborting." if tp.nil?
+
+$wiki.config.template_path = tp
 $wiki.config.verify
 $wiki.set_backend
 

@@ -1,4 +1,4 @@
-page!content:	= Ruwiki 0.8.0 Templating
+page!content:	= Ruwiki %RV#% Templating
 	Ruwiki uses a heavily modified version of the \RDoc
 	&ldquo;cheap-n-cheerful&rdquo; HTML page template system. This a
 	line-oriented, text-based templating system.
@@ -154,4 +154,4 @@ properties!title:	RuwikiTemplatingLibrary
 properties!topic:	RuwikiTemplatingLibrary
 properties!version:	1
 ruwiki!content-version:	2
-ruwiki!version:	0.8.0
+ruwiki!version:	%RV#%

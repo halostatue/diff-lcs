@@ -16,6 +16,7 @@ end
 
 require 'cgi'
 require 'ruwiki/handler'
+require 'ruwiki/auth'
 require 'ruwiki/template'
 require 'ruwiki/lang/en' # Default to the English language.
 require 'ruwiki/config'
@@ -67,7 +68,6 @@ class Ruwiki
   attr_reader :markup
     # Returns the current Backend object.
   attr_reader :backend
-
     # Sets the configuration object to a new configuration object.
   def config=(cc)
     raise self.message[:config_not_ruwiki_config] unless cc.kind_of?(Ruwiki::Config)
@@ -78,6 +78,11 @@ class Ruwiki
   def config!
     @markup.default_project = @config.default_project
     @markup.message = self.message
+  end
+
+  def load_config(filename)
+    @config = Ruwiki::Config.read(filename)
+    self.config!
   end
 
     # The message hash.
@@ -173,11 +178,36 @@ class Ruwiki
     @page     = Ruwiki::Page.new(@backend.retrieve(@topic, @project))
     @type     = :content
 
+    agent_ok = Ruwiki::Auth.check_useragent(@request.environment['HTTP_USER_AGENT'])
+    case agent_ok
+    when false
+      @page.editable = false
+      case @action
+      when 'edit', 'save', 'preview', 'cancel', 'search'
+        @page.indexable = false
+      end
+    when nil
+      forbidden
+      return
+    else
+      unless @config.auth_mechanism.nil?
+        @auth_token = Ruwiki::Auth[@config.auth_mechanism].authenticate(@request, @response, @config.auth_options)
+        @page.editable = @auth_token.permissions['edit']
+      end
+    end
+
       # TODO Detect if @action has already been set.
     @action ||= @request.parameters['action'].downcase if @request.parameters['action']
     @action ||= 'save' if @request.parameters['save']
     @action ||= 'cancel' if @request.parameters['cancel']
     @action ||= 'preview' if @request.parameters['preview']
+
+    unless @page.editable
+      case @action
+      when 'edit', 'save', 'preview', 'cancel'
+        @action = 'show'
+      end
+    end
 
     case @action
     when 'search'
@@ -185,6 +215,9 @@ class Ruwiki
         # TODO: add empty string rejection.
       srchstr = validate_search_string(@request.parameters['q'])
       srchall = @request.parameters['a']
+
+      @page.editable  = false
+      @page.indexable = false
 
       @page.content = self.message[:search_results_for] % [srchstr]
       @page.topic = srchstr || ""
@@ -194,9 +227,6 @@ class Ruwiki
       else
         hits = @backend.search_project(@page.project, srchstr)
       end
-
-        # debug hit returns
-#     hits.each { |key, val| $stderr << "  #{key} : #{val}\n" }
 
         # turn hit hash into content
       hitarr = []
@@ -223,6 +253,8 @@ class Ruwiki
         topic_list = []
       end
 
+      @page.editable = false
+
         # todo: make this localized
       if topic_list.empty?
         @page.content = self.message[:no_topics] % [@page.project]
@@ -244,6 +276,8 @@ EPAGE
       @type = :content
     when 'projects'
       proj_list = @backend.list_projects
+
+      @page.editable = false
 
       if proj_list.empty?
         @page.content = self.message[:no_projects]
@@ -275,6 +309,8 @@ EPAGE
       @page.topic = @request.parameters['topic']
       @page.project = @request.parameters['project']
       @page.editor_ip = @request.environment['REMOTE_ADDR']
+
+      @page.indexable = false
 
       if @action == 'save'
         op = @page.content
@@ -324,6 +360,7 @@ EPAGE
     end
     content = @page.to_html(@markup) if not formatted
   rescue Exception => ee  # rescue for def process_page
+p ee
     @type = :error
     if ee.kind_of?(Ruwiki::Backend::BackendError)
       name = "#{self.message[:error]}: #{ee.to_s}"
@@ -417,15 +454,22 @@ EPAGE
       values["webmaster"]       = @config.webmaster
     end
 
-    template.process(@rendered_page, values, @config.message)
+    template.to_html(values, :messages => @config.message,
+                             :output => @rendered_page)
   end
 
     # Outputs the page.
   def output
+    return if @response.written?
     @response.add_header("Content-type", "text/html")
     @response.add_header("Cache-Control", "max_age=0")
     @response.write_headers
     @response << @rendered_page
+  end
+
+  def forbidden
+    protocol = @request.environment["SERVER_PROTOCOL"] || "HTTP/1.0"
+    @response.write_status "#{protocol} 403 FORBIDDEN\nDate: #{CGI::rfc1123_date(Time.now)}\n\n"
   end
 
     # nil if string is invalid

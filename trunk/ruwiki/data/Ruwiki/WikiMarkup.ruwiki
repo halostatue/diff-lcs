@@ -3,7 +3,7 @@ page!content:	= Ruwiki Markup
 	it easy to format text without needing to know HTML. This Wiki obeys
 	the following rules by default. Because Ruwiki is extensible, there may
 	be additional formatting rules. These rules are those rules that apply
-	as of Ruwiki 0.8.0.
+	as of Ruwiki %RV#%.
 	
 	== \WikiWords, \WikiProjects, Calendars, and External Resources
 	While reading stuff on this Wiki, you will see some words mashed
@@ -261,4 +261,5 @@ properties!title:	WikiMarkup
 properties!topic:	WikiMarkup
 properties!version:	1
 ruwiki!content-version:	2
-ruwiki!version:	0.8.0
+ruwiki!version:	%RV#%
+properties!editable:	false

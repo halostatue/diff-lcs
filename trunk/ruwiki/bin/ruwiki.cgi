@@ -12,12 +12,27 @@
 # $Id$
 #++
 
-  # Customize this if you put the RuWiki files in a different location.
+  # 1) Try to load Ruwiki from the gem.
+  # 2) Try to load Ruwiki from $LOAD_PATH.
+  # 3) Modify $LOAD_PATH and try to load it from the modified $LOAD_PATH.
+  # 4) Fail hard.
+load_state = 1
 begin
-  require 'ruwiki'
+  if 1 == load_state
+    require 'rubygems'
+    require_gem 'ruwiki'
+  else
+    require 'ruwiki'
+  end
 rescue LoadError
-  $LOAD_PATH.unshift "#{File.dirname($0)}/lib"
-  require 'ruwiki'
+  load_state += 1
+
+  if load_state < 4
+    $LOAD_PATH.unshift "#{RuwikiInstaller::PATH}/../lib" if load_state == 3
+    retry
+  else
+    raise
+  end
 end
 
   # This is the CGI version of Ruwiki. Therefore, when we create the Ruwiki
@@ -25,25 +40,35 @@ end
   # generated from a new CGI object.
 wiki = Ruwiki.new(Ruwiki::Handler.from_cgi(CGI.new))
 
-  # Configuration defaults to certain values. This overrides the defaults.
-  # The webmaster.
-wiki.config.webmaster       = "webmaster@domain.com"
+config_file = File.join(Dir.pwd, Ruwiki::Config::CONFIG_NAME)
+
+if File.exists?(config_file)
+  wiki.load_config(config_file)
+  config = Ruwiki::Config.read(config_file)
+  if config.webmaster.nil? or config.rc.webmaster.empty?
+    config.webmaster = "webmaster@domain.tld"
+  end
+else
+    # Configuration defaults to certain values. This overrides the defaults.
+    # The webmaster.
+  wiki.config.webmaster       = "webmaster@domain.tld"
 
 # wiki.config.debug           = false
 # wiki.config.title           = "Ruwiki"
 # wiki.config.default_page    = "ProjectIndex"
 # wiki.config.default_project = "Default"
-  # This next defaults to :flatfiles for Ruby 1.8.1 or earlier and to :yaml for
-  # Ruby 1.8.2 or later.
+    # This next defaults to :flatfiles. Conversion of the default data
+    # will be necessary to use other formats.
 # wiki.config.storage_type    = :flatfiles
 # wiki.config.storage_options[wiki.config.storage_type][:data_path] = "./data/"
-wiki.config.storage_options[wiki.config.storage_type][:extension] = "ruwiki"
+  wiki.config.storage_options[wiki.config.storage_type][:extension] = "ruwiki"
 # wiki.config.template_path   = "./templates/"
 # wiki.config.template_set    = "default"
 # wiki.config.css             = "ruwiki.css"
 # wiki.config.time_format     = "%H:%M:%S"
 # wiki.config.date_format     = "%Y.%m.%d"
 # wiki.config.datetime_format = "%Y.%m.%d %H:%M:%S"
-wiki.config = wiki.config
+end
 
+wiki.config!
 wiki.run

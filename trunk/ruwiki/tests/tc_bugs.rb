@@ -9,6 +9,9 @@
 #
 # $Id$
 #++
+
+$LOAD_PATH.unshift("#{File.dirname(__FILE__)}/../lib") if __FILE__ == $0
+
 require 'harness'
 require 'ruwiki/backend/flatfiles'
 require 'ostruct'
@@ -18,7 +21,13 @@ require 'test/unit'
 # described in bug id 147 on rubyforge
 class TC_LicenseAndAuthorHang < Test::Unit::TestCase
   def setup
-    @ffopts = { :data_path => "../data" }
+    @ffopts = { }
+    dp = nil
+    dp = "../data" if File.exists?("../data")
+    dp = "./data" if File.exists?("./data")
+    raise "Cannot find either ./data or ../data for tests. Aborting." if dp.nil?
+
+    @ffopts['data-path'] = dp
 
     @backend = nil
     @pg = nil

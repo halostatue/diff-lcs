@@ -30,4 +30,4 @@ properties!title:	LicenseAndAuthorInfo
 properties!topic:	LicenseAndAuthorInfo
 properties!version:	1
 ruwiki!content-version:	2
-ruwiki!version:	0.8.0
+ruwiki!version:	%RV#%

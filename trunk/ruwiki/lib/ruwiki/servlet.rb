@@ -10,26 +10,29 @@
 #++
 require 'webrick'
 
-class Ruwiki
-  class Servlet < WEBrick::HTTPServlet::AbstractServlet
-    def initialize(config)
-      @config = config
-    end
+class Ruwiki::Servlet < WEBrick::HTTPServlet::AbstractServlet
+  class << self
+    attr_accessor :config
+  end
 
-      # Converts a POST into a GET.
-    def do_POST(req, res)
-      do_GET(req, res)
-    end
+  def initialize(config)
+    @config = config
+  end
 
-    def do_GET(req, res)
-        # Generate the reponse handlers for Ruwiki from the request and response
-        # objects provided.
-      wiki = Ruwiki.new(Ruwiki::Handler.from_webrick(req, res))
+    # Converts a POST into a GET.
+  def do_POST(req, res)
+    do_GET(req, res)
+  end
 
-        # Configuration defaults to certain values. This overrides the defaults.
-      wiki.config = $config unless $config.nil?
-      wiki.config.logger = @config.logger
-      wiki.run
-    end
+  def do_GET(req, res)
+    # Generate the reponse handlers for Ruwiki from the request and response
+    # objects provided.
+    wiki = Ruwiki.new(Ruwiki::Handler.from_webrick(req, res))
+
+      # Configuration defaults to certain values. This overrides the defaults.
+    wiki.config = Ruwiki::Servlet.config unless Ruwiki::Servlet.config.nil?
+    wiki.config!
+    wiki.config.logger = @config.logger
+    wiki.run
   end
 end

@@ -10,9 +10,11 @@
 # $Id$
 #++
 
-puts "Checking for test cases:"
-Dir['tc*.rb'].each do |testcase|
-  puts "\t#{testcase}"
-  require testcase
+$LOAD_PATH.unshift("#{File.dirname(__FILE__)}/../lib") if __FILE__ == $0
+
+$stderr.puts "Checking for test cases:"
+Dir['tc_*.rb'].each do |testcase|
+  $stderr.puts "\t#{testcase}"
+  load testcase
 end
-puts " "
+$stderr.puts " "

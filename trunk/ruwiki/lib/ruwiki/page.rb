@@ -190,13 +190,13 @@ class Ruwiki::Page
     @edit_date    = Time.at((props['edit-date']    || Time.now).to_i)
     @edit_comment = props['edit-comment'] || ""
     case props['editable']
-    when false
+    when "false"
       @editable = false
     else
       @editable = true
     end
     case props['indexable']
-    when false
+    when "false"
       @indexable = false
     else
       @indexable = true

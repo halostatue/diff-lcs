@@ -9,8 +9,11 @@
 #
 # $Id$
 #++
+
+$LOAD_PATH.unshift("#{File.dirname(__FILE__)}/../lib") if __FILE__ == $0
+
 require 'test/unit'
-require 'harness-cgi'
+require 'harness'
 
 class TokenTestCases < Test::Unit::TestCase
   def setup

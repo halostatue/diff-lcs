@@ -39,11 +39,20 @@ rescue LoadError
   retry
 end
 
-  # Load all of the known backends.
-require 'ruwiki/utils'
-require 'ruwiki/backend/flatfiles'
-require 'ruwiki/backend/yaml'
-require 'ruwiki/backend/marshal'
-require 'ruwiki/utils/converter'
+require 'ruwiki/utils/servletrunner'
 
-exit Ruwiki::Utils::Converter.run(ARGV)
+class Ruwiki::Utils::Daemon < Win32::Daemon
+  LOCATION = File.dirname(File.expand_path(__FILE__))
+
+  def initialize
+    @logfile = File.open(File.join(LOCATION, "ruwiki_service.log"), "ab+")
+  end
+
+  def service_main
+    argv = [ "--config", File.join(LOCATION, Ruwiki::Config::CONFIG_NAME) ]
+    Ruwiki::Utils::ServletRunner.run(argv, @logfile, @logfile, @logfile)
+  end
+end
+
+daemon = Ruwiki::Utils::Daemon.new
+daemon.mainloop

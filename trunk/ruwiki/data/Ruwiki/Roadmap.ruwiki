@@ -1,4 +1,4 @@
-page!content:	= Ruwiki 0.8.0: The Road Ahead
+page!content:	= Ruwiki %RV#%: The Road Ahead
 	What lies ahead for Ruwiki? The To_Do list will give a detailed list of
 	what is to follow, but this list is not the roadmap. There is no clear
 	indication of the reason for &mdash; and in some cases, the meaning of
@@ -220,4 +220,4 @@ properties!title:	Roadmap
 properties!topic:	Roadmap
 properties!version:	1
 ruwiki!content-version:	2
-ruwiki!version:	0.8.0
+ruwiki!version:	%RV#%

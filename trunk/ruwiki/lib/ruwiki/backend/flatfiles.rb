@@ -18,11 +18,11 @@ class Ruwiki::Backend::Flatfiles < Ruwiki::Backend
     # Initializes the Flatfiles backend. The known options are known for
     # Flatfiles:
     #
-    # :data_path::    The directory in which the wiki files will be found. By
+    # data_path::     The directory in which the wiki files will be found. By
     #                 default, this is "./data/"
-    # :extension::    The extension of the wiki files. By default, this is
+    # extension::     The extension of the wiki files. By default, this is
     #                 +nil+ in the backend.
-    # :default_page:: The default page for a project. By default, this is
+    # default_page::  The default page for a project. By default, this is
     #                 ProjectIndex. This is provided only so that the backend
     #                 can make reasonable guesses.
   def initialize(options)
@@ -32,10 +32,7 @@ class Ruwiki::Backend::Flatfiles < Ruwiki::Backend
     # Provides a HEADER marker.
     # Loads the topic page from disk.
   def load(topic, project)
-    page = Ruwiki::Page::NULL_PAGE.dup
-    hash = Ruwiki::Exportable.load(File.read(page_file(topic, project)))
-    hash.each_key { |ss| hash[ss].each { |ii, vv| page[ss][ii] = vv } }
-    page
+    Ruwiki::Backend::Flatfiles.load(File.read(page_file(topic, project)))
   rescue Ruwiki::Exportable::InvalidFormatError
     raise Ruwiki::Backend::InvalidFormatError
   end
@@ -45,7 +42,7 @@ class Ruwiki::Backend::Flatfiles < Ruwiki::Backend
   def store(page)
     pagefile  = page_file(page.topic, page.project)
     export    = page.export
-    newpage   = Ruwiki::Exportable.dump(export)
+    newpage   = Ruwiki::Backend::Flatfiles.dump(export)
     make_rdiff(pagefile, export)
 
     File.open(pagefile, 'wb') { |f| f.puts newpage }
@@ -102,51 +99,15 @@ class Ruwiki::Backend::Flatfiles < Ruwiki::Backend
     super
   end
 
-# class << self
-#   NL_RE       = /\n/
+  class << self
+    def dump(page_hash)
+      Ruwiki::Exportable.dump(page_hash)
+    end
 
-#   def dump(page_hash)
-#     dumpstr = ""
-
-#     page_hash.keys.sort.each do |sect|
-#       page_hash[sect].keys.sort.each do |item|
-#         val = page_hash[sect][item].to_s.split(NL_RE).join("\n\t")
-#         dumpstr << "#{sect}!#{item}:\t#{val}\n"
-#       end
-#     end
-
-#     dumpstr
-#   end
-
-#   def load(buffer)
-#     page = Ruwiki::Page::NULL_PAGE.dup
-#     return page if buffer.empty?
-
-#     buffer = buffer.split(NL_RE)
-
-#     if HEADER_RE.match(buffer[0]).nil?
-#       raise Ruwiki::Backend::InvalidFormatError
-#     end
-
-#     sect = item = nil
-#     
-#     buffer.each do |line|
-#       line.chomp!
-#       match = HEADER_RE.match(line)
-
-#         # If there is no match, add the current line to the previous match.
-#         # Remove the leading \t, though.
-#       if match.nil?
-#         raise Ruwiki::Backend::InvalidFormatError if FIRST_TAB.match(line).nil?
-#         page[sect][item] << "\n#{line.gsub(FIRST_TAB, '')}"
-#       else
-#         sect              = match.captures[0]
-#         item              = match.captures[1]
-#         page[sect][item]  = match.captures[2]
-#       end
-#     end
-
-#     page
-#   end
-# end
+    def load(buffer)
+      page = Ruwiki::Page::NULL_PAGE.dup
+      page.merge!(Ruwiki::Exportable.load(buffer))
+      page
+    end
+  end
 end

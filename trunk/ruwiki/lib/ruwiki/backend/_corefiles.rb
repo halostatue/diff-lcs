@@ -15,24 +15,24 @@ module Ruwiki::Backend::CoreFiles
     # Initializes the [flat-file] backend. The known options for
     # [flat-file] backends are documented below.
     #
-    # :data_path::    The directory in which the wiki files will be found. By
+    # data-path::     The directory in which the wiki files will be found. By
     #                 default, this is "./data/"
-    # :extension::    The extension of the wiki files. By default, this is
+    # extension::     The extension of the wiki files. By default, this is
     #                 +nil+ in the backend.
-    # :default_page:: The default page for a project. By default, this is
+    # default-page::  The default page for a project. By default, this is
     #                 ProjectIndex. This is provided only so that the backend
     #                 can make reasonable guesses.
   def initialize(options)
-    @data_path      = options[:data_path] || File.join(".", "data")
+    @data_path      = options['data-path'] || File.join(".", "data")
 
-    @extension      = options[:extension]
+    @extension      = options['extension']
     if @extension.nil?
       @extension_re = /$/
     else
       @extension_re = /\.#{@extension}$/
     end
 
-    @default_page   = options[:default_page] || "ProjectIndex"
+    @default_page   = options['default-page'] || "ProjectIndex"
     if not (File.exists?(@data_path) and File.directory?(@data_path))
       raise Ruwiki::Backend::BackendError.new([:flatfiles_no_data_directory, [@data_path]])
     end
@@ -118,7 +118,7 @@ module Ruwiki::Backend::CoreFiles
     end
 
     if lock_okay
-      open(lf, 'w') { |lfh| lfh.puts "#{address}\n#{time + timeout}" }
+      open(lf, 'wb') { |lfh| lfh.puts "#{address}\n#{time + timeout}" }
     else
       raise Ruwiki::Backend::BackendError(nil)
     end

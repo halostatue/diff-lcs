@@ -1,0 +1,191 @@
+#! /usr/bin/env rake
+$LOAD_PATH.unshift('lib')
+
+require 'rubygems'
+require 'rake/testtask'
+require 'rake/gempackagetask'
+require 'ruwiki'
+require 'ruwiki/utils'
+require 'ruwiki/utils/manager'
+require 'zlib'
+
+TARDIST = "../ruwiki-#{Ruwiki::VERSION}.tar.gz"
+
+DATE_RE = %r<(\d{4})[./-]?(\d{2})[./-]?(\d{2})(?:[\sT]?(\d{2})[:.]?(\d{2})[:.]?(\d{2})?)?>
+
+if ENV['RELEASE_DATE']
+  year, month, day, hour, minute, second = DATE_RE.match(ENV['RELEASE_DATE'])
+  year ||= 0
+  month ||= 0
+  day ||= 0
+  hour ||= 0
+  minute ||= 0
+  second ||= 0
+  ReleaseDate = Time.mktime(year, month, day, hour, minute, second)
+else
+  ReleaseDate = nil
+end
+
+  # This rakefile must do the following:
+  # 1. Run the unit tests, successfully.
+  # 2. Modify the Readme, Readme.rubygems, and data files to include the
+  #    proper version #.
+  # 2. Create a package.
+  # 3. Modify the existing pages so that properties!editable is set to
+  #    +false+.
+  # 4. 
+
+  # XXX: Get assistance from Nathaniel to actually use a real TestSuite.
+task :test do |t|
+  require 'test/unit/testsuite'
+  require 'test/unit/ui/console/testrunner'
+
+  runner = Test::Unit::UI::Console::TestRunner
+
+  $LOAD_PATH.unshift('tests')
+  $stderr.puts "Checking for test cases:" if t.verbose
+  Dir['tests/tc_*.rb'].each do |testcase|
+    $stderr.puts "\t#{testcase}" if t.verbose
+    load testcase
+  end
+
+  suite = Test::Unit::TestSuite.new
+
+  ObjectSpace.each_object(Class) do |testcase|
+    suite << testcase.suite if testcase < Test::Unit::TestCase
+  end
+
+  runner.run(suite)
+end
+
+task :clean_data do
+  Dir["data/**/*"].each do |file|
+    FileUtils.rm_f(file) if file =~ /(?:rdiff|lock|~)$/
+  end
+end
+
+desc "Build the default Ruwiki deployment package."
+task :package_data => [ :clean_data ] do
+  Ruwiki::Utils::Manager.package(".", ".", nil, false)
+end
+
+task :make_readonly do
+  Dir["data/**/*.ruwiki"].each do |file|
+    data = File.read(file)
+    if data =~ %r{properties!editable:}o
+      data.gsub!(%r{^properties!editable:[ \t].*?$}, "properties!editable:\tfalse")
+    else
+      data << "properties!editable:\tfalse\n"
+    end
+    File.open(file, "w") { |out| out.write(data) }
+  end
+end
+
+spec = Gem::Specification.new do |s|
+  s.name      = %q(ruwiki)
+  s.version   = %q(0.8.1)
+  s.summary   = %q{A simple, extensible, and fast Wiki-clone.}
+
+  s.add_dependency('diff-lcs', '~> 1.1.1')
+  s.add_dependency('archive-tar-minitar', '~> 0.5.1')
+
+  s.has_rdoc          = true
+  s.rdoc_options      = ["--title", "Ruwiki - An Extensible Wiki", "--main", "README", "--line-numbers"]
+  s.extra_rdoc_files  = %w(README)
+
+  s.bindir        = 'bin'
+  s.executables   = Dir['files/*'].delete_if do |item|
+    item =~ %r{(?:|\bCVS\b|\.svn\b|[Rr]akefile|install.rb$|~$|gem(?:spec)?$)}
+  end
+  s.autorequire   = %q{ruwiki}
+  s.require_paths = %w{lib}
+
+  s.test_files    = %w{tests/testall.rb}
+
+  s.files = Dir["**/*"].delete_if do |item|
+    item =~ %r{(?:\bCVS\b|\.svn\b|[Rr]akefile|install.rb$|~$|gem(?:spec)?$)}
+  end
+
+  s.author            = %q{Austin Ziegler and Alan Chen}
+  s.email             = %q{ruwiki-discuss@rubyforge.org}
+  s.rubyforge_project = %q(ruwiki)
+  s.homepage          = %q{http://ruwiki.rubyforge.org/}
+
+  description   = []
+  File.open("README") do |file|
+    file.each do |line|
+      line.chomp!
+      break if line.empty?
+      description << "#{line.gsub(/\[\d\]/, '')}"
+    end
+  end
+  s.description = description[2..-1].join(" ")
+end
+desc "Build the RubyGem for Ruwiki."
+task :gem => [ :package_data ]
+task :gem => [ :make_readonly ]
+Rake::GemPackageTask.new(spec) do |g|
+  g.need_tar    = false
+  g.need_zip    = false
+  g.package_dir = ".."
+end
+
+VERSION_STRING_RE = %r{\\?%RV#%}
+
+desc "Update the version of Ruwiki to #{Ruwiki::VERSION} in documentation files."
+task :update_version do
+  FileList["data/**/*.ruwiki", "Readme*", "Install"].to_a.each do |file|
+    data = File.read(file)
+    data.gsub!(VERSION_STRING_RE) do |match|
+      if match[0] == '\\'
+        match
+      else
+        Ruwiki::VERSION
+      end
+    end
+  end
+end
+
+desc "Build a Ruwiki .tar.gz distribution."
+task :tar => [ TARDIST ]
+file TARDIST do |t|
+  current = File.basename(Dir.pwd)
+  Dir.chdir("..") do
+    begin
+      files = Dir["#{current}/**/*"].select { |dd| dd !~ %r{CVS/} }
+      files.map! do |dd|
+        mtime = File.stat(dd).mtime unless ENV['RELEASE_DATE']
+        if File.directory?(dd)
+          { :name =>dd, :mode => 0555, :dir => true, :mtime => stat.mtime }
+        else
+          if dd =~ %r{bin/}
+            mode = 0755
+          else
+            mode = 0644
+          end
+          data = File.read(dd)
+          { :name => dd, :mode => mode, :data => data, :size => data.size,
+            :mtime => stat.mtime }
+        end
+      end
+
+      ff = File.open(t.name.gsub(%r{^\.\./}o, ''), "wb")
+      gz = Zlib::GzipWriter.new(ff)
+      tw = Archive::Tar::Minitar::Writer.new(gz)
+
+      files.each do |entry|
+        if entry[:dir]
+          tw.mkdir(entry[:name], 0555)
+        else
+          tw.add_file_simple(entry[:name], entry) { |os| os.write(entry[:data]) }
+        end
+      end
+    ensure
+      tw.close if tw
+      gz.close if gz
+    end
+  end
+end
+
+desc "Build everything."
+task :default => [ :test, :update_version, :tar, :gem ]

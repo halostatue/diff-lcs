@@ -1,4 +1,4 @@
-page!content:	= Ruwiki 0.8.0 Tutorial
+page!content:	= Ruwiki %RV#% Tutorial
 	This tutorial is incomplate.
 	
 	%topics(Tutorial)
@@ -9,4 +9,5 @@ properties!title:	ProjectIndex
 properties!topic:	ProjectIndex
 properties!version:	1
 ruwiki!content-version:	2
-ruwiki!version:	0.8.0
+ruwiki!version:	%RV#%
+properties!editable:	false
