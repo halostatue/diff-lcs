@@ -167,7 +167,7 @@ file TARDIST => [ :test, :update_version ] do |t|
   Dir.chdir("..") do
     begin
       files = Dir["#{current}/**/*"].select { |dd| dd !~ %r{(?:/CVS/?|~$)} }
-      files.delete_if { |dd| dd =~ %r{Readme.rubygems} }
+      files.delete_if { |dd| dd =~ %r{Rakefile} }
       files.map! do |dd|
         mtime = ReleaseDate || File.stat(dd).mtime
         ddnew = dd.gsub(/^#{current}/, DISTDIR)
@@ -204,4 +204,4 @@ file TARDIST => [ :test, :update_version ] do |t|
 end
 
 desc "Build everything."
-task :default => [ :tar, :gem, :remove_readonly ]
+task :default => [ :tar, :gem, :clean_readonly ]
