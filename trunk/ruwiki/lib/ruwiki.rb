@@ -179,9 +179,10 @@ class Ruwiki
       # TODO Detect if @action has already been set.
     @action = @request.parameters['action'].downcase if @request.parameters['action']
     case @action
-    when 'searchproj'
+    when 'search'
+      # todo: add global search checkbox
       # get search string
-      srchstr = @request.parameters['searchstr']
+      srchstr = @request.parameters['q']
       # validate and cleanse search string
       vsrchstr = validate_search_string(srchstr)
       @page.content = "Search results for: #{vsrchstr}"
@@ -208,7 +209,7 @@ class Ruwiki
       content = @page.to_html
       @type = :content
 
-    when 'topiclist'
+    when 'topics'
       topic_list = @backend.list_topics(@page.project)
 
       # todo: make this localized
@@ -224,7 +225,7 @@ EPAGE
       content = @page.to_html
       @type = :content
       
-    when 'projectlist'
+    when 'projects'
       proj_list = @backend.list_projects
 
       if( proj_list.size == 0 )
