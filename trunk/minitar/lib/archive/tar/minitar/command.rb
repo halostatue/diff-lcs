@@ -786,9 +786,9 @@ Sort Fields:
     opts = { }
 
     if argv.include?("--version")
-      output <<-EOB
+      output << <<-EOB
 minitar #{Archive::Tar::Minitar::VERSION}
-  Copyright © 2004 Mauricio Julio Fernández Pradier and Austin Ziegler
+  Copyright 2004 Mauricio Julio Fernández Pradier and Austin Ziegler
   This is free software with ABSOLUTELY NO WARRANTY.
 
   see http://rubyforge.org/projects/ruwiki for more information
