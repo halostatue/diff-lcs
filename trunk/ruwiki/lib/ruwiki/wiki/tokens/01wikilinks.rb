@@ -89,7 +89,7 @@ class Ruwiki::Wiki
     def replace
       project = @match.captures[1]
 
-      if @backend.page_exists?('ProjectIndex', project) or @backend.page_exists?(link, project)
+      if @backend.page_exists?('ProjectIndex', project)
         VIEW_LINK % ["#{@script}/#{project}/ProjectIndex", project]
       else
         if @backend.project_exists?(project)

@@ -126,10 +126,10 @@ page!content:	= Extending Ruwiki 0.8.0
 	
 	==== @script
 	The URI to the script.
-
+	
 	==== @message
 	The message hash for displaying localised messages.
-
+	
 	==== @title
 	The title of the wiki instance.
 	

@@ -177,13 +177,13 @@ class Ruwiki
 
     case @action
     when 'search'
-        # todo: add global search checkbox
         # get, validate, and cleanse the search string
+        # TODO: add empty string rejection.
       srchstr = validate_search_string(@request.parameters['q'])
       srchall = @request.parameters['a']
 
       @page.content = self.message[:search_results_for] % [srchstr]
-      @page.topic = srchstr
+      @page.topic = srchstr || ""
 
       unless srchall.nil?
         hits = @backend.search_all_projects(srchstr)
