@@ -17,6 +17,7 @@ require 'ruwiki/config'
 require 'ruwiki/backend'
 require 'ruwiki/wiki'
 require 'ruwiki/page'
+require 'ruqiki/actions'
 
   # = Ruwiki
   # Ruwiki is a simple, extensible Wiki written in Ruby. It supports both CGI
@@ -178,126 +179,119 @@ class Ruwiki
 
       # TODO Detect if @action has already been set.
     @action = @request.parameters['action'].downcase if @request.parameters['action']
-    # TODO: can we remove this if and put the else logic under the 
-    # case-else logic?
-    if @action
-      case @action
-      when 'searchproj'
-        # get search string
-        srchstr = @request.parameters['searchstr']
-        # validate and cleanse search string
-        vsrchstr = validate_search_string(srchstr)
-        @page.content = "Search results for: #{vsrchstr}"
-        hits = @backend.search_project(@page.project, vsrchstr)
+    case @action
+    when 'searchproj'
+      # get search string
+      srchstr = @request.parameters['searchstr']
+      # validate and cleanse search string
+      vsrchstr = validate_search_string(srchstr)
+      @page.content = "Search results for: #{vsrchstr}"
+      hits = @backend.search_project(@page.project, vsrchstr)
 
-        # debug hit returns
-        # hits.each { |key,val| @page.content += "\n  #{key} : #{val}" }
+      # debug hit returns
+      # hits.each { |key,val| @page.content += "\n  #{key} : #{val}" }
 
-        # turn hit hash into content
-        hitarr = []
-        # organize by number of hits
-        hits.each do |key,val| 
-          hitarr[val] ||= []
-          hitarr[val].push key
-        end
-        rhitarr = hitarr.reverse
-        maxhits = hitarr.size
-        rhitarr.each_with_index do |tarray,rnhits|
-          next if( tarray.nil? || tarray.size == 0 )
-          nhits = maxhits - rnhits - 1
-          @page.content += "\n== #{nhits} Hits\n* " + tarray.join("\n* ") unless nhits <= 0
-        end
+      # turn hit hash into content
+      hitarr = []
+      # organize by number of hits
+      hits.each do |key,val| 
+        hitarr[val] ||= []
+        hitarr[val].push key
+      end
+      rhitarr = hitarr.reverse
+      maxhits = hitarr.size
+      rhitarr.each_with_index do |tarray,rnhits|
+        next if( tarray.nil? || tarray.size == 0 )
+        nhits = maxhits - rnhits - 1
+        @page.content += "\n== #{nhits} Hits\n* " + tarray.join("\n* ") unless nhits <= 0
+      end
 
-        content = @page.to_html
-        @type = :content
+      content = @page.to_html
+      @type = :content
 
-      when 'topiclist'
-        topic_list = @backend.list_topics(@page.project)
+    when 'topiclist'
+      topic_list = @backend.list_topics(@page.project)
 
-        # todo: make this localized
-        if( topic_list.size == 0 )
-          @page.content = "No topics"
-        else
-          @page.content = <<EPAGE
+      # todo: make this localized
+      if( topic_list.size == 0 )
+        @page.content = "No topics"
+      else
+        @page.content = <<EPAGE
 = Topics for ::#{@page.project}
 * #{topic_list.join("\n* ")}
 EPAGE
-        end
+      end
 
-        content = @page.to_html
-        @type = :content
- 
-      when 'projectlist'
-        proj_list = @backend.list_projects
+      content = @page.to_html
+      @type = :content
+      
+    when 'projectlist'
+      proj_list = @backend.list_projects
 
-        if( proj_list.size == 0 )
-          @page.content = "No projects"
-        else
-          #todo: make this localized
-          @page.content = <<EPAGE
+      if( proj_list.size == 0 )
+        @page.content = "No projects"
+      else
+        #todo: make this localized
+        @page.content = <<EPAGE
 = Projects in #{@config.title}
 * ::#{proj_list.join("\n* ::")}
 EPAGE
-        end
-
-        content = @page.to_html
-        @type = :content
- 
-      when 'edit', 'create'
-          # Automatically create the project if it doesn't exist or if the
-          # action is 'create'.
-        @backend.create_project(@page.project) if @action == 'create'
-        @backend.create_project(@page.project) unless @backend.project_exists?(@page.project)
-        @backend.obtain_lock(@page, @request.environment['REMOTE_ADDR'])
-
-        content = nil
-        @type = :edit
-      when 'save'
-        np = @request.parameters['newpage'].gsub(/\r/, "").chomp
-        @page.topic = @request.parameters['topic']
-        @page.project = @request.parameters['project']
-
-        op = @request.parameters['origpage'].unpack("m*")[0]
-
-        if np == op
-          @page.content = op
-          @type = :content
-        else
-          @page.content = np
-          @page.old_version  = @request.parameters['old_version'].to_i + 1
-          @page.version      = @request.parameters['version'].to_i + 1
-          @page.edit_comment = @request.parameters['edcomment']
-          @type = :save
-          @backend.store(@page)
-          
-          # hack to ensure that Recent Changes are updated correctly
-          if( @page.topic == 'RecentChanges' )
-            recentraw = @backend.retrieve(@page.topic, @page.project)
-            recentraw[:markup] = @page.markup
-            recentpg = Page.new(recentraw)
-            @page.content = recentpg.content
-          end
-        end
-        @backend.release_lock(@page, @request.environment['REMOTE_ADDR'])
-
-        content = @page.to_html
-      when 'cancel'
-        @page.topic       = @request.parameters['topic']
-        @page.project     = @request.parameters['project']
-        @page.content     = @request.parameters['origpage'].unpack("m*")[0]
-        @page.old_version = @request.parameters['old_version'].to_i
-        @page.version     = @request.parameters['version'].to_i
-
-        content           = @page.to_html
-        @backend.release_lock(@page, @request.environment['REMOTE_ADDR'])
-      else
-        # TODO Return a 501 Not Implemented error
-        nil
       end
+
+      content = @page.to_html
+      @type = :content
+      
+    when 'edit', 'create'
+      # Automatically create the project if it doesn't exist or if the
+      # action is 'create'.
+      @backend.create_project(@page.project) if @action == 'create'
+      @backend.create_project(@page.project) unless @backend.project_exists?(@page.project)
+      @backend.obtain_lock(@page, @request.environment['REMOTE_ADDR'])
+
+      content = nil
+      @type = :edit
+    when 'save'
+      np = @request.parameters['newpage'].gsub(/\r/, "").chomp
+      @page.topic = @request.parameters['topic']
+      @page.project = @request.parameters['project']
+
+      op = @request.parameters['origpage'].unpack("m*")[0]
+
+      if np == op
+        @page.content = op
+        @type = :content
+      else
+        @page.content = np
+        @page.old_version  = @request.parameters['old_version'].to_i + 1
+        @page.version      = @request.parameters['version'].to_i + 1
+        @page.edit_comment = @request.parameters['edcomment']
+        @type = :save
+        @backend.store(@page)
+        
+        # hack to ensure that Recent Changes are updated correctly
+        if( @page.topic == 'RecentChanges' )
+          recentraw = @backend.retrieve(@page.topic, @page.project)
+          recentraw[:markup] = @page.markup
+          recentpg = Page.new(recentraw)
+          @page.content = recentpg.content
+        end
+      end
+      @backend.release_lock(@page, @request.environment['REMOTE_ADDR'])
+
+      content = @page.to_html
+    when 'cancel'
+      @page.topic       = @request.parameters['topic']
+      @page.project     = @request.parameters['project']
+      @page.content     = @request.parameters['origpage'].unpack("m*")[0]
+      @page.old_version = @request.parameters['old_version'].to_i
+      @page.version     = @request.parameters['version'].to_i
+
+      content           = @page.to_html
+      @backend.release_lock(@page, @request.environment['REMOTE_ADDR'])
     else
       content = @page.to_html
     end
-  rescue Exception => e
+  rescue Exception => e  # recscue for def process_page
     @type = :error
     if e.kind_of?(Ruwiki::Backend::BackendError)
       @error[:name] = "#{message()[:error]}: #{e.to_s}"
@@ -308,7 +302,7 @@ EPAGE
     content = nil
   ensure
     @content = content
-  end
+  end  # def process_page
 
     # Renders the page.
   def render(*args)
