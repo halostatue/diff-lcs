@@ -88,6 +88,12 @@ class Ruwiki::Page
     # Class:: +properties+
     # ID::    +editable+
   attr_accessor :editable
+    # Indicates whether the page is indexable. Non-indexable pages are
+    # invisible to compliant web robots, and their links may not be followed.
+    #
+    # Class:: +properties+
+    # ID::    +indexable+
+  attr_accessor :indexable
     # The current version of the page. The old version is always (#version -
     # 1).
     #
@@ -160,7 +166,10 @@ class Ruwiki::Page
     @editor_ip    = props['editor-ip']    || "UNKNOWN"
     @edit_date    = props['edit-date']    || Time.now
     @edit_comment = props['edit-comment'] || ""
-    @editable     = props['editable']     || true
+    @editable     = props['editable']
+    @editable     = true if @editable.nil?
+    @indexable    = props['indexable']
+    @indexable    = true if @indexable.nil?
     @entropy      = props['entropy']      || 0
     @html_headers = props['html-headers'] || []
     @version      = props['version']      || 0
@@ -202,6 +211,7 @@ class Ruwiki::Page
         'edit-date'     => @edit_date,
         'edit-comment'  => @edit_comment,
         'editable'      => @editable,
+        'indexable'     => @indexable,
         'entropy'       => @entropy,
         'html-headers'  => @html_header,
         'version'       => @version

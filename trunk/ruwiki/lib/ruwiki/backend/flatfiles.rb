@@ -113,7 +113,7 @@ class Ruwiki::Backend::Flatfiles < Ruwiki::Backend
           case [sect, item]
           when ['properties', 'create-date'], ['properties', 'edit-date']
             val = val.to_i
-          when ['properties', 'editable']
+          when ['properties', 'editable'], ['properties', 'indexable']
             val = (val ? 'true' : 'false')
           else # string values
             val = val.to_s
@@ -169,7 +169,7 @@ class Ruwiki::Backend::Flatfiles < Ruwiki::Backend
             val = val.to_f
           when ['properties', 'create-date'], ['properties', 'edit-date']
             val = Time.at(val.to_i)
-          when ['properties', 'editable']
+          when ['properties', 'editable'], ['properties', 'indexable']
             val = (val == 'true')
           else # string values
             nil
