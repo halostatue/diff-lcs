@@ -159,10 +159,11 @@ class Ruwiki::Page
     @editor       = props['editor']       || ""
     @editor_ip    = props['editor-ip']    || "UNKNOWN"
     @edit_date    = props['edit-date']    || Time.now
-    @editable     = props['editable']     || true
-    @html_headers = props['html-headers'] || []
-    @entropy      = props['entropy']      || 0
     @edit_comment = props['edit-comment'] || ""
+    @editable     = props['editable']     || true
+    @entropy      = props['entropy']      || 0
+    @html_headers = props['html-headers'] || []
+    @version      = props['version']      || 0
 
     page = exported['page']
     @header       = page['header']  || ""

@@ -6,7 +6,7 @@ page!content:	= Ruwiki 0.8.0 Bug Tracking
 	for Ruwiki.
 	
 	Those interested in Ruwiki development may also find the Ruwiki::To_Do list
-	useful.
+	useful. The format of this list is "fix-version: description".
 	
 	----
 	== Open Bugs
@@ -14,6 +14,7 @@ page!content:	= Ruwiki 0.8.0 Bug Tracking
 	
 	----
 	== Closed Bugs
+	* 0.8.0: \[TODO: Tracker insert]. Fixed a list numbering problem. I think that lists are a bit slower now, but they are completely accurate.
 	* 0.7.0: Fixed a link detection problem in \[wikiword] format. Thanks to [mailto:eivind@FreeBSD.org Eivind Eklund] for the patch.
 	* 0.7.0: Fixed a problem with &lt;pre&gt; paragraph detection and generation.
 	* 0.7.0: Fixed a problem with &lt;p&gt; generation.

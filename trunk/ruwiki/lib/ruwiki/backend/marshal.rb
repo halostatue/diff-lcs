@@ -36,8 +36,9 @@ class Ruwiki::Backend::Marshal < Ruwiki::Backend
     # -- to disk.
   def store(page)
     pagefile  = page_file(page.topic, page.project)
-    newpage   = Ruwiki::Backend::Marshal.dump(page.export)
-    make_rdiff(page, pagefile, newpage)
+    export    = page.export
+    newpage   = Ruwiki::Backend::Marshal.dump(export)
+    make_rdiff(pagefile, export)
 
     File.open(pagefile, 'wb') { |f| f.print newpage }
   end

@@ -222,7 +222,6 @@ class Ruwiki
       raise Ruwiki::Backend::BackendError.new(e), @message[:no_access_list_topics] % [projname]
     rescue Exception => e
       p = ['', %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
-$stderr.puts e, e.backtrace
       raise Ruwiki::Backend::BackendError.new(e), @message[:cannot_list_topics] % p
     end
   end
@@ -244,15 +243,77 @@ $stderr.puts e, e.backtrace
     end
 
   private
-      # Creates the current diff object.
-    def make_diff(page, oldpage, newpage)
-      {
-        'old_version' => ((page.version || 1) - 1),
-        'new_version' => page.version,
-        'edit-date'   => page.edit_date,
-        'editor-ip'   => page.editor_ip,
-        'editor-id'   => page.editor,
-        'diff'        => Diff::LCS.diff(oldpage, newpage)
+    {
+      'properties' => {
+        'title'         => @title,
+        'topic'         => @topic,
+        'project'       => @project,
+        'creator'       => @creator,
+        'creator-ip'    => @creator_ip,
+        'create-date'   => @create_date,
+        'editor'        => @editor,
+        'editor-ip'     => @editor_ip,
+        'edit-date'     => @edit_date,
+        'edit-comment'  => @edit_comment,
+        'editable'      => @editable,
+        'entropy'       => @entropy,
+        'html-headers'  => @html_header,
+        'version'       => @version
+      },
+    }
+
+    NL_RE = %r{\n} #:nodoc:
+
+    def map_diffset(diffset)
+      diffset.map do |hunk|
+        if hunk.kind_of?(Array)
+          hunk.map { |change| change.to_a }
+        else
+          hunk.to_a
+        end
+      end
+    end
+
+      # Creates the current diff object. This is made from two
+      # Ruwiki::Page#export hashes.
+    def make_diff(oldpage, newpage)
+      oldpage = oldpage.export if oldpage.kind_of?(Ruwiki::Page)
+      newpage = newpage.export if newpage.kind_of?(Ruwiki::Page)
+
+      diff = Hash.new
+
+      newpage.keys.sort.each do |sect|
+        newpage[sect].keys.sort.each do |item|
+          oldval = oldpage[sect][item]
+          newval = newpage[sect][item]
+
+          case [sect, item]
+          when ['properties', 'html-headers']
+              # Protect against NoMethodError.
+            oldval ||= []
+            newval ||= []
+            val = Diff::LCS.sdiff(oldval, newval, Diff::LCS::ContextDiffCallbacks)
+          when ['ruwiki', 'content-version'], ['properties', 'version'],
+               ['properties', 'entropy']
+            val = Diff::LCS.sdiff([oldval], [newval], Diff::LCS::ContextDiffCallbacks)
+          when ['properties', 'create-date'], ['properties', 'edit-date']
+            val = Diff::LCS.sdiff([oldval.to_i], [newval.to_i], Diff::LCS::ContextDiffCallbacks)
+          else
+              # Protect against NoMethodError.
+            val = Diff::LCS.sdiff(oldval.to_s.split(NL_RE), newval.to_s.split(NL_RE), Diff::LCS::ContextDiffCallbacks)
+          end
+
+          (diff[sect] ||= {})[item] = map_diffset(val) unless val.nil? or val.empty?
+        end
+      end
+
+      diff_hash = {
+        'old_version' => oldpage['properties']['version'],
+        'new_version' => newpage['properties']['version'],
+        'edit-date'   => newpage['properties']['edit-date'].to_i,
+        'editor-ip'   => newpage['properties']['editor-ip'],
+        'editor'      => newpage['properties']['editor'],
+        'diff'        => diff
       }
     end
   end

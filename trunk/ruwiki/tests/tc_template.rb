@@ -40,7 +40,7 @@ require 'harness-cgi'
     def test_labels
       a = "a#b#c"
       v = {}
-      m = { "b" => "b" }
+      m = { :b => "b" }
       t = Ruwiki::TemplatePage.new(a)
       assert_equal("abc", t.process("", v, m))
     end
@@ -48,11 +48,11 @@ require 'harness-cgi'
     def test_optional_labels
       a = "a#b##?c#d"
       v = {}
-      m = { "b" => "b" }
+      m = { :b => "b" }
       t = Ruwiki::TemplatePage.new(a)
       assert_equal("abd", t.process("", v, m))
 
-      m["c"] = "c"
+      m[:c] = "c"
       assert_equal("abcd", t.process("", v, m))
     end
 

@@ -2,7 +2,7 @@ page!content:	= Ruwiki Markup
 	A [http://c2.com/cgi/wiki Wiki] obeys certain formatting rules to make it easy
 	to format text without needing to know HTML. This Wiki obeys the following
 	rules by default. Because Ruwiki is extensible, there may be additional
-	formatting rules. These rules are those rules that apply as of Ruwiki 0.7.0.
+	formatting rules. These rules are those rules that apply as of Ruwiki 0.8.0.
 	
 	== \WikiWords, \WikiProjects, Calendars, and External Resources
 	While reading stuff on this Wiki, you will see some words mashed together with
@@ -34,10 +34,9 @@ page!content:	= Ruwiki Markup
 	is the same as \Ruwiki::ProjectIndex (Ruwiki::ProjectIndex).
 	
 	=== Calendars
-	: <strong>New to Ruwiki 0.7.0!</strong>
-	
-	Ruwiki now has a calendar. It is possible to tell Ruwiki to generate a
-	calendar for a particular month with %calendar. The format of %calendar is:
+	Ruwiki supports a miniature calendar. Future versions of Ruwiki will
+	allow for calendar aggregation. Using the %calendar function, a calendar
+	section will be generated:
 	
 	  %calendar(<year>, <month>[, <project>])
 	  %calendar(today[, <project>])
@@ -71,14 +70,28 @@ page!content:	= Ruwiki Markup
 	* \[http://www.halostatue.ca] and \[http://www.halostatue.ca/ruby] become [http://www.halostatue.ca] and [http://www.halostatue.ca/ruby].
 	
 	==== Images
-	If \URLs are to JPEG (.jpg, .jpeg), PNG (.png), or GIF (.gif) resources, they
-	will be rendered as inline images. This works with automatically converted
-	\URLs, named \URLs, or numbered \URLs. Named and numbered \URLs affect the
-	TITLE and ALT attribute of the image.
+	: <strong>Changed in Ruwiki 0.8.0!</strong>
 	
-	* \http://www.halostatue.ca/graphics/maple_leaf.gif http://www.halostatue.ca/graphics/maple_leaf.gif
-	* \[http://www.halostatue.ca/graphics/maple_leaf.gif Maple Leaf] [http://www.halostatue.ca/graphics/maple_leaf.gif Maple Leaf]
-	* \[http://www.halostatue.ca/graphics/maple_leaf.gif] [http://www.halostatue.ca/graphics/maple_leaf.gif]
+	In preparation for the anti-wiki-spam features of Ruwiki 0.9.0, it has
+	been necessary to remove the ability for \URLs to be converted into inline
+	images automatically. Inline images are now created with the image
+	markup format, generally of the format \[image:URI options]. The
+	<em>options</em> format is generally the same format as an HTML
+	attribute (<em>name="value"</em>; the quotes are optional for
+	single-word option values) and any valid HTML attribute is also a valid
+	<em>option</em>. There is one special <em>option</em>,
+	<tt>numbered</tt>. This value, if set to any other value than "false",
+	will set the <tt>title</tt> of the image to a numbered link.
+	
+	If the <tt>title</tt> attribute is not specified, it will be set from
+	the <tt>alt</tt> attribute (if specified) or the image's URL. If the
+	<tt>alt</tt> attribute is not specified, it will be set from the
+	<tt>title</tt> attribute.
+	
+	* \[image:http://www.halostatue.ca/graphics/maple_leaf.gif] [image:http://www.halostatue.ca/graphics/maple_leaf.gif]
+	* \[image:http://www.halostatue.ca/graphics/maple_leaf.gif title="Maple Leaf"] [image:http://www.halostatue.ca/graphics/maple_leaf.gif title="Maple Leaf"]
+	* \[image:http://www.halostatue.ca/graphics/maple_leaf.gif numbered=true] [image:http://www.halostatue.ca/graphics/maple_leaf.gif numbered=true]
+	* \[image:http://www.halostatue.ca/graphics/maple_leaf.gif style="border: 1px solid black;"] [image:http://www.halostatue.ca/graphics/maple_leaf.gif style="border: 1px solid black;"]
 	
 	==== Ruby Mailing Lists
 	If a Ruby mailing list message tag is provided, it will be converted appropriately.
@@ -127,11 +140,15 @@ page!content:	= Ruwiki Markup
 	\# level 1<br />
 	\## level 2<br />
 	\### level 3<br />
+	\### level 3.2<br />
+	\## level 2.2<br />
 	\# level 1.2
 	
 	# level 1
 	## level 2
 	### level 3
+	### level 3.2
+	## level 2.2
 	# level 1.2
 	==== Definition Lists
 	Definitions can be created similar to other lists. Unlike "standard" lists,
@@ -182,8 +199,8 @@ page!content:	= Ruwiki Markup
 	>>> Indent Level 3
 	=== Code
 	Text that is indented will be presented as formatted in a monospaced font. The
-	only change is to escape HTML entities &lt; (&amp;lt;), &gt; (&amp;gt;), and
-	&amp; (&amp;amp;).
+	only change is to escape HTML entities < (&lt;), > (&gt;), and
+	& (&amp;).
 	
 	  def replace
 	    content = @match[1]
@@ -193,17 +210,18 @@ page!content:	= Ruwiki Markup
 	== Miscellaneous Formatting
 	=== HTML
 	The Ruwiki engine currently passes through HTML without changes. Thus,
-	&lt;strong&gt;strong&lt;/strong&gt; would be shown as <strong>strong</strong>.
-	<strong><em>Note:</em></strong> This capability could be very dangerous as it
-	could expose the Wiki to cross-site scripting (XSS) vulnerabilities. This will
-	be remedied prior to the 1.0 release of Ruwiki.
+	&lt;strong&gt;strong&lt;/strong&gt; would be shown as
+	<strong>strong</strong>. <strong><em>Note:</em></strong> This
+	capability could be very dangerous as it could expose the Wiki to
+	cross-site scripting (XSS) vulnerabilities. This will be remedied prior
+	to the 1.0 release of Ruwiki.
 	
 	=== Abbreviations
 	Certain abbreviations may be known to the Wiki. While there is not yet any way
 	for a user to query what abbreviations are known, if the abbreviations are
 	told to the users, they may be used. Abbreviations are presented with @{key},
 	where <em>key</em> is the abbreviation desired. This Wiki, for example, knows
-	that \@{PM} means @{PM}. The special form \@{} will produce the current list
+	that \@{matz} means "@{matz}". The special form \@{} will produce the current list
 	of known abbreviations. Unknown abbreviations will simply be put back into the
 	data stream unchanged. Thus, \@{unknownkey} results in @{unknownkey}.
 	
@@ -222,11 +240,21 @@ page!content:	= Ruwiki Markup
 	* http://www.pmichaud.com/wiki/PmWiki/WikiStyles
 	
 	$Id$
+page!footer:	
+page!header:	
+properties!create-date:	
+properties!creator:	
+properties!creator-ip:	UNKNOWN
+properties!edit-comment:	
+properties!edit-date:	
 properties!editable:	
-properties!entropy:	0
+properties!editor:	
+properties!editor-ip:	UNKNOWN
+properties!entropy:	0.0
+properties!html-headers:	
 properties!project:	Ruwiki
 properties!title:	WikiMarkup
 properties!topic:	WikiMarkup
-properties!version:	1
+properties!version:	2
 ruwiki!content-version:	2
 ruwiki!version:	0.8.0

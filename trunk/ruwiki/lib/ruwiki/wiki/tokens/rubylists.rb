@@ -14,7 +14,7 @@ class Ruwiki
       # into named links.
     class RubyTalkLinks < Ruwiki::Wiki::Token
       def self.rank
-        2
+        1
       end
 
       def self.regexp
@@ -23,7 +23,7 @@ class Ruwiki
 
       def replace
         lm = @match.captures[0]
-        %Q(<a class="rw_extlink" href="http://www.ruby-talk.org/#{lm}">#{@match[0]}</a>)
+        %Q(<a class="rwtk_RubyTalkLinks" href="http://www.ruby-talk.org/#{lm}">#{@match[0]}</a>)
       end
     end
 
@@ -31,7 +31,7 @@ class Ruwiki
       # [ruby-core:12345]) into named links.
     class OtherRubyLinks < Ruwiki::Wiki::Token
       def self.rank
-        2
+        1
       end
 
       def self.regexp
@@ -40,7 +40,7 @@ class Ruwiki
 
       def replace
         ln, lm = @match.captures[0..1]
-        %Q(<a class="rw_extlink" href="http://blade.nagaokaut.ac.jp/cgi-bin/scat.rb/ruby/ruby-#{ln}/#{lm}">#{@match[0]}</a>)
+        %Q(<a class="rwtk_OtherRubyLinks" href="http://blade.nagaokaut.ac.jp/cgi-bin/scat.rb/ruby/ruby-#{ln}/#{lm}">#{@match[0]}</a>)
       end
     end
   end

@@ -4,15 +4,19 @@ page!content:	= Ruwiki 0.8.0 ChangeLog
 	
 	== Version 0.8.0
 	* AC: Added topic list (_topics) and project list (_projects) controls on templates and backend.
-	* AC: Added simple project search on back-end; search strings must be validated and cleansed before being sent to the back-end (the back-end must prepare the string for its own search mechanism). The back-end is wholly responsible for the searching of the pages.
-	* AC: Added RecentChanges list to backend and controls
+	* AC: Added simple search on back-end (both project and global); search strings must be validated and cleansed before being sent to the back-end (the back-end must prepare the string for its own search mechanism). The back-end is wholly responsible for the searching of the pages.
+	* AC: Added RecentChanges list to backend and controls.
 	* AZ: Topic backlink search: searches for mentions of the topic in the other topics of the project.
-	* AZ: New look! Ruwiki now sports a new look with CSS and template changes.
-	* AZ: New templating engine. The Rdoc templating engine has been greatly enhanced in preparation for some changes that will happen surrounding antispam capabilities.
+	* AZ: New templating engine: The Rdoc templating engine has been greatly enhanced in preparation for some changes that will happen surrounding antispam capabilities.
 	* AZ: Multiple flatfile-based backend support, plus a convertor between those backends, supporting a tagged format (:flatfiles), a YAML format (:yaml), and a Marshal format (:marshal).
 	* AZ: Defined a canonical, extensible page transport format.
-	; \Ruwiki::Wiki::Handler : Change the way that Tokens get their configuration information to be its own class.
-	; Rename \Ruwiki::Handler to \Ruwiki::NetworkHandler to reduce confusion with the new Network Handler.
+	* AZ: Defined a canonical, format-independent diff format.
+	* AZ: Fixed list numbering problem. Modified lists to allow for mixed lists. See WikiMarkup for restrictions.
+	* AZ: Removed automatic image conversion for URIs that look like images. Now, images must be specified with the [image:uri] format. See WikiMarkup for more details.
+	* AZ: New look! Ruwiki now sports a new default look with CSS and template changes.
+	* AZ: New look! Ruwiki has a "simple" template set.
+	* AZ: New look! Ruwiki has a "sidebar" template set.
+	; Tokens : Fix token bugs (newline problem?), add ISBN token(?).
 	
 	== Version 0.7.0
 	* Changed the tokenization API so that the #post_replace call is made at the Token class level instead of the instance level.

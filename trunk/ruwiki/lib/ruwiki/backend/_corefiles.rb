@@ -87,7 +87,7 @@ module Ruwiki::Backend::CoreFiles
       hits[topic] += topic.scan(re_search).size
 
         # check content
-      page = load(topic, project) rescue {}
+      page = load(topic, project) rescue Ruwiki::Page::NULL_PAGE
       page['page'].each_value do |item|
         item = item.join("") if item.kind_of?(Array)
         item ||= ""
@@ -178,14 +178,14 @@ module Ruwiki::Backend::CoreFiles
     end
   end
 
-  def make_rdiff(page, page_file, new_page)
+  def make_rdiff(page_file, new_page)
     diff_file = "#{page_file}.rdiff"
 
-    old_page = File.read(pf) rescue ""
+    old_page = self.class.load(pf) rescue Ruwiki::Page::NULL_PAGE
 
     diffs = []
     File.open(diff_file, 'rb') { |f| diffs = Marshal.load(f) } if File.exists?(diff_file)
-    diffs << diff
+    diffs << make_diff(old_page, new_page)
     changes = Marshal.dump(diffs)
 
     File.open(diff_file, 'wb') { |f| f << changes }

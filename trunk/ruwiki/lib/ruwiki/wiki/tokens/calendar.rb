@@ -75,29 +75,29 @@ class Ruwiki
 
         result = <<-"CALENDAR_HEAD"
 </p>
-<div class="rw_calendar">
-<table class="rw_calendar" summary="calendar for ::#{project}: #{year}.#{month}">
+<div class="rwtk_Calendar">
+<table class="rwtk_Calendar" summary="calendar for ::#{project}: #{year}.#{month}">
 <thead>
         CALENDAR_HEAD
 
-        result << %Q{  <tr>\n<th colspan="7" class="rw_calendar-current-month">}
+        result << %Q{  <tr>\n<th colspan="7" class="rwtk_Calendar_current_month">}
         result << make_month_link(project, year, month)
-        result << %Q{</th>\n  </tr>\n  <tr>\n<th colspan="2" class="rw_calendar-prev-month">}
+        result << %Q{</th>\n  </tr>\n  <tr>\n<th colspan="2" class="rwtk_Calendar_prev_month">}
         result << make_month_link(project, year, month - 1, :prev)
-        result << %Q{</th>\n<th colspan="3"></th>\n<th colspan="2" class="rw_calendar-next-month">}
+        result << %Q{</th>\n<th colspan="3"></th>\n<th colspan="2" class="rwtk_Calendar_next_month">}
         result << make_month_link(project, year, month + 1, :next)
         result << "</th>\n"
 
         result << <<-"CALENDAR_HEAD2"
   </tr>
   <tr>
-    <th class="rw_calendar-weekend">Su</th>
-    <th class="rw_calendar-weekday">Mo</th>
-    <th class="rw_calendar-weekday">Tu</th>
-    <th class="rw_calendar-weekday">We</th>
-    <th class="rw_calendar-weekday">Th</th>
-    <th class="rw_calendar-weekday">Fr</th>
-    <th class="rw_calendar-weekend">Sa</th>
+    <th class="rwtk_Calendar_weekend">Su</th>
+    <th class="rwtk_Calendar_weekday">Mo</th>
+    <th class="rwtk_Calendar_weekday">Tu</th>
+    <th class="rwtk_Calendar_weekday">We</th>
+    <th class="rwtk_Calendar_weekday">Th</th>
+    <th class="rwtk_Calendar_weekday">Fr</th>
+    <th class="rwtk_Calendar_weekend">Sa</th>
   </tr>
 </thead>
 <tbody>
@@ -107,14 +107,14 @@ class Ruwiki
           result << "  <tr>\n"
           week.each do |day|
             if day.nil?
-              result << %Q{    <td class="rw_calendar-day"></td>\n}
+              result << %Q{    <td class="rwtk_Calendar_day"></td>\n}
             else
               date = "%04d%02d%02d" % [year, month, day]
                 # Add the ability to create pages based on date here.
               if show_today == day
-                result << %Q{    <td class="rw_calendar-today">}
+                result << %Q{    <td class="rwtk_Calendar_today">}
               else
-                result << %Q{    <td class="rw_calendar-day">}
+                result << %Q{    <td class="rwtk_Calendar_day">}
               end
               if @backend.page_exists?(date, project)
                 result << VIEW_LINK % ["#{@script}/#{project}/#{date}", day]
@@ -127,7 +127,7 @@ class Ruwiki
           result << "  </tr>\n"
         end
         
-        result << "</tbody>\n</table>\n</div>\n<p>"
+        result << %Q(</tbody>\n</table>\n</div>\n<p class="rwtk_Paragraph">)
         result
       end
 
@@ -136,10 +136,10 @@ class Ruwiki
       end
 
       def self.post_replace(content)
-        content.gsub!(%r{<p>(\s*</?div(?: [^>]+)?>\s*)</p>}, '\1')
-        content.gsub!(%r{<p>(\s*</?table(?: [^>]+)?>\s*)</p>}, '\1')
-        content.gsub!(%r{<p>(\s*</?t(?:head|body|r)(?: [^>]+)?>\s*)</p>}, '\1')
-        content.gsub!(%r{<p>(\s*<t[hd].+?</t[hd]>\s*)</p>}, '\1')
+        content.gsub!(%r{<p[^>]*>(\s*</?div(?: [^>]+)?>\s*)</p>}, '\1')
+        content.gsub!(%r{<p[^>]*>(\s*</?table(?: [^>]+)?>\s*)</p>}, '\1')
+        content.gsub!(%r{<p[^>]*>(\s*</?t(?:head|body|r)(?: [^>]+)?>\s*)</p>}, '\1')
+        content.gsub!(%r{<p[^>]*>(\s*<t[hd].+?</t[hd]>\s*)</p>}, '\1')
         content
       end
     end

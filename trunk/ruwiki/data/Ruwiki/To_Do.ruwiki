@@ -4,13 +4,13 @@ page!content:	= Ruwiki 0.8.0 To Do Tracking
 	
 	== Well-Defined To Do Items
 	=== Ruwiki 0.9.0
-	; Versioning : complete the change history. Change history is currently stored in a file <em>topic</em>.rdiff. There is no way to display the change history at this point. The change history will need further work, as the default make_diffs is not necessarily appropriate for all backend formats.
+	; Versioning : complete the change history interface. Change history is currently stored in a file <em>topic[.extension]</em>.rdiff. There is no way to display the change history at this point. The change history will need further work, as the default make_diffs is not necessarily appropriate for all backend formats.
+	; Action objects : Actions will be generalised to pull the processing out of the main ruwiki.rb inasmuch as is possible.
+	; Function tokens : generalize the %&lt;function-name&gt;[(&lt;args&gt;)] calling method so that function tokens can be created without having to create a custom regular expression.
         ; Search work : There is further search work required. The current mechanism is effective, but inefficient, as it must load and convert each file in a project to a page and then search selectively within that page. The search mechanism must be improved.
 	; Frozen content : make it so that frozen content can be provided on a per-page or Wiki basis. Will provide both headers and footers. <strong>Note:</strong> Ruwiki 0.9.0 will only provide the ability to present the information, not create it.
 	; Frozen pages : provide the ability to freeze content in place; the page is no longer "wiki" editable and is effectively a plain HTML page.
 	; Page properties : provide the ability to generally edit the properties of a given page.
-	; Function tokens : generalize the %&lt;function-name&gt;[(&lt;args&gt;)] calling method so that function tokens can be created without having to create a custom regular expression.
-	; Action objects : Actions will be generalised to pull the processing out of the main ruwiki.rb inasmuch as is possible.
 	; Blacklisting : Allow the specification of an allow/deny list for IPs or hostnames, aimed at blocking known spammers. Entries in this list can be permanent or temporary (e.g., "* DENY", "spammer.com DENY UNTIL 20040723", "139.244.33.25 ALLOW"). Allow the editing of the list on-line (this is of limited utility until 0.10.0 with user authentication). Denied addresses will be prohibited from editing the pages of the Wiki.
 	; External URL redirection : Force URIs that allow redirection (e.g., HTTP and HTTPS) are redirected through a single point on an instance of Ruwiki (e.g., &lt;ruwiki-uri&gt;_redirect?&lt;url&gt;) unless the specific URIs or hosts are whitelisted (e.g., rubycentral.com, rubyforge.org, ruby-lang.org, etc.). This includes the ability to manage the URI or host list.
 	; Robot exclusion : Recognise known robot user agents; when found, allow them to index and follow links on all pages except command pages (e.g., Project/Topic/_edit, Project/_create, etc.).

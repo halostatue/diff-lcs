@@ -41,8 +41,9 @@ class Ruwiki::Backend::Flatfiles < Ruwiki::Backend
     # -- to disk.
   def store(page)
     pagefile  = page_file(page.topic, page.project)
-    newpage   = Ruwiki::Backend::Flatfiles.dump(page.export)
-    make_rdiff(page, pagefile, newpage)
+    export    = page.export
+    newpage   = Ruwiki::Backend::Flatfiles.dump(export)
+    make_rdiff(pagefile, export)
 
     File.open(pagefile, 'wb') { |f| f.puts newpage }
   end

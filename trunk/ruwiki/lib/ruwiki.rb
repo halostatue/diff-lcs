@@ -266,11 +266,8 @@ EPAGE
       if np == op and @action == 'save'
         @page.content = op
         @type = :content
-        # debug
-        puts op
       else
         @page.content      = np
-        @page.version      = @request.parameters['version'].to_i + 1
         edc = @request.parameters['edcomment']
         unless (edc.nil? or edc.empty? or edc == "*")
           @page.edit_comment = edc
@@ -278,6 +275,7 @@ EPAGE
 
         if @action == 'save'
           @type = :save
+          @page.version = @request.parameters['version'].to_i + 1
           @backend.store(@page)
         
             # hack to ensure that Recent Changes are updated correctly

@@ -5,7 +5,7 @@ page!content:	= Ruwiki
 	projects without colliding or having to resort to odd naming conventions.
 	Please see ::Ruwiki for more information.
 	
-	The current version is 0.7.0. Several fixes have been made to text
+	The current version is 0.8.0. Several fixes have been made to text
 	preservation, an API change to plugins has been made (please read
 	Ruwiki::Extending_Ruwiki for details), and a calendar plugin has been added
 	(please read Ruwiki::WikiMarkup for details).
@@ -21,11 +21,21 @@ page!content:	= Ruwiki
 	general. If you want to play with \WikiFormatting, use the Ruwiki::SandBox.
 	
 	$Id$
+page!footer:	
+page!header:	
+properties!create-date:	
+properties!creator:	
+properties!creator-ip:	UNKNOWN
+properties!edit-comment:	Revert.
+properties!edit-date:	
 properties!editable:	
-properties!entropy:	0
+properties!editor:	
+properties!editor-ip:	UNKNOWN
+properties!entropy:	0.0
+properties!html-headers:	
 properties!project:	Default
 properties!title:	ProjectIndex
 properties!topic:	ProjectIndex
-properties!version:	1
+properties!version:	4
 ruwiki!content-version:	2
 ruwiki!version:	0.8.0

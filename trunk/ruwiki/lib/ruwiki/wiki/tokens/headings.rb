@@ -28,13 +28,13 @@ class Ruwiki
         level   = @match.captures[0].count("=")
         content = @match.captures[1]
         level   = 6 if level > 6
-        "<h#{level}>#{content}</h#{level}>"
+        %Q(<h#{level} class="rwtk_Headings">#{content}</h#{level}>)
       end
 
       def self.post_replace(content)
-        content.gsub!(%r{(</h\d>)\n}) { |m| "#{$1}\n<p>" }
-        content.gsub!(%r{(</h\d>)</p>\n<p>}) { |m| "#{$1}\n<p>" }
-        content.gsub!(%r{<p>(<h\d>)}, '\1')
+        content.gsub!(%r{(</h\d>)\n}) { |m| %Q(#{$1}\n<p class="rwtk_Paragraph">) }
+        content.gsub!(%r{(</h\d>)</p>\n<p>}) { |m| %Q(#{$1}\n<p class="rwtk_Paragraph">) }
+        content.gsub!(%r{<p[^>]*>(<h\d[^>]*>)}, '\1')
         content.gsub!(%r{(</h\d>)</p>}, '\1')
         content
       end

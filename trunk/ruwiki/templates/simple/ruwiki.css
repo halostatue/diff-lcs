@@ -5,87 +5,32 @@ body
   color: black;
   font-size: medium;
   font-family: "Trebuchet MS", "Verdana", sans-serif;
-  background-color: #F7FEFF;
+  background-color: #CCCCCC;
 }
 
-.rw_navbar
-{
-  width: 100%;
-  margin: 0;
-  padding: 0.1em;
-  font-size: 0.7em;
-  border: 1px solid black;
-  color: white;
-  background-color: #27C;
-  height: 0.5em;
-  z-index: 2;
-}
+.rw_navbar { font-weight: bold; }
 
 .rw_navbar a
 {
-  color: white;
-  border-bottom: 1px dashed white;
+  border-bottom: 1px dashed black;
   font-weight: bold;
 }
-
 .rw_navbar a:visited
 {
-  color: #2E7;
-  font-weight: normal;
-  border-bottom: 1px dashed #2E7;
+  color: maroon;
+  border-bottom: 1px dashed maroon;
 }
-
-.rw_navbar a:hover
-{
-  text-decoration: none;
-}
-
-.rw_navbar_tab
-{
-  float: left;
-  background-color: #27C;
-  padding-left: 0.8em;
-  padding-right: 0.8em;
-  padding-top: 0.3em;
-  border: 1px solid #059;
-  margin: 0 0.3em;
-  height: 2em;
-  vertical-align: center;
-}
-
-.rw_navbar_tab:hover
-{
-  background-color: #49E;
-}
-
-.rw_navbar_righttab
-{
-  float: right;
-  padding-left: 0.8em;
-  padding-top: 0.3em;
-  padding-right: 0.8em;
-  border: 1px solid #059;
-  background-color: #27C;
-  margin: 0 0.3em;
-  height: 2em;
-}
-
-.rw_navbar_righttab:hover
-{
-  background-color: #49E;
-}
+.rw_navbar a:hover { background-color: #AAAAAA; }
 
 .rw_content
 {
-  clear: both;
-  margin-top: 2em;
-  margin-left: 3em;
-  margin-right: 3em;
+  margin-left: 2em;
+  margin-right: 2em;
 }
 
 .rw_edit_content
 {
-  border: 1px dashed #059;
+  border: 1px solid black;
   padding: 0.3em;
   width: 100%;
   min-height: 20.5em;
@@ -95,7 +40,7 @@ body
 
 .rw_edit_content textarea
 {
-  border: 1px dashed #059;
+  border: 1px solid black;
   padding: 0.3em;
   width: 100%;
   min-height: 20.5em;
@@ -110,17 +55,23 @@ body
 
 .rw_edit_comment input
 {
-  border: 1px dashed #059;
+  border: 1px solid black;
   min-width: 50%;
   width: 70%;
   max-width: 80%;
 }
 
+.rw_edit_form { margin-top: 1em; }
+
 .rw_edit_form_button
 {
   font-size: 0.8em;
-  border: 1px dotted #27C;
+  border: 1px solid black;
 }
+
+.rw_pagelink { }
+.rw_projectxlink { }
+.rw_projectindex { }
 
 .rw_edit_raw
 {
@@ -133,7 +84,6 @@ body
 
 .rw_edit_raw pre
 {
-  border: 3px double #72C;
   overflow: scroll;
   clear: right;
 }
@@ -147,70 +97,57 @@ body
   margin: 0;
 }
 
-.rw_edit_title
-{
-  margin: 0;
-}
+.rw_edit_title { }
 
 .rw_edit_format div
 {
-  border: 3px double #27C;
 }
 
 .rw_search_button
 {
-  border: 1px dotted #27C;
+  border: 1px solid black;
 }
 
 .rw_search_box
 {
-  border: 1px dotted #27C;
+  border: 1px solid black;
 }
 
-.rw_search_box:hover
-{
-  background-color: #999;
-}
+.rw_search_box:hover { }
 
 li { margin-top: 0.25em; margin-bottom: 0.25em; }
 
 .rw_minilink { font-size: 0.5em; font-weight: bold; }
 
-#rw_editing_tab { background-color: #C72; }
-#rw_saved_page_announcement { border-bottom: 1px solid black; }
+#rw_saved_page_announcement { }
 
   /* Token Classes */
 .rwtk_Paragraph { }
 .rwtk_Code
 {
-  background-color: #999;
+  background-color: #EEE;
   border: 1px solid black;
 }
-.rwtk_Image { }
+.rwtk_Image { border: none; }
 .rwtk_NumberedLinks
 {
-  border: 1px dashed #72C;
-  background-color: #C7CECF;
+  border-bottom: 1px solid #00AA00;
 }
 .rwtk_NamedLinks
 {
-  border: 1px dashed #72C;
-  background-color: #C7CECF;
+  border-bottom: 1px solid #00AA00;
 }
 .rwtk_ExternalLinks
 {
-  border: 1px dashed #72C;
-  background-color: #C7CECF;
+  border-bottom: 1px solid #00AA00;
 }
 .rwtk_RubyTalkLinks
 {
-  border: 1px dashed #72C;
-  background-color: #C7CECF;
+  border-bottom: 1px solid #00AA00;
 }
 .rwtk_OtherRubyLinks
 {
-  border: 1px dashed #72C;
-  background-color: #C7CECF;
+  border-bottom: 1px solid #00AA00;
 }
 .rwtk_HRule { }
 

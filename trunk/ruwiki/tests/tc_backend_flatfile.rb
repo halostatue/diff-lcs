@@ -15,7 +15,7 @@ require 'ostruct'
 require 'test/unit'
 require 'fileutils'
 
-class TestBackendFlatfile < Test::Unit::TestCase
+class TestBackendFlatfiles < Test::Unit::TestCase
   def setup
     @ffopts = { :data_path => "./test/data", :extension => nil }
 
@@ -37,7 +37,7 @@ class TestBackendFlatfile < Test::Unit::TestCase
       FileUtils.mkdir_p(prjdir) rescue nil
       val.each do |topcon|
         topic, content = topcon.split(":")
-        File.open("#{prjdir}/#{topic}", "w") { |fh| fh.puts content }
+        File.open("#{prjdir}/#{topic}", "w") { |fh| fh.puts "page!content:	#{content}" }
       end
     end
 
@@ -68,8 +68,8 @@ class TestBackendFlatfile < Test::Unit::TestCase
     end
   end
 
-  # test simple one word lookups
-  # need to add more complex search strings
+    # test simple one word lookups
+    # need to add more complex search strings
   def test_search_project
     assert_nothing_raised { @backend = Ruwiki::Backend::Flatfiles.new(@ffopts) }
 
