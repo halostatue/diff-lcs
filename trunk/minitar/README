@@ -1,16 +1,15 @@
 Archive::Tar::Minitar README
 ============================
-Archive::Tar::Minitar is a pure-Ruby library and command-line utility
-that provides the ability to deal with POSIX tar(1) archive files. The
-implementation is based heavily on Mauricio Fernández's implementation
-in rpa-base, but has been reorganised to promote reuse in other
-projects.
+Archive::Tar::Minitar is a pure-Ruby library and command-line utility that
+provides the ability to deal with POSIX tar(1) archive files. The
+implementation is based heavily on Mauricio Fernández's implementation in
+rpa-base, but has been reorganised to promote reuse in other projects.
 
-This release is version 0.5.0. The library can only handle files and
-directories at this point. A future version will be expanded to handle
-symbolic links and hard links in a portable manner. The command line
-utility, minitar, can only create archives, extract from archives, and
-list archive contents.
+This release is version 0.5.1, offering a bugfix over version 0.5.0. The
+library can only handle files and directories at this point. A future version
+will be expanded to handle symbolic links and hard links in a portable manner.
+The command line utility, minitar, can only create archives, extract from
+archives, and list archive contents.
 
 Using this library is easy. The simplest case is:
 
@@ -34,10 +33,10 @@ A gzipped tar can be written with:
     Minitar.unpack(tgz, 'x')
 
 As the case above shows, one need not write to a file. However, it will
-sometimes require that one dive a little deeper into the API, as in the
-case of StringIO objects. Note that I'm not providing a block with
-Minitar::Output, as Minitar::Output#close automatically closes both the
-Output object and the wrapped data stream object.
+sometimes require that one dive a little deeper into the API, as in the case
+of StringIO objects. Note that I'm not providing a block with Minitar::Output,
+as Minitar::Output#close automatically closes both the Output object and the
+wrapped data stream object.
 
   begin
     sgz = Zlib::GzipWriter.new(StringIO.new(""))

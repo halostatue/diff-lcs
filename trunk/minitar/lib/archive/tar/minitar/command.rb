@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 #--
-# Archive::Tar::Baby 0.5.0
+# Archive::Tar::Baby 0.5.1
 #   Copyright © 2004 Mauricio Julio Fernández Pradier and Austin Ziegler
 #   This is free software with ABSOLUTELY NO WARRANTY.
 #

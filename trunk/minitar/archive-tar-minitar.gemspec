@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = %{archive-tar-minitar}
-  s.version = %{0.5.0}
+  s.version = %{0.5.1}
   s.author = %{Austin Ziegler, Mauricio Fernandez}
   s.email = %{minitar@halostatue.ca}
   s.homepage = %{http://rubyforge.org/projects/ruwiki/}
@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.bindir = %(bin)
   s.default_executable = %(minitar)
 
-  s.test_suite_file = %w{tests/testall.rb}
+  s.test_files = %w{tests/testall.rb}
 
   s.autorequire = %{archive/tar/minitar}
   s.require_paths = %w{lib}

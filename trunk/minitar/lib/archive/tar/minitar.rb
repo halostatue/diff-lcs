@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 #--
-# Archive::Tar::Minitar 0.5.0
+# Archive::Tar::Minitar 0.5.1
 #   Copyright © 2004 Mauricio Julio Fernández Pradier and Austin Ziegler
 #
 # This program is based on and incorporates parts of RPA::Package from
@@ -151,7 +151,7 @@ end
 require 'fileutils'
 require 'find'
 
-  # = Archive::Tar::Minitar 0.5.0
+  # = Archive::Tar::Minitar 0.5.1
   # Archive::Tar::Minitar is a pure-Ruby library and command-line
   # utility that provides the ability to deal with POSIX tar(1) archive
   # files. The implementation is based heavily on Mauricio Fernández's
@@ -166,7 +166,7 @@ require 'find'
   # NOTE::: support for typeflags 1 and 2 is not yet implemented in this
   #         version.
   #
-  # This release is version 0.5.0. The library can only handle files and
+  # This release is version 0.5.1. The library can only handle files and
   # directories at this point. A future version will be expanded to
   # handle symbolic links and hard links in a portable manner. The
   # command line utility, minitar, can only create archives, extract
@@ -225,7 +225,7 @@ require 'find'
   # modified under the terms of the GPL version 2 (or later) or Ruby's
   # licence.
 module Archive::Tar::Minitar
-  VERSION = "0.5.0"
+  VERSION = "0.5.1"
 
     # The exception raised when a wrapped data stream class is expected to
     # respond to #rewind or #pos but does not.
