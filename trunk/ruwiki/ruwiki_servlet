@@ -20,6 +20,20 @@ require 'ruwiki/servlet'
 require 'optparse'
 require 'ostruct'
 
+copyright_banner = <<-"COPYRIGHT"
+Ruwiki #{Ruwiki::VERSION}
+  Copyright © 2002 - 2004, Digikata and HaloStatue
+
+  http://rubyforge.org/projects/ruwiki/
+
+  Alan Chen (alan@digikata.com)
+  Austin Ziegler (ruwiki@halostatue.ca)
+
+Licensed under the same terms as Ruby.
+
+$Id$
+COPYRIGHT
+
   # This is for the WEBrick version of Ruwiki. This has been abstracted to
   # accept a Config global variable to reconfigure Ruwiki after initial
   # creation.
@@ -55,89 +69,106 @@ ARGV.options do |o|
   o.separator ""
   o.separator "WEBrick options:"
   o.on('-P', '--port PORT', Numeric,
-       'Runs the Ruwiki servlet on the specified port. Default ',
-       '8808.') do |port|
+       'Runs the Ruwiki servlet on the specified',
+       'port. Default 8808.') do |port|
     opts.port = port
   end
   o.on('-A', '--accept ADDRESS,ADDRESS,ADDRESS', Array,
-       'Restricts the Ruwiki servlet to accepting connections from the ',
-       'specified address or (comma-separated) addresses. May be specified ',
-       'multiple times. Defaults to all addresses.') do |address|
+       'Restricts the Ruwiki servlet to accepting',
+       'connections from the specified address or',
+       '(comma-separated) addresses. May be',
+       'specified multiple times. Defaults to all',
+       'addresses.') do |address|
     opts.addresses += address
   end
-  o.on('-L', '--local', 'Restricts the Ruwiki servlet to accepting ',
-       'only local connections. Overrides any previous --accept ',
-       'addresses.') do |local|
+  o.on('-L', '--local',
+       'Restricts the Ruwiki servlet to accepting',
+       'only local connections (12.0.0.1).',
+       'Overrides any previous --accept addresses.') do |local|
     opts.addresses = ["127.0.0.1"]
   end
-  o.on('-M', '--mount MOUNT-POINT', 'The relative URI from which Ruwiki ',
+  o.on('-M', '--mount MOUNT-POINT',
+       'The relative URI from which Ruwiki ',
        'will be accessible. Defaults to "/".') do |mp|
     opts.mount = mp
   end
-  o.on('--[no-]log', 'Log WEBrick activity. Default ',
-       'is --log.') do |log|
+  o.on('--[no-]log',
+       'Log WEBrick activity. Default is --log.') do |log|
     opts.do_log = log
   end
-  o.on('--logfile LOGFILE', 'The file to which WEBrick logs go. ',
-       'Default is standard error.') do |lf|
+  o.on('--logfile LOGFILE', 'The file to which WEBrick logs are',
+       'written. Default is standard error.') do |lf|
     opts.log_dest = lf
   end
-  o.on('-T', '--threads THREADS', Integer, 'Sets the WEBrick ',
-       'threadcount.') do |tc|
+  o.on('-T', '--threads THREADS', Integer,
+       'Sets the WEBrick threadcount.') do |tc|
     opts.threads = tc
   end
   o.separator ""
   o.separator "Ruwiki options:"
-  o.on('--webmaster WEBMASTER', 'The Ruwiki webmaster email ',
-       'address. Defaults to "webmaster@domain.com".') do |wm|
+  o.on('--webmaster WEBMASTER',
+       'The Ruwiki webmaster email address.',
+       'Defaults to "webmaster@domain.com".') do |wm|
     opts.webmaster = wm
   end
-  o.on('--[no-]debug', 'Turns on Ruwiki debugging. Defaults to ',
-       '--no-debug.') do |d|
+  o.on('--[no-]debug',
+       'Turns on Ruwiki debugging. Defaults',
+       'to --no-debug.') do |d|
     opts.debug = d
   end
-  o.on('--title TITLE', 'Provides the Ruwiki title. Default "Ruwiki".') do |t|
+  o.on('--title TITLE',
+       'Provides the Ruwiki title. Default is',
+       '"Ruwiki".') do |t|
     opts.title = t
   end
-  o.on('--default-page PAGENAME', 'An alternate default page. Default ',
+  o.on('--default-page PAGENAME',
+       'An alternate default page. Default is',
        '"ProjectIndex".') do |dp|
     opts.default_page = dp
   end
-  o.on('--default-project PAGENAME', 'An alternate default project. ',
-       'Default "Default".') do |dp|
+  o.on('--default-project PAGENAME',
+       'An alternate default project. Default is',
+       '"Default".') do |dp|
     opts.default_project = dp
   end
-  o.on('--template-path TEMPLATE_PATH', 'The location of Ruwiki templates. ',
-       'Default "./templates".') do |tp|
+  o.on('--template-path TEMPLATE_PATH',
+       'The location of Ruwiki templates. Default',
+       'is "./templates".') do |tp|
     opts.template_path = tp
   end
-  o.on('--templates TEMPLATES', 'The name of the Ruwiki templates. ',
-       'Default "default".') do |tp|
+  o.on('--templates TEMPLATES',
+       'The name of the Ruwiki templates. Default',
+       'is "default".') do |tp|
     opts.template_set = tp
   end
-  o.on('--css CSS_NAME', 'The name of the CSS file in the template ',
-       'path. Default "ruwiki.css".') do |css|
+  o.on('--css CSS_NAME',
+       'The name of the CSS file in the template',
+       'path. Default is "ruwiki.css".') do |css|
     opts.css = css
   end
-  o.on('--storage-type TYPE', Ruwiki::KNOWN_BACKENDS, 'Select the storage ',
-       'type (#{Ruwiki::KNOWN_BACKENDS.join(" ")}).') do |st|
+  o.on('--storage-type TYPE', Ruwiki::KNOWN_BACKENDS,
+       'Select the storage type:',
+       "#{Ruwiki::KNOWN_BACKENDS.join(", ")}") do |st|
     opts.storage_type = st
   end
-  o.on('--flatfiles-data-path PATH', 'The path where data files are ',
-       'stored. Default "./data".') do |fdp|
+  o.on('--flatfiles-data-path PATH',
+       'The path where data files are stored.',
+       'Default is "./data".') do |fdp|
     opts.storage_options[:flatfiles][:data_path] = fdp
   end
-  o.on('--flatfiles-extension EXT', 'The extension for data files. ',
-       'Default none.') do |ext|
+  o.on('--flatfiles-extension EXT',
+       'The extension for data files. Default',
+       'none.') do |ext|
     opts.storage_options[:flatfiles][:extension] = ext
   end
   o.separator ""
+  o.separator "General info:"
   o.on_tail('--help', 'Shows this text.') do
-    $stderr.puts opts
+    $stderr.puts o
     exit
   end
   o.on_tail('--version', 'Shows the version of Ruwiki.') do
-    $stderr.puts Ruwiki::VERSION
+    $stderr.puts copyright_banner
     exit
   end
   o.parse!
@@ -170,11 +201,48 @@ else
 end
 
 if opts.do_log
-  opts.log_dest = File.open(opts.log_dest, "wb+") if opts.log_dest != $stderr
-  logger = WEBrick::Log::new(opts.log_dest, WEBrick::Log::DEBUG)
+  if opts.log_dest = $stderr
+    dest = $stderr
+    opts.log_dest = "stderr"
+  else
+    dest = File.open(opts.log_dest, "wb+")
+  end
+  logger = WEBrick::Log.new(dest, WEBrick::Log::DEBUG)
 else
   logger = nil
 end
+
+banner = <<-"BANNER"
+#{copyright_banner}
+
+WEBrick options:
+  Port                  #{opts.port}
+  Accepted Addresses    #{opts.addresses.join(", ")}
+  Mount Point           #{opts.mount}
+  Logging?              #{opts.do_log}
+  Log Destination       #{opts.log_dest}
+  Threads               #{opts.threads}
+
+Ruwiki options:
+  Webmaster             #{opts.webmaster}
+  Debugging?            #{opts.debug}
+  Title                 #{opts.title}
+  Default Project       #{opts.default_project}
+  Default Page          #{opts.default_page}
+  Template Path         #{opts.template_path}
+  Template Set          #{opts.template_set}
+  CSS Source            #{opts.css}
+
+  Storage Type          #{opts.storage_type}
+  Data Path             #{opts.storage_options[opts.storage_type][:data_path]}
+  Extension             #{opts.storage_options[opts.storage_type][:extension]}
+
+BANNER
+
+unless logger.nil?
+  banner.each { |b| logger.info(b) }
+end
+# logger << banner unless logger.nil?
 
 server = WEBrick::HTTPServer.new(:Port            => opts.port.to_i,
                                  :StartThreads    => opts.threads.to_i,

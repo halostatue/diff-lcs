@@ -1,6 +1,6 @@
 #--
 # Ruwiki
-#   Copyright © 2002 - 2003, Digikata and HaloStatue
+#   Copyright © 2002 - 2004, Digikata and HaloStatue
 #   Alan Chen (alan@digikata.com)
 #   Austin Ziegler (ruwiki@halostatue.ca)
 #

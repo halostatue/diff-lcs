@@ -1,6 +1,6 @@
 #--
 # Ruwiki
-#   Copyright © 2002 - 2003, Digikata and HaloStatue
+#   Copyright © 2002 - 2004, Digikata and HaloStatue
 #   Alan Chen (alan@digikata.com)
 #   Austin Ziegler (austin@halostatue.ca)
 #
@@ -23,36 +23,26 @@ require 'ruwiki/page'
   # and WEBrick interfaces, templates, and CSS formatting. Additionally, it
   # supports project namespaces, so that two pages can be named the same for
   # differing projects without colliding or having to resort to odd naming
-  # conventions. Please see ::Ruwiki in the running Wiki for more information.
+  # conventions. Please see the ::Ruwiki project in the running Wiki for more
+  # information. Ruwiki 0.7.0 has German and Spanish translations available.
   #
-  # == Quick Install (CGI)
+  # == Quick Start (CGI)
   # 1. Place the Ruwiki directory in a place that your webserver can execute
-  #    CGI programs. Ensure that ruwiki.cgi is executable on your webserver.
-  #    You may wish to protect templates/, data/, and lib/ from casual access.
-  # 2. Modify the following lines in ruwiki.cgi:
-  #     wiki.config.webmaster  = ...
-  #     wiki.config.title      = ...
-  # 3. Point your web browser to the appropriate URL.
+  #    CGI programs and ensure that ruwiki.cgi is executable on your webserver.
+  # 2. Point your web browser to the appropriate URL.
   #
-  # == Quick Install (WEBrick)
-  # 1. Modify the following lines in ruwiki_servlet.rb:
-  #     $config.webmaster  = ...
-  #     $config.title      = ...
-  # 2. Run ruwiki_servlet.rb to start a WEBrick instance on localhost:8808 with
-  #   ruwiki bound to the root path (e.g., http://localhost:8808/).
-  # 3. Point your web browser to the appropriate URL.
+  # == Quick Start (WEBrick)
+  # 1. Run ruwiki_servlet (ruwiki_servlet.bat under Windows).
+  # 2. Point your web browser to <http://localhost:8808/>.
   #
-  # == Use
-  # Ruwiki is able to be called with one of several URI forms:
+  # == Configuration
+  # There are extensive configuration options available. The Ruwiki WEBrick
+  # servlet offers command-line options that simplify the configuration of
+  # Ruwiki without editing the servlet; use ruwiki_servlet --help for more
+  # information.
   #
-  #   http://domain.com/ruwiki.cgi?PageName
-  #   http://domain.com/ruwiki.cgi?PageName&project=Project
-  #   http://domain.com/ruwiki.cgi?topic=PageName&project=Project
-  #   http://domain.com/ruwiki.cgi/PageName
-  #   http://domain.com/ruwiki.cgi/Project/
-  #   http://domain.com/ruwiki.cgi/Project/PageName
-  #
-  # Copyright:: Copyright © 2003 - 2003, Digikata and HaloStatue, Ltd.
+  # == Copyright
+  # Copyright:: Copyright © 2002 - 2004, Digikata and HaloStatue, Ltd.
   # Authors::   Alan Chen (alan@digikata.com)
   #             Austin Ziegler (ruwiki@halostatue.ca)
   # Licence::   Ruby's

@@ -18,7 +18,9 @@ This is the \ProjectIndex page for Ruwiki. For any given project, the
 The development progress of Ruwiki is kept in the wiki itself.
 * The BugTracking page in Ruwiki keeps track of open and closed bugs in Ruwiki.
 * The To_Do list keeps track of major development goals for Ruwiki.
+
 ----
+
 == Different Features?
 If this wiki doesn't have the right combination of features, (or if it just
 doesn't feel right) try these other Ruby-based Wikis:
@@ -27,3 +29,5 @@ doesn't feel right) try these other Ruby-based Wikis:
 * \RWiki - http://rwiki.jin.gr.jp/cgi-bin/rw-cgi.rb?cmd=view;name=top
 * \MiniRubyWiki - http://www.xpsd.com/MiniRubyWiki
 * Instiki - http://instiki.rubyforge.org/
+
+$Id$

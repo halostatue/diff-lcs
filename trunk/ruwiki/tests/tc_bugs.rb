@@ -11,10 +11,10 @@
 #
 # $Id$
 #++
-require 'test/unit'
 require 'harness'
 require 'ruwiki/backend/flatfiles'
 require 'ostruct'
+require 'test/unit'
 
 # see if we can reproduce the LicenseandAuthor hang
 # described in bug id 147 on rubyforge
@@ -56,3 +56,11 @@ class TC_LicenseAndAuthorHang < Test::Unit::TestCase
     assert_not_nil(@pg)
   end
 end
+
+# if __FILE__ == $0
+#   ObjectSpace.each_object { |o| tests << o if o.kind_of?(Class) } 
+#   tests.delete_if { |o| !o.ancestors.include?(Test::Unit::TestCase) }
+#   tests.delete_if { |o| o == Test::Unit::TestCase }
+
+#   tests.each { |test| Test::Unit::UI::Console::TestRunner.run(test) }
+# end

@@ -1,9 +1,9 @@
 #--
 # Ruwiki
-#   Copyright © 2002 - 2003, Digikata and HaloStatue
+#   Copyright © 2002 - 2004, Digikata and HaloStatue
 #   Alan Chen (alan@digikata.com)
 #   Austin Ziegler (austin@halostatue.ca)
-#   Mauricio Julio Fernández Pradierández Pradier (batsman.geo@yahoo.com)
+#   Mauricio Julio Fernández Pradier (batsman.geo@yahoo.com)
 #
 # Licensed under the same terms as Ruby.
 #

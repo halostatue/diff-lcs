@@ -3,7 +3,8 @@ topic: To_Do
 version: 1
 #EHDR
 = Ruwiki 0.7.0 To Do Tracking
-Completed to-do items can be found in the ChangeLog. Bugs in Ruwiki are tracked in BugTracking.
+Completed to-do items can be found in the ChangeLog. Bugs in Ruwiki are
+tracked in BugTracking.
 
 Note that Ruwiki 0.7.0 was originally supposed to be 0.6.3, but the
 Tokenization API change demanded a full version change instead. Thus, there
@@ -56,3 +57,5 @@ are still three planned API-changing releases between now and 1.0.
 ; add setup and user config methods : for backend plugin classes, then we can use them with an interactive or gui tool frontend to setup data storage backends. The user might have to run as root or other user with database create permissions.
 ; add id="" to various markup elements (make id specific to topic) : Later we can allow users to tweak a page using uploaded css fragments which might get appended onto the standard css contents. 
 ; ruby action : upload a ruby code fragment to add a smart "action" to that wiki page. Need some sort of security + approval system to handle this safely.
+
+$Id$

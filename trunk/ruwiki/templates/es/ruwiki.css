@@ -8,6 +8,7 @@ body
 
 li { margin-top: 0.25em; margin-bottom: 0.25em; }
 pre { background-color: #FFFFA7; border: 1px solid black; }
+pre pre { border: 0 }
 
 .rw_nav { background-color: #E9967A }
 .rw_edittext { border: 1px dotted blue }
