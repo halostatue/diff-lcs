@@ -2,7 +2,7 @@ Ruwiki %RV#%
 ------------
 Ruwiki is a simple, extensible Wiki-clone written in Ruby. It supports both
 CGI and WEBrick interfaces, templates, and CSS formatting. This Wiki differs
-from most other Wikis in that it supports projectt namespaces, so that two
+from most other Wikis in that it supports project namespaces, so that two
 topics may be named the same for differing projects without colliding or
 having to resort to odd naming conventions. Please see the ::Ruwiki project in
 the running Wiki for more information. Ruwiki %RV#% has German and Spanish
