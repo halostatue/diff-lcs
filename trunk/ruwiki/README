@@ -1,10 +1,10 @@
-Ruwiki 0.6.2
+Ruwiki 0.7.0
 ------------
 Ruwiki is a simple, extensible Wiki written in Ruby. It supports both CGI and
 WEBrick interfaces, templates, and CSS formatting. Additionally, it supports
 project namespaces, so that two pages can be named the same for differing
 projects without colliding or having to resort to odd naming conventions.
-Please see ::Ruwiki in the running Wiki for more information. Ruwiki 0.6.2 now
+Please see ::Ruwiki in the running Wiki for more information. Ruwiki 0.7.0 now
 has German and Spanish translations available.
 
 Quick Install (CGI)
@@ -36,7 +36,7 @@ Ruwiki is able to be called with one of several URI forms:
   http://domain.com/ruwiki.cgi/Project/
   http://domain.com/ruwiki.cgi/Project/PageName
 
-Copyright:  Copyright © 2003 - 2003, Alan Chen and Austin Ziegler
+Copyright:  Copyright © 2002 - 2004, Alan Chen and Austin Ziegler
 Authors:    Alan Chen (alan@digikata.com)
             Austin Ziegler (ruwiki@halostatue.ca)
 Licence:    Ruby's
