@@ -29,8 +29,8 @@
   #                      the implementation of Ruwiki::Wiki::Lists for more
   #                      information.
 class Ruwiki::Wiki::Token
-  @@tokenlist = []
-  @@sorted    = false
+  @tokenlist = []
+  @sorted    = false
 
   class << self
       # Tokens should define rank if they must be first or last in
@@ -43,18 +43,14 @@ class Ruwiki::Wiki::Token
       # tokens that are processed, and the order in which they are
       # processed. See Token.rank for more information.
     def tokenlist(sort = true)
-      if sort and not @@sorted
-        head = @@tokenlist.shift
-        @@tokenlist.sort! { |aa, bb| aa.rank <=> bb.rank }
-        @@tokenlist.unshift(head)
-        @@sorted = true
+      if sort and not @sorted
+        @tokenlist.sort! { |aa, bb| aa.rank <=> bb.rank }
+        @sorted = true
       end
-      @@tokenlist
+      @tokenlist
     end
 
     def inherited(child_class) #:nodoc:
-      @@tokenlist << Ruwiki::Wiki::Token if @@tokenlist.empty?
-
         # Make the child class post_replace a blank function because we
         # don't want to propogate the currently defined post_replace. The
         # current post_replace is specific to Token_Base only.
@@ -64,8 +60,8 @@ class Ruwiki::Wiki::Token
         end
       end
 
-      @@tokenlist << child_class
-      @@sorted = false
+      @tokenlist << child_class
+      @sorted = false
     end
 
       # The replacement regular expression.
