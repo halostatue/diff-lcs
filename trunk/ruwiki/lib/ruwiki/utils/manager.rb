@@ -566,7 +566,7 @@ module Ruwiki::Utils::Manager
             svc.dependencies      = [] # Required because of a bug in Win32::Service
           end
           service.close
-          ioe[:output] << Manager.manager(:manager_service_installed) % [ service_name ] << "\n"
+          ioe[:output] << Ruwiki::Utils::Manager.manager(:manager_service_installed) % [ service_name ] << "\n"
         end
 
         if options[:service_start]
