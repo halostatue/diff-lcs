@@ -110,6 +110,8 @@ def build_rdoc(files)
 
 rescue RDoc::RDocError => e
   $stderr.puts e.message
+rescue Exception => e
+  $stderr.puts "Couldn't build RDoc documentation\n#{e.message}"
 end
 
 def build_ri(files)
@@ -117,6 +119,8 @@ def build_ri(files)
   ri.document(%w{--ri-site --line-numbers --show-hash} + files)
 rescue RDoc::RDocError => e
   $stderr.puts e.message
+rescue Exception => e
+  $stderr.puts "Couldn't build Ri documentation\n#{e.message}"
 end
 
 def run_tests(test_list)
