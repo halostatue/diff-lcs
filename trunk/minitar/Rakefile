@@ -2,7 +2,6 @@
 $LOAD_PATH.unshift('lib')
 
 require 'rubygems'
-require 'rake/testtask'
 require 'rake/gempackagetask'
 require 'rake/contrib/rubyforgepublisher'
 require 'archive/tar/minitar'
@@ -25,15 +24,6 @@ if ENV['RELEASE_DATE']
 else
   ReleaseDate = nil
 end
-
-  # This rakefile must do the following:
-  # 1. Run the unit tests, successfully.
-  # 2. Modify the Readme.tarfile, Readme.rubygems, and data files to include
-  #    the proper version #.
-  # 2. Create a package.
-  # 3. Modify the existing pages so that properties!editable is set to
-  #    +false+.
-  # 4. 
 
 task :test do |t|
   require 'test/unit/testsuite'
