@@ -302,7 +302,6 @@ module Archive::Tar::Minitar::Command
     def help
       raise AbstractCommandError
     end
-
   end
 
   class CommandHelp < CommandPattern
