@@ -18,6 +18,7 @@ Licence].
 * Translation to German by [mailto:chneukirchen@yahoo.de Christian Neukirchen] on 2003.10.22. Note that the initial template translations (./templates/de/) were done via \AltaVista Babelfish and should not be blamed on Christian.
 * Translation to Spanish by [mailto:batsman.geo@yahoo.com Mauricio Fernández] on 2003.10.22. Note that the initial template translations (./templates/es/) were done via \AltaVista Babelfish and should not be blamed on Mauricio.
 
+
 == Other Projects
 Austin has also released several other projects available on the RAA that you may be interested in:
 * [http://raa.ruby-lang.org/list.rhtml?name=mime-types MIME::Types]
