@@ -42,6 +42,8 @@ module Diff::LCS
       def change(event)
         event
       end
+
+      private :new
     end
   end
 

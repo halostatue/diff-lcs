@@ -6,21 +6,21 @@
 #     Smalltalk by Mario I. Wolczko <mario@wolczko.com>
 #   implements McIlroy-Hunt diff algorithm
 #
-# This program is free software. It may be redistributed and/or modified under
-# the terms of the GPL version 2 (or later), the Perl Artistic licence, or the
-# Ruby licence.
+# This program is free software. It may be redistributed and/or modified
+# under the terms of the GPL version 2 (or later), the Perl Artistic
+# licence, or the Ruby licence.
 # 
 # $Id$
 #++
 
 module Diff
     # = Diff::LCS 1.1.0
-    # Computes "intelligent" differences between two sequenced Enumerables. This
-    # is an implementation of the McIlroy-Hunt "diff" algorithm for Enumerable
-    # objects that include Diffable.
+    # Computes "intelligent" differences between two sequenced Enumerables.
+    # This is an implementation of the McIlroy-Hunt "diff" algorithm for
+    # Enumerable objects that include Diffable.
     #
-    # Based on Mario I. Wolczko's <mario@wolczko.com> Smalltalk version (1.2,
-    # 1993) and Ned Konz's <perl@bike-nomad.com> Perl version
+    # Based on Mario I. Wolczko's <mario@wolczko.com> Smalltalk version
+    # (1.2, 1993) and Ned Konz's <perl@bike-nomad.com> Perl version
     # (Algorithm::Diff).
     #
     # == Synopsis
@@ -34,6 +34,14 @@ module Diff
     #   sdiff = Diff::LCS.sdiff(seq1, seq2)
     #   seq = Diff::LCS.traverse_sequences(seq1, seq2, callback_obj)
     #   bal = Diff::LCS.traverse_balanced(seq1, seq2, callback_obj)
+    #   seq2 == Diff::LCS.patch(seq1, diffs)
+    #   seq2 == Diff::LCS.patch!(seq1, diffs)
+    #   seq1 == Diff::LCS.unpatch(seq2, diffs)
+    #   seq1 == Diff::LCS.unpatch!(seq2, diffs)
+    #   seq2 == Diff::LCS.patch(seq1, sdiff)
+    #   seq2 == Diff::LCS.patch!(seq1, sdiff)
+    #   seq1 == Diff::LCS.unpatch(seq2, sdiff)
+    #   seq1 == Diff::LCS.unpatch!(seq2, sdiff)
     #
     # Alternatively, objects can be extended with Diff::LCS:
     #
@@ -43,18 +51,26 @@ module Diff
     #   sdiff = seq1.sdiff(seq2)
     #   seq = seq1.traverse_sequences(seq2, callback_obj)
     #   bal = seq1.traverse_balanced(seq2, callback_obj)
+    #   seq2 == seq1.patch(diffs)
+    #   seq2 == seq1.patch!(diffs)
+    #   seq1 == seq2.unpatch(diffs)
+    #   seq1 == seq2.unpatch!(diffs)
+    #   seq2 == seq1.patch(sdiff)
+    #   seq2 == seq1.patch!(sdiff)
+    #   seq1 == seq2.unpatch(sdiff)
+    #   seq1 == seq2.unpatch!(sdiff)
     # 
-    # Default extensions are provided for Array and String objects through the
-    # use of 'diff/lcs/array' and 'diff/lcs/string'.
+    # Default extensions are provided for Array and String objects through
+    # the use of 'diff/lcs/array' and 'diff/lcs/string'.
     #
     # == Introduction (by Mark-Jason Dominus)
     # 
-    # <em>The following text is from the Perl documentation. The only changes
-    # have been to make the text appear better in Rdoc</em>.
+    # <em>The following text is from the Perl documentation. The only
+    # changes have been to make the text appear better in Rdoc</em>.
     #
-    # I once read an article written by the authors of +diff+; they said that
-    # they hard worked very hard on the algorithm until they found the right
-    # one.
+    # I once read an article written by the authors of +diff+; they said
+    # that they hard worked very hard on the algorithm until they found the
+    # right one.
     #
     # I think what they ended up using (and I hope someone will correct me,
     # because I am not very confident about this) was the `longest common
@@ -170,12 +186,19 @@ module Diff::LCS
                       &block)
   end
 
-    # Attempts to patch +self+ with the provided +patchset+. See Diff::LCS#patch.
+    # Attempts to patch a copy of +self+ with the provided +patchset+. See
+    # Diff::LCS#patch.
   def patch(patchset)
-    Diff::LCS::patch(self, patchset)
+    Diff::LCS::patch(self.dup, patchset)
   end
 
-    # Attempts to unpatch +self+ with the provided +patchset+. See
+    # Attempts to unpatch a copy of +self+ with the provided +patchset+.
+    # See Diff::LCS#patch.
+  def unpatch(patchset)
+    Diff::LCS::unpatch(self.dup, patchset)
+  end
+
+    # Attempts to patch +self+ with the provided +patchset+. See
     # Diff::LCS#patch!. Does no autodiscovery.
   def patch!(patchset)
     Diff::LCS::patch!(self, patchset)
@@ -224,13 +247,16 @@ module Diff::LCS
       # description of these changes.
       # 
       # See Diff::LCS::DiffCallbacks for the default behaviour. An alternate
-      # behaviour may be implemented with Diff::LCS::ContextDiffCallbacks. If
-      # a Class argument is provided for +callbacks+, #diff will attempt to
-      # initialise it. If the +callbacks+ object (possibly initialised)
+      # behaviour may be implemented with Diff::LCS::ContextDiffCallbacks.
+      # If a Class argument is provided for +callbacks+, #diff will attempt
+      # to initialise it. If the +callbacks+ object (possibly initialised)
       # responds to #finish, it will be called.
     def diff(seq1, seq2, callbacks = nil, &block) # :yields diff changes:
       callbacks ||= Diff::LCS::DiffCallbacks
-      callbacks = callbacks.new if callbacks.kind_of?(Class)
+      if callbacks.kind_of?(Class)
+        cb = callbacks.new rescue callbacks
+        callbacks = cb
+      end
       traverse_sequences(seq1, seq2, callbacks)
       callbacks.finish if callbacks.respond_to?(:finish)
 
@@ -264,7 +290,10 @@ module Diff::LCS
       # responds to #finish, it will be called.
     def sdiff(seq1, seq2, callbacks = nil, &block) #:yields diff changes:
       callbacks ||= Diff::LCS::SDiffCallbacks
-      callbacks = callbacks.new if callbacks.kind_of?(Class)
+      if callbacks.kind_of?(Class)
+        cb = callbacks.new rescue callbacks
+        callbacks = cb
+      end
       traverse_balanced(seq1, seq2, callbacks)
       callbacks.finish if callbacks.respond_to?(:finish)
 
@@ -753,6 +782,12 @@ module Diff::LCS
             res << change.element
           end
         end
+      end
+
+      while ai < src.size
+        res << (string ? src[ai, 1] : src[ai])
+        ai += 1
+        bj += 1
       end
 
       res

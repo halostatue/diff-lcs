@@ -1,6 +1,14 @@
 Revision history for Ruby library Diff::LCS. Unless explicitly noted otherwise,
 all changes are produced by Austin Ziegler <diff-lcs@halostatue.ca>.
 
+== Diff::LCS 1.1.1
+* Fixed bug #891:
+  http://rubyforge.org/tracker/?func=detail&atid=407&aid=891&group_id=84
+* Fixed a problem with callback initialisation code (it assumed that all
+  callbacks passed as classes can be initialised; now, it rescues
+  NoMethodError in the event of private :new being called).
+* Modified the non-initialisable callbacks to have a private #new method.
+
 == Diff::LCS 1.1.0
 * Eliminated the need for Diff::LCS::Event and removed it.
 * Added a contextual diff callback, Diff::LCS::ContextDiffCallback.

@@ -562,6 +562,37 @@ class TestPatching < Test::Unit::TestCase
     assert_equal(@seq1, ms3)
   end
 
+    # Tests patch bug #891:
+    # http://rubyforge.org/tracker/?func=detail&atid=407&aid=891&group_id=84
+  def test_patch_bug891
+    s1 = s2 = s3 = s4 = s5 = ps = nil
+    assert_nothing_raised do
+      s1 = %w{a b c d   e f g h i j k }
+      s2 = %w{a b c d D e f g h i j k }
+      ps = Diff::LCS::diff(s1, s2)
+      s3 = Diff::LCS.patch(s1, ps, :patch)
+      ps = Diff::LCS::diff(s1, s2, Diff::LCS::ContextDiffCallbacks)
+      s4 = Diff::LCS.patch(s1, ps, :patch)
+      ps = Diff::LCS::diff(s1, s2, Diff::LCS::SDiffCallbacks)
+      s5 = Diff::LCS.patch(s1, ps, :patch)
+    end
+    assert_equal(s2, s3)
+    assert_equal(s2, s4)
+    assert_equal(s2, s5)
+
+    assert_nothing_raised do
+      ps = Diff::LCS::sdiff(s1, s2)
+      s3 = Diff::LCS.patch(s1, ps, :patch)
+      ps = Diff::LCS::diff(s1, s2, Diff::LCS::ContextDiffCallbacks)
+      s4 = Diff::LCS.patch(s1, ps, :patch)
+      ps = Diff::LCS::diff(s1, s2, Diff::LCS::DiffCallbacks)
+      s5 = Diff::LCS.patch(s1, ps, :patch)
+    end
+    assert_equal(s2, s3)
+    assert_equal(s2, s4)
+    assert_equal(s2, s5)
+  end
+
   def test_patch_sdiff
     ps = ms1 = ms2 = ms3 = nil
     assert_nothing_raised do
