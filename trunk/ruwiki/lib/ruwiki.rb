@@ -353,8 +353,6 @@ EPAGE
     values = {
       "css_link"  => @config.css_link,
       "home_link" => %Q(<a href="#{@request.script_url}">#{@config.title}</a>),
-      "editable"  => @page.editable,
-      "indexable" => @page.indexable,
       "cgi_url"   => @request.script_url,
       "content"   => @content,
     }
@@ -363,10 +361,14 @@ EPAGE
       values["page_project"]    = ""
       values["page_raw_topic"]  = ""
       values["page_topic"]      = ""
+      values["editable"]        = false
+      values["indexable"]       = false
     else
       values["page_project"]    = @page.project
       values["page_raw_topic"]  = @page.topic
       values["page_topic"]      = CGI.unescape(@page.topic)
+      values["editable"]        = @page.editable
+      values["indexable"]       = @page.indexable
     end
 
     values["url_project"]       = %Q(#{values["cgi_url"]}/#{values["page_project"]})

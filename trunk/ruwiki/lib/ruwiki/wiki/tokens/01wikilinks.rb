@@ -119,7 +119,7 @@ class Ruwiki::Wiki
       topic = @match.captures[1]
       link  = CGI.escape(topic.dup)
 
-      if @backend.page_exists?(topic, @project) or @backend.page_exists?(link, project)
+      if @backend.page_exists?(topic, @project) or @backend.page_exists?(link, @project)
         VIEW_LINK % ["#{@script}/#{@project}/#{link}", topic.gsub(/_/, ' ')]
       else
         EDIT_LINK % [topic.gsub(/_/, ' '), "#{@script}/#{@project}/#{link}/_edit"]
@@ -156,7 +156,7 @@ class Ruwiki::Wiki
         link  = CGI.escape(at.captures[0])
       end
 
-      if @backend.page_exists?(link, @project) or @backend.page_exists?(link, project)
+      if @backend.page_exists?(link, @project) or @backend.page_exists?(link, @project)
         VIEW_LINK % ["#{@script}/#{@project}/#{link}", topic]
       else
         EDIT_LINK % [topic, "#{@script}/#{@project}/#{link}/_edit"]

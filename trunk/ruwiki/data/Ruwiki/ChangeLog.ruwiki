@@ -6,7 +6,7 @@ page!content:	= Ruwiki 0.8.0 ChangeLog
 	* AC: Added topic list (_topics) and project list (_projects) controls on templates and backend.
 	* AZ: Added %topics() and %projects() tokens. See WikiMarkup for details.
 	* AC: Added simple search on back-end (both project and global); search strings must be validated and cleansed before being sent to the back-end (the back-end must prepare the string for its own search mechanism). The back-end is wholly responsible for the searching of the pages.
-	* AC: Added RecentChanges list to backend and controls.
+	* AC: Added \RecentChanges list to backend and controls.
 	* AZ: Changed default for Ruwiki::Config#storage_options[:flatfiles][:extension] to <tt>ruwiki</tt>.
 	* AZ: Topic backlink search: searches for mentions of the topic in the other topics of the project.
 	* AZ: New templating engine: The Rdoc templating engine has been greatly enhanced in preparation for some changes that will happen surrounding antispam capabilities.
@@ -20,7 +20,7 @@ page!content:	= Ruwiki 0.8.0 ChangeLog
 	* AZ: New look! Ruwiki now sports a new default look with CSS and template changes.
 	* AZ: New look! Ruwiki has a &ldquo;simple&rdquo; template set.
 	* AZ: New look! Ruwiki has a &ldquo;sidebar&rdquo; template set.
-        * AZ: Fixed a long-standing bug with code tokens.
+	* AZ: Fixed a long-standing bug with code tokens.
 	
 	== Version 0.7.0
 	* Changed the tokenization API so that the #post_replace call is made at the Token class level instead of the instance level.
