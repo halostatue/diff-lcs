@@ -25,4 +25,4 @@
 # or
 #DEFAULT (echo ""; id; echo %{sVv}; date; cat) >> $CVSROOT/CVSROOT/commitlog
 ALL (echo ""; id; echo %{sVv}; date; cat) >> $CVSROOT/CVSROOT/commitlog
-ALL /var/cvs/commitmailer.sh %s austin@halostatue.ca
+ALL /var/cvs/commitmailer.sh %s austin@rubyforge.org
