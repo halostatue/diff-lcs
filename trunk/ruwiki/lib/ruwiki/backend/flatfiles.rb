@@ -182,7 +182,7 @@ class Ruwiki
         if @extension.nil?
           File.join(project_directory(project), topic)
         else
-          File.join(project_directory(project), "#{topic}.#{extension}")
+          File.join(project_directory(project), "#{topic}.#{@extension}")
         end
       end
     end
