@@ -152,7 +152,9 @@ class Ruwiki::Config
     if rc['storage-options'].nil? or rc['storage-options'].empty?
       @storage_options = Hash.new { |hh, kk| hh[kk] = {} }
     else
-      @storage_options = Ruwiki::Exportable.load(rc['storage-options'])
+      @storage_options.keys.each do |key|
+        @storage_options[key.to_sym] = @storage_options.delete(key)
+      end
     end
     if @storage_options.empty?
       @storage_options[@storage_type]['extension'] = "ruwiki"
