@@ -187,10 +187,10 @@ class Ruwiki::Page
     @project      = props['project']      || "Default"
     @creator      = props['creator']      || ""
     @creator_ip   = props['creator-ip']   || "UNKNOWN"
-    @create_date  = Time.at((props['create-date']  || Time.now).to_i)
+    @create_date  = Time.at((props['create-date']  || Time.now.utc).to_i)
     @editor       = props['editor']       || ""
     @editor_ip    = props['editor-ip']    || "UNKNOWN"
-    @edit_date    = Time.at((props['edit-date']    || Time.now).to_i)
+    @edit_date    = Time.at((props['edit-date']    || Time.now.utc).to_i)
     @edit_comment = props['edit-comment'] || ""
     case props['editable']
     when "false"

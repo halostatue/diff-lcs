@@ -64,8 +64,8 @@ class Ruwiki
           'title'         => topic,
           'topic'         => topic,
           'project'       => project,
-          'create-date'   => Time.now,
-          'edit-date'     => Time.now,
+          'create-date'   => Time.now.utc,
+          'edit-date'     => Time.now.utc,
           'editable'      => true,
           'indexable'     => true,
           'entropy'       => 0.0,
@@ -108,7 +108,7 @@ class Ruwiki
           recent_changes = Page.new(retrieve('RecentChanges', page.project))
         end
 
-        changeline = "\n; #{page.editor_ip} (#{Time.now.strftime(@datetime_format)}), #{page.topic} : #{page.edit_comment}"
+        changeline = "\n; #{page.editor_ip} (#{Time.now.utc.strftime(@datetime_format)}), #{page.topic} : #{page.edit_comment}"
 
         # add changeline to top of page
         recent_changes.content = changeline + (recent_changes.content || "")
@@ -135,7 +135,7 @@ class Ruwiki
 
       # Releases the lock on the page.
     def release_lock(page, address = 'UNKNOWN')
-      time    = Time.now.to_i
+      time    = Time.now.utc.to_i
       @delegate.release_lock(page, time, address)
     rescue Ruwiki::Backend::BackendError
       raise Ruwiki::Backend::BackendError.new(nil), @message[:cannot_release_lock] % [page.project, page.topic]
@@ -146,7 +146,7 @@ class Ruwiki
 
       # Attempts to obtain a lock on the page. The lock 
     def obtain_lock(page, address = 'UNKNOWN', timeout = 600)
-      time    = Time.now.to_i
+      time    = Time.now.utc.to_i
       expire  = time + timeout
       @delegate.obtain_lock(page, time, expire, address)
     rescue Ruwiki::Backend::BackendError

@@ -140,7 +140,6 @@ class Ruwiki::Backend::Flatfiles < Ruwiki::Backend
 
     # Releases the lock on the topic page.
   def release_lock(page, time, address = 'UNKNOWN')
-    time = Time.now.to_i
     lockfile = "#{page_file(page.topic, page.project)}.lock"
 
     if lock_okay?(page, time, address)
