@@ -9,12 +9,12 @@ page!content:	= Ruwiki %RV#%
 	* Who wrote Ruwiki? Read the LicenseAndAuthorInfo.
 	
 	== Requirements
-	Ruwiki currently requires Ruby 1.8, Diff::LCS 1.2.0 and
+	Ruwiki currently requires Ruby 1.8, Diff::LCS 1.1.2 and
 	Archive::Tar::Minitar 0.5.1. These packages are included in the
 	<em>packages/</em> directory in the
 	<code>ruwiki-0.9.0-full.tar.gz</code> form of the distribution.
 	
-	The YAML backend requires Ruby 1.8.2.
+	The YAML backend requires Ruby 1.8.2 preview 3 or later.
 	
 	== Upgrading
 	Ruwiki %RV#% has a flatfile format that is incompatible with versions

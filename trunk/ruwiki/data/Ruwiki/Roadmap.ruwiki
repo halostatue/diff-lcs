@@ -1,6 +1,5 @@
 page!content:	= Ruwiki %RV#%: The Road Ahead
-	This roadmap is accurate as of the release of 0.8.0. It has not yet
-	been updated for version %RV#%.
+	This roadmap is accurate as of the release of 0.9.0.
 	
 	What lies ahead for Ruwiki? The To_Do list will give a detailed list
 	of what is to follow, but this list is not the roadmap. There is no
@@ -9,28 +8,33 @@ page!content:	= Ruwiki %RV#%: The Road Ahead
 	document is to expand on that list. As items are completed, they will
 	be removed from this document.
 	
-	== Development Input
+	== A Note About Targets
+	Ruwiki development is not proceeding as quickly as I would prefer, but
+	it is continuing steadily. I am at times choosing to delay releases
+	and bypass some versions because there are other pressing concerns; I
+	am definitely aiming for quality here, not for timeliness.
+	
+	== Development Inputs
 	The primary driver of development on Ruwiki is the needs of a few
 	groups of people. First, both Alan and Austin use or will use Ruwiki
 	at work. There are particular needs that both have. Austin will be
 	replacing an installation of \PhpWiki with an installation of Ruwiki
-	sometime in September or October 2004.
+	sometime in early 2005.
 	
-	Second, both [http://www.rubygarden.org/ruby RubyGarden] and
-	[http://www.rubyforge.org RubyForge] have expressed an intention to
-	replace the Perl-based \UseMod wiki with a Ruby-based wiki. The
-	popular and easy-to-use Instiki (&ldquo;there is no step 2&rdquo;) is
-	not an ideal choice for either because they either require or prefer a
-	CGI-based wiki. Ruwiki has the desired level of performance and
-	implemenation simplicity that impresses both groups, and it is the
-	current preferred choice. Thus, the needs of both websites factor
-	highly into the goals for Ruwiki.
+	Second, [http://www.rubygarden.org/ruby RubyGarden], and
+	[http://www.rubyforge.org RubyForge], and the
+	[http://rpa.rubygarden.org <acronym title="Ruby Production Archive">RPA</acronym>]
+	have expressed an intention to replace the Perl-based \UseMod wiki
+	with a Ruby-based wiki. The popular and easy-to-use Instiki
+	(&ldquo;there is no step 3&rdquo;) is not an ideal choice for either
+	because they either require or prefer a CGI-based wiki. Ruwiki has the
+	desired level of performance and implemenation simplicity that
+	impresses both groups, and it is the current preferred choice. Thus,
+	the needs of both websites factor highly into the goals for Ruwiki.
 	
-	Third, Austin is giving a talk on Ruwiki at \RubyConf 2004. This
-	requires that the API must be mostly stable so that the talk,
-	&ldquo;Using and Extending Ruwiki&rdquo;, has relevance to current and
-	potential users of Ruwiki without having to worry that the API may
-	change significantly.
+	Third, Austin gave a talk on Ruwiki at \RubyConf 2004. Many of the
+	features in the current release come from a development effort leading
+	up to the talk and in the weeks following.
 	
 	Last, and certainly not least, feature requests and bug reports are a
 	factor. One of the things that changed in Ruwiki 0.8.0 was the look
@@ -39,51 +43,17 @@ page!content:	= Ruwiki %RV#%: The Road Ahead
 	general wiki theme. Users complained, and we changed this. The
 	continual spam defacement of the \RubyGarden wiki suggested several
 	possible improvements that could be made in Ruwiki to fight wiki spam;
-	initial work has been implemented in Ruwiki 0.8.0 and other work will
-	be implemented in 0.9.0 through to the release of 1.0.
+	initial work has been implemented in Ruwiki 0.9.0 and more work
+	remains. Additionally, Ruwiki is the first wiki with built-in
+	deployment support for package management systems (such as \RubyGems
+	and rpa-base), although Instiki has been modified for RPA by the RPA
+	team to support limited installation in RPA locations.
 	
-	== Ruwiki 0.8.1: &ldquo;Keeping Up Appearances&rdquo;
-	Ruwiki 0.8.1 is planned for release a week or so after the release of
-	Ruwiki 0.8.0. This will mean little change for users of the standalone
-	release, but some work will be done to prepare for versions of Ruwiki
-	that can be installed with \RubyGems or <acronym title="Ruby
-	Production Archive">RPA</acronym>&rsquo;s rpa-base.
-	
-	Both installation systems present a particular challenge to Ruwiki, as
-	simply running &ldquo;ruwiki_servlet&rdquo; with no arguments will
-	look for the data files and the template files relative to the current
-	directory. With \RubyGems, though, this would require that the user
-	specify something like:
-	
-	  ruwiki_servlet \
-	    --template-path /usr/local/lib/ruby/gems/1.8/ruwiki-0.8.1/templates \
-	    --flatfiles-data-path /usr/local/lib/ruby/gems/1.8/ruwiki-0.8.1/data
-	
-	Instiki does this better, by creating the templates and data files on
-	the fly when a new instance is created. This will certainly be an
-	option, but it will not be the only option. Since a Wiki instance may
-	be private, and since Ruwiki supports CGI execution where this may not
-	be an option, we need a secondary installation mechanism that copies
-	the default data to a local directory. Ideally, as well, instead of
-	providing all of the configuration options on the command-line, we
-	will also provide a configuration file mechanism.
-	
-	Daniel Berger has provided instructions for users of Instiki to
-	install it as a service on Win32. There is no reason that this cannot
-	also be applied to Ruwiki&rsquo;s \WEBrick servlet, so it will, and it
-	will be offered as an option.
-	
-	After all of this, Ruwiki will be offered as a \RubyGem and the RPA
-	team will be asked to offer Ruwiki in the RPA.
-	
-	Chad Fowler&rsquo;s port of \RubLog&rsquo;s vector search may be added
-	to this version if it is ready.
-	
-	== Ruwiki 0.9.0: &ldquo;Are You Being Served?&rdquo;
+	== Ruwiki 0.10.0: &ldquo;Are You Being Served?&rdquo;
 	Ruwiki 0.8.0 introduced an incompatible change in the way that page
 	diffs were stored, so users were advised to remove any existing .rdiff
 	files. This isn&rsquo;t as problematic as it may sound, as until
-	0.9.0, there is no way to actually view the page diffs from Ruwiki
+	0.10.0, there is no way to actually view the page diffs from Ruwiki
 	itself.
 	
 	In Ruwiki 0.7.0, a new token was introduced: %calendar(). The concept
@@ -97,8 +67,8 @@ page!content:	= Ruwiki %RV#%: The Road Ahead
 	still need to be written, but standardizing new custom tokens will be
 	a good thing.
 	
-	If it has not been added already, Chad Fowler&rsquo;s port of
-	\RubLog&rsquo;s vector search will be added.
+	Chad Fowler&rsquo;s port of \RubLog&rsquo;s vector search will
+	probably be added to this version.
 	
 	The presence of static HTML content (headers and footers) per page has
 	been accounted for in Ruwiki 0.8.0, but it will not be displayed.
@@ -110,71 +80,99 @@ page!content:	= Ruwiki %RV#%: The Road Ahead
 	
 	The purpose of the \WikiWikiWeb is to provide a collaborative,
 	community knowledge editing environment. Unfortunately, the pondscum
-	also known as spammers have figured out that the \WikiWikiWeb provides
-	a positive Google \PageRank, and having their links on our Wikis is
+	known as spammers have figured out that the \WikiWikiWeb provides a
+	positive Google \PageRank, and having their links on our Wikis is
 	benefits them. Just as they don&rsquo;t care about filling our
-	mailboxes, they don&rsquo;t care about defacing our community
-	knowledge. Thus, Ruwiki 0.9.0 will also see the introduction of
-	antispam techniques. They will include IP or hostname blacklisting
-	(with timeouts); external URL redirection with an exception list; and
-	robot exclusion. Partial robot exclusion is implemented in Ruwiki
-	0.8.0, but there is no transformation on actions, which is necessary.
+	mailboxes with junk, they don&rsquo;t care about defacing our
+	community knowledge. Ruwiki 0.10.0 provides additional antispam
+	defences.
 	
 	The \RecentChanges mechanism will be updated to make it possible to
 	see the \GlobalRecentChanges list.
 	
-	The most significant change in Ruwiki 0.9.0 will be the modification
+	The most significant change in Ruwiki 0.10.0 will be the modification
 	of the request pipeline. This will not be visible to the end user, but
 	it will be significant to users who wish to extend Ruwiki. Currently,
-	Ruwiki processes all commands in ruwiki.rb. In Ruwiki 0.9.0, this will
-	be changed to a dispatch mechanism, where Action objects are
+	Ruwiki processes all commands in ruwiki.rb. In Ruwiki 0.10.0, this
+	will be changed to a dispatch mechanism, where Action objects are
 	introduced, and ruwiki.rb dispatches requests to Action objects.
 	
-	  .---------.          .--------------------.
-	  | Request +--------->| Process [Request]  |
-	  ·---------·          ·----+---------------·
+	<table summary="Pipeline" style="border: 1px solid black"><tr><td>
+	  +---------+          +-------------------+
+	  | Request |--------->| Authorize Request |
+	  +---------+          +-------------------+
 	                            |
 	                            v
-	                       .--------------------.
-	                       | Perform [Action]   |
-	                       ·----+---------------·
+	                       +-------------------+
+	                       | Configure Ruwiki  |
+	                       +-------------------+
 	                            |
 	                            v
-	                       .--------------------.
-	                       | Prepare [Response] |
-	                       ·----+---------------·
+	                       +-------------------+
+	                       | Parse Request     |
+	                       +-------------------+
 	                            |
 	                            v
-	  .--------.           .----+---------------.
-	  | Page   |<----------+ Send [Page]        |  
-	  ·--------·           ·--------------------·
+	                       +-------------------+
+	                       | Perform Action    |
+	                       +-------------------+
+	                            |
+	                            v
+	                       +-------------------+
+	                       | Prepare Response  |
+	                       +-------------------+
+	                            |
+	                            v
+	  +--------+           +----+--------------+
+	  | Page   |<----------| Send Page         |  
+	  +--------+           +-------------------+
+	</td></tr></table>
 	
 	The diagram above shows the general pipeline. The difference is that
 	the action will be its own object. In general, it will need to know
 	how to process certain URL formats.
 	
-	In the process of defining the action objects, ActionCards will be
+	In the process of defining the action objects, \ActionCards will be
 	created. Below is an example \ActionCard for the default action,
-	<tt>_show</tt>. In ActionCards, everything is relative to the Ruwiki
-	root URI. Important to note is that ActionCards are an ideal: they may
-	not represent something that can be accomplished for 0.9, 0.10, or
-	even 1.0. They do, however, represent the ultimate target.
+	<tt>_show</tt>. In \ActionCards, everything is relative to the Ruwiki
+	root URI. Important to note is that \ActionCards are an ideal: they may
+	not represent something that can be accomplished for 0.10.0, 0.11.0,
+	or even 1.0. They do, however, represent the ultimate target.
 	
+	Ruwiki does some implicit URI rewriting in the general form of:
+	
+	<table summary="Ruwiki URI rewriting" style="border: 1px solid black; border-collapse: collapse">
+	<tr><th style="border: 1px solid black">URI</th><th style="border: 1px solid black">Rewritten URI</th></tr>
+	<tr><td style="border: 1px solid black">/</td><td style="border: 1px solid black">/Project<sub style="border: 1px solid black; font-size: 50%">Default</sub style="border: 1px solid black; font-size: 50%">/Topic<sub style="border: 1px solid black; font-size: 50%">Default</sub style="border: 1px solid black; font-size: 50%">/Action<sub style="border: 1px solid black; font-size: 50%">Default</sub style="border: 1px solid black; font-size: 50%"></td></tr>
+	<tr><td style="border: 1px solid black">/Action</td><td style="border: 1px solid black">/Project<sub style="border: 1px solid black; font-size: 50%">Default</sub style="border: 1px solid black; font-size: 50%">/Topic<sub style="border: 1px solid black; font-size: 50%">Default</sub style="border: 1px solid black; font-size: 50%">/Action</td></tr>
+	<tr><td style="border: 1px solid black">/Topic</td><td style="border: 1px solid black">/Project<sub style="border: 1px solid black; font-size: 50%">Default</sub style="border: 1px solid black; font-size: 50%">/Topic/Action<sub style="border: 1px solid black; font-size: 50%">Default</sub style="border: 1px solid black; font-size: 50%"></td></tr>
+	<tr><td style="border: 1px solid black">/Project/</td><td style="border: 1px solid black">/Project/Topic<sub style="border: 1px solid black; font-size: 50%">Default</sub style="border: 1px solid black; font-size: 50%">/Action<sub style="border: 1px solid black; font-size: 50%">Default</sub style="border: 1px solid black; font-size: 50%"></td></tr>
+	<tr><td style="border: 1px solid black">/Project/Action</td><td style="border: 1px solid black">/Project/Topic<sub style="border: 1px solid black; font-size: 50%">Default</sub style="border: 1px solid black; font-size: 50%">/Action</td></tr>
+	<tr><td style="border: 1px solid black">/Project/Topic</td><td style="border: 1px solid black">/Project/Topic/Action<sub style="border: 1px solid black; font-size: 50%">Default</sub style="border: 1px solid black; font-size: 50%"></td></tr>
+	<tr><td style="border: 1px solid black">/Project/Topic/Action</td><td style="border: 1px solid black">/Project/Topic/Action</td></tr>
+	</table>
+	
+	<table summary="_show Action Card" style="border: 1px solid black"><tr><td>
 	=== Action: Show [_show] <strong>DEFAULT</strong>
-	;; /Topic, /Topic/_show : Show <em>Topic</em> in the <em>Default</em> project.
-	;; /Project/, /Project/_show : Show <em>Project</em>::\ProjectIndex.
-	;; /Project/Topic, /Project/Topic/_show : Show <em>Project</em>::<em>Topic</em>.
-	;; /Topic?<em>yyyymmdd</em>[&t=<em>hh[mm[ss]]</em>], /Topic/_show?<em>yyyymmdd</em>[&t=<em>hh[mm[ss]]</em>] : Show the content of <em>Topic</em> as of the specified date, and optionally time.
-	;; /Project/?<em>yyyymmdd</em>[&t=<em>hh[mm[ss]]</em>], /Project/_show?<em>yyyymmdd</em>[&t=<em>hh[mm[ss]]</em>] : Show the content of <em>Project</em>::\ProjectIndex as of the specified date, and optionally time.
-	;; /Project/Topic/?<em>yyyymmdd</em>[&t=<em>hh[mm[ss]]</em>], /Project/Topic/_show?<em>yyyymmdd</em>[&t=<em>hh[mm[ss]]</em>] : Show the content of <em>Project</em>::<em>Topic/</em> as of the specified date, and optionally time.
-	;; /Topic?v=<em>version#</em>, /Topic/_show?v=<em>version#</em> : Show the specified version of <em>Topic</em>.
-	;; /Project/?v=<em>version#</em>, /Project/_show?v=<em>version#</em> : Show the specified version of <em>Project</em>::\ProjectIndex.
-	;; /Project/Topic?v=<em>version#</em>, /Project/Topic/_show?v=<em>version#</em> : Show the specified version of <em>Project</em>::<em>Topic</em>.
-	;; /Topic?s=<em>set-id#</em>, /Topic/_show?s=<em>set-id#</em> : Show the specified set of <em>Topic</em>. This is a possible action that will work with &ldquo;changesets&rdquo;.
-	;; /Project/?s=<em>set-id#</em>, /Project/_show?s=<em>set-id#</em> : Show the specified set of <em>Project</em>::\ProjectIndex. This is a possible action that will work with &ldquo;changesets&rdquo;.
-	;; /Project/Topic?s=<em>set-id#</em>, /Project/Topic/_show?s=<em>set-id#</em> : Show the specified set of <em>Project</em>::<em>Topic</em>. This is a possible action that will work with &ldquo;changesets&rdquo;.
+	The Show action is the default action that will be performed when
+	there is no action specified. Without any arguments, the latest
+	version of the page will be displayed.
 	
-	== Ruwiki 0.10.0: &ldquo;What&rsquo;s Your Line?&rdquo;
+	==== Action Arguments
+	; ?r=<em>revision</em> : Show the specified revision of the page.
+	; ?r : Show the list of revisions known to the page.
+	; ?r=<em>revision1</em>:<em>revision2</em> : Shows the difference of revision1 and revision2 for the page.
+	; ?r=:<em>revision</em> : Shows the difference between the current page and the specified revision.
+	; ?d=<em>yyyymmdd[:hh[mm[ss]]]</em> : Shows the last revision from at or before the specified date and time. If time is not specified, it is assumed to be 23:59:59.
+	
+	==== Interaction Notes
+	Without arguments, _show generates pages pages that are editable and
+	indexable (<meta name="robots" content="index,follow,archive">). If
+	any argument is specified, the page is still editable, but not
+	indexable (<meta name="robots" content="noindex,nofollow,noarchive">).
+	</td></tr></table>
+	
+	== Ruwiki 0.11.0: &ldquo;What&rsquo;s My Line?&rdquo;
 	The antispam techniques introduced in 0.9.0 are positive steps in the
 	fight against wiki defacement. They are hopefully effective, too. The
 	problem is that because 0.9.0 doesn&rsquo;t offer users or user

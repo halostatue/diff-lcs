@@ -17,6 +17,13 @@ page!content:	= Ruwiki %RV#%
 	The developers of Ruwiki do what they can to ensure that Ruwiki is
 	distributed in a way that works well for both Unix and Windows
 	systems, but this will occasionally cause problems.
+	
+	== undefined method
+	  % ./ruwiki_servlet 
+	  ./ruwiki_servlet:64: undefined method `[]=' for nil (NameError)
+	
+	This may appear if you are running Ruby 1.6. Ruwiki requires Ruby 1.8
+	or higher; certain features require Ruby 1.8.2 preview 3 or better.
 properties!project:	Ruwiki
 properties!title:	ProjectIndex
 properties!topic:	ProjectIndex

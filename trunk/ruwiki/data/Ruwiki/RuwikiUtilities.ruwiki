@@ -8,7 +8,28 @@ page!content:	= Ruwiki %RV#% Utilities
 	installed in a central location by one of the two major packaging
 	systems available for Ruby (\RubyGems and RPA). Managing these
 	deployments is accomplished with the utility appropriately enough named
-	<tt>ruwiki</tt>, stored in the  directory of the distribution.
+	<tt>ruwiki</tt>, stored in the directory of the distribution.
+	
+	This utility has little value for users of the standalone release
+	(either of the versions packaged in tarfiles or zipfiles), but is
+	developed because packaging systems present a particular challenge to
+	Ruwiki, as simply running &ldquo;ruwiki_servlet&rdquo; with no
+	arguments will look for the data files and the template files relative
+	to the current directory. With \RubyGems, though, this would require
+	that the user specify something like:
+	
+	  ruwiki_servlet \
+	    --template-path /usr/local/lib/ruby/gems/1.8/ruwiki-0.9.0/templates \
+	    --flatfiles-data-path /usr/local/lib/ruby/gems/1.8/ruwiki-0.9.0/data
+	
+	This is not the preferred option because Wiki installations may be
+	private and the /usr/local directory is a system-wide shared
+	directory. Additionally, since Ruwiki works as a CGI, the system
+	shared data and template paths will not be generally accessible (and
+	should not be world-writeable!) to CGI executables.
+	
+	This utility also encapsulates Win32 service management through
+	Win32::Service for the \WEBrick servlet runner.
 	
 	=== <tt>ruwiki <command> [<em>parameters</em>]</tt>
 	The <tt>ruwiki</tt> utility will recognise four different commands on

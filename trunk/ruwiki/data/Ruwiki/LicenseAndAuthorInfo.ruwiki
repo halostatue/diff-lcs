@@ -7,8 +7,6 @@ page!content:	= Ruwiki Licence
 	of Ruby&rsquo;s licence or the [http://www.gnu.org/copyleft/gpl.html
 	GNU General Public Licence].
 	
-	* Ruwiki includes parts of Diff::LCS by Austin.
-	* Ruwiki includes parts of Archive::Tar::Minitar by Austin.
 	* Ruwiki includes a modified version of rdoc/template.rb originally by Dave Thomas for use in \RDoc.
 	
 	== Translations

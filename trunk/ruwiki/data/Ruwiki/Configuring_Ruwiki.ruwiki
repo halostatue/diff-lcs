@@ -19,18 +19,24 @@ page!content:	= Configuring Ruwiki %RV#%
 	
 	== Ruwiki Configuration Options
 	=== wiki.config.title
-	
 	This configuration option names the Wiki; by default this is
 	<tt>Ruwiki</tt>. This affects the display of the home link and the
 	&lt;title&gt; element of pages.
 	
 	=== wiki.config.webmaster
-	
 	The email address for the webmaster. This is used in generating error
 	reports that can be emailed to the wiki&rsquo;s webmaster.
 	
-	=== wiki.config.default_page, wiki.config.default_project
+	=== wiki.config.language
+	This sets the internationalisation mechanism. It must be one of the
+	known two-letter ISO language codes or a module under Ruwiki::Lang
+	matching that description. See Extending_Ruwiki for more information.
+	Ruwiki's default language is English ('en'), but there are translations
+	for Spanish ('es') and German ('de') included. Localization is
+	currently per wiki instance. In a servlet environment, this may mean
+	that only a single language is recognised.
 	
+	=== wiki.config.default_page, wiki.config.default_project
 	These options indicate what will happen when the wiki&rsquo;s URL is
 	specified without any parameters (the default page in the default
 	project is opened), when a topic is specified without a project (the
@@ -38,29 +44,29 @@ page!content:	= Configuring Ruwiki %RV#%
 	specified without a topic (the default page is opened in the project).
 	
 	=== wiki.config.storage_type, wiki.config.storage_options
-	
 	<tt>wiki.config.storage_type</tt> specifies the back-end storage
-	mechanism as a Ruby Symbol. Currently, <tt>:flatfiles</tt>,
-	<tt>:marshal</tt>, and <tt>:yaml</tt> are supported. YAML is the
-	default format for Ruby version 1.8.2 or later; :flatfiles for earlier
-	versions. Because of this, the Ruwiki data is stored by default in
-	:flatfiles format. See Extending_Ruwiki for more information.
+	mechanism as a Ruby Symbol. Currently, <tt>'flatfiles'</tt>,
+	is supported. See Extending_Ruwiki for more information.
 	
 	<tt>wiki.config.storage_options</tt> is a hash of option hashes for
 	each known storage type known to the Wiki. This must use the same
 	Symbol as <tt>wiki.config.storage_type</tt> as the top-level hash key.
 	
-	==== ...storage_options[:flatfiles][:data_path], ...storage_options[:yaml][:data_path], ...storage_options[:marshal][:data_path]
-	
+	==== ...storage_options['flatfiles']['data-path']
 	The directory in which the wiki files will be found. By default, this
 	is &ldquo;<tt>./data/</tt>&rdquo;.
 	
-	==== ...storage_options[:flatfiles][:extension]
+	==== ...storage_options['flatfiles']['format']
+	Specifies the storage format for the flatfiles backend. The default
+	format is 'exportable', but may be set to 'yaml' or 'marshal' as well.
+	The 'yaml' format will not work reliably with versions of Ruby before
+	1.8.2 preview 3.
 	
+	==== ...storage_options['flatfiles']['extension']
 	The extension of the wiki files. By default, this is
-	&ldquo;ruwiki&rdquo;. For those upgrading from a previous version of
-	Ruwiki, note that you must explicitly set this value to <tt>nil</tt> if
-	you wish to have no extension.
+	&ldquo;ruwiki&rdquo;. For those upgrading from a version of Ruwiki
+	before 0.8.0, note that you must explicitly set this value to
+	<tt>nil</tt> if you wish to have no extension.
 	
 	=== wiki.config.template_path
 	This specifies the paths where the Wiki templates will be found. The
@@ -83,6 +89,32 @@ page!content:	= Configuring Ruwiki %RV#%
 	=== wiki.config.time_format, wiki.config.date_format, wiki.config.datetime_format
 	When the wiki displays date or time values, these formats are used.
 	They are not currently accessible by tokens.
+	
+	=== wiki.config.debug
+	Adds additional information to the (rare) error reports. Defaults to
+	<tt>false</tt>.
+	
+	=== wiki.config.logger
+	Sets or returns the logger. The logger, if set, must respond to the
+	same methods as WEBrick::Logger.
+	
+	=== wiki.config.auth_mechanism
+	The authentication mechanism name as a String. Corresponds to a
+	filename that will be found in ruwiki/auth. The authenticator must have
+	a single class method, +authenticate+, which accepts the +request+, the
+	+response+, and the +auth_options+. This API is a draft API and is
+	likely to change in future versions of Ruwiki. In this version of
+	Ruwiki, only one authentication mechanism will be found -- for dealing
+	with authenticating users already logged into RubyForge.
+	
+	=== wiki.config.auth_options
+	Options for the authentication mechanism as a Hash. This will be passed
+	to the authenticator defined in wiki.config.auth_mechanism. The
+	<tt>auth_options</tt> are a single-level hash. They may be stored in
+	the Ruwiki configuration file as:
+	
+	  ruwiki-config!auth-options: default!user: pgsqluser
+	   default!pass: pgsqlpass
 	
 	== Ruwiki Servlet Options
 	Most, if not all, of the configuration above can be achieved through

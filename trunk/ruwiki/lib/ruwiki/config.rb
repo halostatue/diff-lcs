@@ -44,14 +44,18 @@ class Ruwiki::Config
     # arguments or a project specification. Defaults to +Default+
   attr_accessor :default_project
   exportable :default_project
-    # The authentication mechanism as a String. Corresponds to a filename that
-    # will be found in ruwiki/auth. In this version of Ruwiki, only one
-    # authentication mechanism will be found -- for dealing with authenticating
-    # users already logged into RubyForge.
+    # The authentication mechanism name as a String. Corresponds to
+    # a filename that will be found in ruwiki/auth. The authenticator must
+    # have a single class method, +authenticate+, which accepts the
+    # +request+, the +response+, and the +#auth_options+. This API is
+    # a draft API and is likely to change in future versions of Ruwiki. In
+    # this version of Ruwiki, only one authentication mechanism will be
+    # found -- for dealing with authenticating users already logged into
+    # RubyForge.
   attr_accessor :auth_mechanism
   exportable :auth_mechanism
     # Options for the authentication mechanism as a Hash. This will be
-    # passed to the authenticator defined in :auth_mechanism. 
+    # passed to the authenticator defined in +#auth_mechanism+. 
   attr_accessor :auth_options
   exportable :auth_options
     # The storage type as a String. Corresponds to a filename that will be
@@ -82,15 +86,15 @@ class Ruwiki::Config
     # be reachable by File#read.
   attr_accessor :template_set
   exportable :template_set
-    # Ruwiki is internationalized. This method sets the Ruwiki error messages
-    # (and a few other messages) )to the specified language Module. The
-    # language Module must have a constant Hash called +Message+ containing a
-    # set of symbols and localized versions of the messages associated with
-    # them.
+    # Ruwiki is internationalized. This method sets the Ruwiki error
+    # messages (and a few other messages) to the specified language Module.
+    # The language Module must have a constant Hash called +Message+
+    # containing a set of symbols and localized versions of the messages
+    # associated with them.
     #
     # If the file 'ruwiki/lang/es.rb' contains the module
-    # <tt>Ruwiki::Lang::ES</tt>, the error messages for RSS could be localized
-    # to Español thus:
+    # <tt>Ruwiki::Lang::ES</tt>, the error messages for RSS could be
+    # localized to Español thus:
     #
     #   require 'ruwiki/lang/es'
     #   ...
@@ -106,8 +110,12 @@ class Ruwiki::Config
   attr_reader   :message
 
   def language=(l) #:nodoc:
-    @language = l
-    @message = l::Message
+    if l.kind_of?(String)
+      @language = Ruwiki::Lang::const_get(l.upcase)
+    else
+      @language = l
+    end
+    @message = @language::Message
   end
 
   # Returns the specified template as a string.

@@ -10,15 +10,19 @@ page!content:	= Ruwiki
 	Unicode (UTF-8) is required. There are German and Spanish translations
 	of the messages included with the Ruwiki distribution.
 	
-	The current version is %RV#%. Numerous enhancements have been made in
-	this version, ranging from a new default look (and two additional
-	schemes) to new backend format support to searching and topic listing.
+	The current version is %RV#%. Enhancements and changes include:
+	* a deployment system, whereby Ruwiki deployments can be installed from a package manager like that used for RPA (rpa-base) or RubyGems;
+	* support for Ruwiki as a Windows service on NT, 2000, XP, and 2003 systems;
+	* demotion of YAML and Marshal storage types to formats of the Flatfiles storage type;
+	* external user authentication (currently to RubyForge only);
+	* antispam efforts including robot and IP exclusion and URL redirection; and
+	* protection against cross-site scripting (XSS) attacks with HTML and CSS cleaning.
 	The full list of changes can be found in Ruwiki::ChangeLog, with
 	discussions of various features in Ruwiki::WikiMarkup,
 	Ruwiki::Configuring_Ruwiki, and Ruwiki::Extending_Ruwiki.
 	
-	If you are upgrading from an older version of Ruwiki, please read
-	Ruwiki::RuwikiUtilities.
+	If you are upgrading from a version of Ruwiki older than 0.8.0, please
+	read Ruwiki::RuwikiUtilities.
 	
 	Certain Ruwiki \APIs are considered stable at this point, others will
 	be changing leading up to 1.0. Some of this is discussed in

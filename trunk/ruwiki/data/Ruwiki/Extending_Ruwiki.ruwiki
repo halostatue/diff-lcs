@@ -37,6 +37,9 @@ page!content:	= Extending Ruwiki %RV#%
 	; <tt>%url_topic_search%</tt> : The URL to search for the current topic in the current project.
 	; <tt>%link_topic_search%</tt> : A link to the current topic search.
 	
+	=== Variables for :content, :save, :search, :edit, :preview
+	; <tt>%message%</tt> : A message presented at the top of the Wiki when Ruwiki needs to inform the user of something that is not an error.
+	
 	=== Variables for :content, :save, :search
 	; <tt>%wiki_title%</tt> : The title of the Wiki.
 	; <tt>%label_topic_or_search%</tt> : Either <tt>#topic#</tt> or <tt>#search#</tt>.
