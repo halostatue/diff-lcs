@@ -1,6 +1,10 @@
 Revision history for Ruby library Diff::LCS. Unless explicitly noted otherwise,
 all changes are produced by Austin Ziegler <diff-lcs@halostatue.ca>.
 
+== Diff::LCS 1.1.2
+* Fixed a problem reported by Mauricio Fernandez in htmldiff. Future versions
+  of Diff::LCS will be removing this program.
+
 == Diff::LCS 1.1.1
 * Fixed bug #891:
   http://rubyforge.org/tracker/?func=detail&atid=407&aid=891&group_id=84

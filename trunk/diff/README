@@ -6,11 +6,10 @@ differences between two sequenced enumerable containers[2]. The
 implementation is based on Mario I. Wolczko's[3] Smalltalk version (1.2,
 1993)[4] and Ned Konz's[5] Perl version (Algorithm::Diff)[6].
 
-This release is version 1.1.1, fixing a reported #patch bug in 1.1.0.
-Version 1.1.0 added new features, including the ability to #patch and
-#unpatch changes as well as a new contextual diff callback,
-Diff::LCS::ContextDiffCallbacks, that should improve the context
-sensitivity of patching.
+This release is version 1.1.2, fixing an htmldiff bug in 1.1.1. Version 1.1.0
+added new features, including the ability to #patch and #unpatch changes as
+well as a new contextual diff callback, Diff::LCS::ContextDiffCallbacks, that
+should improve the context sensitivity of patching.
 
 Using this module is quite simple. By default, Diff::LCS does not extend
 objects with the Diff::LCS interface, but will be called as if it were a
