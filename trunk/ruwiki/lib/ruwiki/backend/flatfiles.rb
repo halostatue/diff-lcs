@@ -73,8 +73,8 @@ class Ruwiki::Backend::Flatfiles < Ruwiki::Backend
     super
   end
 
-    # String search all topic names and content in a project and return a
-    # has of topic hits
+    # String search all topic names and content in a project and
+    # return a has of topic hits
   def search_project(project, searchstr)
     super
   end

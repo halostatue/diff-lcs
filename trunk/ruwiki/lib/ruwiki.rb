@@ -334,13 +334,13 @@ EPAGE
     end
 
     @rendered_page = ""
-    values = { "css_link"       => @config.css_link,
-               "home_link"      => %Q(<a href="#{@request.script_url}">#{@config.title}</a>),
-               "encoding"       => @config.message[:charset_encoding],
-               "editable"       => true,
-               "cgi_url"        => @request.script_url,
-               "content"        => @content,
-             }
+    values = {
+      "css_link"  => @config.css_link,
+      "home_link" => %Q(<a href="#{@request.script_url}">#{@config.title}</a>),
+      "editable"  => true,
+      "cgi_url"   => @request.script_url,
+      "content"   => @content,
+    }
 
     if @page.nil?
       values["page_project"]    = ""

@@ -8,7 +8,10 @@
 #
 # $Id$
 #++
-require 'ruwiki/wiki/handler'
+
+# NOTE: This is not currently compatible with Ruwiki 0.8.0
+#
+# require 'ruwiki/wiki/handler'
 
 class Ruwiki::RubLogHandler < Ruwiki::Wiki::Handler
   def initialize(entries)

@@ -71,8 +71,8 @@ module Ruwiki::Backend::CoreFiles
     Dir.rmdir(pd) if File.exists?(pd) and File.directory?(pd)
   end
 
-    # String search all topic names and content in a project and return a hash
-    # of topic hits.
+    # String search all topic names and content in a project and
+    # return a hash of topic hits.
   def search_project(project, searchstr)
     re_search = Regexp.new(searchstr, Regexp::IGNORECASE)
 

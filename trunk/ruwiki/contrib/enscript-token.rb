@@ -26,13 +26,13 @@ class Ruwiki::Wiki::CodeColor < Ruwiki::Wiki::Token
     i.print text
     i.close
 
-    re_script = %r{(<PRE>.*?</pre>)}mio
+    re_script = %r{(<pre>.*?</pre>)}mio
     c = o.readlines[1..-1].join("\n")
     re_script.match(c).captures[0]
   end
 
   def self.post_replace(content)
-    content.gsub!(%r{<pre>\n}im, '<pre>')
+    content.gsub!(%r{<pre>\n}im, '<pre class="rwtk_CodeColor>')
     content.gsub!(%r{\n</pre>}im, '</pre>')
     content.gsub!(%r{<font color="(.+?)">}im, '<span style="color: \1">')
     content.gsub!(%r{</font>}im, '</span>')

@@ -110,107 +110,45 @@ page!content:	= Configuring Ruwiki 0.8.0
 	of these has a slightly different combination of template files used,
 	and this means that there are different sets of variables available.
 	
-	The major templates are combined templates that are defined as follows:
-	; content : body.tmpl, content.tmpl, controls.tmpl, footer.tmpl
-	; edit : body.tmpl, edit.tmpl
+	The major templates are "composite templates" that are defined as follows:
+	; content or search : body.tmpl, content.tmpl, controls.tmpl, footer.tmpl
+	; edit or preview : body.tmpl, edit.tmpl
 	; save : body.tmpl, save.tmpl, controls.tmpl, footer.tmpl
 	; error : body.tmpl, error.tmpl
 	
-	=== body.tmpl
-	The body template knows two printable template keys
-	(<tt>%wiki_title%</tt> and <tt>%css_link%</tt>), one label
-	(<tt>#charset_encoding#</tt>), one boolean template key
-	(<tt>editable</tt>), and includes one other template. The values for
-	%wiki_title% key differs depending on context, but no other key should
-	be used or expected in the body template.
+	=== Common Variables
+	The following template variables are presented for all composite templates.
+	; <tt>%css_link%</tt> : The contents of the CSS file for the template set.
+	; <tt>%home_link%</tt> : A link to the root page of the Wiki.
+	; <tt>%editable%</tt> : A boolean value to mark the page as editable or not. Used in a conditional block in the templates.
+	; <tt>%cgi_url%</tt> : The URL for the Wiki.
+	; <tt>%content%</tt> : The formatted content of the current page.
+	; <tt>%page_project%</tt> : The project for the current page.
+	; <tt>%page_raw_topic%</tt> : The topic for the current page, escaped for safe transmission over the web.
+	; <tt>%page_topic%</tt> : The printable topic for the current page.
+	; <tt>%url_project%</tt> : The URL to the current page's project.
+	; <tt>%url_topic_search%</tt> : The URL to search for the current topic in the current project.
+	; <tt>%link_topic_search%</tt> : A link to the current topic search.
 	
-	There are no CSS specifiers on the default templates.
+	=== Variables for :content, :save, :search
+	; <tt>%wiki_title%</tt> : The title of the Wiki.
+	; <tt>%label_topic_or_search%</tt> : Either <tt>#topic#</tt> or <tt>#search#</tt>.
+	; <tt>%page_topic_name%</tt> : The same as <tt>%page_topic%</tt>.
 	
-	=== content.tmpl
-	The content template knows one template key (<tt>%content%</tt>) and
-	includes two other templates (controls.tmpl and footer.tmpl). The
-	content portion is contained in an HTML &lt;div&gt; with a CSS class
-	of <tt>rw_content</tt>.
+	=== Variables for :edit, :preview
+	; <tt>%wiki_title%</tt> : The title of the Wiki with a tag to indicate that the page is being edited.
+	; <tt>%page_content%</tt> : The content of the page.
+	; <tt>%page_version%</tt> : The current version number of the page.
+	; <tt>%unedited_page_content%</tt> : The formatted, unedited content of the page.
+	; <tt>%pre_page_content%</tt> : A Web-escaped form of the page content.
+	; <tt>%edit_comment%</tt> : The current edit comment.
 	
-	=== controls.tmpl, footer.tmpl
-	The controls and footer templates vary by template set. They is
-	intended to provide a navigation section or breadcrumbs. The variables
-	provided to the controls and footer templates are:
-	
-	; <tt>%home_link%</tt> : The root URL of the wiki.
-	; <tt>%cgi_url%</tt> : The URL to the wiki, suitable for building further links from.
-	; <tt>%page_project%</tt> : The project for the current page topic.
-	; <tt>%page_topic%</tt> : The topic of the current page.
-	; <tt>%page_raw_topic%</tt> : The raw version of the topic; suitable for use in an URI.
-	; <tt>%label_topic_or_search%</tt> : A localized version of "Topic: " (<tt>#label_topic#</tt>) or "Search: " (<tt>#label_search#</tt>), as appropriate for the action being taken.
-	
-	The labels provided are <tt>#label_projects#</tt>,
-	<tt>#label_edit#</tt>, <tt>#label_search_project#</tt>,
-	<tt>#label_search_all#</tt>, <tt>#label_recent_changes#</tt>,
-	and <tt>#label_topics#</tt>. There is one control variable,
-	<tt>editable</tt>.
-	
-	The controls section is in a &lt;form&gt; or &lt;div&gt; with a CSS
-	class of <tt>rw_navbar</tt>. There may be additional &lt;div&gt;s with
-	classes like <tt>rw_navbar_tab</tt> or <tt>rw_navbar_righttab</tt>.
-	The search box, button, and checkbox are <tt>rw_search_box</tt>,
-	<tt>rw_search_button</tt>, and <tt>rw_search_all_check</tt>.
-	
-	=== edit.tmpl
-	The edit template is the most complex template with the most keys. Of
-	necessity, it provides a restricted form of the navigation bar, the edit form,
-	the raw body of the page, and the formatted body of the page.
-	
-	; %cgi_url% : The URL to the wiki, suitable for building further links from.
-	; %home_link% : The root topic of the wiki.
-	; %orig_page% : The unedited original page encoded as Base64.
-	; %page_content% : The editable page content.
-	; %page_old_version% : The old version number of the page.
-	; %page_project% : The project for the current page topic being edited.
-	; %page_topic% : The topic of the current page being edited.
-	; %page_version% : The new version number of the page.
-	; %pre_page_content% : The unedited original page content for display in a &lt;pre&gt; tagset.
-	; %unedited_page_content% : The formatted unedited orignal page content.
-	
-	  <div class="rw_nav">%home_link% | <em>Editing</em> Topic: <strong>%page_topic%</strong> Project: <strong>%page_project%</strong></div><br />
-	  <form class="rw_edit_form" action="%cgi_url%/%page_project%/%page_topic%" method="post">
-	    <textarea name="newpage" rows="15" cols="90">%page_content%</textarea>
-	    <input type="hidden" name="origpage" value="%orig_page%" />
-	    <input type="hidden" name="topic" value="%page_topic%" />
-	    <input type="hidden" name="project" value="%page_project%" />
-	    <input type="hidden" name="old_version" value="%page_old_version%" />
-	    <input type="hidden" name="version" value="%page_version%" /><br />
-	    <input type="submit" name="action" value="Save" />
-	    <input type="submit" name="action" value="Cancel" />
-	  </form>
-	  <div class="rw_edit_raw"><h2>Raw Original Value</h2><pre>%pre_page_content%</pre></div>
-	  <div class="rw_edit_format"><h2>Formatted Version</h2>%unedited_page_content%</div>
-	
-	=== save.tmpl
-	An alternative content page for use when a page is saved after editing. This
-	knows <tt>%page_project%</tt>, <tt>%page_tolink%</tt> (used to link directly
-	to the page), and <tt>%content%</tt>.
-	
-	  !INCLUDE!
-	  Saved page %page_project%::%page_tolink%<hr />
-	  <!-- topic content -->
-	  %content%
-	  <!-- topic content -->
-	
-	=== error.tmpl
-	This template is used for reporting errors to the user and offering an
-	opportunity to the user to send a report to the wiki webmaster.
-	
-	; %backtrace% : The error backtrace.
-	; %backtrace_email% : The error backtrace in a format suitable for email.
-	; %home_link% : The root topic of the wiki.
-	; %name% : The name of the error.
-	; %webmaster% : The email address of the wiki webmaster.
-	
-	  <div class="rw_nav">%home_link%</div>
-	  <h1>%name%</h1>
-	  <p>Send the webmaster a report by <a href="mailto:%webmaster%?subject=%name%&amp;body=%backtrace_email%">email</a>.</p>
-	  <p>%backtrace%</p>
+	=== Variables for :error
+	; <tt>%wiki_title%</tt> : The title of the Wiki with an error message.
+	; <tt>%name%</tt> : The name of the error.
+	; <tt>%backtrace%</tt> : The backtrace of the error.
+	; <tt>%backtrace_email%</tt> : The backtrace of the error formatted for sending by email.
+	; <tt>%webmaster%</tt> : The email address of the webmaster.
 	
 	$Id$
 properties!editable:	
