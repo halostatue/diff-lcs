@@ -8,7 +8,7 @@
 #
 # $Id$
 #++
-require 'algorithm/diff'
+require 'diff/lcs'
 
 class Ruwiki
     # The list of known backends.
@@ -69,10 +69,10 @@ class Ruwiki
       # update change page
       begin
         recent_changes = nil
-        if( page.topic == 'RecentChanges' )
+        if (page.topic == 'RecentChanges')
           recent_changes = page.dup
         else
-          rawpage = retrieve( 'RecentChanges', page.project )
+          rawpage = retrieve('RecentChanges', page.project)
           rawpage[:markup] = page.markup
           recent_changes = Page.new(rawpage)
         end
@@ -157,9 +157,9 @@ class Ruwiki
       raise Ruwiki::Backend::BackendError.new(e), @message[:cannot_destroy_project] % p
     end
 
-    # search a project
+      # Attempts to search a project
     def search_project(project, searchstr)
-      #TODO: Validate searchstr is a safe regexp?
+        #TODO: Validate searchstr is a safe regexp?
       @delegate.search_project(project, searchstr)
     rescue Exception => e
       p = [project, searchstr, e.class, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
@@ -212,7 +212,7 @@ class Ruwiki
         'change_date' => Time.now,
         'change_ip'   => page.change_ip,
         'change_id'   => page.change_id,
-        'diff'        => Diff.diff(oldpage, newpage)
+        'diff'        => Diff::LCS.diff(oldpage, newpage)
       }
     end
   end

@@ -11,6 +11,7 @@ if "%OS%"=="Windows_NT" goto WinNT
 ruby -x "ruwiki_servlet" %1 %2 %3 %4 %5 %6 %7 %8 %9
 goto done
 :WinNT
+title Ruwiki
 ruby -x "ruwiki_servlet" %*
 goto done
 :done

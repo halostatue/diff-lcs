@@ -40,11 +40,6 @@ body
   text-decoration: none;
 }
 
-.rw_navbar button
-{
-  font-size: 0.8em;
-}
-
 .rw_navbar_tab
 {
   float: left;
@@ -88,39 +83,92 @@ body
   margin-right: 3em;
 }
 
-.rw_edit_input
+.rw_edit_content
 {
   border: 1px dashed #059;
   padding: 0.3em;
+  width: 100%;
+  min-height: 20.5em;
+}
+
+.rw_accelerator { text-decoration: underline; }
+
+.rw_edit_content textarea
+{
+  border: 1px dashed #059;
+  padding: 0.3em;
+  width: 100%;
+  min-height: 20.5em;
+  height: 20.5em;
+}
+
+.rw_edit_comment
+{
+  clear: both;
+  margin-top: 1em;
+}
+
+.rw_edit_comment input
+{
+  border: 1px dashed #059;
+  min-width: 50%;
+  width: 70%;
+  max-width: 80%;
+}
+
+.rw_edit_form_button
+{
+  font-size: 0.8em;
+  border: 1px dotted #27C;
 }
 
 .rw_edittext { border: 1px dotted blue }
 .rw_pagelink { }
-.rw_extlink { border: 1px solid red }
+.rw_extlink {
+  border: 1px dashed #72C;
+  background-color: #C7CECF;
+}
 .rw_projectxlink { }
 .rw_projectindex { }
 
-.rw_edit_form { }
-
-.rw_edit_form button:after { content: " (" attr(accesskey) ")" }
-
-.rw_edit_raw {
-  border: 2px solid green;
+.rw_edit_raw
+{
+  font-size: 0.8em;
   float: left;
   max-width: 48%;
+  width: 48%;
+  margin: 0;
+}
+
+.rw_edit_raw pre
+{
+  border: 3px double #72C;
   overflow: scroll;
   clear: right;
 }
-.rw_edit_format {
-  border: 2px solid blue;
+
+.rw_edit_format
+{
+  font-size: 0.8em;
   float: right;
   max-width: 48%;
-  clear: none;
+  width: 48%;
+  margin: 0;
+}
+
+.rw_edit_title
+{
+  margin: 0;
+}
+
+.rw_edit_format div
+{
+  border: 3px double #27C;
 }
 
 .rw_search_button
 {
-  border: 1px solid #27C;
+  border: 1px dotted #27C;
 }
 
 .rw_search_box
@@ -143,3 +191,4 @@ li { margin-top: 0.25em; margin-bottom: 0.25em; }
 pre { background-color: #FFFFA7; border: 1px solid black; }
 pre pre { border: 0 }
 
+.rw_minilink { font-size: 0.5em; font-weight: bold; }

@@ -242,7 +242,6 @@ BANNER
 unless logger.nil?
   banner.each { |b| logger.info(b) }
 end
-# logger << banner unless logger.nil?
 
 server = WEBrick::HTTPServer.new(:Port            => opts.port.to_i,
                                  :StartThreads    => opts.threads.to_i,

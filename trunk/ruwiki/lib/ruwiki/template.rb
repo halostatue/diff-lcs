@@ -215,9 +215,7 @@ class Ruwiki
 
       line
     rescue Exception => e
-      $stderr.puts "Error in template: #{e}"
-      $stderr.puts "Original line: #{line}"
-      exit
+      raise "Error in template: #{e}\nOriginal line: #{line}"
     end
   end
 end

@@ -51,7 +51,7 @@ class Ruwiki
 
   ALLOWED_ACTIONS = %w(edit create)
   EDIT_ACTIONS    = %w(save cancel)
-  EDIT_VARS       = %w(newpage origpage topic project old_version version)
+  EDIT_VARS       = %w(newpage topic project old_version version edcomment q)
   RESERVED        = ['action', EDIT_VARS].flatten
 
     # Returns the current configuration object.
@@ -67,7 +67,7 @@ class Ruwiki
 
     # Sets the configuration object to a new configuration object.
   def config=(c)
-    raise message()[:config_not_ruwiki_config] unless c.kind_of?(Ruwiki::Config)
+    raise self.message[:config_not_ruwiki_config] unless c.kind_of?(Ruwiki::Config)
     @config = c
     @markup.default_project = @config.default_project
   end
@@ -84,7 +84,7 @@ class Ruwiki
 
     @config     = Ruwiki::Config.new
 
-    @path_info  = @request.determine_request_path || ""
+    @path_info  = @request.determine_request_path || ''
 
     @type       = nil
     @error      = {}
@@ -117,7 +117,7 @@ class Ruwiki
     path_info = @path_info.split(%r{/}, -1).map { |e| e.empty? ? nil : e }
 
     if path_info.size == 1 or (path_info.size > 1 and path_info[0])
-      raise message()[:invalid_path_info_value] % [@path_info] unless path_info[0].nil?
+      raise self.message[:invalid_path_info_value] % [@path_info] unless path_info[0].nil?
     end
 
       # path_info[0] will ALWAYS be nil.
@@ -149,12 +149,12 @@ class Ruwiki
       end
     end
 
-#@request.each_parameter { |key, val| puts "#{key} :: #{val.class}" }
+#   @request.each_parameter { |key, val| puts "#{key} :: #{val.class}" }
 
-    @request.each_parameter do |key, val|
-      next if RESERVED.include?(key)
-      @topic = key
-    end
+#   @request.each_parameter do |key, val|
+#     next if RESERVED.include?(key)
+#     @topic = key
+#   end
 
     @project ||= @request.parameters['project']
     @project ||= @config.default_project
@@ -173,6 +173,7 @@ class Ruwiki
     page_init[:remote_addr]   = @request.environment['REMOTE_ADDR']
 
     @page     = Ruwiki::Page.new(page_init)
+    content = @page.to_html
 
     @type     = :content
 
@@ -180,124 +181,134 @@ class Ruwiki
     @action = @request.parameters['action'].downcase if @request.parameters['action']
     case @action
     when 'search'
-      # todo: add global search checkbox
-      # get search string
-      srchstr = @request.parameters['q']
-      # validate and cleanse search string
-      vsrchstr = validate_search_string(srchstr)
-      @page.content = "Search results for: #{vsrchstr}"
-      hits = @backend.search_project(@page.project, vsrchstr)
+        # todo: add global search checkbox
+        # get, validate, and cleanse the search string
+      srchstr = validate_search_string(@request.parameters['q'])
+      content = self.message[:search_results_for] % [srchstr]
+      @page.topic = self.message[:search_text] % [srchstr]
+      hits = @backend.search_project(@page.project, srchstr)
 
-      # debug hit returns
-      # hits.each { |key,val| @page.content += "\n  #{key} : #{val}" }
+        # debug hit returns
+#     hits.each { |key, val| $stderr << "  #{key} : #{val}\n" }
 
-      # turn hit hash into content
+        # turn hit hash into content
       hitarr = []
-      # organize by number of hits
-      hits.each do |key,val| 
-        hitarr[val] ||= []
-        hitarr[val].push key
-      end
+        # organize by number of hits
+      hits.each { |key, val| (hitarr[val] ||= []) << key }
+
       rhitarr = hitarr.reverse
       maxhits = hitarr.size
-      rhitarr.each_with_index do |tarray,rnhits|
-        next if( tarray.nil? || tarray.size == 0 )
+      rhitarr.each_with_index do |tarray, rnhits|
+        next if tarray.nil? or tarray.empty?
         nhits = maxhits - rnhits - 1
-        @page.content += "\n== #{nhits} Hits\n* " + tarray.join("\n* ") unless nhits <= 0
+
+        if nhits > 0
+          content << "\n== #{self.message[:number_of_hits] % [nhits]}\n* "
+          content << tarray.join("\n* ")
+        end
       end
 
+      @page.content = content
       content = @page.to_html
       @type = :content
-
     when 'topics'
       topic_list = @backend.list_topics(@page.project)
 
-      # todo: make this localized
-      if( topic_list.size == 0 )
-        @page.content = "No topics"
+        # todo: make this localized
+      if topic_list.empty?
+        @page.content = self.message[:no_topics]
       else
         @page.content = <<EPAGE
-= Topics for ::#{@page.project}
+= #{self.message[:topics_for_project] % [@page.project]}
 * #{topic_list.join("\n* ")}
 EPAGE
       end
 
       content = @page.to_html
       @type = :content
-      
     when 'projects'
       proj_list = @backend.list_projects
 
-      if( proj_list.size == 0 )
-        @page.content = "No projects"
+      if proj_list.empty?
+        @page.content = self.message[:no_projects]
       else
-        #todo: make this localized
-        proj_list.map! { |proj| "#{proj} ([#{@request.script_url}/_topics topics])" }
+          # TODO make this localized
+        proj_list.map! { |proj| %[#{proj} (a href='\\#{@request.script_url}/#{proj}/_topics' class='rw_minilink')#{self.message[:project_topics_link]}</a>] }
         @page.content = <<EPAGE
-= Projects in #{@config.title}
+= #{self.message[:wiki_projects] % [@config.title]}
 * ::#{proj_list.join("\n* ::")}
 EPAGE
       end
 
       content = @page.to_html
+      content.gsub!(%r{\(a href='([^']+)/_topics' class='rw_minilink'\)}, '<a href="\1/_topics" class="rw_minilink">')
       @type = :content
-      
     when 'edit', 'create'
-      # Automatically create the project if it doesn't exist or if the
-      # action is 'create'.
+        # Automatically create the project if it doesn't exist or if the action
+        # is 'create'.
       @backend.create_project(@page.project) if @action == 'create'
       @backend.create_project(@page.project) unless @backend.project_exists?(@page.project)
       @backend.obtain_lock(@page, @request.environment['REMOTE_ADDR'])
 
       content = nil
       @type = :edit
-    when 'save'
-      np = @request.parameters['newpage'].gsub(/\r/, "").chomp
+    when 'save', 'preview'
+      np = @request.parameters['newpage'].gsub(/\r/, '').chomp
       @page.topic = @request.parameters['topic']
       @page.project = @request.parameters['project']
 
-      op = @request.parameters['origpage'].unpack("m*")[0]
+      if @action == 'save'
+        op = @page.content
+      else
+        op = nil
+      end
 
-      if np == op
+      if np == op and @action == 'save'
         @page.content = op
         @type = :content
       else
-        @page.content = np
+        @page.content      = np
         @page.old_version  = @request.parameters['old_version'].to_i + 1
         @page.version      = @request.parameters['version'].to_i + 1
         @page.edit_comment = @request.parameters['edcomment']
-        @type = :save
-        @backend.store(@page)
+
+        if @action == 'save'
+          @type = :save
+          @backend.store(@page)
         
-        # hack to ensure that Recent Changes are updated correctly
-        if( @page.topic == 'RecentChanges' )
-          recentraw = @backend.retrieve(@page.topic, @page.project)
-          recentraw[:markup] = @page.markup
-          recentpg = Page.new(recentraw)
-          @page.content = recentpg.content
+            # hack to ensure that Recent Changes are updated correctly
+          if @page.topic == 'RecentChanges'
+            recentraw = @backend.retrieve(@page.topic, @page.project)
+            recentraw[:markup] = @page.markup
+            recentpg = Page.new(recentraw)
+            @page.content = recentpg.content
+          end
+
+          @backend.release_lock(@page, @request.environment['REMOTE_ADDR'])
+          content = @page.to_html
+        else
+          @type = :preview
+          content = nil
         end
       end
-      @backend.release_lock(@page, @request.environment['REMOTE_ADDR'])
-
-      content = @page.to_html
     when 'cancel'
       @page.topic       = @request.parameters['topic']
       @page.project     = @request.parameters['project']
-      @page.content     = @request.parameters['origpage'].unpack("m*")[0]
       @page.old_version = @request.parameters['old_version'].to_i
       @page.version     = @request.parameters['version'].to_i
 
       content           = @page.to_html
       @backend.release_lock(@page, @request.environment['REMOTE_ADDR'])
+      @type = :content
     else
       content = @page.to_html
     end
   rescue Exception => e  # recscue for def process_page
     @type = :error
     if e.kind_of?(Ruwiki::Backend::BackendError)
-      @error[:name] = "#{message()[:error]}: #{e.to_s}"
+      @error[:name] = "#{self.message[:error]}: #{e.to_s}"
     else
-      @error[:name] = "#{message()[:complete_utter_failure]}: #{e.to_s}"
+      @error[:name] = "#{self.message[:complete_utter_failure]}: #{e.to_s}"
     end
     @error[:backtrace] = e.backtrace.join("<br />\n")
     content = nil
@@ -311,7 +322,7 @@ EPAGE
       type  = @type
       error = @error
     else
-      raise ArgumentError, message()[:render_arguments] unless args.size == 2
+      raise ArgumentError, self.message[:render_arguments] unless args.size == 2
       type  = args[0]
       error = {}
       error[:name] = args[1].inspect.gsub(/&/, '&amp;').gsub(/</, '&lt;').gsub(/>/, '&gt;')
@@ -326,7 +337,7 @@ EPAGE
 
     case type
     when :content, :save
-      values["wiki_title"]      = "#{message()[:error]} - #{@config.title}" if @page.nil?
+      values["wiki_title"]      = "#{self.message[:error]} - #{@config.title}" if @page.nil?
       values["wiki_title"]    ||= "#{@page.project}::#{CGI.unescape(@page.topic)} - #{@config.title}"
       values["page_topic"]      = CGI.unescape(@page.topic)
       values["page_raw_topic"]  = @page.topic
@@ -338,22 +349,21 @@ EPAGE
       else
         template = TemplatePage.new(@config.template(:body), @config.template(:save), @config.template(:controls))
       end
-    when :edit
+    when :edit, :preview
       template = TemplatePage.new(@config.template(:body), @config.template(:edit))
-      values["wiki_title"]            = "#{message()[:editing]}: #{@page.project}::#{CGI.unescape(@page.topic)} - #{@config.title}"
+      values["wiki_title"]            = "#{self.message[:editing]}: #{@page.project}::#{CGI.unescape(@page.topic)} - #{@config.title}"
       values["page_topic"]            = CGI.unescape(@page.topic)
       values["page_raw_topic"]        = @page.topic
       values["page_project"]          = @page.project
       values["cgi_url"]               = @request.script_url
       values["page_content"]          = @page.content
-      values["orig_page"]             = [@page.content].pack("m*")
       values["page_old_version"]      = @page.old_version.to_s
       values["page_version"]          = @page.version.to_s
       values["unedited_page_content"] = @page.to_html
       values["pre_page_content"]      = CGI.escapeHTML(@page.content)
     when :error
       template = TemplatePage.new(@config.template(:body), @config.template(:error))
-      values["wiki_title"]      = "#{message()[:error]} - #{@config.title}"
+      values["wiki_title"]      = "#{self.message[:error]} - #{@config.title}"
       values["name"]            = error[:name]
       values["backtrace"]       = error[:backtrace]
       values["backtrace_email"] = error[:backtrace].gsub(/<br \/>/, '')
