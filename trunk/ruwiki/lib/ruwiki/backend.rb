@@ -134,6 +134,15 @@ class Ruwiki
       raise Ruwiki::Backend::BackendError.new(e), @message[:cannot_destroy_project] % p
     end
 
+    # search a project
+    def search_project(project, searchstr)
+      #TODO: Validate searchstr is a safe regexp?
+      @delegate.search_project(project, searchstr)
+    rescue Exception => e
+      p = [project, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
+      raise Ruwiki::Backend::BackendError.new(e), @message[:search_project_fail] % p
+    end
+
     # Return an array of projects
     def list_projects()
       @delegate.list_projects()

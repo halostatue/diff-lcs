@@ -87,6 +87,36 @@ class Ruwiki
         Dir.rmdir(pd) if File.exists?(pd) and File.directory?(pd)
       end
 
+      # string search all topic names and content in a project and return a
+      # has of topic hits
+      def search_project(project, searchstr)
+
+        re_search = Regexp.new(searchstr, Regexp::IGNORECASE)
+
+        hits = {}
+        topic_list = list_topics(project)
+
+        return hits if( topic_list.size == 0 )
+
+        topic_list.each { |topicname| hits[topicname] = 0 }
+
+        # search topic content
+        topic_list.each do |topicname|
+          # search name
+          if( topicname.grep( re_search ).size > 0 )
+            hits[topicname] += 1
+          end            
+
+          # check content
+          buf = load( topicname, project )
+          if( buf.grep( re_search ).size > 0 )
+            hits[topicname] += 1
+          end
+        end
+
+        hits
+      end
+
         # Attempts to obtain a lock on the topic page.
       def obtain_lock(page, address = 'UNKNOWN', timeout = 600)
         pf = page_file(page.topic, page.project)

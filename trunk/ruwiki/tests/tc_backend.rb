@@ -71,4 +71,16 @@ class TC_Backend_Flatfile < Test::Unit::TestCase
     end
   end
 
+  # test simple one word lookups
+  # need to add more complex cases
+  def test_search_project
+    assert_nothing_raised do
+      @backend = ::Ruwiki::Backend::Flatfiles.new(@ffopts)
+    end
+
+    assert_equal( { 'P1TopicOne'=>1, 'P1TopicTwo'=>0 }, @backend.search_project('Proj1', 'this')    )
+    assert_equal( { 'P1TopicOne'=>0, 'P1TopicTwo'=>1 }, @backend.search_project('Proj1', 'more')    )
+    assert_equal( { 'P1TopicOne'=>1, 'P1TopicTwo'=>1 }, @backend.search_project('Proj1', 'topic')   )
+    assert_equal( { 'P1TopicOne'=>1, 'P1TopicTwo'=>1 }, @backend.search_project('Proj1', 'content') )
+  end
 end
