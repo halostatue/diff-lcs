@@ -68,7 +68,7 @@ file TARDIST => [ :test ] do |t|
         ddnew = dd.gsub(/^#{current}/, DISTDIR)
         mtime = ReleaseDate || File.stat(dd).mtime
         if File.directory?(dd)
-          { :name => ddnew, :mode => 0555, :dir => true, :mtime => mtime }
+          { :name => ddnew, :mode => 0755, :dir => true, :mtime => mtime }
         else
           if dd =~ %r{bin/}
             mode = 0755
