@@ -85,7 +85,7 @@ class Ruwiki
       end
     end
 
-    RE_URI_SCHEME = %r{[\w.]+?:}
+    RE_URI_SCHEME = %r{[-a-z0-9+.]{3,}?:}
     RE_URI_PATH   = %r{[^\s<>\]]}
     RE_URI_TEXT   = %r{[^\]]*}
     RE_IMAGE      = /(jpg|jpeg|png|gif)$/
