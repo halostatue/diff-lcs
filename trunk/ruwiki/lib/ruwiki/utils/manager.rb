@@ -302,7 +302,7 @@ module Ruwiki::Utils::Manager
       @ruwiki_servlet_cmd = File.join(@shared, "bin", "ruwiki_servlet.cmd")
       @ruwiki_service     = File.join(@shared, "bin", "ruwiki_service.rb")
       @ruwiki_cgi         = File.join(@shared, "bin", "ruwiki.cgi")
-      @ruwiki_pkg         = File.join(@shared, "share", "ruwiki",
+      @ruwiki_pkg         = File.join(@shared,
                                       Ruwiki::Utils::Manager::DEFAULT_PACKAGE_NAME)
     end
 
