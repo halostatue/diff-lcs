@@ -185,8 +185,18 @@ class Ruwiki
       raise Ruwiki::Backend::BackendError.new(e), @message[:cannot_destroy_project] % p
     end
 
-      # Attempts to search all projects.
     def search_all_projects(searchstr)
+      if @delegate.respond_to?( :search_all_projects )
+        return @delegate.search_all_projects(searchstr) 
+      end
+
+      search_all_projects_default(searchstr)
+    end
+
+    # Attempts to search all projects.
+    # this is the default search_all_projects used unless the delegate implements
+    # a specialized search_all_projects
+    def search_all_projects_default(searchstr)
       hits = {}
       list_projects.each do |project|
         lhits = search_project(project, searchstr)
