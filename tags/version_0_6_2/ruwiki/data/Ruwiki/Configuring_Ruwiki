@@ -1,0 +1,178 @@
+id: 0
+topic: Configuring_Ruwiki
+version: 1
+#EHDR
+= Configuring Ruwiki 0.6.2
+
+Ruwiki is configured similarly for both CGI and WEBrick modes. The biggest
+distinction is that because the Wiki is created after WEBrick server is
+created (during the dispatch to the servlet), it is necessary to configure the
+wiki with a global \Ruwiki::Config object, <i>$config</i>. Thus, in the
+examples below, replace <i>wiki.config</i> with <i>$config</i> where
+necessary.
+
+== wiki.config Options
+
+=== wiki.config.title
+
+This configuration option names the Wiki, by default this is <tt>Ruwiki</tt>.
+This affects the display of the home link and the &lt;title&gt; element of
+pages.
+
+=== wiki.config.webmaster
+
+The email address for the webmaster. This is used in generating error reports
+that can be emailed to the wiki's webmaster.
+
+=== wiki.config.default_page, wiki.config.default_project
+
+These options indicate what will happen when the wiki's URL is specified
+without any parameters (the default page in the default project is opened),
+when a topic is specified without a project (the topic is opened in the
+default project), and when a project is specified without a topic (the default
+page is opened in the project).
+
+=== wiki.config.storage_type, wiki.config.storage_options
+
+<tt>wiki.config.storage_type</tt> specifies the back-end storage mechanism as
+a Ruby Symbol. Currently, only <tt>:flatfiles</tt> is implemented. See
+Extending_Ruwiki for more information.
+
+<tt>wiki.config.storage_options</tt> is a hash of option hashes for each known
+storage type known to the Wiki. This must use the same Symbol as
+<tt>wiki.config.storage_type</tt> as the top-level hash key.
+
+==== ...storage_options[:flatfiles][:data_path]
+
+The directory in which the wiki files will be found. By default, this is
+<tt>"./data/"</tt>.
+
+==== ...storage_options[:flatfiles][:extension]
+
+The extension of the wiki files. By default, this is +nil+ (no extension).
+
+=== wiki.config.template_path
+This specifies the paths where the Wiki templates will be found. The process
+running the Wiki must have read access to the template_path.
+
+=== wiki.config.template_set, wiki.config.css
+These two options indicate which template set will be used. Only one template
+set is provided in the release package, "default". The only CSS file used
+initially is "ruwiki.css". Templates work such that they will be found in
+<i>template_path</i>/<i>template_set</i>. All CSS files are loaded from the
+template set directory and emitted as part of the output stream.
+
+: The bad news is that this means that the CSS never caches on the client side
+: as it would if it were a separate file. However, because the templates may
+: not be in a web-accessible directory, this is necessary.
+
+== Templates
+Templating is done with the RDoc template.rb library, included in the
+distribution of Ruwiki. The templating library allows for nested templates,
+and this is used extensively in Ruwiki. This library is documented in
+RuwikiTemplatingLibrary.
+
+There are four major templates: content, edit, save, and error. Each of these
+has a slightly different combination of template files used, and this means
+that there are different sets of variables available.
+
+The major templates are combined templates that are defined as follows:
+; content : body.tmpl, content.tmpl, controls.tmpl
+; edit : body.tmpl, edit.tmpl
+; save : body.tmpl, save.tmpl, controls.tmpl
+; error : body.tmpl, error.tmpl
+
+=== body.tmpl
+The body template knows two template keys (<tt>%wiki_title%</tt> and
+<tt>%css_link%</tt>) and includes one other template. The values for
+%wiki_title% key differs depending on context, but no other key should be
+used or expected in the body template.
+
+  <html>
+    <head>
+      <title>%wiki_title%</title>
+      %css_link%
+    </head>
+    <body>
+      !INCLUDE!
+    </body>
+  </html>
+
+=== content.tmpl
+The content template knows one template key (<tt>%content%</tt>) and includes
+one other template. (This may change moving forward so that there's a footer
+as well as a control header.)
+
+  !INCLUDE!
+  <!-- topic content -->
+  %content%
+  <!-- topic content -->
+
+=== controls.tmpl
+The controls template offers a navigation bar. It knows four template keys:
+; %cgi_url% : The URL to the wiki, suitable for building further links from.
+; %home_link% : The root topic of the wiki.
+; %page_project% : The project for the current page topic.
+; %page_topic% : The topic of the current page.
+
+  <div class="rw_nav">
+    %home_link% |
+    Topic: <b>%page_topic%</b> Project: <a href="%cgi_url%/%page_project%/"><b>%page_project%</b></a> |
+    <a href="%cgi_url%?action=edit&amp;project=%page_project%&amp;%page_topic%">Edit</a>
+  </div>
+
+=== edit.tmpl
+The edit template is the most complex template with the most keys. Of
+necessity, it provides a restricted form of the navigation bar, the edit form,
+the raw body of the page, and the formatted body of the page.
+
+; %cgi_url% : The URL to the wiki, suitable for building further links from.
+; %home_link% : The root topic of the wiki.
+; %orig_page% : The unedited original page encoded as Base64.
+; %page_content% : The editable page content.
+; %page_old_version% : The old version number of the page.
+; %page_project% : The project for the current page topic being edited.
+; %page_topic% : The topic of the current page being edited.
+; %page_version% : The new version number of the page.
+; %pre_page_content% : The unedited original page content for display in a &lt;pre&gt; tagset.
+; %unedited_page_content% : The formatted unedited orignal page content.
+
+  <div class="rw_nav">%home_link% | <i>Editing</i> Topic: <b>%page_topic%</b> Project: <b>%page_project%</b></div><br />
+  <form class="rw_edit_form" action="%cgi_url%/%page_project%/%page_topic%" method="post">
+    <textarea name="newpage" rows="15" cols="90">%page_content%</textarea>
+    <input type="hidden" name="origpage" value="%orig_page%" />
+    <input type="hidden" name="topic" value="%page_topic%" />
+    <input type="hidden" name="project" value="%page_project%" />
+    <input type="hidden" name="old_version" value="%page_old_version%" />
+    <input type="hidden" name="version" value="%page_version%" /><br />
+    <input type="submit" name="action" value="Save" />
+    <input type="submit" name="action" value="Cancel" />
+  </form>
+  <div class="rw_edit_raw"><h2>Raw Original Value</h2><pre>%pre_page_content%</pre></div>
+  <div class="rw_edit_format"><h2>Formatted Version</h2>%unedited_page_content%</div>
+
+=== save.tmpl
+An alternative content page for use when a page is saved after editing. This
+knows <tt>%page_project%</tt>, <tt>%page_tolink%</tt> (used to link directly
+to the page), and <tt>%content%</tt>.
+
+  !INCLUDE!
+  Saved page %page_project%::%page_tolink%<hr />
+  <!-- topic content -->
+  %content%
+  <!-- topic content -->
+
+=== error.tmpl
+This template is used for reporting errors to the user and offering an
+opportunity to the user to send a report to the wiki webmaster.
+
+; %backtrace% : The error backtrace.
+; %backtrace_email% : The error backtrace in a format suitable for email.
+; %home_link% : The root topic of the wiki.
+; %name% : The name of the error.
+; %webmaster% : The email address of the wiki webmaster.
+
+  <div class="rw_nav">%home_link%</div>
+  <h1>%name%</h1>
+  <p>Send the webmaster a report by <a href="mailto:%webmaster%?subject=%name%&amp;body=%backtrace_email%">email</a>.</p>
+  <p>%backtrace%</p>
