@@ -153,6 +153,7 @@ class Ruwiki::Backend::Flatfiles < Ruwiki::Backend
           # If there is no match, add the current line to the previous match.
           # Remove the leading \t, though.
         if match.nil?
+          raise Ruwiki::Backend::InvalidFormatError if FIRST_TAB.match(line).nil?
           page[sect][item] << "\n#{line.gsub(FIRST_TAB, '')}"
         else
           cap = match.captures

@@ -14,7 +14,7 @@ page!content:	= Ruwiki 0.8.0 Bug Tracking
 	
 	----
 	== Closed Bugs
-	* 0.8.0: \[TODO: Tracker insert]. Fixed a list numbering problem. I think that lists are a bit slower now, but they are completely accurate.
+	* 0.8.0: [http://rubyforge.org/tracker/index.php?func=detail&aid=707&group_id=84&atid=407 Sub-Numbered bullets don't increment]. Fixed a list numbering problem. I think that lists are a bit slower now, but they are completely accurate.
 	* 0.7.0: Fixed a link detection problem in \[wikiword] format. Thanks to [mailto:eivind@FreeBSD.org Eivind Eklund] for the patch.
 	* 0.7.0: Fixed a problem with &lt;pre&gt; paragraph detection and generation.
 	* 0.7.0: Fixed a problem with &lt;p&gt; generation.
