@@ -1,7 +1,7 @@
 #!/user/bin/env ruby
-# = Diff::LCS 1.0
-# == diff Usage
-#   diff [options] oldfile newfile
+# = Diff::LCS 1.0.1
+# == ldiff Usage
+#   ldiff [options] oldfile newfile
 #
 # -c::                            Displays a context diff with 3 lines of context.
 # -C [LINES], --context [LINES]:: Displays a context diff with LINES lines of context. Default 3 lines.
@@ -29,12 +29,19 @@
 
 require 'optparse'
 require 'ostruct'
-require 'diff/lcs'
+
+begin
+  require 'diff/lcs'
+rescue
+  require 'rubygems'
+  require_gem 'diff-lcs', "1.0.1"
+end
+
 require 'diff/lcs/hunk'
 
 module Diff
   BANNER = <<-COPYRIGHT
-diff #{Diff::LCS::VERSION}
+ldiff #{Diff::LCS::VERSION}
   Copyright © 2004 Austin Ziegler
 
   Part of Diff::LCS.
@@ -225,6 +232,4 @@ $Id$
   end
 end
 
-if __FILE__ == $0
-  exit Diff::diffprog(ARGV, $stdout, $stderr)
-end
+exit Diff::diffprog(ARGV, $stdout, $stderr)

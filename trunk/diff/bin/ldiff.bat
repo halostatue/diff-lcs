@@ -13,9 +13,9 @@ REM
 REM  $Id$
 REM ++
 if "%OS%"=="Windows_NT" goto WinNT
-ruby -x "diff" %1 %2 %3 %4 %5 %6 %7 %8 %9
+ruby -x "ldiff" %1 %2 %3 %4 %5 %6 %7 %8 %9
 goto done
 :WinNT
-ruby -x "diff" %*
+ruby -x "ldiff" %*
 goto done
 :done

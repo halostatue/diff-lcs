@@ -1,6 +1,6 @@
 Diff::LCS README
 ================
-This is the 1.0 release of Diff::LCS for Ruby, based originally on Perl's
+This is the 1.0.1 release of Diff::LCS for Ruby, based originally on Perl's
 Algorithm::Diff[1]. It uses the McIlroy-Hunt longest common subsequence (LCS)
 algorithm to compute intelligent differences between two sequenced enumerable
 containers[2]. The implementation is based on Mario I. Wolczko's[3] Smalltalk
@@ -53,7 +53,7 @@ Footnotes
 =========
 [1] This library is called Diff::LCS because there are multiple
     Ruby libraries called Algorithm::Diff maintained by other authors.
-[2] By sequenced enumerable, I mean that the orderr of enumeration is
+[2] By sequenced enumerable, I mean that the order of enumeration is
     predictable and consistent for the same set of data. While it is
     theoretically possible to generate a diff for unordereded hash, it
     will only be meaningful if the enumeration of the hashes is
