@@ -80,13 +80,12 @@ class Ruwiki
 
       # Converts URLs in the form of [url] to numbered links.
     class NumberedLinks < Ruwiki::Wiki::Token
-      def self.rank
-        2
+      class << self
+        attr_accessor :count
       end
 
-      def initialize(ruwiki, match, project = nil)
-        super
-        @@count = 0
+      def self.rank
+        2
       end
 
       def self.regexp
@@ -96,8 +95,9 @@ class Ruwiki
       def replace
         extlink = @match.captures[0]
 
-        @@count += 1
-        name = "[#{@@count}]"
+        NumberedLinks.count ||= 0
+        NumberedLinks.count += 1
+        name = "[#{NumberedLinks.count}]"
 
         if extlink =~ RE_IMAGE
           %Q{<img src="#{extlink}" title="#{name}" alt="#{name}" />}

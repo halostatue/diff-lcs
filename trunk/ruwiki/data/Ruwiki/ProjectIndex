@@ -2,7 +2,7 @@ id: 0
 topic: ProjectIndex
 version: 1
 #EHDR
-= Ruwiki 0.6.1
+= Ruwiki 0.6.2
 This is the \ProjectIndex page for Ruwiki. For any given project, the
 \ProjectIndex topic will be the default topic for plain project links. As of
 Ruwiki 0.6.0, \ProjectIndex it is also the standard default page (not

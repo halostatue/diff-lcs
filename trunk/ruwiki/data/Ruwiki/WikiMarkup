@@ -2,7 +2,7 @@ id: 0
 topic: WikiMarkup
 version: 1
 #EHDR
-= Wiki Markup
+= Ruwiki Markup
 A [http://c2.com/cgi/wiki Wiki] obeys certain formatting rules to make it easy
 to format text without needing to know HTML. This Wiki obeys the following
 rules by default. Because Ruwiki is extensible, there may be additional

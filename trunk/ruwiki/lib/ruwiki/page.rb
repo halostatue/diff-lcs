@@ -28,7 +28,7 @@ class Ruwiki
 
       # The IP address of the person who made the last change.
     def change_ip
-      %Q<#{@ruwiki.request.environment['REMOTE_HOST']} (#{@ruwiki.request.environment['REMOTE_ADDR']})>
+      %Q(#{@remote_host} #{@remote_addr})
     end
 
       # The ID, if present, of the person who made the last change. Not yet
@@ -38,11 +38,15 @@ class Ruwiki
     end
 
       # Creates a Ruwiki page.
-    def initialize(ruwiki, init = {})
-      @ruwiki = ruwiki
+    def initialize(init = {})
+      @markup       = init[:markup]
+      @script       = init[:script]
 
-      @project      = init[:project] || @ruwiki.config.default_project
-      @topic        = init[:topic] || "NewTopic"
+      @remote_host  = init[:remote_host]
+      @remote_addr  = init[:remote_addr]
+
+      @project      = init[:project] || "Default"
+      @topic        = init[:topic]   || "NewTopic"
       @content      = init[:content] || ""
       @page_id      = init[:page_id] || 0
       @version      = init[:version] || 0
@@ -119,7 +123,7 @@ version: #{@version}
 
       # Parse the content.
     def parse_content(content, project)
-      parsed = @ruwiki.markup.parse(content, project)
+      parsed = @markup.parse(content, project)
 
       parsed
     end

@@ -2,7 +2,7 @@ id: 0
 topic: Configuring_Ruwiki
 version: 1
 #EHDR
-= Configuring Ruwiki 0.6.1
+= Configuring Ruwiki 0.6.2
 
 Ruwiki is configured similarly for both CGI and WEBrick modes. The biggest
 distinction is that because the Wiki is created after WEBrick server is

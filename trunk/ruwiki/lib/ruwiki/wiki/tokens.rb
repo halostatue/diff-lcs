@@ -80,13 +80,18 @@ class Ruwiki
         # All Token classes must match this header signature if they define
         # #initialize.
         #
-        # [ruwiki]    The owner Ruwiki object.
         # [match]     The MatchData object for this Token.
         # [project]   The project being processed.
-      def initialize(ruwiki, match, project = nil)
-        @ruwiki   = ruwiki
+        # [backend]   The backend for the wiki. This is used to determine if
+        #             the page or project exists. The object passed must
+        #             respond to #project_exists?(project) and
+        #             #page_exists?(page, project).
+        # [script]    The URI to the script.
+      def initialize(match, project, backend, script)
         @match    = match
-        @project  = project || @ruwiki.config.default_project
+        @project  = project
+        @backend  = backend
+        @script   = script
       end
 
         # The replacement method. Uses @match to replace the token with the

@@ -2,11 +2,11 @@ id: 0
 topic: Extending_Ruwiki
 version: 1
 #EHDR
-= Extending Ruwiki 0.6.1
+= Extending Ruwiki 0.6.2
 
-Ruwiki is relatively easily extended to support new features. There are two
-primary ways in which Ruwiki can be extended by the end user: markup and
-backends.
+Ruwiki is relatively easily extended to support new features. There are three
+primary ways in which Ruwiki can be extended by the end user: markup,
+backends, and translating Ruwiki error messages.
 
 == Extending Ruwiki Markup
 
@@ -15,7 +15,7 @@ Tokens will be automatically loaded if they are placed in
 <i>ruwiki/wiki/tokens</i>.
 
 It is recommended that new tokens be added to the test cases in
-<tt>tests/</tt>.
+<tt>tests/tc_tokens.rb</tt>.
 
 The following Ruwiki::Wiki::Token class will convert strings in the forms of
 \[ruby-talk:12345] to links.
@@ -34,6 +34,22 @@ The following Ruwiki::Wiki::Token class will convert strings in the forms of
       %Q(<a class="rw_extlink" href="http://www.ruby-talk.org/#{lm}">#{@match[0]}</a>)
     end
   end
+
+=== Known Instance Variables
+==== @match
+The match data for this token instance is is kept in @match. This is what will
+be used in #replace and #restore.
+
+==== @project
+The project being processed.
+
+==== @backend
+The Backend for the wiki. If you are using Ruwiki tokenizers outside of
+Ruwiki, this does not need to be a BackendDelegator, but can be the direct
+Backend (which expects less information).
+
+==== @script
+The URI to the script.
 
 === Required Methods
 ==== ::regexp
@@ -100,16 +116,24 @@ Ruwiki can support varying backends, as the backend interface has been
 abstracted completely from the data store. The backend <b>must</b>:
 
 # reside in <i>ruwiki/backends/</i> as <i>backend_name</i>.rb.
-# be registered by adding the <i>backend_name</i> as a symbol (e.g., :<i>backend_name</i>) to Ruwiki::Backend::BACKENDS.
+# be registered by adding the <i>backend_name</i> as a symbol (e.g., :<i>backend_name</i>) to Ruwiki::KNOWN_BACKENDS.
 # inherit from Ruwiki::Backend.
 # exist as Ruwiki::Backend::<i>\Backend_name</i>.
 
 === Required Methods
-==== #initialize(ruwiki)
+==== #initialize(storage_options)
 
 The backend may only obtain its configuration information from the provided
 ruwiki instance (through Ruwiki#config) and must set @ruwiki (this can be
 achieved by calling <tt>super ruwiki</tt>).
+
+If a configuration error is detected during initialization, the backend should
+raise Ruwiki::Backend::BackendError. This would be done with:
+
+  raise Ruwiki::Backend::BackendError.new([:message_symbol, [message_parameters]])
+
+Backend writers should add messages to the <i>lang/en.rb</i> at a minimum. The
+BackendDelegator will detect this and report the results appropriately.
 
 ==== #load(topic, project)
 
@@ -122,7 +146,7 @@ String#split("\n") on it.
 
 This method must store the provided page in the backend. Note that the return
 value of the Page#rawtext method must be stored. This method may call
-Backend#make_diff to generate the differences hash.
+the private method Backend#make_diff to generate the differences hash.
 
   diff = {
     'old_version' => page.old_version,
@@ -133,17 +157,23 @@ Backend#make_diff to generate the differences hash.
     'diff'        => Diff.diff(oldpage, newpage)
   }
 
-==== #obtain_lock(page)
+===== Backend#make_diff(page, oldpage, newpage)
 
-Obtains an exclusive lock on the page. The lock should have a ten minute (600
-second) timeout and permit access from the same IP address without
-restriction. This should <b>not</b> be a filesystem lock.
+This method expects the page object, the old page text, and the new page text.
+They must be Diffable. Backend::Flatfiles provides oldpage and newpage to
+Diff#diff as arrays (each line as a separate entry in the array).
 
-==== #release_lock(page)
+==== #obtain_lock(page, address = 'UKNOWN', timeout = 600)
+
+Obtains an exclusive lock on the page. The lock should have a timeout and
+permit access from the same IP address without restriction. This should
+<b>not</b> be a filesystem lock. The time stored for purposes of locking
+should include the timeout (e.g., Time.now.to_i + time).
+
+==== #release_lock(page, address = 'UNKNOWN')
 
 Releases the exclusive lock on the page. The lock should not be released
-unless the IP address on the lock is the same or the lock has expired (600
-seconds).
+unless the IP address on the lock is the same or the lock has expired.
 
 ==== #project_exists?(project)
 
@@ -171,3 +201,26 @@ Attempts to create the project.
 ==== #destroy_project(project)
 
 Attempts to destroy the project.
+
+== Translating Ruwiki Error Messages
+
+Ruwiki is internationalized. This method sets the Ruwiki error messages (and a
+few other messages) to the specified language Module. The language Module must
+have a constant Hash called <tt>Message</tt> containing a set of symbols and
+localized versions of the messages associated with them.
+
+If the file <i>ruwiki/lang/es.rb</i> contains the module
+<tt>Ruwiki::Lang::ES</tt>, the messages for RSS could be localized to
+Spanish thus:
+
+  require 'ruwiki/lang/es'
+  ...
+  wiki.config.language = Ruwiki::Lang::ES
+
+Localization is per wiki instance. In a servlet environment, this may mean
+that only a single language is recognised.
+
+It is recommended that Message.default be set to a proc that reports unknown
+message keys.
+
+  Message.default = proc { |h, k| "Language ERROR: Unknown message key #{k.inspect}." }

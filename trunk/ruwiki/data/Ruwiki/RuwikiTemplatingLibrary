@@ -2,7 +2,7 @@ id: 0
 topic: RuwikiTemplatingLibrary
 version: 1
 #EHDR
-= Ruwiki 0.6.1 Templating
+= Ruwiki 0.6.2 Templating
 
 Ruwiki uses the RDoc templating system, described by its creator as:
 

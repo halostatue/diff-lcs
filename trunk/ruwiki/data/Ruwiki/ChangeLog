@@ -2,9 +2,13 @@ id: 0
 version: 1
 topic: ChangeLog
 #EHDR
-= Ruwiki 0.6.1 ChangeLog
+= Ruwiki 0.6.2 ChangeLog
 Uncompleted to-do items can be found in To_Do. Bugs in Ruwiki are tracked in
 BugTracking.
+
+== Version 0.6.2
+* Removed dependencies on Ruwiki from a number of classes (Ruwiki::Backend, Ruwiki::Backend::Flatfiles, Ruwiki::Page, Ruwiki::Wiki, Ruwiki::Wiki::Tokens, and various tokens).
+* Ruwiki now initializes a Ruwiki::BackendDelegator, which creates the requisite Ruwiki::Backend instance with Ruwiki::Config#storage_options.
 
 == Version 0.6.1
 * Changed Config#data_path to Config#storage_options[:flatfiles][:data_path]. This represents a generalisation of storage type options so that the Config object is not polluted with storage type options. Config#storage_options keys should be the same Ruby Symbol as is used in Config#storage_type.

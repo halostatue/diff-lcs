@@ -57,7 +57,7 @@ require 'ruwiki/page'
   #             Austin Ziegler (ruwiki@halostatue.ca)
   # Licence::   Ruby's
 class Ruwiki
-  VERSION         = '0.6.1.0'
+  VERSION         = '0.6.2.0'
 
   ALLOWED_ACTIONS = %w(edit create)
   EDIT_ACTIONS    = %w(save cancel)
@@ -79,6 +79,7 @@ class Ruwiki
   def config=(c)
     raise message()[:config_not_ruwiki_config] unless c.kind_of?(Ruwiki::Config)
     @config = c
+    @markup.default_project = @config.default_project
   end
 
     # The message hash.
@@ -98,12 +99,14 @@ class Ruwiki
     @type       = nil
     @error      = {}
 
-    @markup     = Ruwiki::Wiki.new(self)
+    @markup     = Ruwiki::Wiki.new(@config.default_project,
+                                   @request.script_url)
   end
 
     # Initializes the backend for Ruwiki.
   def set_backend
-    @backend = Backend[@config.storage_type, self]
+    @backend = BackendDelegator.new(self, @config.storage_type)
+    @markup.backend = @backend
   end
 
     # Runs the steps to process the wiki.
@@ -136,17 +139,17 @@ class Ruwiki
     when 1 # /PageTopic OR /_edit
       set_page_name_or_action(path_info[0])
     when 2 # /Project/ OR /Project/PageTopic OR /Project/_edit OR /Project/create
-      @project_name = path_info.shift
+      @project = path_info.shift
       set_page_name_or_action(path_info[0])
     else # /Project/PageTopic/_edit OR /Project/diff/3,4 OR something else.
-      @project_name = path_info.shift
+      @project = path_info.shift
       item = path_info.shift
       action = RE_ACTION.match(item)
       if action
         @action = action.captures[0]
         @params = path_info
       else
-        @page_name = item
+        @topic = item
         item = path_info.shift
         action = RE_ACTION.match(item)
         if action
@@ -158,20 +161,29 @@ class Ruwiki
 
     @request.each_parameter do |key, val|
       next if RESERVED.include?(key)
-      @page_name = key
+      @topic = key
     end
 
-    @project_name ||= @request.parameters['project']
-    @project_name ||= @config.default_project
-    @page_name    ||= @config.default_page
+    @project ||= @request.parameters['project']
+    @project ||= @config.default_project
+    @topic    ||= @config.default_page
   end
 
     # Processes the page through the necessary steps. This is where the edit,
     # save, cancel, and display actions are present.
   def process_page
-    content = nil
-    @page   = @backend.retrieve(@page_name, @project_name)
-    @type   = :content
+    content   = nil
+    page_init = @backend.retrieve(@topic, @project)
+
+    page_init[:markup]        = @markup
+    page_init[:project]     ||= @config.default_project
+    page_init[:remote_host]   = @request.environment['REMOTE_HOST']
+    page_init[:remote_addr]   = @request.environment['REMOTE_ADDR']
+
+    @page     = Ruwiki::Page.new(page_init)
+
+    @type     = :content
+
       # TODO Detect if @action has already been set.
     @action = @request.parameters['action'].downcase if @request.parameters['action']
 
@@ -182,7 +194,7 @@ class Ruwiki
           # action is 'create'.
         @backend.create_project(@page.project) if @action == 'create'
         @backend.create_project(@page.project) unless @backend.project_exists?(@page.project)
-        @backend.obtain_lock(@page)
+        @backend.obtain_lock(@page, @request.environment['REMOTE_ADDR'])
 
         content = nil
         @type = :edit
@@ -203,7 +215,7 @@ class Ruwiki
           @type = :save
           @backend.store(@page)
         end
-        @backend.release_lock(@page)
+        @backend.release_lock(@page, @request.environment['REMOTE_ADDR'])
 
         content = @page.to_html
       when 'cancel'
@@ -214,7 +226,7 @@ class Ruwiki
         @page.version     = @request.parameters['version'].to_i
 
         content           = @page.to_html
-        @backend.release_lock(@page)
+        @backend.release_lock(@page, @request.environment['REMOTE_ADDR'])
       else
         # TODO Return a 501 Not Implemented error
         nil
@@ -249,8 +261,10 @@ class Ruwiki
     end
 
     @rendered_page = ""
-    values = { "css_link" => @config.css_link,
-               "home_link" => %Q(<a href="#{@request.script_url}">#{@config.title}</a>) }
+    values = { "css_link"   => @config.css_link,
+               "home_link"  => %Q(<a href="#{@request.script_url}">#{@config.title}</a>),
+               "encoding"   => @config.message[:encoding]
+             }
 
     case type
     when :content, :save
@@ -306,7 +320,7 @@ private
     if action
       @action     = action.captures[0]
     else
-      @page_name  = item
+      @topic  = item
     end
   end
 end

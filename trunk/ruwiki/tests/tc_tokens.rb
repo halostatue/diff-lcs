@@ -23,7 +23,7 @@ class TokenTestCases < Test::Unit::TestCase
   def __tokenize(content, token)
     content.gsub!(token.regexp) do |m|
       match = Regexp.last_match
-      tc    = token.new($wiki, match, @project)
+      tc    = token.new(match, @project, $wiki.backend, $wiki.request.script_url)
       @tokens << tc
       if m[0, 1] == '\\'
         "\\TOKEN_#{@tokens.size - 1}"

@@ -49,9 +49,10 @@ class Ruwiki
       #Template filename. Must be reachable by File#read.
     attr_accessor :template_set
       # Ruwiki is internationalized. This method sets the Ruwiki error
-      # messages to the specified language Module. The language Module must
-      # have a constant Hash called +Message+ containing a set of symbols and
-      # localized versions of the messages associated with them.
+      # messages (and a few other messages) )to the specified language Module.
+      # The language Module must have a constant Hash called +Message+
+      # containing a set of symbols and localized versions of the messages
+      # associated with them.
       #
       # If the file 'ruwiki/lang/es.rb' contains the module
       # <tt>Ruwiki::Lang::ES</tt>, the error messages for RSS could be
@@ -72,6 +73,7 @@ class Ruwiki
     def language=(l) #:nodoc:
       @language = l
       @message = l::Message
+      @message.default = l::Message.default
     end
 
       # Returns the template string
