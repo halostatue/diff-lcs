@@ -55,7 +55,7 @@ module Ruwiki::Lang
       :error                        => "Error",
       :invalid_path_info_value      => "Algo huele a podrido en su entorno Web. PATH_INFO = %s",
       :render_arguments             => "Ruwiki#render debe ser llamado con cero o dos argumentos.",
-      :unknown_feature              => "Clase Feature desconocida: %s."
+      :unknown_feature              => "Clase Feature desconocida: %s.",
 
           # Labels
       :label_search_project         => "Proyecto De la Búsqueda",
@@ -82,7 +82,7 @@ module Ruwiki::Lang
       :label_raw                    => "Version sin formato",
       :label_formatted              => "Version con formato",
       :label_send_report_by         => "Envie al admistrador de este sitio una notificación por correo electrónico.",
-      :label_send_report            => "Envie notificación."
+      :label_send_report            => "Envie notificación.",
       :label_saved_page             => "Página salvaguardada: ",
     }
     message.each { |k, v| Message[k] = v }

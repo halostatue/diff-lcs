@@ -56,7 +56,7 @@ module Ruwiki::Lang
       :invalid_path_info_value      => "Fataler Fehler in der Web-Umgebung. PATH_INFO = %s",
         # Should this really get translated?  --chris
       :render_arguments             => "Ruwiki#render muss mit zwei oder mehr Argumenten aufgerufen werden.",
-      :unknown_feature              => "Unbekanntes Feature %s."
+      :unknown_feature              => "Unbekanntes Feature %s.",
 
           # Labels
       :label_search_project         => "SuchcProjeckt",
