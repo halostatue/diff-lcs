@@ -8,6 +8,7 @@ all changes are produced by Austin Ziegler <diff-lcs@halostatue.ca>.
   callbacks passed as classes can be initialised; now, it rescues
   NoMethodError in the event of private :new being called).
 * Modified the non-initialisable callbacks to have a private #new method.
+* Moved ldiff core code to Diff::LCS::Ldiff (diff/lcs/ldiff.rb).
 
 == Diff::LCS 1.1.0
 * Eliminated the need for Diff::LCS::Event and removed it.

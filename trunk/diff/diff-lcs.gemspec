@@ -13,13 +13,11 @@ Gem::Specification.new do |s|
   end
 
   s.summary = %{Provides a list of changes that represent the difference between two sequenced collections.}
-  s.platform = Gem::Platform::RUBY
 
   s.required_ruby_version = %(>=1.8.1)
 
   s.executables = %w(ldiff htmldiff)
   s.bindir = %(bin)
-  s.default_executable = %(ldiff)
 
   s.test_files = %w{tests/00test.rb}
 

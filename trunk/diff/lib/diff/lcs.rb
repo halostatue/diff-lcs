@@ -14,7 +14,7 @@
 #++
 
 module Diff
-    # = Diff::LCS 1.1.0
+    # = Diff::LCS 1.1.1
     # Computes "intelligent" differences between two sequenced Enumerables.
     # This is an implementation of the McIlroy-Hunt "diff" algorithm for
     # Enumerable objects that include Diffable.

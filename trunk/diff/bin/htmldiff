@@ -15,7 +15,7 @@
 
 begin
   require 'rubygems'
-  require_gem 'diff-lcs', "1.1.0"
+  require_gem 'diff-lcs', "1.1.1"
   require 'diff/lcs/string'
 rescue LoadError
   require 'diff/lcs/string'
