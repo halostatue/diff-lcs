@@ -1,0 +1,23 @@
+id: 0
+version: 1
+topic: ChangeLog
+#EHDR
+= Ruwiki 0.6.0 ChangeLog
+Uncompleted to-do items can be found in To_Do. Bugs in Ruwiki are tracked in
+BugTracking.
+
+== Version 0.6.0
+* Added Ruby mailing list support (e.g., \[ruby-talk:12345]).
+* Reorganised the code (again) to better support alternative frontends. Based, in part, on [http://sourceforge.net/projects/rdoc-wiki RDoc Wiki] by Dave Thomas.
+* Added a [http://www.webrick.org WEBrick] servlet interface. Based, in part, on the WEBrick servlet interface provided with RDoc Wiki by Chad Fowler.
+* Added templates, using the [http://rdoc.sourceforge.net RDoc] template.rb library.
+* Changed the default topic to be \ProjectIndex instead of \DefaultProject.
+* Added a new \WikiWord format, \Wiki_Word_with_Spaces.
+* Completed lots of Ruwiki documentation.
+* Updated the save page.
+* Fixed a problem with the linking of project specific pages.
+
+== Version 0.5.0
+* Reorganized the code significantly to be easier to edit and extend.
+* Added abbreviation capabilities.
+* Cleaned up a lot of tokenizing code.
