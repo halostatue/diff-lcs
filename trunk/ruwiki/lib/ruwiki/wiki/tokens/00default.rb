@@ -128,7 +128,7 @@ class Ruwiki::Wiki
       options = { 'src' => %Q("#{@match.captures[0]}") }
       groups  = @match.captures[1]
       unless groups.nil?
-        groups.scan(RE_IMAGE_OPTIONS).each { |g| options[g[0].strip] = g[1].strip }
+        groups.scan(RE_IMAGE_OPTIONS).each { |gg| options[gg[0].strip] = gg[1].strip }
       end
 
       unless options['numbered'].nil? or options['numbered'] == "false"

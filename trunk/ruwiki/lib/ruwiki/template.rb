@@ -71,11 +71,11 @@ require 'cgi'
   #     values = { "name" => "Dave", "state" => "TX" }
   #     fr = { :name => "Nom", :state => "Etat" }
   #     en = { :name => "Name", :state => "State" }
-  #     t = TemplatePage.new(T1, T2, T3)
+  #     tt = TemplatePage.new(T1, T2, T3)
   #
   #     res = ""
-  #     t.process(res, values, fr)
-  #     t.process(res, values, en)
+  #     tt.process(res, values, fr)
+  #     tt.process(res, values, en)
   #
 class Ruwiki::TemplatePage
   BLOCK_RE      = %r{^\s*(IF|IFNOT|IFBLANK|IFNOTBLANK|ENDIF|START|END):(\w+)?}
@@ -371,26 +371,26 @@ class Ruwiki::TemplatePage
       stuff = $2
 
       val = @context.lookup(name)
-      s = ""
+      ss = ""
       case val
       when nil
         nil
       when Fixnum
-        val.times { |i| s << stuff.sub(/%#{name}%/, "#{i + 1}") }
+        val.times { |ii| ss << stuff.sub(/%#{name}%/, "#{ii + 1}") }
       when Range
-        val.each { |i| s << stuff.sub(/%#{name}%/, "#{i}") }
+        val.each { |ii| ss << stuff.sub(/%#{name}%/, "#{ii}") }
       when Array
         if not val.empty? and val[0].kind_of?(Hash)
-          val.each do |v|
-            @context.push(v)
-            s << expand(stuff, escaper)
+          val.each do |vv|
+            @context.push(vv)
+            ss << expand(stuff, escaper)
             @context.pop
           end
         else
-          val.each { |e| s << stuff.sub(/%#{name}%/, "#{e}") }
+          val.each { |ee| ss << stuff.sub(/%#{name}%/, "#{ee}") }
         end
       end
-      s
+      ss
     end
 
       # Substitute in values for #xxx# constructs.
@@ -437,8 +437,8 @@ class Ruwiki::TemplatePage
     end
 
     line
-  rescue Exception => e
-    raise "Error in template: #{e}\nOriginal line: #{line}\n#{e.backtrace[0]}"
+  rescue Exception => ex
+    raise "Error in template: #{ex}\nOriginal line: #{line}\n#{ex.backtrace[0]}"
   end
 
   def check(*args)
@@ -462,13 +462,13 @@ class Ruwiki::TemplatePage
 
     res = %Q(<select name="#{args[0]}">)
 
-    sorted = options.to_a.sort do |a, b|
-      if a[0] == -1
+    sorted = options.to_a.sort do |aa, bb|
+      if aa[0] == -1
         -1
-      elsif b[0] == -1
+      elsif bb[0] == -1
         1
       else
-        a[sort_on] <=> b[sort_on]
+        aa[sort_on] <=> bb[sort_on]
       end
     end
 
@@ -480,10 +480,10 @@ class Ruwiki::TemplatePage
   end
 
   def date(*args)
-    y = "#{argv[0]}_y"
-    m = "#{argv[0]}_m"
-    d = "#{argv[0]}_d"
-    %Q<#{input(y, 4, 4)}&nbsp;.&nbsp;#{input(m, 2, 2)}&nbsp;.&nbsp;#{input(d, 2, 2)}>
+    yy = "#{argv[0]}_y"
+    mm = "#{argv[0]}_m"
+    dd = "#{argv[0]}_d"
+    %Q<#{input(yy, 4, 4)}&nbsp;.&nbsp;#{input(mm, 2, 2)}&nbsp;.&nbsp;#{input(dd, 2, 2)}>
   end
 
   def radioone(*args)

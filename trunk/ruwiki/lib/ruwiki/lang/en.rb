@@ -14,7 +14,7 @@ module Ruwiki::Lang
     # any method in the Ruwiki library. The messages are identified by a
     # Symbol.
   module EN
-    Message = Hash.new { |h, k| h[k] = "Language ERROR: Unknown message key #{k.inspect}."; h[k] }
+    Message = Hash.new { |hh, kk| hh[kk] = "Language ERROR: Unknown message key #{kk.inspect}."; hh[kk] }
     message = {
         # The encoding for the webpages. This should match the encoding used
         # to create these messages.
@@ -49,6 +49,10 @@ You have submitted an old version of %1$s::%2$s. The differences between
 your version and the current version of this page have been merged.
 Conflicting lines have both lines shown. Please ensure that you have edited
 the entire page before saving again.
+EOM
+      :no_empty_search_string       => <<EOM ,
+The search field may not be empty. Please enter something in the search box
+before pressing the search button.
 EOM
 
         # Config-related messages.
@@ -324,6 +328,6 @@ Ruwiki options:
   Extension             %18$s
 BANNER
     }
-    message.each { |k, v| Message[k] = v }
+    message.each { |kk, vv| Message[kk] = vv }
   end
 end

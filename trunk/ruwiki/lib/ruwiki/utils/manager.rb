@@ -22,10 +22,10 @@ require 'ruwiki/utils/command'
 require 'ruwiki/config'
 
 begin
+  require 'archive/tar/minitar'
+rescue LoadError
   require 'rubygems'
   require_gem 'archive-tar-minitar', '~> 0.5.1'
-rescue LoadError
-  require 'archive/tar/minitar'
 end
 
 module Ruwiki::Utils::Manager
@@ -317,8 +317,8 @@ module Ruwiki::Utils::Manager
         :mode   => 0644,
       }
       return group
-    rescue Exception => e
-      puts e.message, e.backtrace.join("\n")
+    rescue Exception => ex
+      puts ex.message, ex.backtrace.join("\n")
     ensure
       to.close
       group[:size] = group[:data].size
@@ -467,9 +467,8 @@ module Ruwiki::Utils::Manager
       end
 
       nil
-    rescue Exception => e
-      puts e
-      puts e.backtrace.join("\n")
+    rescue Exception => ex
+      puts ex, ex.backtrace.join("\n")
     ensure
       tw.close if tw
       gz.close if gz
@@ -556,11 +555,11 @@ module Ruwiki::Utils::Manager
           binpath       = "#{ruby} #{program}".tr('/', '\\')
 
           service = Win32::Service.new
-          service.create_service do |s|
-            s.service_name      = service_name
-            s.display_name      = service_desc
-            s.binary_path_name  = binpath
-            s.dependencies      = [] # Required because of a bug in Win32::Service
+          service.create_service do |svc|
+            svc.service_name      = service_name
+            svc.display_name      = service_desc
+            svc.binary_path_name  = binpath
+            svc.dependencies      = [] # Required because of a bug in Win32::Service
           end
           service.close
           ioe[:output] << Manager.manager(:manager_service_installed) % [ service_name ] << "\n"

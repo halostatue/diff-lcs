@@ -11,10 +11,10 @@ page!content:	= Ruwiki
 	of the messages included with the Ruwiki distribution.
 	
 	The current version is %RV#%. Enhancements and changes include:
-	* a deployment system, whereby Ruwiki deployments can be installed from a package manager like that used for RPA (rpa-base) or RubyGems;
+	* a deployment system, whereby Ruwiki deployments can be installed from a package manager like that used for RPA (rpa-base) or \RubyGems;
 	* support for Ruwiki as a Windows service on NT, 2000, XP, and 2003 systems;
 	* demotion of YAML and Marshal storage types to formats of the Flatfiles storage type;
-	* external user authentication (currently to RubyForge only);
+	* external user authentication (currently to \RubyForge only);
 	* antispam efforts including robot and IP exclusion and URL redirection; and
 	* protection against cross-site scripting (XSS) attacks with HTML and CSS cleaning.
 	The full list of changes can be found in Ruwiki::ChangeLog, with

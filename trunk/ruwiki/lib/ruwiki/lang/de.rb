@@ -17,7 +17,7 @@ module Ruwiki::Lang
     # any method in the Ruwiki library. The messages are identified by a
     # Symbol.
   module DE
-    Message = Hash.new { |h, k| h[k] = "Sprachdatei-FEHLER: Unbekannter Nachrichten-Typ #{k.inspect}."; h[k] }
+    Message = Hash.new { |hh, kk| hh[kk] = "Sprachdatei-FEHLER: Unbekannter Nachrichten-Typ #{k.inspect}."; hh[kk] }
     message = {
         # The encoding for the webpages. This should match the encoding used
         # to create these messages.
@@ -31,22 +31,33 @@ module Ruwiki::Lang
       :cannot_release_lock          => "Kann die Sperre für %1$s::%2$s nicht lösen. Bitte später nochmal versuchen.",
       :cannot_retrieve_topic        => "Kann auf %1$s::%2$s nicht zugreifen: %3$s",
       :cannot_store_topic           => "Kann %1$s::%2$s nicht speichern: %3$s",
+      :cannot_list_topics           => "Kann Themen für Projekt %1$s nicht auflisten: %2$s",
       :error_creating_lock          => "Fehler beim Erzeugen der Sperre von %1$s::%2$s: %3$s",
       :error_releasing_lock         => "Fehler beim Lösen der Sperre von %1$s::%2$s: %3$s",
       :flatfiles_no_data_directory  => "Das Daten-Verzeichnis (%1$s) existiert nicht.",
       :no_access_list_projects      => "Keine Berechtigung zum Auflisten der Projekte.",
       :no_access_list_topics        => "Keine Berechtigung zum Auflisten der Themen von Projekt %1$s.",
-      :no_access_to_create_project  => "Keine Berechtigung um Projekt %1$s zu erzeugen.",                
+      :no_access_to_create_project  => "Keine Berechtigung um Projekt %1$s zu erzeugen.",
       :no_access_to_destroy_project => "Keine Berechtigung um Projekt %1$s zu zerstören.",
       :no_access_to_destroy_topic   => "Keine Berechtigung um Thema %1$s::%2$s zu zerstören.",
       :no_access_to_read_topic      => "Keine Berechtigung um Thema %1$s::%2$s zu lesen.",
       :no_access_to_store_topic     => "Keine Berechtigung um Thema %1$s::%2$s zu speichern.",
       :page_not_in_backend_format   => "%1$s::%2$s ist in einem von Backend %3$s nicht unterstütztem Format.",
-      :project_already_exists       => "Project %1$s existiert bereits.",                         
-      :project_does_not_exist       => "Project %1$s existiert nicht.",                         
+      :project_already_exists       => "Project %1$s existiert bereits.",
+      :project_does_not_exist       => "Project %1$s existiert nicht.",
       :search_project_fail          => "Suche in Projekt %1$s nach Zeichenkette %2$s gescheitert.",
       :yaml_requires_182_or_higher  => "YAML-Flatfile-Support existiert nur für Ruby 1.8.2 oder höher.",
-                                                                                             
+      :not_editing_current_version  => <<EOM ,
+Sie haben eine alte Version von %1$s::%2$s abgeschickt.  Die Unterschiede
+zwischen ihrer und der jetzigen Version wurden kombiniert.  Konfliktierende
+Zeilen zeigen beide Zeilen.  Bitte gehen sie sicher, dass sie die gesammte
+Seite bearbeitet haben bevor sie nochmals speichern.
+EOM
+      :no_empty_search_string       => <<EOM ,
+Das Suchfeld darf nicht leer sein. Bitte etwas eingeben bevor der Suchknopf
+gedrückt wird.
+EOM
+
         # Config-related messages.
       :config_not_ruwiki_config     => "Die Konfiguration muss von Typ der Klasse Ruwiki::Config sein.",
       :invalid_template_dir         => "Der angegebene Pfad für Schablonen (%1$s) existiert nicht oder ist kein Verzeichnis.",
@@ -61,13 +72,13 @@ module Ruwiki::Lang
         # Should this really get translated?  --chris
       :render_arguments             => "Ruwiki#render muss mit zwei oder mehr Argumenten aufgerufen werden.",
       :unknown_feature              => "Unbekanntes Feature %1$s.",
-      :topics_for_project           => "Themen for Projekt ::%1$s",                            
-      :project_topics_link          => "(Themen)",                                           
-      :wiki_projects                => "Projekte in %1$s",                                     
+      :topics_for_project           => "Themen for Projekt ::%1$s",
+      :project_topics_link          => "(Themen)",
+      :wiki_projects                => "Projekte in %1$s",
       :no_projects                  => "Keine Projekte bekannt.",
-      :no_topics                    => "Keine Themen in Projekt %1$s.",                           
-      :search_results_for           => "= Suchergebnisse für: %1$s",                           
-      :number_of_hits               => "%d Treffer",                                            
+      :no_topics                    => "Keine Themen in Projekt %1$s.",
+      :search_results_for           => "= Suchergebnisse für: %1$s",
+      :number_of_hits               => "%d Treffer",
 
           # Labels
       :label_search_project         => "Durchsuche Projekt",
@@ -131,6 +142,7 @@ module Ruwiki::Lang
       :converter_done               => "fertig.",
       :converter_not_ruwiki         => "Keine Ruwiki-Datei; übersprungen.",
       :converter_nosave_modified    => "Kann veränderte Datei %1$s nicht speichern.",
+      :converter_page_format_error  => "Fehler: Kann Seitenformat nicht erkennen.",
 
         # Messages from Ruwiki::Utils::Manager
       :manager_unknown_command      => "Unbekannter Befehl: %1$s",
@@ -203,6 +215,7 @@ EOH
 Entpackt das gegebene Rukwiki-Paket (Standard: "./%1$s") in das angebene
 Verzeichnis (oder ".").
 EOH
+      :manager_service_broken       => "Kann keinen Win32-Service verwalten, wenn Win32::Service nicht installiert ist.",
       :manager_service_lo_argcount  => "Ungenügene Parameteranzahl: %1$s",
       :manager_service_hi_argcount  => "Zu viele Parameter: %1$s",
       :manager_service_help         => <<-EOH ,
@@ -320,6 +333,6 @@ Ruwiki-Options:
   Dateierweiterung      %18$s
 BANNER
     }
-    message.each { |k, v| Message[k] = v }
+    message.each { |kk, vv| Message[kk] = vv }
   end
 end

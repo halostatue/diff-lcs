@@ -27,18 +27,18 @@ class Ruwiki::Wiki
       end
 
       if topic_list.empty?
-        s = @message[:no_topics] % [project]
+        ss = @message[:no_topics] % [project]
       else
-        s = %Q(<h4 class="rwtk_Headings">#{@message[:topics_for_project] % [project]}</h4>\n<ul class="rwtk_Lists">\n)
+        ss = %Q(<h4 class="rwtk_Headings">#{@message[:topics_for_project] % [project]}</h4>\n<ul class="rwtk_Lists">\n)
         topic_list.each do |tt|
-          s << %Q(<li class="rwtk_Lists">)
-          s << VIEW_LINK % ["#{@script}/#{project}/#{tt}", "#{CGI::unescape(tt.gsub(/_/, ' '))}"]
-          s << "</li>\n"
+          ss << %Q(<li class="rwtk_Lists">)
+          ss << VIEW_LINK % ["#{@script}/#{project}/#{tt}", "#{CGI::unescape(tt.gsub(/_/, ' '))}"]
+          ss << "</li>\n"
         end
-        s << "</ul>\n"
+        ss << "</ul>\n"
       end
 
-      s
+      ss
     end
   end
 
@@ -50,14 +50,14 @@ class Ruwiki::Wiki
     def replace
       proj_list = @backend.list_projects
 
-      s = %Q(<h4 class="rwtk_Headings">#{@message[:wiki_projects] % [@title]}</h4>\n<ul class="rwtk_Lists">\n)
+      ss = %Q(<h4 class="rwtk_Headings">#{@message[:wiki_projects] % [@title]}</h4>\n<ul class="rwtk_Lists">\n)
       proj_list.each do |pp|
-        s << %Q(<li class="rwtk_Lists">)
-        s << VIEW_LINK % ["#{@script}/#{pp}/ProjectIndex", pp]
-        s << %Q! <a href='#{@script}/#{pp}/_topics' class='rw_minilink'>#{@message[:project_topics_link]}</a>!
-        s << "</li>\n"
+        ss << %Q(<li class="rwtk_Lists">)
+        ss << VIEW_LINK % ["#{@script}/#{pp}/ProjectIndex", pp]
+        ss << %Q! <a href='#{@script}/#{pp}/_topics' class='rw_minilink'>#{@message[:project_topics_link]}</a>!
+        ss << "</li>\n"
       end
-      s << "</ul>\n"
+      ss << "</ul>\n"
     end
   end
 end

@@ -109,11 +109,11 @@ class Ruwiki::Config
     # The message hash.
   attr_reader   :message
 
-  def language=(l) #:nodoc:
-    if l.kind_of?(String)
-      @language = Ruwiki::Lang::const_get(l.upcase)
+  def language=(ll) #:nodoc:
+    if ll.kind_of?(String)
+      @language = Ruwiki::Lang::const_get(ll.upcase)
     else
-      @language = l
+      @language = ll
     end
     @message = @language::Message
   end
@@ -200,8 +200,8 @@ class Ruwiki::Config
   def verify
     raise ConfigError, message[:no_webmaster_defined] if @webmaster.nil? or @webmaster.empty?
     raise ConfigError, message[:invalid_template_dir] % [@template_path] unless File.exists?(@template_path) and File.directory?(@template_path)
-    t = File.join(@template_path, @template_set)
-    raise ConfigError, message[:no_template_set] % [@template_set] unless File.exists?(t) and File.directory?(t)
+    tt = File.join(@template_path, @template_set)
+    raise ConfigError, message[:no_template_set] % [@template_set] unless File.exists?(tt) and File.directory?(tt)
   end
 
   # Provides the canonical export hash.

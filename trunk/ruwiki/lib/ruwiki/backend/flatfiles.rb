@@ -88,7 +88,7 @@ class Ruwiki::Backend::Flatfiles < Ruwiki::Backend
   def search_project(project, searchstr)
     re_search = Regexp.new(searchstr, Regexp::IGNORECASE)
 
-    hits = Hash.new { |h, k| h[k] = 0 }
+    hits = Hash.new { |hh, kk| hh[kk] = 0 }
     topic_list = list_topics(project)
 
     return hits if topic_list.empty?
@@ -153,9 +153,9 @@ class Ruwiki::Backend::Flatfiles < Ruwiki::Backend
 
     # list projects found in data path
   def list_projects
-    Dir[File.join(@data_path, "*")].select do |d|
-      File.directory?(d) and File.exist?(page_file(@default_page, File.basename(d)))
-    end.map { |d| File.basename(d) }
+    Dir[File.join(@data_path, "*")].select do |dd|
+      File.directory?(dd) and File.exist?(page_file(@default_page, File.basename(dd)))
+    end.map { |dd| File.basename(dd) }
   end
 
     # list topics found in data path
@@ -163,9 +163,9 @@ class Ruwiki::Backend::Flatfiles < Ruwiki::Backend
     pd = project_directory(project)
     raise Ruwiki::Backend::BackendError.new(:no_project) unless File.exist?(pd)
 
-    Dir[File.join(pd, "*")].select do |f|
-      f !~ /\.rdiff$/ and f !~ /\.lock$/ and File.file?(f) and f =~ @extension_re
-    end.map { |f| File.basename(f).sub(@extension_re, "") }
+    Dir[File.join(pd, "*")].select do |ff|
+      ff !~ /\.rdiff$/ and ff !~ /\.lock$/ and File.file?(ff) and ff =~ @extension_re
+    end.map { |ff| File.basename(ff).sub(@extension_re, "") }
   end
 
   def project_directory(project) # :nodoc:
@@ -186,18 +186,18 @@ class Ruwiki::Backend::Flatfiles < Ruwiki::Backend
     old_page = self.class.load(pf) rescue Ruwiki::Page::NULL_PAGE
 
     diffs = []
-    File.open(diff_file, 'rb') { |f| diffs = Marshal.load(f) } if File.exists?(diff_file)
+    File.open(diff_file, 'rb') { |ff| diffs = Marshal.load(ff) } if File.exists?(diff_file)
     diffs << make_diff(old_page, new_page)
     changes = Marshal.dump(diffs)
 
-    File.open(diff_file, 'wb') { |f| f << changes }
+    File.open(diff_file, 'wb') { |ff| ff << changes }
   end
 
     # Provides a HEADER marker.
     # Loads the topic page from disk.
   def load(topic, project)
     data = nil
-    File.open(page_file(topic, project), 'rb') { |f| data = f.read }
+    File.open(page_file(topic, project), 'rb') { |ff| data = ff.read }
 
     Ruwiki::Page::NULL_PAGE.merge(@format.load(data))
   rescue Ruwiki::Exportable::InvalidFormatError, TypeError, ArgumentError
@@ -212,6 +212,6 @@ class Ruwiki::Backend::Flatfiles < Ruwiki::Backend
     newpage   = @format.dump(export)
     make_rdiff(pagefile, export)
 
-    File.open(pagefile, 'wb') { |f| f.puts newpage }
+    File.open(pagefile, 'wb') { |ff| ff.puts newpage }
   end
 end

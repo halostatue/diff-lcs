@@ -8,7 +8,12 @@
 #
 # $Id$
 #++
-require 'diff/lcs'
+
+begin
+  require 'diff/lcs'
+rescue LoadError
+  require 'rubygems'
+end
 
 class Ruwiki
     # The list of known backends.
@@ -37,14 +42,14 @@ class Ruwiki
 
       beoptions = options[backend]
       @delegate = Ruwiki::Backend.const_get(beconst).new(beoptions)
-    rescue Ruwiki::Backend::BackendError => e
-      if e.kind_of?(Array)
-        raise Ruwiki::Backend::BackendError.new(nil), @message[e.reason[0]] % e.reason[1]
+    rescue Ruwiki::Backend::BackendError => ex
+      if ex.kind_of?(Array)
+        raise Ruwiki::Backend::BackendError.new(nil), @message[ex.reason[0]] % ex.reason[1]
       else
         raise
       end
     end
-
+  
       # Retrieve the specified topic and project page. Calls Backend#load
       # after verifying that the project exists.
     def retrieve(topic, project = 'Default')
@@ -76,13 +81,13 @@ class Ruwiki
       end
 
       return @delegate.load(topic, project)
-    rescue Ruwiki::Backend::InvalidFormatError => e
+    rescue Ruwiki::Backend::InvalidFormatError => ex
       raise Ruwiki::Backend::BackendError.new(nil), @message[:page_not_in_backend_format] % [project, topic, @delegate.class]
-    rescue Errno::EACCES => e
-      raise Ruwiki::Backend::BackendError.new(e), @message[:no_access_to_read_topic] % [project, topic]
-    rescue Exception => e
-      p = [project, topic, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
-      raise Ruwiki::Backend::BackendError.new(e), @message[:cannot_retrieve_topic] % p
+    rescue Errno::EACCES => ex
+      raise Ruwiki::Backend::BackendError.new(ex), @message[:no_access_to_read_topic] % [project, topic]
+    rescue Exception => ex
+      mm = [project, topic, %Q~#{ex}<br />\n#{ex.backtrace.join('<br />\n')}~]
+      raise Ruwiki::Backend::BackendError.new(ex), @message[:cannot_retrieve_topic] % mm
     end
 
       # Stores the specified topic and project page.
@@ -103,24 +108,24 @@ class Ruwiki
         # add changeline to top of page
         recent_changes.content = changeline + (recent_changes.content || "")
         @delegate.store(recent_changes)
-      rescue Exception => e
-        raise "Couldn't save RecentChanges\n#{e.backtrace}"
+      rescue Exception => ex
+        raise "Couldn't save RecentChanges\n#{ex.backtrace}"
       end
-    rescue Errno::EACCES => e
-      raise Ruwiki::Backend::BackendError.new(e), @message[:no_access_to_store_topic] % [page.project, page.topic]
-    rescue Exception => e
-      p = [page.project, page.topic, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
-      raise Ruwiki::Backend::BackendError.new(e), @message[:cannot_store_topic] % p
+    rescue Errno::EACCES => ex
+      raise Ruwiki::Backend::BackendError.new(ex), @message[:no_access_to_store_topic] % [page.project, page.topic]
+    rescue Exception => ex
+      mm = [page.project, page.topic, %Q~#{ex}<br />\n#{ex.backtrace.join('<br />\n')}~]
+      raise Ruwiki::Backend::BackendError.new(ex), @message[:cannot_store_topic] % mm
     end
 
       # Destroys the specified topic and project page.
     def destroy(page)
       @delegate.destroy(page)
-    rescue Errno::EACCES => e
-      raise Ruwiki::Backend::BackendError.new(e), @message[:no_access_to_destroy_topic] % [page.project, page.topic]
-    rescue Exception => e
-      p = [page.project, page.topic, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
-      raise Ruwiki::Backend::BackendError.new(e), @message[:cannot_destroy_topic] % p
+    rescue Errno::EACCES => ex
+      raise Ruwiki::Backend::BackendError.new(ex), @message[:no_access_to_destroy_topic] % [page.project, page.topic]
+    rescue Exception => ex
+      mm = [page.project, page.topic, %Q~#{ex}<br />\n#{ex.backtrace.join('<br />\n')}~]
+      raise Ruwiki::Backend::BackendError.new(ex), @message[:cannot_destroy_topic] % mm
     end
 
       # Releases the lock on the page.
@@ -129,9 +134,9 @@ class Ruwiki
       @delegate.release_lock(page, time, address)
     rescue Ruwiki::Backend::BackendError
       raise Ruwiki::Backend::BackendError.new(nil), @message[:cannot_release_lock] % [page.project, page.topic]
-    rescue Errno::EACCES, Exception => e
-      p = [page.project, page.topic, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
-      raise Ruwiki::Backend::BackendError.new(e), @message[:error_releasing_lock] % p
+    rescue Errno::EACCES, Exception => ex
+      mm = [page.project, page.topic, %Q~#{ex}<br />\n#{ex.backtrace.join('<br />\n')}~]
+      raise Ruwiki::Backend::BackendError.new(ex), @message[:error_releasing_lock] % mm
     end
 
       # Attempts to obtain a lock on the page. The lock 
@@ -141,9 +146,9 @@ class Ruwiki
       @delegate.obtain_lock(page, time, expire, address)
     rescue Ruwiki::Backend::BackendError
       raise Ruwiki::Backend::BackendError.new(nil), @message[:cannot_obtain_lock] % [page.project, page.topic]
-    rescue Errno::EACCES, Exception => e
-      p = [page.project, page.topic, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
-      raise Ruwiki::Backend::BackendError.new(e), @message[:error_creating_lock] % p
+    rescue Errno::EACCES, Exception => ex
+      mm = [page.project, page.topic, %Q~#{ex}<br />\n#{ex.backtrace.join('<br />\n')}~]
+      raise Ruwiki::Backend::BackendError.new(ex), @message[:error_creating_lock] % mm
     end
 
       # Checks to see if the project exists.
@@ -159,23 +164,23 @@ class Ruwiki
       # Attempts to create the project.
     def create_project(project)
       @delegate.create_project(project)
-    rescue Ruwiki::Backend::ProjectExists => e
-      raise Ruwiki::Backend::BackendError.new(e), @message[:project_already_exists] % [project]
-    rescue Errno::EACCES => e
-      raise Ruwiki::Backend::BackendError.new(e), @message[:no_access_to_create_project] % [project]
-    rescue Exception => e
-      p = [project, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
-      raise Ruwiki::Backend::BackendError.new(e), @message[:cannot_create_project] % p
+    rescue Ruwiki::Backend::ProjectExists => ex
+      raise Ruwiki::Backend::BackendError.new(ex), @message[:project_already_exists] % [project]
+    rescue Errno::EACCES => ex
+      raise Ruwiki::Backend::BackendError.new(ex), @message[:no_access_to_create_project] % [project]
+    rescue Exception => ex
+      mm = [project, %Q~#{ex}<br />\n#{ex.backtrace.join('<br />\n')}~]
+      raise Ruwiki::Backend::BackendError.new(ex), @message[:cannot_create_project] % mm
     end
 
       # Attempts to destroy the project.
     def destroy_project(project)
       @delegate.destroy_project(project)
-    rescue Errno::EACCES => e
-      raise Ruwiki::Backend::BackendError.new(e), @message[:no_access_to_destroy_project] % [project]
-    rescue Exception => e
-      p = [project, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
-      raise Ruwiki::Backend::BackendError.new(e), @message[:cannot_destroy_project] % p
+    rescue Errno::EACCES => ex
+      raise Ruwiki::Backend::BackendError.new(ex), @message[:no_access_to_destroy_project] % [project]
+    rescue Exception => ex
+      mm = [project, %Q~#{ex}<br />\n#{ex.backtrace.join('<br />\n')}~]
+      raise Ruwiki::Backend::BackendError.new(ex), @message[:cannot_destroy_project] % mm
     end
 
     def search_all_projects(searchstr)
@@ -203,29 +208,29 @@ class Ruwiki
     def search_project(project, searchstr)
         #TODO: Validate searchstr is a safe regexp?
       @delegate.search_project(project, searchstr)
-    rescue Exception => e
-      p = [project, searchstr, e.class, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
-      raise Ruwiki::Backend::BackendError.new(e), @message[:search_project_fail] % p
+    rescue Exception => ex
+      mm = [project, searchstr, ex.class, %Q~#{ex}<br />\n#{ex.backtrace.join('<br />\n')}~]
+      raise Ruwiki::Backend::BackendError.new(ex), @message[:search_project_fail] % mm
     end
 
       # Return an array of projects
     def list_projects
       @delegate.list_projects
-    rescue Errno::EACCES => e
-      raise Ruwiki::Backend::BackendError.new(e), @message[:no_access_list_projects]
-    rescue Exception => e
-      p = ['', %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
-      raise Ruwiki::Backend::BackendError.new(e), @message[:cannot_list_projects] % p
+    rescue Errno::EACCES => ex
+      raise Ruwiki::Backend::BackendError.new(ex), @message[:no_access_list_projects]
+    rescue Exception => ex
+      mm = ['', %Q~#{ex}<br />\n#{ex.backtrace.join('<br />\n')}~]
+      raise Ruwiki::Backend::BackendError.new(ex), @message[:cannot_list_projects] % mm
     end
 
       # Return an array of projects
     def list_topics(projname)
       @delegate.list_topics(projname)
-    rescue Errno::EACCES => e
-      raise Ruwiki::Backend::BackendError.new(e), @message[:no_access_list_topics] % [projname]
-    rescue Exception => e
-      p = [projname, e.message]
-      raise Ruwiki::Backend::BackendError.new(e), @message[:cannot_list_topics] % p
+    rescue Errno::EACCES => ex
+      raise Ruwiki::Backend::BackendError.new(ex), @message[:no_access_list_topics] % [projname]
+    rescue Exception => ex
+      mm = [projname, ex.message]
+      raise Ruwiki::Backend::BackendError.new(ex), @message[:cannot_list_topics] % mm
     end
   end
 

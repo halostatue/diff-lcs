@@ -18,19 +18,19 @@ class Ruwiki
 
       def self.make(year, month)
         result = []
-        t = Time.local(year, month, 1)
-        r = Array.new(t.wday, nil)
-        r << 1
+        tt = Time.local(year, month, 1)
+        rr = Array.new(tt.wday, nil)
+        rr << 1
 
-        2.upto(31) do |i|
-          break if Time.local(year, month, i).month != month
-          r << i
+        2.upto(31) do |ii|
+          break if Time.local(year, month, ii).month != month
+          rr << ii
         end
 
-        r += Array.new((- r.size) % 7, nil)
+        rr += Array.new((- rr.size) % 7, nil)
 
-        0.step(r.size - 1, 7) do |i|
-          result << r[i, 7]
+        0.step(rr.size - 1, 7) do |ii|
+          result << rr[ii, 7]
         end
         result
       end

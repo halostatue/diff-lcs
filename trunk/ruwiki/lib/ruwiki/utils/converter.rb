@@ -35,14 +35,14 @@ module Ruwiki::Utils::Converter
       return unless @options.nil?
       @options = OpenStruct.new
 
-      with @options do |o|
-        o.traverse_directories  = true
-        o.backup_old_files      = true
-        o.backup_extension      = "~"
-        o.quiet                 = false
-        o.verbose               = false
-        o.extension             = 'ruwiki'
-        o.target_format         = 'flatfiles'
+      with @options do |oo|
+        oo.traverse_directories  = true
+        oo.backup_old_files      = true
+        oo.backup_extension      = "~"
+        oo.quiet                 = false
+        oo.verbose               = false
+        oo.extension             = 'ruwiki'
+        oo.target_format         = 'flatfiles'
       end
     end
 
@@ -186,7 +186,7 @@ module Ruwiki::Utils::Converter
         page = Ruwiki::Page::NULL_PAGE.dup
 
         unless data.empty?
-          rawbuf = data.split(NL_RE).map { |e| e.chomp }
+          rawbuf = data.split(NL_RE).map { |ee| ee.chomp }
 
           loop do
             if rawbuf[0] =~ OLD_HEADER_END_RE
@@ -246,7 +246,7 @@ module Ruwiki::Utils::Converter
         begin
           page = Ruwiki::Backend::Flatfiles.load(data)
           page_format = 'Exportable'
-        rescue Exception =>e
+        rescue Exception => ex
           nil
         end
       end
@@ -258,8 +258,8 @@ module Ruwiki::Utils::Converter
       [page, page_format]
     rescue PageLoadException
       raise
-    rescue Exception
-      @error << %Q|#{e.message}\n#{e.backtrace.join("\n")}\n| if @options.verbose
+    rescue Exception => ex
+      @error << %Q|#{ex.message}\n#{ex.backtrace.join("\n")}\n| if @options.verbose
       raise PageLoadException
     end
 
@@ -278,10 +278,10 @@ module Ruwiki::Utils::Converter
       else
         method = :puts
       end
-      File.open(file, 'wb') { |f| f.__send__(method, @options.target_format_class.dump(page)) }
-    rescue Exception => ee
+      File.open(file, 'wb') { |ff| ff.__send__(method, @options.target_format_class.dump(page)) }
+    rescue Exception => ex
       FileUtils.mv(backup, file) if File.exists?(backup)
-      @error << %Q|#{ee.message}\n#{ee.backtrace.join("\n")}\n| if @options.verbose
+      @error << %Q|#{ex.message}\n#{ex.backtrace.join("\n")}\n| if @options.verbose
       raise PageSaveException
     ensure
       # If we aren't *supposed* to back up the file, then get rid of the

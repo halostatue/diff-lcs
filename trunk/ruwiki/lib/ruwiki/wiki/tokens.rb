@@ -49,7 +49,7 @@ class Ruwiki
         def tokenlist
           unless @@sorted
             head = @@tokenlist.shift
-            @@tokenlist.sort! { |a, b| a.rank <=> b.rank }
+            @@tokenlist.sort! { |aa, bb| aa.rank <=> bb.rank }
             @@tokenlist.unshift(head)
             sorted = true
           end

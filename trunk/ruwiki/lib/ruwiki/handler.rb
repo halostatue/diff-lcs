@@ -105,15 +105,15 @@ class Ruwiki::Handler
     attr_reader :cookies
 
     def each_parameter #:yields parameter, value:
-      @parameters.each { |k, v| yield k, v }
+      @parameters.each { |kk, vv| yield kk, vv }
     end
 
     def each_environment #:yields variable, value
-      @environment.each { |k, v| yield k, v }
+      @environment.each { |kk, vv| yield kk, vv }
     end
 
     def each_cookie #:yields name, value:
-      @cookies.each { |k, v| yield k, v }
+      @cookies.each { |kk, vv| yield kk, vv }
     end
 
       # Return the URL of our server.
@@ -158,7 +158,7 @@ class Ruwiki::Handler
       @environment    = ENV
       @cgi            = cgi
       @parameters     = {}
-      cgi.params.each { |k, v| @parameters[k] = v[0] }
+      cgi.params.each { |kk, vv| @parameters[kk] = vv[0] }
       @cookies        = {}
       cgi.cookies.each do |name, cookie|
         @cookies[name] = Handler::Cookie.new(name, cookie.value) do |oc|

@@ -20,16 +20,16 @@ class Ruwiki::Wiki
     end
 
     def replace
-      k = @match.captures[0]
-      if k.nil? or k.empty?
+      kk = @match.captures[0]
+      if kk.nil? or kk.empty?
         data = %Q(<dl class="rwtk_Abbreviations">)
-        ABBREVIATIONS.each do |k, v|
-          data << %Q(<dt class="rwtk_Abbreviations">#{k}</dt><dd class="rwtk_Abbreviations">#{v}</dd>)
+        ABBREVIATIONS.each do |kk, vv|
+          data << %Q(<dt class="rwtk_Abbreviations">#{kk}</dt><dd class="rwtk_Abbreviations">#{vv}</dd>)
         end
         data << %Q(</dl>)
       else
-        if ABBREVIATIONS.has_key?(k)
-          data = ABBREVIATIONS[k]
+        if ABBREVIATIONS.has_key?(kk)
+          data = ABBREVIATIONS[kk]
         else
           data = @match[0]
         end

@@ -223,7 +223,7 @@ class Ruwiki
     @topic   ||= @config.default_page
   end
 
-  PROJECT_LIST_ITEM = %~%1$s (a href='\\%2$s/%1$s/_topics' class='rw_minilink')%3$s\\</a\\>~
+  PROJECT_LIST_ITEM = %[%1$s (a href='\\%2$s/%1$s/_topics' class='rw_minilink')%3$s\\</a\\>]
 
     # Processes the page through the necessary steps. This is where the edit,
     # save, cancel, and display actions are present.
@@ -270,38 +270,43 @@ class Ruwiki
         # get, validate, and cleanse the search string
         # TODO: add empty string rejection.
       srchstr = validate_search_string(@request.parameters['q'])
-      srchall = @request.parameters['a']
+      if srchstr.nil?
+        srchall = @request.parameters['a']
 
-      @page.editable  = false
-      @page.indexable = false
+        @page.editable  = false
+        @page.indexable = false
 
-      @page.content = self.message[:search_results_for] % [srchstr]
-      @page.topic = srchstr || ""
+        @page.content = self.message[:search_results_for] % [srchstr]
+        @page.topic = srchstr || ""
 
-      unless srchall.nil?
+        unless srchall.nil?
         hits = @backend.search_all_projects(srchstr)
-      else
-        hits = @backend.search_project(@page.project, srchstr)
-      end
-
-        # turn hit hash into content
-      hitarr = []
-        # organize by number of hits
-      hits.each { |key, val| (hitarr[val] ||= []) << key }
-
-      rhitarr = hitarr.reverse
-      maxhits = hitarr.size
-      rhitarr.each_with_index do |tarray, rnhits|
-        next if tarray.nil? or tarray.empty?
-        nhits = maxhits - rnhits - 1
-
-        if nhits > 0
-          @page.content << "\n== #{self.message[:number_of_hits] % [nhits]}\n* "
-          @page.content << tarray.join("\n* ")
+        else
+          hits = @backend.search_project(@page.project, srchstr)
         end
+
+          # turn hit hash into content
+        hitarr = []
+          # organize by number of hits
+        hits.each { |key, val| (hitarr[val] ||= []) << key }
+
+        rhitarr = hitarr.reverse
+        maxhits = hitarr.size
+        rhitarr.each_with_index do |tarray, rnhits|
+          next if tarray.nil? or tarray.empty?
+          nhits = maxhits - rnhits - 1
+
+          if nhits > 0
+            @page.content << "\n== #{self.message[:number_of_hits] % [nhits]}\n* "
+            @page.content << tarray.join("\n* ")
+          end
       end
 
-      @type = :search
+        @type = :search
+      else
+        @sysmessage = self.message[:not_editing_current_version] % [ @page.project, @page.topic ]
+        @type = :content
+      end
     when 'topics'
       if @backend.project_exists?(@page.project)
         topic_list = @backend.list_topics(@page.project)

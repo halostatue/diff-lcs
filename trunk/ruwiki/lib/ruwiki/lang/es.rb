@@ -15,7 +15,7 @@ module Ruwiki::Lang
     # any method in the Ruwiki library. The messages are identified by a
     # Symbol.
   module ES
-    Message = Hash.new { |h, k| h[k] = "ERROR: Identificador de mensaje desconocido: #{k.inspect}."; h[k] }
+    Message = Hash.new { |hh, kk| hh[kk] = "ERROR: Identificador de mensaje desconocido: #{kk.inspect}."; hh[kk] }
     message = {
         # The encoding for the webpages. This should match the encoding used
         # to create these messages.
@@ -50,6 +50,10 @@ Ha enviado una versión antigua de %1$s::%2$s. Las diferencias entre su versión
 y la actual han sido fusionadas. En caso de conflicto, las líneas de ambas 
 versiones serán mostradas. Asegúrese de editar la página en su totalidad
 antes de salvar de nuevo.
+EOM
+      :no_empty_search_string       => <<EOM ,
+El campo de búsqueda no puede estar vacío. Por favor introduzca el texto
+a buscar antes de pulsar sobre el botón de búsqueda.
 EOM
 
         # Config-related messages.
@@ -329,6 +333,6 @@ Opciones de Ruwiki:
   Extensión              %18$s
 BANNER
     }
-    message.each { |k, v| Message[k] = v }
+    message.each { |kk, vv| Message[kk] = vv }
   end
 end

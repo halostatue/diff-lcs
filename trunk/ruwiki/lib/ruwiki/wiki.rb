@@ -36,11 +36,11 @@ class Ruwiki::Wiki
     project ||= @default_project
 
     Token.tokenlist.each do |token|
-      content.gsub!(token.regexp) do |m|
+      content.gsub!(token.regexp) do |mm|
         match = Regexp.last_match
         tc = token.new(match, project, @backend, @script, @message, @title)
         tokens << tc
-        if m[0, 1] == '\\'
+        if mm[0, 1] == '\\'
           "\\TOKEN_#{tokens.size - 1}"
         else
           "TOKEN_#{tokens.size - 1}"
@@ -49,18 +49,18 @@ class Ruwiki::Wiki
     end
 
     replaced = []
-    s = true
+    ss = true
     loop do
       break if replaced.size >= tokens.size
-      break if s.nil?
-      s = content.gsub!(/\\TOKEN_(\d+)/) { |m|
+      break if ss.nil?
+      ss = content.gsub!(/\\TOKEN_(\d+)/) { |mm|
         match   = Regexp.last_match
         itoken  = match[1].to_i
         replaced << itoken
         tokens[itoken].restore
       }
 
-      s = content.gsub!(/TOKEN_(\d+)/) { |m|
+      ss = content.gsub!(/TOKEN_(\d+)/) { |mm|
         match   = Regexp.last_match
         itoken  = match[1].to_i
         replaced << itoken

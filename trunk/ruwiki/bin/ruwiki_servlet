@@ -12,32 +12,43 @@
 # $Id$
 #++
 
-  # 1) Try to load Ruwiki from the gem.
-  # 2) Try to load Ruwiki from $LOAD_PATH.
-  # 3) Modify $LOAD_PATH and try to load it from the modified $LOAD_PATH.
-  # 4) Fail hard.
+  # 1) Try to load Ruwiki from the local directory structure (e.g., ./lib/
+  #    and ../lib/).
+  # 2) Try to load Ruwiki from the directory structure of the running script
+  #    (e.g., File.dirname($0)/lib and File.dirname($0)/../lib).
+  # 3) Try to load Ruwiki from the directory structure of the current file
+  #    (e.g., File.dirname(__FILE__)/lib and File.dirname(__FILE__)/../lib).
+  # 4) Try to load Ruwiki from an unmodified $LOAD_PATH, e.g., site_ruby.
+  # 5) Try to load Ruwiki from Rubygems.
+  # 6) Fail hard.
 load_state = 1
+
+$LOAD_PATH.unshift "#{Dir.pwd}/lib", "#{Dir.pwd}/../lib"
+
 begin
-  if 1 == load_state
-    require 'rubygems'
-    require_gem 'ruwiki', '= 0.9.0'
-  else
-    require 'ruwiki'
-  end
+  require 'ruwiki'
 rescue LoadError
+  if (1..3).include?(load_state)
+    $LOAD_PATH.shift # Oh, what I'd give for $LOAD_PATH.shift(2)
+    $LOAD_PATH.shift
+  end
+
   load_state += 1
 
   case load_state
+  when 2
+    $LOAD_PATH.unshift "#{File.dirname($0)}/lib", "#{File.dirname($0)}/../lib"
   when 3
-    $LOAD_PATH.unshift "#{File.dirname($0)}/../lib"
-  when 4
-    $LOAD_PATH.shift
-    $LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../lib"
+    $LOAD_PATH.unshift "#{File.dirname(__FILE__)}/lib", "#{File.dirname(__FILE__)}/../lib"
   when 5
+    require 'rubygems'
+  when 6
     raise
   end
   retry
 end
+
+p Ruwiki.constants
 
 require 'ruwiki/utils/servletrunner'
 

@@ -138,101 +138,103 @@ COPYRIGHT
       @rc.language = Ruwiki::Lang.const_get(language.upcase)
       self.message = @rc.language
 
-      argv.options do |o|
-        o.banner = self.message(:runner_usage) % [ File.basename($0) ]
-        o.separator self.message(:runner_general_options)
-        o.on('--save-config [FILENAME]', *([ self.message(:runner_saveconfig_desc), Ruwiki::Config::CONFIG_NAME ].flatten)) { |fname|
+      argv.options do |oo|
+        oo.banner = self.message(:runner_usage) % [ File.basename($0) ]
+        oo.separator self.message(:runner_general_options)
+        oo.on('--save-config [FILENAME]', *([ self.message(:runner_saveconfig_desc), Ruwiki::Config::CONFIG_NAME ].flatten)) { |fname|
           save_config = fname || Ruwiki::Config::CONFIG_NAME
         }
-        o.on('--config FILENAME', *self.message(:runner_config_desc)) { |fn|
+        oo.on('--config FILENAME', *self.message(:runner_config_desc)) { |fn|
           read_config(fn)
         }
-        o.separator ""
-        o.separator self.message(:runner_webrick_options)
-        o.on('-P', '--port PORT', Numeric, *self.message(:runner_port_desc)) { |port|
+        oo.separator ""
+        oo.separator self.message(:runner_webrick_options)
+        oo.on('-P', '--port PORT', Numeric, *self.message(:runner_port_desc)) { |port|
           @sc.port = port
         }
-        o.on('-A', '--accept ADDRESS,ADDRESS,ADDRESS', Array, *self.message(:runner_address_desc)) { |address|
+        oo.on('-A', '--accept ADDRESS,ADDRESS,ADDRESS', Array, *self.message(:runner_address_desc)) { |address|
           @sc.addresses += address
         }
-        o.on('-L', '--local', *self.message(:runner_local_desc)) {
+        oo.on('-L', '--local', *self.message(:runner_local_desc)) {
           @sc.addresses = ["127.0.0.1"]
         }
-        o.on('-M', '--mount MOUNT-POINT', *self.message(:runner_mountpoint_desc)) { |mp|
+        oo.on('-M', '--mount MOUNT-POINT', *self.message(:runner_mountpoint_desc)) { |mp|
           @sc.mount = mp
         }
-        o.on('--[no-]log', *self.message(:runner_log_desc)) { |log|
+        oo.on('--[no-]log', *self.message(:runner_log_desc)) { |log|
           @sc.do_log = log
         }
-        o.on('--logfile LOGFILE', *self.message(:runner_logfile_desc)) { |lf|
+        oo.on('--logfile LOGFILE', *self.message(:runner_logfile_desc)) { |lf|
           @sc.log_dest = lf
         }
-        o.on('-T', '--threads THREADS', Integer, *self.message(:runner_threads_desc)) { |tc|
+        oo.on('-T', '--threads THREADS', Integer, *self.message(:runner_threads_desc)) { |tc|
           @sc.threads = tc
         }
-        o.separator ""
-        o.separator self.message(:runner_ruwiki_options)
-        o.on('--language=LANGUAGE', *self.message(:runner_language_desc)) { |lang|
+        oo.separator ""
+        oo.separator self.message(:runner_ruwiki_options)
+        oo.on('--language=LANGUAGE', *self.message(:runner_language_desc)) { |lang|
           nil
         }
-        o.on('--webmaster WEBMASTER', *self.message(:runner_webmaster_desc)) { |wm|
+        oo.on('--webmaster WEBMASTER', *self.message(:runner_webmaster_desc)) { |wm|
           @rc.webmaster = wm
         }
-        o.on('--[no-]debug', *self.message(:runner_debug_desc)) { |d|
-          @rc.debug = d
+        oo.on('--[no-]debug', *self.message(:runner_debug_desc)) { |dd|
+          @rc.debug = dd
         }
-        o.on('--title TITLE', *self.message(:runner_title_desc)) { |t|
-          @rc.title = t
+        oo.on('--title TITLE', *self.message(:runner_title_desc)) { |tt|
+          @rc.title = tt
         }
-        o.on('--default-page PAGENAME', *self.message(:runner_defaultpage_desc)) { |dp|
+        oo.on('--default-page PAGENAME', *self.message(:runner_defaultpage_desc)) { |dp|
           @rc.default_page = dp
         }
-        o.on('--default-project PAGENAME', *self.message(:runner_defaultproject_desc)) { |dp|
+        oo.on('--default-project PAGENAME', *self.message(:runner_defaultproject_desc)) { |dp|
           @rc.default_project = dp
         }
-        o.on('--template-path TEMPLATE_PATH', *self.message(:runner_templatepath_desc)) { |tp|
+        oo.on('--template-path TEMPLATE_PATH', *self.message(:runner_templatepath_desc)) { |tp|
           @rc.template_path = tp
         }
-        o.on('--templates TEMPLATES', *self.message(:runner_templatename_desc)) { |tp|
+        oo.on('--templates TEMPLATES', *self.message(:runner_templatename_desc)) { |tp|
           @rc.template_set = tp
         }
-        o.on('--css CSS_NAME', *self.message(:runner_cssname_desc)) { |css|
+        oo.on('--css CSS_NAME', *self.message(:runner_cssname_desc)) { |css|
           @rc.css = css
         }
-        o.on('--storage-type TYPE', Ruwiki::KNOWN_BACKENDS, *([self.message(:runner_storage_desc), Ruwiki::KNOWN_BACKENDS.join(", ")].flatten)) { |st|
+        oo.on('--storage-type TYPE', Ruwiki::KNOWN_BACKENDS, *([self.message(:runner_storage_desc), Ruwiki::KNOWN_BACKENDS.join(", ")].flatten)) { |st|
           @rc.storage_type = st
           @rc.storage_options[@rc.storage_type]['data-path'] ||= "./data/"
           @rc.storage_options[@rc.storage_type]['extension'] ||= "ruwiki"
         }
-        o.on('--data-path PATH', *self.message(:runner_datapath_desc)) { |fdp|
+        oo.on('--data-path PATH', *self.message(:runner_datapath_desc)) { |fdp|
           @rc.storage_options['flatfiles']['data-path'] = fdp
         }
-        o.on('--extension EXT', *self.message(:runner_extension_desc)) { |ext|
+        oo.on('--extension EXT', *self.message(:runner_extension_desc)) { |ext|
           @rc.storage_options['flatfiles']['data-path'] = fdp
         }
         if defined?(Gem::Cache)
-          o.separator ""
-          o.on('--central', *self.message(:runner_central_desc)) {
+          oo.separator ""
+          oo.on('--central', *self.message(:runner_central_desc)) {
             gempath = Gem::Cache.from_installed_gems.search("ruwiki", "=#{Ruwiki::VERSION}").last.full_gem_path
             @rc.storage_type    = 'flatfiles'
             @rc.storage_options['flatfiles']['data-path'] = "#{gempath}/data"
             @rc.storage_options['flatfiles']['extension'] = "ruwiki"
+            @rc.storage_options['flatfiles']['format'] = "exportable"
             @rc.template_path   = "#{gempath}/templates"
+            @rc.template_set    = "sidebar"
           }
         end
 
           # TODO: Add options for time, date, and datetime formats.
-        o.separator ""
-        o.separator self.message(:runner_general_info)
-        o.on_tail('--help', *self.message(:runner_help_desc)) {
-          error << o << "\n"
+        oo.separator ""
+        oo.separator self.message(:runner_general_info)
+        oo.on_tail('--help', *self.message(:runner_help_desc)) {
+          error << oo << "\n"
           return 0
         }
-        o.on_tail('--version', *self.message(:runner_version_desc)) {
+        oo.on_tail('--version', *self.message(:runner_version_desc)) {
           error << COPYRIGHT << "\n"
           return 0
         }
-        o.parse!
+        oo.parse!
       end
 
       if save_config
@@ -240,7 +242,7 @@ COPYRIGHT
         rc = @rc.export
         cf = sc.merge(rc)
 
-        File.open(save_config, 'wb') { |f| f.puts Ruwiki::Exportable.dump(cf) }
+        File.open(save_config, 'wb') { |ff| ff.puts Ruwiki::Exportable.dump(cf) }
         return 0
       end
 
@@ -276,7 +278,7 @@ COPYRIGHT
           @rc.storage_options[@rc.storage_type]['data-path'],
           @rc.storage_options[@rc.storage_type]['extension'] ]
 
-      banner.each { |b| logger.info(b) } unless logger.nil?
+      banner.each { |bb| logger.info(bb) } unless logger.nil?
 
       server = WEBrick::HTTPServer.new(:Port            => @sc.port.to_i,
                                        :StartThreads    => @sc.threads.to_i,
