@@ -11,6 +11,11 @@ BugTracking.
 * Added Config#storage_options[:flatfiles][:extension], based on a request by Chad Fowler. This allows you to have Project/\TopicFile actually stored as Project/\TopicFile.wiki if Config#storage_options[:flatfiles][:extension] is set to <tt>wiki</tt>. The default for Config#storage_options[:flatfiles][:extension] is <tt>nil</tt>.
 * Fixed incorrect references. I had been incorrectly attributing [http://sourceforge.net/projects/rdoc-wiki RDoc Wiki] to Dave Thomas. RDoc Wiki is by Michael Neumann. However, the project I pulled from <b>is</b> by Dave Thomas, but it's [http://sourceforge.net/projects/rublog RubLog]. Apologies to both developers.
 * Added RuwikiTemplatingLibrary documentation.
+* Internationalized messages, except for the templating library.
+* Added configuration API for future work surrounding features. The existing wiki is mostly feature complete. Additional features (such as access controls) will be added through the feature interface.
+* Fixed project creation.
+* Fixed problems with WikiWord links.
+* TODO Added Wikipedia-style Wiki links (\[[list of words]]).
 
 == Version 0.6.0
 * Added Ruby mailing list reference support (e.g., \[ruby-talk:12345]).

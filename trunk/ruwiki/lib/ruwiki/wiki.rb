@@ -8,8 +8,6 @@
 #
 # $Id$
 #++
-require 'ruwiki/markup'
-
 class Ruwiki
     # Ruwiki's Wiki markup class. This will convert the Wiki markup known by
     # Ruwiki (defined by Token classes). The algorithm is as follows:
@@ -32,17 +30,16 @@ class Ruwiki
     #
     # == Tokens
     # Look at Ruwiki::Markup::Token describes how to create Token objects.
-  class Wiki < Ruwiki::Markup
+  class Wiki
     def parse(content, project = nil)
       content = content.dup
-      meta    = Ruwiki::Markup::Meta.new(@ruwiki)
       tokens  = []
       project ||= @ruwiki.config.default_project
 
       Token.tokenlist.each do |token|
         content.gsub!(token.regexp) do |m|
           match = Regexp.last_match
-          tc = token.new(@ruwiki, match, meta, project)
+          tc = token.new(@ruwiki, match, project)
           tokens << tc
           if m[0, 1] == '\\'
             "\\TOKEN_#{tokens.size - 1}"
@@ -76,7 +73,12 @@ class Ruwiki
         tokens.reverse_each { |token| token.post_replace(content) }
       end
 
-      [content, meta]
+      content
+    end
+
+      # Creates the markup class.
+    def initialize(ruwiki)
+      @ruwiki = ruwiki
     end
   end
 end

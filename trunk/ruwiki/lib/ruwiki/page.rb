@@ -26,11 +26,6 @@ class Ruwiki
       # Formatted page text.
     attr_accessor :formatted
 
-      # The internal links known to the page.
-    attr_accessor :internal
-      # The external links known to the page.
-    attr_accessor :external
-
       # The IP address of the person who made the last change.
     def change_ip
       %Q<#{@ruwiki.request.environment['REMOTE_HOST']} (#{@ruwiki.request.environment['REMOTE_ADDR']})>
@@ -45,8 +40,6 @@ class Ruwiki
       # Creates a Ruwiki page.
     def initialize(ruwiki, init = {})
       @ruwiki = ruwiki
-      @internal = []
-      @external = []
 
       @project      = init[:project] || @ruwiki.config.default_project
       @topic        = init[:topic] || "NewTopic"
@@ -89,13 +82,6 @@ version: #{@version}
       @formatted
     end
 
-      # Produces a link to the current page.
-    def to_link(css_class = "rw_pagelink")
-      css_class = %Q{class="#{css_class} "} unless css_class.nil?
-      project   = (@project == @ruwiki.config.default_project) ? "" : "#{@project}/"
-      %Q{<a #{css_class}href="#{@ruwiki.request.script_url}/#{project}#{@topic}">#{@topic}</a>}
-    end
-
   private
     HEADER_RE     = /^([a-z]+)\s*:\s*(.*)$/
     HEADER_END_RE = /^#EHDR$/
@@ -133,10 +119,7 @@ version: #{@version}
 
       # Parse the content.
     def parse_content(content, project)
-      parsed, meta = @ruwiki.markup.parse(content, project)
-
-      @internal = meta.internal
-      @external = meta.external
+      parsed = @ruwiki.markup.parse(content, project)
 
       parsed
     end

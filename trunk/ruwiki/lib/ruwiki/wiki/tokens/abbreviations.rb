@@ -12,6 +12,10 @@ class Ruwiki
   class Wiki
       # Converts abbreviations.
     class Abbreviations < Ruwiki::Wiki::Token
+      ABBREVIATIONS = {
+        "PM"  =>  "PocoMail"
+      }
+
       def self.regexp
         %r!@{([^}]*)}!
       end
@@ -20,13 +24,13 @@ class Ruwiki
         k = @match[1]
         if k.nil? or k.empty?
           data = "<dl>"
-          @ruwiki.abbr.each do |k, v|
+          ABBREVIATIONS.each do |k, v|
             data << "<dt>#{k}</dt><dd>#{v}</dd>"
           end
           data << "</dl>"
         else
-          if @ruwiki.abbr.has_key?(k)
-            data = @ruwiki.abbr[k]
+          if ABBREVIATIONS.has_key?(k)
+            data = ABBREVIATIONS[k]
           else
             data = @match[0]
           end

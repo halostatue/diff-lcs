@@ -81,6 +81,7 @@ class Ruwiki
         @@count = 0
       end
 
+# URL regexp: %r!^(?:([^:/?#]+):)?(?:(?://)?([^/?#]*))?([^?#]*)(?:\?([^#]*))?(?:#(.*))?!)
       def self.regexp
         %r{\[((https?|ftp|mailto|news):[^\s<>\]]*?)\]}
       end
@@ -96,7 +97,6 @@ class Ruwiki
         if extlink =~ IMAGE_RE
           %Q{<img src="#{extlink}" title="#{name}" alt="#{name}" />}
         else
-          @meta.add_link(extlink, :external)
           %Q{<a class="rw_extlink" href="#{extlink}">#{name}</a>}
         end
       end
@@ -121,7 +121,6 @@ class Ruwiki
         if extlink =~ IMAGE_RE
           %Q{<img src="#{extlink}" title="#{name}" alt="#{name}" />}
         else
-          @meta.add_link(extlink, :external)
           %Q{<a class="rw_extlink" href="#{extlink}">#{name}</a>}
         end
       end
@@ -145,72 +144,7 @@ class Ruwiki
         if extlink =~ IMAGE_RE
           %Q{<img src="#{extlink}" title="Image at: #{extlink}" alt="Image at: #{extlink}" />}
         else
-          @meta.add_link(extlink, :external)
           %Q{<a class="rw_extlink" href="#{extlink}">#{extlink}</a>}
-        end
-      end
-    end
-
-      # Creates a crosslink for a Project::WikiPage.
-    class ProjectCrossLink < Ruwiki::Wiki::Token
-      def self.rank
-        502
-      end
-
-      def self.regexp
-        %r{([A-Z][a-z]+)::([A-Z][a-z]+([A-Z][a-z]+)+)}
-      end
-
-      def replace
-        project = @match[1]
-        topic   = @match[2]
-
-        return @ruwiki.markup.edit_link(topic, project, "#{project}::#{topic}") unless @ruwiki.backend.page_exists?(topic, project)
-        @ruwiki.markup.view_link(topic, project, "#{project}::#{topic}")
-      end
-    end
-
-      # Creates a link to the project index from ::Project.
-    class ProjectIndex < Ruwiki::Wiki::Token
-      def self.rank
-        501
-      end
-
-      def self.regexp
-        %r{(\B|\\)::([A-Z][a-z]+)}
-      end
-
-      def restore
-        @match[0][1..-1]
-      end
-
-      def replace
-        pn = @match.captures[1]
-        %Q(<a class="rw_projectindex" href="#{@ruwiki.request.script_url}/#{pn}/ProjectIndex">#{pn}</a>)
-      end
-    end
-
-      # Creates a link to a WikiPage in the current project.
-    class WikiLinks < Ruwiki::Wiki::Token
-      def self.rank
-        503
-      end
-
-      def self.regexp
-        %r{(\b|\\)([A-Z][a-z]+([A-Z][a-z]+|_[A-Z]?[a-z]+)+)\b}
-      end
-
-      def restore
-        @match[0][1..-1]
-      end
-
-      def replace
-        topic = @match.captures[1]
-        @meta.add_link(topic)
-        if @ruwiki.backend.page_exists?(topic, @project)
-          @ruwiki.markup.view_link(topic, @project)
-        else
-          @ruwiki.markup.edit_link(topic, @project)
         end
       end
     end

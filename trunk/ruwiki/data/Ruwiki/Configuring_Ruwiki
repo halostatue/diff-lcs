@@ -47,7 +47,7 @@ storage type known to the Wiki. This must use the same Symbol as
 The directory in which the wiki files will be found. By default, this is
 <tt>"./data/"</tt>.
 
-==== storage_options[:flatfiles][:extension]
+==== ...storage_options[:flatfiles][:extension]
 
 The extension of the wiki files. By default, this is +nil+ (no extension).
 

@@ -15,8 +15,6 @@ class Ruwiki
   class Backend
     BACKENDS  = [:flatfiles] # :postgresql, :mysql, :odbc]
 
-    STORE_ERROR = "No access to store topic.<br />\nThis is probably a RuWiki configuration error."
-
     class ProjectExists < StandardError #:nodoc:
     end
     class BackendError < StandardError #:nodoc:
@@ -29,13 +27,13 @@ class Ruwiki
 
       # The Backend Factory. Requires and initializes the backend requested.
     def self.[](backend, ruwiki)
-      raise RuntimeError, "Unknown Backend #{backend}" unless BACKENDS.include?(backend)
+      raise RuntimeError, ruwiki.message[:unknown_backend] % [backend] unless BACKENDS.include?(backend)
       befile = backend.to_s
       beconst = befile.capitalize
 
       require "ruwiki/backend/#{befile}"
 
-      be = eval("Ruwiki::Backend::#{beconst}")
+      be = Ruwiki::Backend.const_get(beconst)
       be.new(ruwiki)
     end
 
@@ -50,7 +48,7 @@ class Ruwiki
                                   :project  => project)
         else
           return Ruwiki::Page.new(@ruwiki,
-                                  :content  => "Project #{project} doesn't exist",
+                                  :content  => @ruwiki.message[:project_does_not_exist] % [project],
                                   :topic    => topic,
                                   :project  => project)
         end

@@ -1,6 +1,6 @@
 id: 0
 topic: WikiMarkup
-version: 3
+version: 1
 #EHDR
 = Wiki Markup
 A [http://c2.com/cgi/wiki Wiki] obeys certain formatting rules to make it easy
@@ -13,16 +13,10 @@ While reading stuff on this Wiki, you will see some words mashed together with
 capitalisation (like \WikiWords). While this may seem odd at first, this
 feature allows internal links to be created across the Wiki.
 
-There are two allowable forms for \WikiWords. The first form has two or more words
-concatenated; each word must begin with a capital letter and be followed by
-one or more lowercase letters. Thus, \FooBar is a valid \WikiWord, while
-CPlusPlus is not. The second form has two or more words separated by
-underscores. This would make \Wiki_Phrases a valid \WikiWord. \WikiWords that
-are separated by underscores will be shown separated with spaces instead of
-underscores. That is, \Wiki_Phrases will be displayed as "Wiki Phrases".
-\WikiWords match the following regular expression:
-
-  %r{\b([A-Z][a-z]+([A-Z][a-z]+|_[A-Z]?[a-z]+)+)\b}
+There are several allowable forms for \WikiWords.
+# Two or more words concatenated directly. Each word must begin with a capital letter and be followed by zero or more lowercase letters. Thus, \FooBar, \CPlusPlus, and \AbC are all valid \WikiWords, but ABC is not.
+# Two or more words concatenated with underscores. The first word must begin with a capital letter. This makes \Foo_Bar, \C_Plus_Plus, and \A_b_C valid \WikiWords. These \WikiWords will be displayed with spaces instead of underscores.\C_Plus_Plus will be displayed as "C Plus Plus".
+# One or more words contained in double square brackets. This the form supported by [http://wikipedia.com/ Wikipedia], and looks like \[[A Wiki Phrase]]. These links will be displayed exactly as entered between the brackets.
 
 If a \WikiWord is found that does not have a page defining the \WikiWord, then
 the word will be shown with a hyperlink question mark following it, allowing

@@ -82,12 +82,10 @@ class Ruwiki
         #
         # [ruwiki]    The owner Ruwiki object.
         # [match]     The MatchData object for this Token.
-        # [meta]      The metadata that may be stored by the Token.
         # [project]   The project being processed.
-      def initialize(ruwiki, match, meta, project = nil)
+      def initialize(ruwiki, match, project = nil)
         @ruwiki   = ruwiki
         @match    = match
-        @meta     = meta
         @project  = project || @ruwiki.config.default_project
       end
 

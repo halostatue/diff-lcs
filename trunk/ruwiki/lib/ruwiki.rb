@@ -11,11 +11,11 @@
 require 'cgi'
 require 'ruwiki/handler'
 require 'ruwiki/template'
+require 'ruwiki/lang/en' # Default to the English language.
 require 'ruwiki/config'
 require 'ruwiki/backend'
 require 'ruwiki/wiki'
 require 'ruwiki/page'
-require 'ruwiki/abbreviations'
 
   # = Ruwiki
   # Ruwiki is a simple, extensible Wiki written in Ruby. It supports both CGI
@@ -46,6 +46,7 @@ require 'ruwiki/abbreviations'
   #
   #   http://domain.com/ruwiki.cgi?PageName
   #   http://domain.com/ruwiki.cgi?PageName&project=Project
+  #   http://domain.com/ruwiki.cgi?topic=PageName&project=Project
   #   http://domain.com/ruwiki.cgi/PageName
   #   http://domain.com/ruwiki.cgi/Project/
   #   http://domain.com/ruwiki.cgi/Project/PageName
@@ -57,12 +58,11 @@ require 'ruwiki/abbreviations'
 class Ruwiki
   VERSION         = '0.6.1.0'
 
-  ALLOWED_ACTIONS = ['edit', 'save', 'cancel']
-  POST_VARS       = ['newpage', 'pagename', 'project']
-  RESERVED        = ['action', ALLOWED_ACTIONS, POST_VARS].flatten
+  ALLOWED_ACTIONS = %w(edit create)
+  EDIT_ACTIONS    = %w(save cancel)
+  EDIT_VARS       = %w(newpage origpage topic project old_version version)
+  RESERVED        = ['action', EDIT_VARS].flatten
 
-    # Returns the known abbreviations.
-  attr_accessor :abbr
     # Returns the current configuration object.
   attr_reader :config
     # Returns the current Response object.
@@ -76,8 +76,13 @@ class Ruwiki
 
     # Sets the configuration object to a new configuration object.
   def config=(c)
-    raise "Configuration must be of class Ruwiki::Config." unless c.kind_of?(Ruwiki::Config)
+    raise message()[:config_not_ruwiki_config] unless c.kind_of?(Ruwiki::Config)
     @config = c
+  end
+
+    # The message hash.
+  def message
+    @config.message
   end
 
     # Initializes Ruwiki. 
@@ -86,10 +91,8 @@ class Ruwiki
     @response   = handler.response
 
     @config     = Ruwiki::Config.new
-    @abbr       = Ruwiki::ABBREVIATIONS
-    @request    = request
-    @response   = response
-    @path_info  = @request.determine_request_path
+
+    @path_info  = @request.determine_request_path || ""
 
     @type       = nil
     @error      = {}
@@ -117,37 +120,45 @@ class Ruwiki
 
     # Initializes current page for Ruwiki.
   def set_page
-    if @path_info.nil? or @path_info.empty? or @path_info == "/"
+    path_info = @path_info.split(%r{/}, -1).map { |e| e.empty? ? nil : e }
+
+    if path_info.size == 1 or (path_info.size > 1 and path_info[0])
+      raise message()[:invalid_path_info_value] % [@path_info] unless path_info[0].nil?
+    end
+
+      # path_info[0] will ALWAYS be nil.
+    path_info.shift
+
+    case path_info.size
+    when 0 # Safety check.
+      nil
+    when 1 # /PageTopic OR /edit
+      set_page_name_or_action(path_info[0])
+    when 2 # /Project/ OR /Project/PageTopic OR /Project/edit OR /Project/create
+      @project_name = path_info.shift
+      set_page_name_or_action(path_info[0])
+    else # /Project/PageTopic/edit OR /Project/diff/3,4 OR something else.
+      @project_name = path_info.shift
+      if action?(path_info[0])
+        @action = path_info.shift
+        @params = path_info
+      else
+        @page_name = path_info.shift
+        if action?(path_info[0])
+          @action = path_info.shift
+          @params = path_info
+        end
+      end
+    end
+
       @request.each_parameter do |key, val|
         next if RESERVED.include?(key)
         @page_name = key
       end
-      @project_name = @request.parameters['project']
+
+    @project_name ||= @request.parameters['project']
       @project_name ||= @config.default_project
       @page_name    ||= @config.default_page
-    else
-      pi = @path_info.split("/", -1)
-      case pi.size
-      when 1
-        @page_name    = @config.default_page
-        @project_name = @config.default_project
-      when 2
-        if pi[1].nil? or pi[1].empty?
-          @page_name  = @config.default_page
-        else
-          @page_name    = pi[1]
-        end
-        @project_name = @config.default_project
-      else
-        if pi[2].nil? or pi[2].empty?
-          @page_name    = @config.default_page
-          @project_name = pi[1]
-        else
-          @page_name    = pi[2]
-          @project_name = pi[1]
-        end
-      end
-    end
   end
 
     # Processes the page through the necessary steps. This is where the edit,
@@ -156,14 +167,22 @@ class Ruwiki
     content   = nil
     @page     = @backend.retrieve(@page_name, @project_name)
     @type     = :content
+      # TODO Detect if @action has already been set.
+    @action = @request.parameters['action'].downcase if @request.parameters['action']
 
-    if @request.parameters['action']
-      case @request.parameters['action'].downcase.intern
-      when :edit
+    if @action
+      case @action
+      when 'edit', 'create'
+          # Automatically create the project if it doesn't exist or if the
+          # action is 'create'.
+        @backend.create_project(@page.project) if @action == 'create'
+p @page.project, @backend.project_exists?(@page.project)
+        @backend.create_project(@page.project) unless @backend.project_exists?(@page.project)
         @backend.obtain_lock(@page)
+
         content = nil
         @type = :edit
-      when :save
+      when 'save'
         @page.topic       = @request.parameters['topic']
         @page.project     = @request.parameters['project']
         @page.content     = @request.parameters['newpage']
@@ -174,14 +193,18 @@ class Ruwiki
         @backend.store(@page)
         @backend.release_lock(@page)
         @type = :save
-      when :cancel
+      when 'cancel'
         @page.topic       = @request.parameters['topic']
         @page.project     = @request.parameters['project']
         @page.content     = @request.parameters['origpage'].unpack("m*")[0]
         @page.old_version = @request.parameters['old_version'].to_i
         @page.version     = @request.parameters['version'].to_i
+
         content           = @page.to_html
         @backend.release_lock(@page)
+      else
+        # TODO Return a 501 Not Implemented error
+        nil
       end
     else
       content = @page.to_html
@@ -189,11 +212,11 @@ class Ruwiki
   rescue Exception => e
     @type = :error
     if e.kind_of?(Ruwiki::Backend::BackendError)
-      @error[:name] = "Error: #{e.to_s}"
+      @error[:name] = "#{message()[:error]}: #{e.to_s}"
     else
-      @error[:name] = "Complete and Utter Failure: #{e.to_s}"
+      @error[:name] = "#{message()[:complete_utter_failure]}: #{e.to_s}"
     end
-    @error[:backtrace] = e.backtrace.join
+    @error[:backtrace] = e.backtrace.join("<br />\n")
     content = nil
   ensure
     @content = content
@@ -205,7 +228,7 @@ class Ruwiki
       type  = @type
       error = @error
     else
-      raise ArgumentError, "#render must be called with zero or two arguments." unless args.size == 2
+      raise ArgumentError, message()[:render_arguments] unless args.size == 2
       type  = args[0]
       error = {}
       error[:name] = args[1].inspect.gsub(/&/, '&amp;').gsub(/</, '&lt;').gsub(/>/, '&gt;')
@@ -218,10 +241,10 @@ class Ruwiki
 
     case type
     when :content, :save
-      values["wiki_title"]    = "Error - #{@config.title}" if @page.nil?
-      values["wiki_title"]  ||= "#{@page.project}::#{@page.topic} - #{@config.title}"
-      values["page_tolink"]   = @page.to_link
-      values["page_topic"]    = @page.topic
+      values["wiki_title"]      = "#{message()[:error]} - #{@config.title}" if @page.nil?
+      values["wiki_title"]    ||= "#{@page.project}::#{CGI.unescape(@page.topic)} - #{@config.title}"
+      values["page_topic"]      = CGI.unescape(@page.topic)
+      values["page_raw_topic"]  = @page.topic
       values["page_project"]  = @page.project
       values["cgi_url"]       = @request.script_url
       values["content"]       = @content
@@ -232,8 +255,9 @@ class Ruwiki
       end
     when :edit
       template = TemplatePage.new(@config.template(:body), @config.template(:edit))
-      values["wiki_title"] = "Editing: #{@page.project}::#{@page.topic} - #{@config.title}"
-      values["page_topic"] = @page.topic
+      values["wiki_title"]            = "#{message()[:editing]}: #{@page.project}::#{CGI.unescape(@page.topic)} - #{@config.title}"
+      values["page_topic"]            = CGI.unescape(@page.topic)
+      values["page_raw_topic"]        = @page.topic
       values["page_project"] = @page.project
       values["cgi_url"] = @request.script_url
       values["page_content"] = @page.content
@@ -244,7 +268,7 @@ class Ruwiki
       values["pre_page_content"] = CGI.escapeHTML(@page.content)
     when :error
       template = TemplatePage.new(@config.template(:body), @config.template(:error))
-      values["wiki_title"]      = "Error - #{@config.title}"
+      values["wiki_title"]      = "#{message()[:error]} - #{@config.title}"
       values["name"]            = error[:name]
       values["backtrace"]       = error[:backtrace]
       values["backtrace_email"] = error[:backtrace].gsub(/<br \/>/, '')
@@ -259,5 +283,19 @@ class Ruwiki
     @response.add_header("Content-type", "text/html")
     @response.write_headers
     @response << @rendered_page
+  end
+  
+private
+  def action?(x)
+    return false if x.nil?
+    (x == x.downcase) and (x.downcase == CGI.escape(x.downcase))
+  end
+
+  def set_page_name_or_action(x)
+    if action?(x)
+      @action     = x
+    else
+      @page_name  = x
+    end
   end
 end

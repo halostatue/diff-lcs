@@ -1,6 +1,6 @@
 id: 0
 topic: ProjectIndex
-version: 0
+version: 1
 #EHDR
 = Ruwiki
 Ruwiki is a simple, extensible Wiki written in Ruby. It supports both CGI and

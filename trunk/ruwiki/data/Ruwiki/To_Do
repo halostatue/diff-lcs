@@ -7,18 +7,23 @@ Completed to-do items can be found in the ChangeLog. Bugs in Ruwiki are
 tracked in BugTracking.
 
 == Well-Defined To Do Items
-; Topic renaming : add the ability to rename a topic within a project. Topic change history should be maintained.
-; Topic moving : add the ability to move and/or rename a topic between projects. Topic change history should be maintained.
-; Preview button : add a preview button to the save page.
-; Complete documentation : Complete the documentation of Ruwiki.
+=== Ruwiki 0.7.0
 ; Versioning : complete the change history. Change history is currently stored in a file <i>topic</i>.rdiff. There is no way to display the change history at this point.
-; Escape HTML Entities : HTML Entities such as &amp;, &lt;, and &gt; are not currently escaped. This may cause problems with some browsers and should be fixed <b>without</b> impairing the ability to add at least some raw HTML. Note that the current engine does not check raw HTML and thus could potentially be vulnerable to cross-site-scripting attacks.
-
-== General To Do Items
-; Alternative templating systems : not as high priority now that there's a real templating system in place.
+=== Ruwiki 0.8.0
 ; In-project topic search : searches for mentions of the topic in the other topics for the project.
 ; Project topic listing : provide a special link (perhaps Project::Project) that displays the list of topics known to that project.
 ; Project listing : provide a special link (perhaps ::*) that displays the list of known projects.
+=== Ruwiki 0.9.0
+; Topic renaming : add the ability to rename a topic within a project. Topic change history should be maintained.
+; Topic moving : add the ability to move and/or rename a topic between projects. Topic change history should be maintained.
+; Complete documentation : Complete the documentation of Ruwiki.
+=== Ruwiki 1.0.0
+; Escape HTML Entities : HTML Entities such as &amp;, &lt;, and &gt; are not currently escaped. This may cause problems with some browsers and should be fixed <b>without</b> impairing the ability to add at least some raw HTML. Note that the current engine does not check raw HTML and thus could potentially be vulnerable to cross-site-scripting attacks.
+; Features : Ruwiki will be programmatically extensible with entirely new features: commands, ACLs, and more. This is planned for 1.0.0.
+
+== General To Do Items
+; Preview button : add a preview button to the save page.
+; Alternative templating systems : not as high priority now that there's a real templating system in place.
 ; Project/topic security : allow certain projects to be restricted/authenticated for read/write based on user.
 ; Track last <i>n</i> links/topics : ?
 ; Write a markup debugger : ?

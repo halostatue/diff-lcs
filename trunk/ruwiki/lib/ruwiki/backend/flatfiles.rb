@@ -8,8 +8,6 @@
 #
 # $Id$
 #++
-require 'algorithm/diff'
-
 class Ruwiki
   class Backend
       # Stores Ruwiki pages as flatfiles.
@@ -26,10 +24,10 @@ class Ruwiki
       def initialize(ruwiki)
         options = ruwiki.config.storage_options[:flatfiles]
         options[:data_path] ||= "./data/"
-        raise Ruwiki::Backend::StandardError,
-          "data directory #{options[:data_path]} does not exist." unless File.exists?(options[:data_path])
         @data_path = options[:data_path]
         @extension = options[:extension]
+        raise Ruwiki::Backend::StandardError,
+          ruwiki.message[:no_data_directoy] % [@data_path] unless File.exists?(@data_path) and File.directory?(@data_path)
         super ruwiki
       end
 
@@ -38,11 +36,9 @@ class Ruwiki
         pagefile = page_file(topic, project)
         buffer = File.readlines(pagefile)
       rescue Errno::EACCES
-        raise Ruwiki::Backend::BackendError,
-          "No access to retrieve the topic."
+        raise Ruwiki::Backend::BackendError, @ruwiki.message[:backend_no_access_read]
       rescue Exception => e
-        raise Ruwiki::Backend::BackendError,
-          "Cannot retrieve project [#{project}] topic [#{topic}] (file #{pf}): #{e}"
+        raise Ruwiki::Backend::BackendError, @ruwiki.message[:cannot_retrieve_topic] % p
       end
 
         # Saves the topic page -- and its difference with the previous version
@@ -53,7 +49,7 @@ class Ruwiki
 
         oldfile = File.readlines(pf) rescue []
         oldfile.collect! { |e| e.chomp }
-        newfile = page.rawtext.split("\n")
+        newfile = page.rawtext.split(/\n/)
 
         diff = make_diff(page, oldfile, newfile)
         diffs = []
@@ -64,9 +60,10 @@ class Ruwiki
         File.open(cf, 'wb') { |cfh| cfh.print changes }
         File.open(pf, 'wb') { |pfh| pfh.puts page.rawtext }
       rescue Errno::EACCES
-        raise BackendError, Ruwiki::Backend::STORE_ERROR
+        raise Ruwiki::Backend::BackendError, @ruwiki.message[:backend_no_access_store]
       rescue Exception => e
-        raise BackendError, "Error storing page project [#{page.project}] topic [#{page.topic}]: #{e}<br />#{e.backtrace.join("<br />")}"
+        p = [project, topic, %Q~ (#{@ruwiki.message[:file]} #{pf}~, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
+        raise BackendError, @ruwiki.message[:cannot_store_topic] % p
       end
 
         # Destroys the topic page.
@@ -74,9 +71,10 @@ class Ruwiki
         pf = page_file(page.topic, page.project)
         File.unlink(pf) if File.exists?(pf)
       rescue Errno::EACCES
-        raise BackendError, "No access to destroy topic."
+        raise BackendError, @ruwiki.message[:backend_no_access_dtopic]
       rescue Exception => e
-        raise BackendError, "Unable to destroy project [#{project}] topic [#{topic}]: #{e}"
+        p = [project, topic, %Q~ (#{@ruwiki.message[:file]} #{pf})~, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
+        raise BackendError, @ruwiki.message[:cannot_destroy_topic] % p
       end
 
         # Checks to see if the project exists.
@@ -94,12 +92,15 @@ class Ruwiki
         # Tries to create the project.
       def create_project(project)
         pd = project_directory(project)
-        raise ProjectExists, "Project #{project} already exists." if File.exists?(pd)
+        raise Backend::ProjectExists, @ruwiki.message[:project_already_exists] % [project] if File.exists?(pd)
         Dir.mkdir(pd)
+      rescue Backend::ProjectExists
+        raise
       rescue Errno::EACCES
-        raise BackendError, "No access to create project."
+        raise BackendError, @ruwiki.message[:backend_no_access_create]
       rescue Exception => e
-        raise BackendError, "Unable to create project [#{project}]: #{e}"
+        p = [project, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
+        raise BackendError, @ruwiki.message[:cannot_create_project] % p
       end
 
         # Tries to destroy the project.
@@ -107,14 +108,16 @@ class Ruwiki
         pd = project_directory(project)
         Dir.rmdir(pd) if File.exists?(pd) and File.directory?(pd)
       rescue Errno::EACCES
-        raise BackendError, "No access to destroy project."
+        raise BackendError, @ruwiki.message[:backend_no_access_dproject]
       rescue Exception => e
-        raise BackendError, "Unable to destroy project [#{project}]: #{e}"
+        p = [project, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
+        raise BackendError, @ruwiki.message[:cannot_destroy_project] % p
       end
 
         # Attempts to obtain a lock on the topic page.
       def obtain_lock(page)
-        lf = "#{page_file(page.topic, page.project)}.lock"
+        pf = page_file(page.topic, page.project)
+        lf = "#{pf}.lock"
 
         lock_okay = false
           # See if we have the lock already.
@@ -132,19 +135,19 @@ class Ruwiki
         if lock_okay
           open(lf, 'w') { |lfh| lfh.puts "#{@ruwiki.request.environment['REMOTE_ADDR']}\n#{Time.now.to_i + 600}" }
         else
-          raise BackendError, "Unable to obtain a lock on page project [#{page.project}] topic [#{page.topic}]. Try again in ten minutes."
+          raise BackendError, @ruwiki.message[:backend_cannot_obtain_lock] % [page.project, page.topic]
         end
-      rescue Errno::EACCES
-        raise BackendError, "unable to create lock on page project [#{page.project}] topic [#{page.topic}]."
       rescue BackendError
         raise
-      rescue Exception => e
-        raise BackendError, "Error storing page project [#{page.project}] topic [#{page.topic}]: #{e}"
+      rescue Errno::EACCES, Exception => e
+        p = [project, topic, %Q~ (#{@ruwiki.message[:file]} #{pf})~, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
+        raise BackendError, @ruwiki.message[:error_creating_lock] % p
       end
 
         # Releases the lock on the topic page.
       def release_lock(page)
-        lf = "#{page_file(page.topic, page.project)}.lock"
+        pf = page_file(page.topic, page.project)
+        lf = "#{pf}.lock"
 
         lock_okay = false
         if File.exists?(lf)
@@ -161,14 +164,13 @@ class Ruwiki
         if lock_okay
           File.unlink(lf) if File.exists?(lf)
         else
-          raise BackendError, "Unable to release the lock on page project [#{page.project}] topic [#{page.topic}]. Try again in ten minutes."
+          raise BackendError, @ruwiki.message[:backend_cannot_release_lock] % [page.project, page.topic]
         end
-      rescue Errno::EACCES
-        raise BackendError, "unable to create lock on page [#{page.project}] topic [#{page.topic}]."
       rescue BackendError
         raise
-      rescue Exception => e
-        raise BackendError, "Error storing page project [#{page.project}] topic [#{page.topic}]: #{e}"
+      rescue Errno::EACCES, Exception => e
+        p = [project, topic, %Q~ (#{@ruwiki.message[:file]} #{pf})~, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
+        raise BackendError, @ruwiki.message[:error_releasing_lock] % p
       end
 
     private
@@ -182,7 +184,6 @@ class Ruwiki
         else
           File.join(project_directory(project), "#{topic}.#{extension}")
         end
-        "#{project_directory(project)}/#{topic}"
       end
     end
   end
