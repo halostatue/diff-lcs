@@ -1,0 +1,38 @@
+/* $Id$ */
+body
+{
+  color: black;
+  font-size: medium;
+  background-color: #F2FFA7;
+}
+
+li { margin-top: 0.25em; margin-bottom: 0.25em; }
+pre { background-color: #FFFFA7; border: 1px solid black; }
+pre pre { border: 0 }
+
+.rw_nav { background-color: #E9967A }
+.rw_edittext { border: 1px dotted blue }
+.rw_pagelink { }
+.rw_extlink { border: 1px solid red }
+.rw_projectxlink { }
+.rw_projectindex { }
+.rw_edit_form { }
+.rw_edit_raw {
+  border: 2px solid green;
+  float: left;
+  max-width: 48%;
+  overflow: scroll;
+  clear: right;
+}
+.rw_edit_format {
+  border: 2px solid blue;
+  float: right;
+  max-width: 48%;
+  clear: none;
+}
+div.rw_calendar {
+  border: 1px solid black;
+  float: right;
+  clear: none;
+}
+.rw_calendar-today { background-color: #FFFFA7; }
