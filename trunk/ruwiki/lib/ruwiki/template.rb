@@ -11,10 +11,6 @@
 # $Id$
 #++
 
-if __FILE__ == $0
-  class Ruwiki; end
-end
-
   # Ruwiki templating, based originally on RDoc's "cheap-n-cheerful" HTML page
   # template system, which is a line-oriented text-based templating system.
   #
@@ -29,13 +25,13 @@ end
   #   (<tt>%?key%</tt>).
   # * Label values between hash marks (<tt>#key#</tt>). Optional label values
   #   can be preceded by a question mark (<tt>#?key#</tt>).
-  # * Cross references (<tt>HREF:ref:name:</tt>).
+  # * Links (<tt>HREF:ref:name:</tt>).
   # * Repeating substitution values (<tt>[:key| stuff :]</tt>). The value of
   #   +key+ may be an integer value or a range (in which case key will be used
   #   as an iterator, providing the current value of key on successive values),
   #   an array of scalar values (substituting each value), or an array of
   #   hashes (in which case it works like repeating blocks, see below). These
-  #   must NOT be nested.
+  #   must NOT be nested. Note that integer value counting is one-based.
   # * Optional substitution values (<tt>[?key| stuff ?]</tt> or <tt>[!key|
   #   stuff ?]</tt>. These must NOT be nested.
   # * Repeating blocks:
@@ -177,6 +173,7 @@ class Ruwiki::TemplatePage
     @context = Context.new
     @message = message_hash
     output << sub(@lines.dup, value_hash).tr("\000", '\\')
+    output
   end
 
     # Substitute a set of key/value pairs into the given template. Keys with
@@ -209,12 +206,11 @@ class Ruwiki::TemplatePage
         raise "#{cmd}: must have a key to test." if tag.nil?
 
         test = @context.lookup(tag).nil?
-        test = (cmd == "IF") ? (not test) : test
+        test = (cmd == "IF") ? test : (not test)
         lines.read_up_to(/^ENDIF:#{tag}/) if test
       when "ENDIF"
         nil
       when "START"
-      when /^START:(\w+)/
         raise "#{cmd}: must have a key." if tag.nil?
 
         body = lines.read_up_to(/^END:#{tag}/)
@@ -222,6 +218,7 @@ class Ruwiki::TemplatePage
         raise "unknown tag: #{tag}" unless inner
         raise "not array: #{tag}" unless inner.kind_of?(Array)
         inner.each { |vals| result << sub(body.dup, vals) }
+        result << "" # Append the missing \n
       else
         result << expand(line.dup)
       end
@@ -243,7 +240,7 @@ class Ruwiki::TemplatePage
       name = @context.find_scalar($2)
 
       if ref and not ref.kind_of?(Array)
-        "<a href=\"#{ref}\">#{name}</a>"
+        %Q(<a href="#{ref}">#{name}</a>)
       else
         name
       end
@@ -270,28 +267,28 @@ class Ruwiki::TemplatePage
     end
 
       # Look for repeating content.
-    line = line.gsub(BLOCKLINE_RE) do
+    line = line.gsub(BLOCKLINE_RE) do |match|
       name  = $1
       stuff = $2
 
-      val = name.lookup(name)
+      val = @context.lookup(name)
       s = ""
       case val
       when nil
         nil
       when Fixnum
-        val.times { |i| s << stuff.sub(/%#{name}%/, i) }
+        val.times { |i| s << stuff.sub(/%#{name}%/, "#{i + 1}") }
       when Range
-        val.each { |i| s << stuff.sub(/%#{name}%/, i) }
+        val.each { |i| s << stuff.sub(/%#{name}%/, "#{i}") }
       when Array
         if not val.empty? and val[0].kind_of?(Hash)
           val.each do |v|
             @context.push(v)
-            expand(stuff)
+            s << expand(stuff)
             @context.pop
           end
         else
-          val.each { |e| s << stuff.sub(/%#{name}%/, e) }
+          val.each { |e| s << stuff.sub(/%#{name}%/, "#{e}") }
         end
       end
       s
@@ -307,7 +304,7 @@ class Ruwiki::TemplatePage
         raise "Template error: can't find label '#{key}'." if mandatory
         ""
       else
-        val.tr('\\', "\000")
+        "#{val}".tr('\\', "\000")
       end
     end
 
@@ -323,48 +320,12 @@ class Ruwiki::TemplatePage
         raise "Template error: can't find variable '#{key}'." if mandatory
         ""
       else
-        val.tr('\\', "\000")
+        "#{val}".tr('\\', "\000")
       end
     end
 
     line
   rescue Exception => e
-    raise "Error in template: #{e}\nOriginal line: #{line}"
-  end
-end
-
-if __FILE__ == $0
-  require 'test/unit'
-
-  class TestTemplates < Test::Unit::TestCase
-    def test_include
-      a = "a!INCLUDE!c"
-      b = "b"
-      t = Ruwiki::TemplatePage.new(a, b)
-      assert_equal(["abc"], t.lines.lines)
-    end
-
-    def test_variables
-      a = "a%b%c"
-      v = { "b" => "b" }
-      s = ""
-      t = Ruwiki::TemplatePage.new(a)
-      t.process(s, v)
-      assert_equal("abc", s)
-    end
-
-    def test_optional_variables
-      a = "a%b%%?c%d"
-      v = { "b" => "b" }
-      s = ""
-      t = Ruwiki::TemplatePage.new(a)
-      t.process(s, v)
-      assert_equal("abd", s)
-
-      v["c"] = "c"
-      s = ""
-      t.process(s, v)
-      assert_equal("abcd", s)
-    end
+    raise "Error in template: #{e}\nOriginal line: #{line}\n#{e.backtrace[0]}"
   end
 end

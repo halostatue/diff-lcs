@@ -104,7 +104,7 @@ class Ruwiki
 
             # check content
           buf = load(topic, project) rescue [""]
-          buf.each { |line| hits[topic] += topic.scan(re_search).size }
+          buf.each { |line| hits[topic] += line.scan(re_search).size }
         end
 
         hits
