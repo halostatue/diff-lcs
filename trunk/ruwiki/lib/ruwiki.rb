@@ -178,7 +178,8 @@ class Ruwiki
 
       # TODO Detect if @action has already been set.
     @action = @request.parameters['action'].downcase if @request.parameters['action']
-
+    # TODO: can we remove this if and put the else logic under the 
+    # case-else logic?
     if @action
       case @action
       when 'searchproj'
@@ -263,10 +264,19 @@ EPAGE
           @type = :content
         else
           @page.content = np
-          @page.old_version = @request.parameters['old_version'].to_i + 1
-          @page.version = @request.parameters['version'].to_i + 1
+          @page.old_version  = @request.parameters['old_version'].to_i + 1
+          @page.version      = @request.parameters['version'].to_i + 1
+          @page.edit_comment = @request.parameters['edcomment']
           @type = :save
           @backend.store(@page)
+          
+          # hack to ensure that Recent Changes are updated correctly
+          if( @page.topic == 'RecentChanges' )
+            recentraw = @backend.retrieve(@page.topic, @page.project)
+            recentraw[:markup] = @page.markup
+            recentpg = Page.new(recentraw)
+            @page.content = recentpg.content
+          end
         end
         @backend.release_lock(@page, @request.environment['REMOTE_ADDR'])
 

@@ -8,6 +8,7 @@ BugTracking.
 == Version 0.7.0+
 * Added Topic List and Project List controls on template and backend
 * Added simple search on backend (need to refine this). Expect validation check on frontend
+* Added RecentChanges list to backend and controls
 
 == Version 0.7.0
 * Changed the tokenization API so that the #post_replace call is made at the Token class level instead of the instance level.
