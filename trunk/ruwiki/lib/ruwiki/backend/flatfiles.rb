@@ -177,7 +177,7 @@ class Ruwiki
         Dir[@data_path + "/*" ].each do |fpath|
           next unless File.directory?( fpath )
           pdir,projdir = File.split(fpath)
-          projs.push projdir
+          projs.push projdir if File.exist?( fpath + "/ProjectIndex" )
         end
         projs
       end
