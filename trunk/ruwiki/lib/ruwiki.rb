@@ -308,6 +308,7 @@ class Ruwiki
     # Outputs the page.
   def output
     @response.add_header("Content-type", "text/html")
+    @response.add_header("Cache-Control", "max_age=0")
     @response.write_headers
     @response << @rendered_page
   end
