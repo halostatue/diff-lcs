@@ -107,7 +107,7 @@ class Ruwiki
       # Creates a link to a WikiPage in the current project.
     class WikiLinks < Ruwiki::Wiki::Token
       def self.rank
-        503
+        502
       end
 
       def self.regexp
@@ -145,7 +145,7 @@ class Ruwiki
         @match[0][1..-1]
       end
 
-      ALT_TEXT = %{(.*?)\|(.*)}o
+      ALT_TEXT = %r{(.*?)\|(.*)}o
 
       def replace
         captures = @match.captures
