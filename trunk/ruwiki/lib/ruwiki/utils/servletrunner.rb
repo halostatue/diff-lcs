@@ -88,6 +88,19 @@ COPYRIGHT
     end
   end
 
+  def self.message=(lang)
+    if lang.kind_of?(Hash)
+      @message = lang
+    elsif "constant" == defined?(lang::Message)
+      @message = lang::Message
+    else
+      raise ArgumentError
+    end
+  end
+  def self.message(id)
+    @message[id]
+  end
+
   class << self
       # This is for the WEBrick version of Ruwiki. This has been abstracted to
       # accept a Config global variable to reconfigure Ruwiki after initial
@@ -95,9 +108,7 @@ COPYRIGHT
     def read_config(filename)
       ch = {}
       if File.exists?(filename)
-        File.open(filename, 'rb') do |ff|
-          ch = Ruwiki::Exportable.load(ff.read)
-        end
+        File.open(filename, 'rb') { |ff| ch = Ruwiki::Exportable.load(ff.read) }
       end
 
       @sc = WEBrickConfig.new(ch)
@@ -113,92 +124,99 @@ COPYRIGHT
 
       save_config = nil
 
-      if argv.kind_of?(Array)
-        ARGV.replace(argv)
-        argv = ARGV
+      language = 'en'
+      find_lang = argv.grep(%r{^--language})
+      find_lang.each do |ee|
+        if ee =~ %r{^--language=}
+          language = ee.sub(%r{^--language=}, '')
+        else
+          language = argv[argv.index(ee).succ]
+        end
       end
 
+      require "ruwiki/lang/#{language.downcase}"
+      @rc.language = Ruwiki::Lang.const_get(language.upcase)
+      self.message = @rc.language
+
       argv.options do |o|
-        o.banner = "Usage: #{File.basename($0)} [options]"
-        o.separator "General options:"
-        o.on('--save-config [FILENAME]', 'Save the configuration to FILENAME and', 'exit. If FILENAME is not used, then', "#{Ruwiki::Config::CONFIG_NAME} will be used. All options", 'will be read, stored, and saved. The', 'servlet will not start.') { |fname| 
+        o.banner = self.message(:runner_usage) % [ File.basename($0) ]
+        o.separator self.message(:runner_general_options)
+        o.on('--save-config [FILENAME]', *([ self.message(:runner_saveconfig_desc), Ruwiki::Config::CONFIG_NAME ].flatten)) { |fname|
           save_config = fname || Ruwiki::Config::CONFIG_NAME
         }
-        o.on('--config FILENAME', 'Read the default configuration from', "FILENAME instead of #{Ruwiki::Config::CONFIG_NAME}.", 'Options set until this point will be', 'reset to the values from the read', 'configuration file.') { |fn|
+        o.on('--config FILENAME', *self.message(:runner_config_desc)) { |fn|
           read_config(fn)
         }
         o.separator ""
-        o.separator "WEBrick options:"
-        o.on('-P', '--port PORT', Numeric, 'Runs the Ruwiki servlet on the specified', 'port. Default 8808.') { |port|
+        o.separator self.message(:runner_webrick_options)
+        o.on('-P', '--port PORT', Numeric, *self.message(:runner_port_desc)) { |port|
           @sc.port = port
         }
-        o.on('-A', '--accept ADDRESS,ADDRESS,ADDRESS', Array, 'Restricts the Ruwiki servlet to accepting', 'connections from the specified address or', '(comma-separated) addresses. May be', 'specified multiple times. Defaults to all', 'addresses.') { |address|
+        o.on('-A', '--accept ADDRESS,ADDRESS,ADDRESS', Array, *self.message(:runner_address_desc)) { |address|
           @sc.addresses += address
         }
-        o.on('-L', '--local', 'Restricts the Ruwiki servlet to accepting', 'only local connections (127.0.0.1).', 'Overrides any previous --accept addresses.') { |local|
+        o.on('-L', '--local', *self.message(:runner_local_desc)) {
           @sc.addresses = ["127.0.0.1"]
         }
-        o.on('-M', '--mount MOUNT-POINT', 'The relative URI from which Ruwiki ', 'will be accessible. Defaults to "/".') { |mp|
+        o.on('-M', '--mount MOUNT-POINT', *self.message(:runner_mountpoint_desc)) { |mp|
           @sc.mount = mp
         }
-        o.on('--[no-]log', 'Log WEBrick activity. Default is --log.') { |log|
+        o.on('--[no-]log', *self.message(:runner_log_desc)) { |log|
           @sc.do_log = log
         }
-        o.on('--logfile LOGFILE', 'The file to which WEBrick logs are', 'written. Default is standard error.') { |lf|
+        o.on('--logfile LOGFILE', *self.message(:runner_logfile_desc)) { |lf|
           @sc.log_dest = lf
         }
-        o.on('-T', '--threads THREADS', Integer, 'Sets the WEBrick threadcount.') { |tc|
+        o.on('-T', '--threads THREADS', Integer, *self.message(:runner_threads_desc)) { |tc|
           @sc.threads = tc
         }
         o.separator ""
-        o.separator "Ruwiki options:"
-        o.on('--language LANGUAGE', 'The interface language for Ruwiki.', 'Defaults to "en". May be "en", "de", or', '"es".') { |lang|
-          @rc.language = Ruwiki::Lang::const_get(lang.upcase)
+        o.separator self.message(:runner_ruwiki_options)
+        o.on('--language=LANGUAGE', *self.message(:runner_language_desc)) { |lang|
+          nil
         }
-        o.on('--webmaster WEBMASTER', 'The Ruwiki webmaster email address.', 'Defaults to "webmaster@domain.tld".') { |wm|
+        o.on('--webmaster WEBMASTER', *self.message(:runner_webmaster_desc)) { |wm|
           @rc.webmaster = wm
         }
-        o.on('--[no-]debug', 'Turns on Ruwiki debugging. Defaults', 'to --no-debug.') { |d|
+        o.on('--[no-]debug', *self.message(:runner_debug_desc)) { |d|
           @rc.debug = d
         }
-        o.on('--title TITLE', 'Provides the Ruwiki title. Default is', '"Ruwiki".') { |t|
+        o.on('--title TITLE', *self.message(:runner_title_desc)) { |t|
           @rc.title = t
         }
-        o.on('--default-page PAGENAME', 'An alternate default page. Default is', '"ProjectIndex".') { |dp|
+        o.on('--default-page PAGENAME', *self.message(:runner_defaultpage_desc)) { |dp|
           @rc.default_page = dp
         }
-        o.on('--default-project PAGENAME', 'An alternate default project. Default is', '"Default".') { |dp|
+        o.on('--default-project PAGENAME', *self.message(:runner_defaultproject_desc)) { |dp|
           @rc.default_project = dp
         }
-        o.on('--template-path TEMPLATE_PATH', 'The location of Ruwiki templates. Default', 'is "./templates".') { |tp|
+        o.on('--template-path TEMPLATE_PATH', *self.message(:runner_templatepath_desc)) { |tp|
           @rc.template_path = tp
         }
-        o.on('--templates TEMPLATES', 'The name of the Ruwiki templates. Default', 'is "default".') { |tp|
+        o.on('--templates TEMPLATES', *self.message(:runner_templatename_desc)) { |tp|
           @rc.template_set = tp
         }
-        o.on('--css CSS_NAME', 'The name of the CSS file in the template', 'path. Default is "ruwiki.css".') { |css|
+        o.on('--css CSS_NAME', *self.message(:runner_cssname_desc)) { |css|
           @rc.css = css
         }
-        o.on('--storage-type TYPE', Ruwiki::KNOWN_BACKENDS, 'Select the storage type:', "#{Ruwiki::KNOWN_BACKENDS.join(", ")}") { |st|
+        o.on('--storage-type TYPE', Ruwiki::KNOWN_BACKENDS, *([self.message(:runner_storage_desc), Ruwiki::KNOWN_BACKENDS.join(", ")].flatten)) { |st|
           @rc.storage_type = st
           @rc.storage_options[@rc.storage_type]['data-path'] ||= "./data/"
           @rc.storage_options[@rc.storage_type]['extension'] ||= "ruwiki"
         }
-        o.on('--data-path PATH', 'The path where data files are stored.', 'Default is "./data".') { |fdp|
+        o.on('--data-path PATH', *self.message(:runner_datapath_desc)) { |fdp|
           @rc.storage_options[:flatfiles]['data-path'] = fdp
           @rc.storage_options[:yaml]['data-path'] = fdp
           @rc.storage_options[:marshal]['data-path'] = fdp
         }
-        o.on('--extension EXT', 'The extension for data files.', 'Default is "ruwiki".') { |ext|
+        o.on('--extension EXT', *self.message(:runner_extension_desc)) { |ext|
           @rc.storage_options[:flatfiles]['extension'] = ext
           @rc.storage_options[:yaml]['extension'] = ext
           @rc.storage_options[:marshal]['extension'] = ext
         }
         if defined?(Gem::Cache)
           o.separator ""
-          o.on('--gem-data',
-               'Runs Ruwiki with the data in the default',
-               'RubyGem location.') {
+          o.on('--gem-data', *self.message(:runner_gemdata_desc)) {
             gempath = Gem::Cache.from_installed_gems.search("ruwiki", "=#{Ruwiki::VERSION}").last.full_gem_path
             @rc.storage_type    = :flatfiles
             @rc.storage_options[:flatfiles]['data-path'] = "#{gempath}/data"
@@ -207,14 +225,14 @@ COPYRIGHT
           }
         end
 
-        # TODO: Add options for time, date, and datetime formats.
+          # TODO: Add options for time, date, and datetime formats.
         o.separator ""
-        o.separator "General info:"
-        o.on_tail('--help', 'Shows this text.') {
+        o.separator self.message(:runner_general_info)
+        o.on_tail('--help', *self.message(:runner_help_desc)) {
           error << o << "\n"
           return 0
         }
-        o.on_tail('--version', 'Shows the version of Ruwiki.') {
+        o.on_tail('--version', *self.message(:runner_version_desc)) {
           error << COPYRIGHT << "\n"
           return 0
         }
@@ -235,8 +253,7 @@ COPYRIGHT
       if not @sc.addresses.empty?
         localonly = lambda do |sock|
           if not @sc.addresses.include?(sock.peeraddr[3])
-            msg = "Rejected peer address #{sock.peeraddr[3]}. Connections are only accepted from: #{opts.addresses.join(", ")}."
-            raise WEBrick::ServerError, msg
+            raise WEBrick::ServerError, self.message(:runner_rejected_address) % [ sock.peeraddr[3], @sc.addresses.join(", ") ]
           end
         end
       else
@@ -254,31 +271,15 @@ COPYRIGHT
         logger = nil
       end
 
-      banner = <<-"BANNER"
-#{Ruwiki::Utils::ServletRunner::COPYRIGHT}
+      banner = self.message(:runner_banner) %
+        [ Ruwiki::Utils::ServletRunner::COPYRIGHT, @sc.port,
+          @sc.addresses.join(", "), @sc.mount, @sc.do_log, @sc.log_dest,
+          @sc.threads, @rc.webmaster, @rc.debug, @rc.title,
+          @rc.default_project, @rc.default_page, @rc.template_path,
+          @rc.template_set, @rc.css, @rc.storage_type,
+          @rc.storage_options[@rc.storage_type]['data-path'],
+          @rc.storage_options[@rc.storage_type]['extension'] ]
 
-WEBrick options:
-  Port                  #{@sc.port}
-  Accepted Addresses    #{@sc.addresses.join(", ")}
-  Mount Point           #{@sc.mount}
-  Logging?              #{@sc.do_log}
-  Log Destination       #{@sc.log_dest}
-  Threads               #{@sc.threads}
-
-Ruwiki options:
-  Webmaster             #{@rc.webmaster}
-  Debugging?            #{@rc.debug}
-  Title                 #{@rc.title}
-  Default Project       #{@rc.default_project}
-  Default Page          #{@rc.default_page}
-  Template Path         #{@rc.template_path}
-  Template Set          #{@rc.template_set}
-  CSS Source            #{@rc.css}
-
-  Storage Type          #{@rc.storage_type}
-  Data Path             #{@rc.storage_options[@rc.storage_type]['data-path']}
-  Extension             #{@rc.storage_options[@rc.storage_type]['extension']}
-      BANNER
       banner.each { |b| logger.info(b) } unless logger.nil?
 
       server = WEBrick::HTTPServer.new(:Port            => @sc.port.to_i,

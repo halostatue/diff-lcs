@@ -31,6 +31,21 @@ end
 module Ruwiki::Utils::Manager
   DEFAULT_PACKAGE_NAME  = 'ruwiki.pkg'
 
+  def self.message=(lang)
+    if lang.kind_of?(Hash)
+      @message = lang
+    elsif "constant" == defined?(lang::Message)
+      @message = lang::Message
+    else
+      raise ArgumentError
+    end
+  end
+  def self.message(id)
+    @message[id]
+  end
+
+  class ManagerError < RuntimeError; end
+
   EXECUTABLES = %w(ruwiki.cgi ruwiki_servlet ruwiki_servlet.bat \
                    ruwiki_servlet.cmd ruwiki_service.rb)
 
@@ -47,17 +62,9 @@ module Ruwiki::Utils::Manager
       if Ruwiki::Utils::CommandPattern.command?(help_on)
         ioe[:output] << Ruwiki::Utils::CommandPattern[help_on].help
       elsif help_on == "commands"
-        ioe[:output] << <<-EOH
-The commands known to ruwiki are:
-
-    ruwiki install              Installs the default deployment package.
-    ruwiki package              Packages a Ruwiki installation.
-    ruwiki unpackage            Unpackages a Ruwiki installation.
-    ruwiki service              Manages a Win32::Service for Ruwiki.
-
-        EOH
+        ioe[:output] << Ruwiki::Utils::Manager.message(:manager_help_commands)
       else
-        ioe[:output] << "Unknown command: #{help_on}\n" unless help_on.nil? or help_on.empty?
+        ioe[:output] << Ruwiki::Utils::Manager.message(:manager_unknown_command) % [ help_on ] << "\n" % [ help_on ] unless help_on.nil? or help_on.empty?
         ioe[:output] << self.help
       end
 
@@ -65,14 +72,7 @@ The commands known to ruwiki are:
     end
 
     def help
-      help = <<-EOH
-This is a basic help message containing pointers to more information on how
-to use this command-line tool. Try:
-
-    ruwiki help commands        list all 'ruwiki' commands
-    ruwiki help <COMMAND>       show help on <COMMAND>
-                                  (e.g., 'ruwiki help install')
-      EOH
+      Ruwiki::Utils::Manager.message(:manager_help_help)
     end
   end
 
@@ -92,10 +92,10 @@ to use this command-line tool. Try:
         case arg
         when '--to'
           dir = args.shift
-          raise ArgumentError if dir.nil?
+          raise Ruwiki::Utils::CommandPattern::MissingParameterError.new(arg) if dir.nil?
           if File.exist?(dir)
             if not File.directory?(dir)
-              raise ArgumentError
+              raise ArgumentError, Ruwiki::Utils::Manager.message(:manager_dest_not_directory)
             end
           else
             FileUtils.mkdir_p(dir)
@@ -127,34 +127,7 @@ to use this command-line tool. Try:
     end
 
     def help
-      help = <<-EOH
-    ruwiki install [OPTIONS] [--to DEST]
-
-Creates a new Ruwiki instance. By default this installs the data, templates,
-and a default configuration file to the current directory. The destination
-can be changed with the --to option, and what is installed can be specified
-with the OPTIONS list. The OPTIONS list may be space, comma, or semi-colon
-separated. Thus,
-
-    ruwiki install data;servlet
-    ruwiki install data,servlet
-    ruwiki install data servlet
-
-are all equivalent. The options may be specified in any case. The
-installation OPTIONS are:
-
-    servlet       # Installs the Ruwiki servlet stub
-    service       # Installs the Ruwiki Win32::Service stub
-    CGI           # Installs the Ruwiki CGI script
-    data          # Installs the Ruwiki data, templates, and configuration
-
-Options may be disabled with by prepending a dash or 'no':
-
-    ruwiki install cgi -data
-    ruwiki install cgi nodata
-
-These will install the CGI script but not the data.
-      EOH
+      Ruwiki::Utils::Manager.message(:manager_install_help)
     end
   end
 
@@ -176,7 +149,7 @@ These will install the CGI script but not the data.
           replace = true
         when '-o', '--output'
           name  = args.shift
-          raise ArgumentError if name.nil?
+          raise Ruwiki::Utils::CommandPattern::MissingParameterError.new(arg) if name.nil?
           dest  = File.dirname(name)
           name  = File.basename(name)
         else
@@ -184,7 +157,11 @@ These will install the CGI script but not the data.
         end
       end
 
-      raise ArgumentError if argv.size > 1
+      if argv.size > 1
+        ioe[:output] << Ruwiki::Utils::Manager.message(:manager_service_hi_argcount) % [ args.join(" ") ] << "\n"
+        ioe[:output] << self.help
+        return 1
+      end
       source = argv.shift || "."
     
       Ruwiki::Utils::Manager.package(source, dest, name, replace)
@@ -192,20 +169,8 @@ These will install the CGI script but not the data.
     end
 
     def help
-      help = <<-EOH
-    ruwiki package [SOURCE] [--output PACKAGE] [--replace]
-    ruwiki package [SOURCE] [-o PACKAGE] [--replace]
-
-Packages the Ruwiki files (data, templates, and executables) from the
-specified SOURCE or the current directory into the specified output package
-(or "./#{Ruwiki::Utils::Manager::DEFAULT_PACKAGE_NAME}"). If the SOURCE is a ruwiki configuration file (e.g.,
-"#{Ruwiki::Config::CONFIG_NAME}"), then that will be used to determine the location and name of
-the data and template directories.
-
-    NOTE: The packaging process will normalize the data and templates
-          directory names to be relative to the unpacking directory. They
-          will NEVER be absolute paths.
-      EOH
+      Ruwiki::Utils::Manager.message(:manager_package_help) % [ "./#{Ruwiki::Utils::Manager::DEFAULT_PACKAGE_NAME}",
+                                                 Ruwiki::Config::CONFIG_NAME ]
     end
   end
 
@@ -223,13 +188,17 @@ the data and template directories.
         case arg
         when '-o', '--output'
           dir = args.shift
-          raise ArgumentError if dir.nil? or not File.directory?(dir)
+          raise Ruwiki::Utils::CommandPatter::MissingParameterError.new(arg) if dir.nil? or not File.directory?(dir)
         else
           argv << arg
         end
       end
 
-      raise ArgumentError if argv.size > 1
+      if argv.size > 1
+        ioe[:output] << Ruwiki::Utils::Manager.message(:manager_service_hi_argcount) % [ args.join(" ") ] << "\n"
+        ioe[:output] << self.help
+        return 1
+      end
       source = argv.shift || Ruwiki::Utils::Manager::DEFAULT_PACKAGE_NAME
 
       Ruwiki::Utils::Manager.unpackage(source, dir)
@@ -238,13 +207,7 @@ the data and template directories.
     end
 
     def help
-      help = <<-EOH
-    ruwiki unpackage [SOURCE] [--output DIRECTORY]
-    ruwiki unpackage [SOURCE] [-o DIRECTORY]
-
-Unpackages the provided Ruwiki package (default "./#{Ruwiki::Utils::Manager::DEFAULT_PACKAGE_NAME}") into the
-specified directory (default ".").
-      EOH
+      Ruwiki::Utils::Manager.message(:manager_unpackage_help) % [ "./#{Ruwiki::Utils::Manager::DEFAULT_PACKAGE_NAME}" ]
     end
   end
 
@@ -258,7 +221,7 @@ specified directory (default ".").
         ioe = Ruwiki::Utils::CommandPattern.default_ioe(ioe)
 
         if args.size < 2
-          ioe[:output] << %<Insufficient arguments: #{args.join(" ")}\n>
+          ioe[:output] << Ruwiki::Utils::Manager.message(:manager_service_lo_argcount) % [ args.join(" ") ] << "\n"
           ioe[:output] << self.help
           return 0
         end
@@ -275,13 +238,13 @@ specified directory (default ".").
           case arg
           when "--rubybin"
             options[:ruby_bin] = args.shift
-            raise ARgumentError if options[:ruby_bin].nil?
+            raise Ruwiki::Utils::CommandPattern::MissingParameterError.new(arg) if options[:ruby_bin].nil?
           when "--exec"
             options[:service_bin] = args.shift
-            raise ArgumentError if options[:service_bin].nil?
+            raise Ruwiki::Utils::CommandPattern::MissingParameterError.new(arg) if options[:service_bin].nil?
           when "--home"
             options[:service_home] = args.shift
-            raise ArgumentError if options[:service_home].nil?
+            raise Ruwiki::Utils::CommandPattern::MissingParameterError.new(arg) if options[:service_home].nil?
           else
             argv << arg
           end
@@ -299,7 +262,7 @@ specified directory (default ".").
         when "delete"
           options[:service_delete] = true
         else
-          raise ArgumentError, "Unknown command #{command}."
+          raise ArgumentError, Ruwiki::Utils::Manager.message(:manager_unknown_command) % [ command ]
         end
 
         Ruwiki::Utils::Manager.manage_windows_service(options, ioe)
@@ -308,19 +271,7 @@ specified directory (default ".").
       end
 
       def help
-      help = <<-EOH
-    ruwiki service install NAME [DESCRIPTION] [options]
-    ruwiki service start   NAME
-    ruwiki service stop    NAME
-    ruwiki service delete  NAME
-
-Manages the Ruwiki WEBrick servlet as a Windows service. The service must be
-NAMEd. install supports the following additional options:
-
-  --rubybin RUBYPATH      The path to the Ruby binary.
-  --exec    SERVICEPATH   The path to the service executable.
-  --home    PATHTOHOME    The path to the home directory.
-      EOH
+        Ruwiki::Utils::Manager.message(:manager_service_help)
       end
     end
     Ruwiki::Utils::CommandPattern << ManagerService
@@ -390,7 +341,7 @@ NAMEd. install supports the following additional options:
       else
         pkg = File.join(dest, name)
         if File.exists?(pkg) and (not replace)
-          raise "Package #{pkg} already exists."
+          raise ManagerError, Ruwiki::Utils::Manager.message(:manager_package_exists)
         end
       end
 
@@ -601,7 +552,7 @@ NAMEd. install supports the following additional options:
             s.dependencies      = [] # Required because of a bug in Win32::Service
           end
           service.close
-          ioe[:output] << "#{service_name} service installed.\n"
+          ioe[:output] << Manager.manager(:manager_service_installed) % [ service_name ] << "\n"
         end
 
         if options[:service_start]
@@ -611,10 +562,10 @@ NAMEd. install supports the following additional options:
             status  = Win32::Service.status(service_name)
             started = (status.current_state == "running")
             break if started
-            ioe[:output] << "One moment, #{status.current_state}\n"
+            ioe[:output] << Ruwiki::Utils::Manager.message(:manager_one_moment) % [ status.current_state ] << "\n"
             sleep 1
           end
-          ioe[:output] << "#{service_name} service started.\n"
+          ioe[:output] << Ruwiki::Utils::Manager.message(:manager_service_started) % [ service_name ] << "\n"
         end
 
         if options[:service_stop]
@@ -624,16 +575,16 @@ NAMEd. install supports the following additional options:
             status  = Win32::Service.status(service_name)
             stopped = (status.current_state == "stopped")
             break if stopped
-            ioe[:output] << "One moment, #{status.current_state}\n"
+            ioe[:output] << Ruwiki::Utils::Manager.message(:manager_one_moment) % [ status.current_state ] << "\n"
             sleep 1
           end
-          ioe[:output] << "#{service_name} service stopped.\n"
+          ioe[:output] << Ruwiki::Utils::Manager.message(:manager_service_stopped) % [ service_name ] << "\n"
         end
 
         if options[:service_delete]
           Win32::Service.stop(service_name) rescue nil
           Win32::Service.delete(service_name)
-          ioe[:output] << "#{service_name} service deleted.\n"
+          ioe[:output] << Ruwiki::Utils::Manager.message(:manager_service_deleted) % [ service_name ] << "\n"
         end
       end
     end
@@ -645,8 +596,30 @@ NAMEd. install supports the following additional options:
         :error  => error
       }
 
+      language = 'en'
+      find_lang = argv.grep(%r{^--lang})
+      find_lang.each do |ee|
+        eepos = argv.index(ee)
+        if ee =~ %r{^--lang=}
+          language = ee.sub(%r{^--lang=}, '')
+        else
+          language = argv[eepos.succ]
+          argv.delete_at(eepos.succ)
+        end
+        argv.delete_at(eepos)
+      end
+
+      require "ruwiki/lang/#{language.downcase}"
+      Ruwiki::Utils::Manager.message = Ruwiki::Lang.const_get(language.upcase)
+
       command = Ruwiki::Utils::CommandPattern[(argv.shift or "").downcase]
       return command[argv, {}, ioe]
+    rescue Ruwiki::Utils::CommandPattern::MissingParameterError => ee
+      ioe[:error] << Ruwiki::Utils::Manager.message(:manager_missing_parameter) % [ ee.argument ] << "\n"
+      return 1
+    rescue ArgumentError, ManagerError => ee
+      ioe[:error] << ee.message << "\n"
+      return 1
     end
   end
 end

@@ -26,6 +26,7 @@ else
   ReleaseDate = nil
 end
 
+desc "Run Ruwiki unit tests."
 task :test do |t|
   require 'test/unit/testsuite'
   require 'test/unit/ui/console/testrunner'

@@ -12,10 +12,18 @@
 # $Id$
 #++
 
+  # Implements the command pattern. Commands are used by the command-line
 class Ruwiki::Utils::CommandPattern
   class AbstractCommandError < Exception; end
   class UnknownCommandError < RuntimeError; end
   class CommandAlreadyExists < RuntimeError; end
+  class MissingParameterError < ArgumentError
+    def initialize(argument)
+      @argument = argument
+    end
+
+    attr_reader :argument
+  end
 
   class << self
     def add(command)

@@ -27,7 +27,7 @@ module Ruwiki::Utils::Converter
     NL_RE               = /\n/
 
     def with(obj)
-    yield obj if block_given?
+      yield obj if block_given?
     end
 
       # Only allow this to be run once. Silently fail otherwise.
@@ -46,6 +46,23 @@ module Ruwiki::Utils::Converter
       end
     end
 
+    def message=(lang)
+      if lang.kind_of?(Hash)
+        @message = lang
+      elsif "constant" == defined?(lang::Message)
+        @message = lang::Message
+      else
+        raise ArgumentError
+      end
+    end
+    def message(id)
+      if @message[id].nil?
+        []
+      else
+        @message[id]
+      end
+    end
+
     def display_options
     end
 
@@ -59,39 +76,60 @@ module Ruwiki::Utils::Converter
       @output = output
       @error  = error
 
+      language = 'en'
+      find_lang = argv.grep(%r{^--lang})
+      find_lang.each do |ee|
+        if ee =~ %r{^--lang=}
+          language = ee.sub(%r{^--lang=}, '')
+        else
+          language = argv[argv.index(ee).succ]
+        end
+      end
+
+      require "ruwiki/lang/#{language.downcase}"
+      self.message = Ruwiki::Lang.const_get(language.upcase)
+
       argv.options do |opts|
-        opts.banner = "Usage: converter [options] <directory>+"
+        opts.banner = message(:converter_usage) % File.basename($0)
         opts.separator ''
-        opts.on('--format=FORMAT', 'Converts encountered files (regardless', 'of the current format), to the specified', 'format. Default is yaml. Allowed formats', 'are:     yaml marshal flatfiles') do |ff|
+        opts.on('--format=FORMAT', *message(:converter_format_desc)) do |ff|
           @options.target_format = ff
         end
-        opts.on('--[no-]backup', 'Create backups of upgraded files.', 'Default is --backup.') do |bb|
+        opts.on('--[no-]backup', *message(:converter_backup_desc)) do |bb|
           @options.backup_old_files = bb
         end
-        opts.on('--backup-extension=EXTENSION', 'Specify the backup extension. Default', 'is "~", which is appended to the data', 'filename.') do |ee|
+        opts.on('--backup-extension=EXTENSION', *message(:converter_backupext_desc)) do |ee|
           if ee.nil? or ee.empty?
-            @error << "The backup extension must not be empty." if ee.nil? or ee.empty?
+            @error << message(:converter_backupext_error) if ee.nil? or ee.empty?
             @error << "#{opts}\n"
             return 0
           end
           @options.backup_extension = ee
         end
-        opts.on('--extension=EXTENSION', 'Specifies the extension of Ruwiki data', 'files. The default is .ruwiki') do |ee|
+        opts.on('--extension=EXTENSION', *message(:converter_extension_desc)) do |ee|
+          if ee.nil? or ee.empty?
+            @error << message(:converter_extension_error) if ee.nil? or ee.empty?
+            @error << "#{opts}\n"
+            return 0
+          end
           @options.extension = ee
         end
-        opts.on('--no-extension', 'Indicates that the Ruwiki data files', 'have no extension.') do |nn|
+        opts.on('--no-extension', *message(:converter_noextension_desc)) do
           @options.extension = nil
         end
-        opts.on('--quiet', 'Runs quietly. Default is to run with', 'normal messages.') do |qq|
+        opts.on('--lang=LANG', *message(:converter_language_desc)) do |lang|
+          self.message = Ruwiki::Lang.const_get(lang.upcase)
+        end
+        opts.on('--quiet', *message(:converter_quiet_desc)) do |qq|
           @options.quiet   = qq
           @options.verbose = (not qq)
         end
-        opts.on('--verbose', 'Runs with full messages. Default is to', 'run with normal messages.') do |vv|
+        opts.on('--verbose', *message(:converter_verbose_desc)) do |vv|
           @options.quiet   = (not vv)
           @options.verbose = vv
         end
         opts.separator ''
-        opts.on_tail('--help', 'Shows this text.') do
+        opts.on_tail('--help', *message(:converter_help_desc)) do
           @error << "#{opts}\n"
           return 0
         end
@@ -100,7 +138,7 @@ module Ruwiki::Utils::Converter
       end
 
       if argv.empty?
-        @error << "Error: not enough arguments.\n#{argv.options}\n" if not @options.quiet
+        @error << message(:converter_num_arguments) << "\n#{argv.options}\n" unless @options.quiet
         return 127
       end
 
@@ -122,18 +160,18 @@ module Ruwiki::Utils::Converter
       @out << "#{file}: " unless @options.quiet
 
       if File.directory?(file) and @options.traverse_directories
-        @out << "directory\n" unless @options.quiet
+        @out << message(:converter_directory) << "\n" unless @options.quiet
         Dir.chdir(file) { Dir['*'].each { |entry| process_file(entry) } }
       else
         begin
           page, page_format = load_page(file)
-          @out << "converting from #{page_format} to #{@options.target_format} ... " if @options.verbose
+          @out << message(:converter_converting_from) % [ page_format, @options.target_format ] if @options.verbose
           save_page(file, page)
-          @out << "done.\n" unless @options.quiet
+          @out << message(:converter_done) << "\n" unless @options.quiet
         rescue PageLoadException
-          @out << "not a Ruwiki file; skipping.\n" unless @options.quiet
+          @out << message(:converter_not_ruwiki) << "\n" unless @options.quiet
         rescue PageSaveException
-          @out << "cannot save modified #{file}.\n" unless @options.quiet
+          @out << message(:cannot_nosave_modified) << "\n" % [ file ] unless @options.quiet
         end
       end
     end
@@ -174,11 +212,11 @@ module Ruwiki::Utils::Converter
 
           page['page']['content'] = rawbuf.join("\n")
 
-          with page['properties'] do |p|
-            p['project']    = File.basename(File.dirname(File.expand_path(file)))
-            p['editable']   = true
-            p['indexable']  = true
-            p['entropy']    = 0.0
+          with page['properties'] do |pp|
+            pp['project']    = File.basename(File.dirname(File.expand_path(file)))
+            pp['editable']   = true
+            pp['indexable']  = true
+            pp['entropy']    = 0.0
           end
         end
       end

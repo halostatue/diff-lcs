@@ -56,8 +56,9 @@ class Ruwiki::Utils::Daemon < Win32::Daemon
   end
 
   def service_main
-    argv = [ "--config", File.join(LOCATION, Ruwiki::Config::CONFIG_NAME), "--logfile", File.join(LOCATION, "ruwiki_servlet.log") ]
-    Ruwiki::Utils::ServletRunner.run(argv, @logfile, @logfile, @logfile)
+    ARGV.replace(["--config", File.join(LOCATION, Ruwiki::Config::CONFIG_NAME),
+                  "--logfile", File.join(LOCATION, "ruwiki_servlet.log")])
+    Ruwiki::Utils::ServletRunner.run(ARGV, @logfile, @logfile, @logfile)
   rescue Exception => e
     file = LOCATION + '/temp.log'
     File.open(file, "a+") do |f|

@@ -79,6 +79,10 @@ class Ruwiki::Wiki
   RE_URI_PATH   = %r{[^\s<>\]]}
   RE_URI_TEXT   = %r{[^\]]*}
 
+  def self.redirect(uri)
+    "http://www.google.com/url?sa=D&q=#{uri}"
+  end
+
     # Converts URLs in the form of [url] to numbered links.
   class NumberedLinks < Ruwiki::Wiki::Token
     class << self
@@ -105,7 +109,7 @@ class Ruwiki::Wiki
 
       name = "[#{NumberedLinks.increment}]"
 
-      %Q{<a class="rwtk_NumberedLinks" href="#{extlink}">#{name}</a>}
+      %Q{<a class="rwtk_NumberedLinks" href="#{Ruwiki::Wiki.redirect(extlink)}">#{name}</a>}
     end
   end
 
@@ -157,7 +161,7 @@ class Ruwiki::Wiki
       extlink = @match.captures[0]
       name    = @match.captures[1]
 
-      %Q{<a class="rwtk_NamedLinks" href="#{extlink}">#{name}</a>}
+      %Q{<a class="rwtk_NamedLinks" href="#{Ruwiki::Wiki.redirect(extlink)}">#{name}</a>}
     end
   end
 
@@ -174,7 +178,7 @@ class Ruwiki::Wiki
     def replace
       extlink = @match.captures[0]
 
-      %Q{<a class="rwtk_ExternalLinks" href="#{extlink}">#{extlink}</a>}
+      %Q{<a class="rwtk_ExternalLinks" href="#{Ruwiki::Wiki.redirect(extlink)}">#{extlink}</a>}
     end
   end
 
