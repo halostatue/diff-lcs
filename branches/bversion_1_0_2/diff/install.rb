@@ -173,19 +173,19 @@ def install_binfile(from, op_file, target)
     installed_wrapper = false
 
     if File.exists?("#{from}.bat")
-      FileUtils.install("#{from}.bat", File.join(target, "#{opfile}.bat"), 0755, true)
+      FileUtils.install("#{from}.bat", File.join(target, "#{op_file}.bat"), :mode => 0755, :verbose => true)
       installed_wrapper = true
     end
 
     if File.exists?("#{from}.cmd")
-      FileUtils.install("#{from}.cmd", File.join(target, "#{opfile}.cmd"), 0755, true)
+      FileUtils.install("#{from}.cmd", File.join(target, "#{op_file}.cmd"), :mode => 0755, :verbose => true)
       installed_wrapper = true
     end
 
-    opfile += ".rb" if not installed_wrapper
+    op_file += ".rb" if not installed_wrapper
   end
-  FileUtils.install(tmp_file, File.join(InstallOptions.bin_dir, opfile), 0755, true)
-  FileUtils.unlink(tmp_file)
+  FileUtils.install(tmp_file, File.join(InstallOptions.bin_dir, op_file), :mode => 0755, :verbose => true)
+  File.unlink(tmp_file)
 end
 
 def glob(list)
