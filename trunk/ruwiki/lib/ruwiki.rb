@@ -232,6 +232,7 @@ EPAGE
         @page.content = "No projects"
       else
         #todo: make this localized
+        proj_list.map! { |proj| "#{proj} ([#{@request.script_url}/_topics topics])" }
         @page.content = <<EPAGE
 = Projects in #{@config.title}
 * ::#{proj_list.join("\n* ::")}
