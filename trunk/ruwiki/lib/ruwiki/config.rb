@@ -26,8 +26,9 @@ class Ruwiki
       # found in ruwiki/backend. In this version of Ruwiki, only flatfiles.rb
       # (e.g., :flatfiles) is defined. Defaults to <tt>:flatfiles</tt>.
     attr_accessor :storage_type
-      # The path for flatfile storage. Defaults to <tt>./data/</tt>.
-    attr_accessor :data_path
+      # The options for the specified storage type. This is a hash of hashes
+      # with auto-vifification. See the storage type for available options.
+    attr_reader   :storage_options
       # The path for templates. Defaults to <tt>./templates/</tt>.
     attr_accessor :template_path
       # The name of the Wiki. Defaults to <tt>ruwiki</tt>
@@ -61,7 +62,7 @@ class Ruwiki
       @default_project  = "Default"
       @default_page     = "ProjectIndex"
       @storage_type     = :flatfiles
-      @data_path        = "./data/"
+      @storage_options  = Hash.new { |h, k| h[k] = {} }
       @template_path    = "./templates/"
       @template_set     = "default"
       @css              = "ruwiki.css"

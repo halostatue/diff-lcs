@@ -2,7 +2,8 @@ id: 0
 topic: Configuring_Ruwiki
 version: 1
 #EHDR
-= Configuring Ruwiki 0.6.0
+= Configuring Ruwiki 0.6.1
+
 Ruwiki is configured similarly for both CGI and WEBrick modes. The biggest
 distinction is that because the Wiki is created after WEBrick server is
 created (during the dispatch to the servlet), it is necessary to configure the
@@ -13,30 +14,46 @@ necessary.
 == wiki.config Options
 
 === wiki.config.title
+
 This configuration option names the Wiki, by default this is <tt>Ruwiki</tt>.
 This affects the display of the home link and the &lt;title&gt; element of
 pages.
 
 === wiki.config.webmaster
+
 The email address for the webmaster. This is used in generating error reports
 that can be emailed to the wiki's webmaster.
 
 === wiki.config.default_page, wiki.config.default_project
+
 These options indicate what will happen when the wiki's URL is specified
 without any parameters (the default page in the default project is opened),
 when a topic is specified without a project (the topic is opened in the
 default project), and when a project is specified without a topic (the default
 page is opened in the project).
 
-=== wiki.config.storage_type
-This specifies the back-end storage mechanism as a Ruby Symbol. Currently,
-only <tt>:flatfiles</tt> is implemented. See Extending_Ruwiki for more
-information.
+=== wiki.config.storage_type, wiki.config.storage_options
 
-=== wiki.config.data_path, wiki.config.template_path
-These specify the paths where Wiki data and templates will be found. The
-process running the Wiki must have read/write acccess to the data_path and
-read access to the template_path.
+<tt>wiki.config.storage_type</tt> specifies the back-end storage mechanism as
+a Ruby Symbol. Currently, only <tt>:flatfiles</tt> is implemented. See
+Extending_Ruwiki for more information.
+
+<tt>wiki.config.storage_options</tt> is a hash of option hashes for each known
+storage type known to the Wiki. This must use the same Symbol as
+<tt>wiki.config.storage_type</tt> as the top-level hash key.
+
+==== ...storage_options[:flatfiles][:data_path]
+
+The directory in which the wiki files will be found. By default, this is
+<tt>"./data/"</tt>.
+
+==== storage_options[:flatfiles][:extension]
+
+The extension of the wiki files. By default, this is +nil+ (no extension).
+
+=== wiki.config.template_path
+This specifies the paths where the Wiki templates will be found. The process
+running the Wiki must have read access to the template_path.
 
 === wiki.config.template_set, wiki.config.css
 These two options indicate which template set will be used. Only one template

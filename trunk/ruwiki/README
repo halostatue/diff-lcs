@@ -1,4 +1,4 @@
-Ruwiki 0.6.0
+Ruwiki 0.6.1
 ------------
 Ruwiki is a simple, extensible Wiki written in Ruby. It supports both CGI and
 WEBrick interfaces, templates, and CSS formatting. Additionally, it supports

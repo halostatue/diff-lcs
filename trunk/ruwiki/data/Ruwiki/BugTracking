@@ -2,9 +2,9 @@ id: 0
 topic: BugTracking
 version: 1
 #EHDR
-= Ruwiki 0.6.0 Bug Tracking
+= Ruwiki 0.6.1 Bug Tracking
 This page is for tracking bugs in the Ruwiki project. Because of the extensive
-nature of the changes between Ruwiki 0.3.0 and Ruwiki 0.5.0 (and 0.6.0), the
+nature of the changes between Ruwiki 0.3.0 and Ruwiki 0.5.0 (and 0.6.x), the
 previously listed bugs have been erased.
 
 You may also be interested in the Ruwiki::To_Do list.

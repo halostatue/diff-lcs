@@ -2,7 +2,7 @@ id: 0
 topic: Extending_Ruwiki
 version: 1
 #EHDR
-= Extending Ruwiki 0.6.0
+= Extending Ruwiki 0.6.1
 
 Ruwiki is relatively easily extended to support new features. There are two
 primary ways in which Ruwiki can be extended by the end user: markup and

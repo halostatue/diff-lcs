@@ -2,14 +2,20 @@ id: 0
 version: 1
 topic: ChangeLog
 #EHDR
-= Ruwiki 0.6.0 ChangeLog
+= Ruwiki 0.6.1 ChangeLog
 Uncompleted to-do items can be found in To_Do. Bugs in Ruwiki are tracked in
 BugTracking.
 
+== Version 0.6.1
+* Changed Config#data_path to Config#storage_options[:flatfiles][:data_path]. This represents a generalisation of storage type options so that the Config object is not polluted with storage type options. Config#storage_options keys should be the same Ruby Symbol as is used in Config#storage_type.
+* Added Config#storage_options[:flatfiles][:extension], based on a request by Chad Fowler. This allows you to have Project/\TopicFile actually stored as Project/\TopicFile.wiki if Config#storage_options[:flatfiles][:extension] is set to <tt>wiki</tt>. The default for Config#storage_options[:flatfiles][:extension] is <tt>nil</tt>.
+* Fixed incorrect references. I had been incorrectly attributing [http://sourceforge.net/projects/rdoc-wiki RDoc Wiki] to Dave Thomas. RDoc Wiki is by Michael Neumann. However, the project I pulled from <b>is</b> by Dave Thomas, but it's [http://sourceforge.net/projects/rublog RubLog]. Apologies to both developers.
+* Added RuwikiTemplatingLibrary documentation.
+
 == Version 0.6.0
-* Added Ruby mailing list support (e.g., \[ruby-talk:12345]).
-* Reorganised the code (again) to better support alternative frontends. Based, in part, on [http://sourceforge.net/projects/rdoc-wiki RDoc Wiki] by Dave Thomas.
-* Added a [http://www.webrick.org WEBrick] servlet interface. Based, in part, on the WEBrick servlet interface provided with RDoc Wiki by Chad Fowler.
+* Added Ruby mailing list reference support (e.g., \[ruby-talk:12345]).
+* Reorganised the code (again) to better support alternative frontends. Based, in part, on [http://sourceforge.net/projects/rublog RubLog] by Dave Thomas. (Reference corrected in 0.6.1.)
+* Added a [http://www.webrick.org WEBrick] servlet interface. Based, in part, on the WEBrick servlet interface provided with RubLog by Chad Fowler.
 * Added templates, using the [http://rdoc.sourceforge.net RDoc] template.rb library.
 * Changed the default topic to be \ProjectIndex instead of \DefaultProject.
 * Added a new \WikiWord format, \Wiki_Word_with_Spaces.

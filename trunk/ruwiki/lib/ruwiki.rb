@@ -55,7 +55,7 @@ require 'ruwiki/abbreviations'
   #             Austin Ziegler (ruwiki@halostatue.ca)
   # Licence::   Ruby's
 class Ruwiki
-  VERSION         = '0.6.0.0'
+  VERSION         = '0.6.1.0'
 
   ALLOWED_ACTIONS = ['edit', 'save', 'cancel']
   POST_VARS       = ['newpage', 'pagename', 'project']

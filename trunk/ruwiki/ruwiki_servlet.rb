@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
-#
 #--
-# Ruwiki
+# Ruwiki version 0.6.1
 #   Copyright © 2002 - 2003, Digikata and HaloStatue
 #   Alan Chen (alan@digikata.com)
 #   Austin Ziegler (ruwiki@halostatue.ca)
@@ -35,7 +34,8 @@ $config.webmaster       = "webmaster@domain.com"
 # $config.default_page    = "DefaultPage"
 # $config.default_project = "Default"
 # $config.storage_type    = :flatfiles
-# $config.data_path       = "./data/"
+# $config.storage_options[:flatfiles][:data_path] = "./data/"
+# $config.storage_options[:flatfiles][:extension] = nil
 # $config.css             = "ruwiki.css"
 # $config.template_file   = nil
 

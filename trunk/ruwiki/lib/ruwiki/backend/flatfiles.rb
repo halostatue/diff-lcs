@@ -14,12 +14,22 @@ class Ruwiki
   class Backend
       # Stores Ruwiki pages as flatfiles.
     class Flatfiles < Ruwiki::Backend
-        # Initializes the flatfile backend.
+        # Initializes the flatfile backend. This will read
+        # ruwiki.config.storage_options[:flatfiles] to determine the options
+        # set by the user. The following options are known for
+        # <tt>:flatfiles</tt>:
+        #
+        # :data_path::  The directory in which the wiki files will be found.
+        #               By default, this is "./data/"
+        # :extension::  The extension of the wiki files. By default, this is
+        #               +nil+.
       def initialize(ruwiki)
-        ruwiki.config.data_path << "/" unless (ruwiki.config.data_path[-1] == ?/)
+        options = ruwiki.config.storage_options[:flatfiles]
+        options[:data_path] ||= "./data/"
         raise Ruwiki::Backend::StandardError,
-          "data directory #{ruwiki.config.data_path} does not exist." unless File.exists?(ruwiki.config.data_path)
-        @data_path = ruwiki.config.data_path
+          "data directory #{options[:data_path]} does not exist." unless File.exists?(options[:data_path])
+        @data_path = options[:data_path]
+        @extension = options[:extension]
         super ruwiki
       end
 
@@ -34,7 +44,6 @@ class Ruwiki
         raise Ruwiki::Backend::BackendError,
           "Cannot retrieve project [#{project}] topic [#{topic}] (file #{pf}): #{e}"
       end
-
 
         # Saves the topic page -- and its difference with the previous version
         # -- to disk.
@@ -164,10 +173,15 @@ class Ruwiki
 
     private
       def project_directory(project)
-        "#{@data_path}#{project}"
+        File.join(@data_path, project)
       end
 
       def page_file(topic, project = 'Default')
+        if @extension.nil?
+          File.join(project_directory(project), topic)
+        else
+          File.join(project_directory(project), "#{topic}.#{extension}")
+        end
         "#{project_directory(project)}/#{topic}"
       end
     end
