@@ -42,7 +42,7 @@ $config.webmaster       = "webmaster@domain.com"
 localonly = proc { |sock|
   if( sock.peeraddr[3] != "127.0.0.1" )
     msg = "Rejected non-local peeraddr #{sock.peeraddr[3]}"
-    raise WEBRick::ServerError, msg
+    raise WEBrick::ServerError, msg
   end
 }
 
