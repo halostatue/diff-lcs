@@ -98,6 +98,19 @@ file TARDIST => [ :test ] do |t|
     end
   end
 end
+task TARDIST => [ :test ]
+
+def sign(file)
+  sh %("C:\\Program Files\\Windows Privacy Tools\\GnuPG\\Gpg.exe" -ba #{file})
+end
+
+task :signtar => [ :tar ] do
+  sign TARDIST
+end
+task :signgem => [ :gem ] do
+  sign "../#{DISTDIR}.gem"
+end
 
 desc "Build everything."
-task :default => [ :tar, :gem ]
+task :default => [ :signtar, :signgem ] do
+end
