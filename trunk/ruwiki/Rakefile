@@ -75,7 +75,7 @@ task :make_readonly do
 end
 
 task :clean_readonly do
-  Data["data/**/*.ruwiki"].each do |file|
+  Dir["data/**/*.ruwiki"].each do |file|
     orig = "#{file}.orig"
     FileUtils.mv(orig, file) if File.exists?(orig)
   end
