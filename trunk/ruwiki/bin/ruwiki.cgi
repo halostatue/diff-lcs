@@ -45,7 +45,7 @@ config_file = File.join(Dir.pwd, Ruwiki::Config::CONFIG_NAME)
 if File.exists?(config_file)
   wiki.load_config(config_file)
   config = Ruwiki::Config.read(config_file)
-  if config.webmaster.nil? or config.rc.webmaster.empty?
+  if config.webmaster.nil? or config.webmaster.empty?
     config.webmaster = "webmaster@domain.tld"
   end
 else

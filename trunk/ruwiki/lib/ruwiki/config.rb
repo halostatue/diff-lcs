@@ -226,9 +226,9 @@ class Ruwiki::Config
       else
         File.open(file, 'rb') { |ff| ff.read }
       end
-      hash = Ruwiki::Config.load(data)
+      hash = Ruwiki::Exportable.load(data)
 
-      rc = Ruwiki::Config.new(hash)
+      Ruwiki::Config.new(hash)
     end
   end
 

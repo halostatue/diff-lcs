@@ -373,10 +373,27 @@ module Ruwiki::Utils::Manager
             end
           end
 
-          f_data  = Dir["data/**/**"].select { |dd| dd !~ /CVS\// }
-          f_data.map! { |dd| { :name => dd, :mode => 0644 } }
-          f_tmpl  = Dir["templates/**/**"].select { |tt| tt !~ /CVS\// }
-          f_tmpl.map! { |tt| { :name => tt, :mode => 0644 } }
+          f_data = Dir["data/**/**"].select { |dd| dd !~ /CVS\// }
+          f_data.unshift("data")
+          f_data.map! do |dd|
+            res = { :name => dd, :mode => 0644 }
+            if File.directory?(dd)
+              res[:mode] = 0755
+              res[:dir] = true
+            end
+            res
+          end
+
+          f_tmpl = Dir["templates/**/**"].select { |tt| tt !~ /CVS\// }
+          f_tmpl.unshift("templates")
+          f_tmpl.map! do |tt|
+            res = { :name => tt, :mode => 0644 }
+            if File.directory?(tt)
+              res[:mode] = 0755
+              res[:dir] = true
+            end
+            res
+          end
 
           files << tar_files(f_data, "data.pkg")
           files << tar_files(f_tmpl, "tmpl.pkg")
