@@ -16,7 +16,7 @@ TARDIST = "../#{DISTDIR}.tar.gz"
 DATE_RE = %r<(\d{4})[./-]?(\d{2})[./-]?(\d{2})(?:[\sT]?(\d{2})[:.]?(\d{2})[:.]?(\d{2})?)?>
 
 if ENV['RELEASE_DATE']
-  year, month, day, hour, minute, second = DATE_RE.match(ENV['RELEASE_DATE'])
+  year, month, day, hour, minute, second = DATE_RE.match(ENV['RELEASE_DATE']).captures
   year ||= 0
   month ||= 0
   day ||= 0
@@ -198,7 +198,6 @@ file TARDIST do |t|
     end
   end
 end
-
 
 desc "Build everything."
 task :default => [ :test, :update_version, :tar, :gem ]
