@@ -16,72 +16,78 @@ require 'harness-cgi'
 
 class TokenTestCases < Test::Unit::TestCase
   def setup
-    @project  = "Default"
-    @tokens   = []
+    @mrw = MockRuwiki.new
   end
 
-  def __tokenize(content, token)
-    content.gsub!(token.regexp) do |m|
-      match = Regexp.last_match
-      tc    = token.new(match, @project, $wiki.backend, $wiki.request.script_url)
-      @tokens << tc
-      if m[0, 1] == '\\'
-        "\\TOKEN_#{@tokens.size - 1}"
-      else
-        "TOKEN_#{@tokens.size - 1}"
-      end
+  class MockRuwiki
+    def initialize
+      @project  = "Default"
+      @tokens   = []
     end
-    content
-  end
 
-  def __replace(content)
-    replaced = []
-    s = true
-    loop do
-      break if replaced.size >= @tokens.size
-      break if s.nil?
-      s = content.gsub!(/\\TOKEN_(\d+)/) do |m|
+    def __tokenize(content, token)
+      content.gsub!(token.regexp) do |m|
         match = Regexp.last_match
-        i = match.captures[0].to_i
-        replaced << i
-        @tokens[i].restore
+        tc    = token.new(match, @project, $wiki.backend, $wiki.request.script_url)
+        @tokens << tc
+        if m[0, 1] == '\\'
+          "\\TOKEN_#{@tokens.size - 1}"
+        else
+          "TOKEN_#{@tokens.size - 1}"
+        end
       end
+      content
+    end
 
-      s = content.gsub!(/TOKEN_(\d+)/) do |m|
-        match = Regexp.last_match
-        i = match.captures[0].to_i
-        replaced << i
-        @tokens[i].replace
+    def __replace(content)
+      replaced = []
+      s = true
+      loop do
+        break if replaced.size >= @tokens.size
+        break if s.nil?
+        s = content.gsub!(/\\TOKEN_(\d+)/) do |m|
+          match = Regexp.last_match
+          i = match.captures[0].to_i
+          replaced << i
+          @tokens[i].restore
+        end
+
+        s = content.gsub!(/TOKEN_(\d+)/) do |m|
+          match = Regexp.last_match
+          i = match.captures[0].to_i
+          replaced << i
+          @tokens[i].replace
+        end
       end
+      content
     end
-    content
-  end
 
-  def __post_replace(content)
-    3.times do
-      @tokens.reverse_each { |token| token.post_replace(content) }
+    def __post_replace(content)
+      token_classes = @tokens.map { |token| token.class }.sort_by { |token| token.rank }
+      token_classes.uniq.each { |tc| tc.post_replace(content) }
+      content
     end
-    content
+
   end
 
   def __process(token, content, tokenized, replaced, result)
-    assert_equal(tokenized, content = __tokenize(content, token))
-    assert_equal(replaced, content = __replace(content))
-    assert_equal(result, content = __post_replace(content))
+    assert_equal(tokenized, content = @mrw.__tokenize(content, token))
+    assert_equal(replaced, content = @mrw.__replace(content))
+    assert_equal(result, content = @mrw.__post_replace(content))
   end
 
   def __display(token, content)
-    p tokenized = __tokenize(content.dup, token)
-    p replaced  = __replace(tokenized.dup)
-    p result    = __post_replace(replaced.dup)
+    p tokenized = @mrw.__tokenize(content.dup, token)
+    p replaced  = @mrw.__replace(tokenized.dup)
+    p result    = @mrw.__post_replace(replaced.dup)
   end
 
   def test_Paragraph
     token   = Ruwiki::Wiki::Paragraph
     content = "\nABC\n\nabc\n"
     tkv     = "TOKEN_0\nABC\nTOKEN_1\nabc\n"
-    rpv     = "<p>\nABC\n<p>\nabc\n"
-    res     = "<p>ABC</p><p>abc</p>"
+    rpv     = "</p><p>\nABC\n</p><p>\nabc\n"
+    res     = "<p>\nABC</p>\n<p>abc</p>\n"
 
     __process(token, content, tkv, rpv, res)
   end
@@ -90,8 +96,8 @@ class TokenTestCases < Test::Unit::TestCase
     content = "  line 1\n    line 2\nline3\n"
     token   = Ruwiki::Wiki::Code
     tkv     = "TOKEN_0\nTOKEN_1\nline3\n"
-    rpv     = "<pre>  line 1</pre>\n<pre>    line 2</pre>\nline3\n"
-    res     = "<pre>  line 1\n    line 2</pre>\nline3\n"
+    rpv     = "</p><pre>  line 1</pre>\n</p><pre>    line 2</pre>\nline3\n"
+    res     = "</p><pre>  line 1\n    line 2</pre>\nline3\n"
 
     __process(token, content, tkv, rpv, res)
   end
@@ -201,7 +207,7 @@ class TokenTestCases < Test::Unit::TestCase
     content = "= header 1\n== header 2\n=== header 3\n==== header 4\n===== header 5\n====== header 6\n======= header 7->6\n\\== noheader 2\n"
     tkv     = "TOKEN_0\nTOKEN_1\nTOKEN_2\nTOKEN_3\nTOKEN_4\nTOKEN_5\nTOKEN_6\n\\TOKEN_7\n"
     rpv     = "<h1>header 1</h1>\n<h2>header 2</h2>\n<h3>header 3</h3>\n<h4>header 4</h4>\n<h5>header 5</h5>\n<h6>header 6</h6>\n<h6>header 7->6</h6>\n== noheader 2\n"
-    res     = "<h1>header 1</h1>\n<h2>header 2</h2>\n<h3>header 3</h3>\n<h4>header 4</h4>\n<h5>header 5</h5>\n<h6>header 6</h6>\n<h6>header 7->6</h6>\n== noheader 2\n"
+    res     = "<h1>header 1</h1>\n<h2>header 2</h2>\n<h3>header 3</h3>\n<h4>header 4</h4>\n<h5>header 5</h5>\n<h6>header 6</h6>\n<h6>header 7->6</h6>\n<p>== noheader 2\n"
 
     __process(token, content, tkv, rpv, res)
   end
@@ -221,7 +227,7 @@ class TokenTestCases < Test::Unit::TestCase
     token   = Ruwiki::Wiki::Blockquotes
     content = ": level 1\n:: level 2\n::: level 3\n: level 1, para 2\n\\: not a blockquote\n"
     tkv     = "TOKEN_0\nTOKEN_1\nTOKEN_2\nTOKEN_3\n\\TOKEN_4\n"
-    rpv     = "<blockquote>level 1</blockquote>\n<blockquote><blockquote>level 2</blockquote></blockquote>\n<blockquote><blockquote><blockquote>level 3</blockquote></blockquote></blockquote>\n<blockquote>level 1, para 2</blockquote>\n: not a blockquote\n"
+    rpv     = "<blockquote> level 1</blockquote>\n<blockquote><blockquote> level 2</blockquote></blockquote>\n<blockquote><blockquote><blockquote> level 3</blockquote></blockquote></blockquote>\n<blockquote> level 1, para 2</blockquote>\n: not a blockquote\n"
     res     = "<blockquote>level 1<blockquote>level 2<blockquote>level 3</blockquote></blockquote>level 1, para 2</blockquote>\n: not a blockquote\n"
 
     __process(token, content, tkv, rpv, res)
@@ -234,6 +240,7 @@ class TokenTestCases < Test::Unit::TestCase
     rpv     = "<dl><dt>word1</dt><dd>val1</dd></dl>\n<dl><dl><dt>word2</dt><dd>val2</dd></dl></dl>\n<dl><dl><dl><dt>word3</dt><dd>val3</dd></dl></dl></dl>\n<dl><dt>word1/2</dt><dd>val1/2</dd></dl>\n; not-a-word : not-a-val\n"
     res     = "<dl><dt>word1</dt><dd>val1</dd><dl><dt>word2</dt><dd>val2</dd><dl><dt>word3</dt><dd>val3</dd></dl></dl><dt>word1/2</dt><dd>val1/2</dd></dl>\n; not-a-word : not-a-val\n"
 
+#   __display(token, content)
     __process(token, content, tkv, rpv, res)
   end
 

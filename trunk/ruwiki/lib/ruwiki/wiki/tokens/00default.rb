@@ -9,7 +9,7 @@
 # $Id$
 #++
 
-$debug = File.open("output.txt", "w")
+# $debug = File.open("output.txt", "w")
 
 class Ruwiki
   class Wiki
@@ -17,8 +17,7 @@ class Ruwiki
       # under the current implementation, should be *first* in the Token list
       # after Token.
     class Paragraph < Ruwiki::Wiki::Token
-        # This Token is #rank 0, because it should be second in the Token list
-        # after ParaBreak.
+        # This Token is #rank 0, because it should be first in the Token list.
       def self.rank
         0
       end
@@ -33,12 +32,14 @@ class Ruwiki
         "</p><p>"
       end
 
+        # Ensures that <p> won't be surrounded by <br> tags.
       def self.post_replace(content)
         content.gsub!(%r{\A}, '<p>')
         content.gsub!(%r{\z}, '</p>')
         content.gsub!(%r{^}, '<p>')
         content.gsub!(%r{\n}, "</p>\n")
         content.gsub!(%r{<p>(<p>)+}, '<p>')
+        content.gsub!(%r{</p>(</p>)+}, '</p>')
         content.gsub!(%r{((?:<p>(?:.*?)</p>\n)+?<p></p><p></p>)}) do |m|
           r = m.gsub(%r{</p>\n<p>}, "\n<p>")
           r.gsub!(%r{<p></p><p></p>}, "</p>")
@@ -46,6 +47,7 @@ class Ruwiki
           r.gsub!(%r{\n</p>}, '</p>')
           r
         end
+        content.gsub!(%r{<p></p>}, '')
         content
     end
   end
@@ -65,7 +67,11 @@ class Ruwiki
 
         # Replaces the text to <pre>content</pre>.
       def replace
-        content = @match[1].gsub(/&/) { "&amp;" }.gsub(/</) { "&lt;" }.gsub(/>/) { "&gt;" }
+        content = @match.captures[0]
+        content.gsub!(/&/, '&amp;')
+        content.gsub!(/</, '&lt;')
+        content.gsub!(/>/, '&gt;')
+
         %Q{</p><pre>#{content}</pre>}
       end
 
@@ -146,7 +152,7 @@ class Ruwiki
       end
 
       def replace
-        extlink = @match[1]
+        extlink = @match.captures[0]
 
         if extlink =~ RE_IMAGE
           %Q{<img src="#{extlink}" title="Image at: #{extlink}" alt="Image at: #{extlink}" />}

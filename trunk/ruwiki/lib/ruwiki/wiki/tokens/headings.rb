@@ -12,9 +12,9 @@ class Ruwiki
   class Wiki
       # Converts headings.
     class Headings < Ruwiki::Wiki::Token
-      def self.rank
-        2
-      end
+#     def self.rank
+#       5
+#     end
 
       def self.regexp
         %r{^\\?(=+)\s+(.*)}
@@ -25,16 +25,16 @@ class Ruwiki
       end
 
       def replace
-        level   = @match[1].count("=")
-        content = @match[2]
+        level   = @match.captures[0].count("=")
+        content = @match.captures[1]
         level   = 6 if level > 6
         "<h#{level}>#{content}</h#{level}>"
       end
 
       def self.post_replace(content)
-        content.gsub!(%r{<p>(<h\d>)}, '\1')
         content.gsub!(%r{(</h\d>)\n}) { |m| "#{$1}\n<p>" }
         content.gsub!(%r{(</h\d>)</p>\n<p>}) { |m| "#{$1}\n<p>" }
+        content.gsub!(%r{<p>(<h\d>)}, '\1')
         content.gsub!(%r{(</h\d>)</p>}, '\1')
         content
       end

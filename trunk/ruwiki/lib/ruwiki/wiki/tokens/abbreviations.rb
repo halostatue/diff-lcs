@@ -21,7 +21,7 @@ class Ruwiki
       end
 
       def replace
-        k = @match[1]
+        k = @match.captures[0]
         if k.nil? or k.empty?
           data = "<dl>"
           ABBREVIATIONS.each do |k, v|

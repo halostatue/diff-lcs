@@ -37,9 +37,8 @@ class Ruwiki
       end
 
       def replace
-        captures = @match.captures
-        project = captures[0]
-        topic   = captures[1]
+        project = @match.captures[0]
+        topic   = @match.captures[1]
         link    = CGI.escape(topic.dup)
 
         if @backend.page_exists?(topic, project)
@@ -62,10 +61,9 @@ class Ruwiki
       end
 
       def replace
-        captures = @match.captures
-        project = captures[0]
-        link    = CGI.escape(captures[1])
-        topic   = captures[1]
+        project = @match.captures[0]
+        topic   = @match.captures[1]
+        link    = CGI.escape(topic)
 
         if @backend.page_exists?(topic, project)
           VIEW_LINK % ["#{@script}/#{project}/#{link}", "#{project}::#{topic}"]
@@ -107,7 +105,7 @@ class Ruwiki
       # Creates a link to a WikiPage in the current project.
     class WikiLinks < Ruwiki::Wiki::Token
       def self.rank
-        502
+        503
       end
 
       def self.regexp
@@ -134,7 +132,7 @@ class Ruwiki
       # link format.
     class WikipediaLinks < Ruwiki::Wiki::Token
       def self.rank
-        503
+        502
       end
 
       def self.regexp
@@ -145,16 +143,16 @@ class Ruwiki
         @match[0][1..-1]
       end
 
-      ALT_TEXT = %r{(.*?)\|(.*)}o
+      ALT_TEXT = %r{(.+)\|(.+)}o
 
       def replace
         captures = @match.captures
-        at = ALT_TEXT.match(captures[1])
+        topic = @match.captures[1]
+        link  = CGI.escape(topic)
+
+        at = ALT_TEXT.match(topic)
         
-        if at.nil?
-          link  = CGI.escape(captures[1])
-          topic = captures[1]
-        else
+        if not at.nil?
           topic = at.captures[1]
           link  = CGI.escape(at.captures[0])
         end

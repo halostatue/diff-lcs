@@ -28,7 +28,7 @@ Quick Install (WEBrick)
 
 Use
 ---
-Ruwiki is able to be called with one of several URI forms:
+As a CGI, Ruwiki is able to be called with one of several URI forms:
 
   http://domain.com/ruwiki.cgi?PageName
   http://domain.com/ruwiki.cgi?PageName&project=Project

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 #--
-# Ruwiki version 0.6.1
-#   Copyright © 2002 - 2003, Digikata and HaloStatue
+# Ruwiki version 0.7.0
+#   Copyright © 2002 - 2004, Digikata and HaloStatue
 #   Alan Chen (alan@digikata.com)
 #   Austin Ziegler (ruwiki@halostatue.ca)
 #

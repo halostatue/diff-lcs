@@ -11,24 +11,37 @@ are still three planned API-changing releases between now and 1.0.
 
 == Well-Defined To Do Items
 === Ruwiki 0.8.0
-; Versioning : complete the change history. Change history is currently stored in a file <i>topic</i>.rdiff. There is no way to display the change history at this point.
+; Versioning : complete the change history. Change history is currently stored in a file <em>topic</em>.rdiff. There is no way to display the change history at this point.
+; \Ruwiki::Wiki::Handler : Change the way that Tokens get their configuration information to be its own class.
+; Rename \Ruwiki::Handler to \Ruwiki::NetworkHandler to reduce confusion with the new Network Handler.
+; YAML : Convert the page, header, and diff formats to YAML from custom and Marshal formats.
+; Frozen content : make it so that frozen content can be provided on a per-page or Wiki basis. Will provide both headers and footers. <strong>Note:</strong> Ruwiki 0.7.0 will only provide the ability to present the information, not create it.
+; Frozen pages : provide the ability to freeze content in place; the page is no longer "wiki" editable and is effectively a plain HTML page.
+; Function tokens : generalize the %<function-name>[(<args>)] calling method so that function tokens can be created without having to create a custom regular expression.
 === Ruwiki 0.9.0
-; In-project topic search : searches for mentions of the topic in the other topics for the project.
-; Project topic listing : provide a special link (perhaps Project::Project) that displays the list of topics known to that project.
-; Project listing : provide a special link (perhaps ::*) that displays the list of known projects.
+; Full Text search : searches for user specified text on a per-project or whole-Wiki basis.
+; Topic backlink search : searches for mentions of the topic in the other topics for the project.
+; Versioning : complete the change history. Change history is currently stored in a file <em>topic</em>.rdiff. There is no way to display the change history at this point.
+; Recent changes list : displays the list of recent changes to on a per-project or whole-Wiki basis.
 === Ruwiki 0.10.0
+; Project topic listing : provide a special link (perhaps \Project::Project) that displays the list of topics known to that project.
+; Project listing : provide a special link (perhaps ::*) that displays the list of known projects.
+; Authentication : allow user creation and authentication.
+=== Ruwiki 0.11.0
 ; Topic renaming : add the ability to rename a topic within a project. Topic change history should be maintained.
 ; Topic moving : add the ability to move and/or rename a topic between projects. Topic change history should be maintained.
 ; Complete documentation : Complete the documentation of Ruwiki.
 === Ruwiki 1.0.0
-; Escape HTML Entities : HTML Entities such as &amp;, &lt;, and &gt; are not currently escaped. This may cause problems with some browsers and should be fixed <b>without</b> impairing the ability to add at least some raw HTML. Note that the current engine does not check raw HTML and thus could potentially be vulnerable to cross-site-scripting attacks.
-; Features : Ruwiki will be programmatically extensible with entirely new features: commands, ACLs, and more. This is planned for 1.0.0.
+; Escape HTML Entities : HTML Entities such as &amp;, &lt;, and &gt; are not currently escaped. This may cause problems with some browsers and should be fixed <strong>without</strong> impairing the ability to add at least some raw HTML. Note that the current engine does not check raw HTML and thus could potentially be vulnerable to cross-site-scripting attacks.
+; Features : Ruwiki will be programmatically extensible with entirely new features: commands, \ACLs, and more. This is planned for 1.0.0.
 
 == General To Do Items
 ; Preview button : add a preview button to the save page.
 ; Alternative templating systems : not as high priority now that there's a real templating system in place.
+; Alternative markup systems : potentially allow \RedCloth (Textile) and/or \BlueCloth (Markdown) to be processed for a page. This could be implemented as a %function.
 ; Project/topic security : allow certain projects to be restricted/authenticated for read/write based on user.
-; Track last <i>n</i> links/topics : ?
+; RSS Feed : 
+; Track last <em>n</em> links/topics : ?
 ; Write a markup debugger : ?
 ; Validate topic formatting from cgi : ?
 ; Validate project from cgi : ?

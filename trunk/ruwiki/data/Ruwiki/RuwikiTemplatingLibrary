@@ -4,29 +4,37 @@ version: 1
 #EHDR
 = Ruwiki 0.7.0 Templating
 
-Ruwiki uses the RDoc templating system, described by its creator as:
+Ruwiki uses the \RDoc templating system, described by its creator as:
 
-  RDoc's cheap-n-cheerful HTML page template system.
+> \RDoc's cheap-n-cheerful HTML page template system.
 
 == Templates
 
-Templates in the templating system are essentially plain strings with particular references to templating keys or an include directive.
+Templates in the templating system are essentially plain strings with
+particular references to templating keys or an include directive.
 
 === Templating Keys
 
-The template interacts with a value hash provided by ruwiki. The keys known to the templates expected by Ruwiki are detailed in Configuring_Ruwiki. Nested key references are found from the inside-out. That is, the closest resolving key to the current level is found, not the furthest resolving key.
+The template interacts with a value hash provided by ruwiki. The keys known to
+the templates expected by Ruwiki are detailed in Configuring_Ruwiki. Nested
+key references are found from the inside-out. That is, the closest resolving
+key to the current level is found, not the furthest resolving key.
 
 ==== Simple Templating Keys
-Ruwiki only uses the simplest form of RDoc templating at this point, which is the enclosing of variable names between percent signs (e.g., <tt>%wiki_title%</tt>).
+Ruwiki only uses the simplest form of \RDoc templating at this point, which is
+the enclosing of variable names between percent signs (e.g.,
+<tt>%wiki_title%</tt>).
 
 ==== Repeating Block Keys
-The RDoc templating library supports a block format:
+The \RDoc templating library supports a block format:
 
   START:key
     ... stuff ...
   END:key
 
-The block between <tt>START:key</tt> and <tt>END:key</tt> will be repeated once for each hash entry found in the array at <tt>key</tt> in the main value hash. Blocks may be nested arbitrarily deeply.
+The block between <tt>\START:key</tt> and <tt>\END:key</tt> will be repeated
+once for each hash entry found in the array at <tt>key</tt> in the main value
+hash. Blocks may be nested arbitrarily deeply.
 
 ==== Conditional Block Keys
 
@@ -34,15 +42,18 @@ The block between <tt>START:key</tt> and <tt>END:key</tt> will be repeated once 
     ... stuff ...
   ENDIF:key
 
-The block between <tt>IF:key</tt> and <tt>ENDIF:key</tt> will be included in the output only if the corresponding key is set in the value hash.
+The block between <tt>\IF:key</tt> and <tt>\ENDIF:key</tt> will be included in
+the output only if the corresponding key is set in the value hash.
 
 === Including Other Templates
 
-Templates may include other templates to any arbitrary level by using the !INCLUDE! directive. 
+Templates may include other templates to any arbitrary level by using the
+!INCLUDE! directive. 
 
 == Example
 
-Given the set of templates T1, T2, and T3 (shown below), here's how we would use the templating system.
+Given the set of templates T1, T2, and T3 (shown below), here's how we would
+use the templating system.
 
   values = { "name" => "Dave", "state" => "TX" }
   t = TemplatePage.new(T1, T2, T3)

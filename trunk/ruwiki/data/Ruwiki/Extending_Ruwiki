@@ -4,15 +4,25 @@ version: 1
 #EHDR
 = Extending Ruwiki 0.7.0
 
-Ruwiki is relatively easily extended to support new features. There are three primary ways in which Ruwiki can be extended by the end user: markup, backends, and translating Ruwiki error messages.
+Ruwiki is relatively easily extended to support new features. There are three
+primary ways in which Ruwiki can be extended by the end user: markup,
+backends, and translating Ruwiki error messages.
+
+: <strong>WARNING:</strong> These \APIs are likely to change moving forward,
+: and new \APIs may be added as well. (There are definite changes in 0.8.0.
+: You have been warned.)
 
 == Extending Ruwiki Markup
 
-Ruwiki's WikiMarkup can be extended by creating a new Ruwiki::Wiki::Token. Tokens will be automatically loaded if they are placed in <i>ruwiki/wiki/tokens</i>.
+Ruwiki's WikiMarkup can be extended by creating a new \Ruwiki::Wiki::Token.
+Tokens will be automatically loaded if they are placed in
+<em>ruwiki/wiki/tokens</em>.
 
-It is recommended that new tokens be added to the test cases in <tt>tests/tc_tokens.rb</tt>.
+It is recommended that new tokens be added to the test cases in
+<tt>tests/tc_tokens.rb</tt>.
 
-The following Ruwiki::Wiki::Token class will convert strings in the forms of \[ruby-talk:12345] to links.
+The following \Ruwiki::Wiki::Token class will convert strings in the forms of
+\[ruby-talk:12345] to links.
 
   class RubyTalkLinks < Ruwiki::Wiki::Token
     def self.rank
@@ -31,13 +41,16 @@ The following Ruwiki::Wiki::Token class will convert strings in the forms of \[r
 
 === Known Instance Variables
 ==== @match
-The match data for this token instance is is kept in @match. This is what will be used in #replace and #restore.
+The match data for this token instance is is kept in @match. This is what will
+be used in #replace and #restore.
 
 ==== @project
 The project being processed.
 
 ==== @backend
-The Backend for the wiki. If you are using Ruwiki tokenizers outside of Ruwiki, this does not need to be a BackendDelegator, but can be the direct Backend (which expects less information).
+The Backend for the wiki. If you are using Ruwiki tokenizers outside of
+Ruwiki, this does not need to be a \BackendDelegator, but can be the direct
+Backend (which expects less information).
 
 ==== @script
 The URI to the script.
@@ -45,11 +58,16 @@ The URI to the script.
 === Required Methods
 ==== ::regexp
 
-Ruwiki tokens are matched only through regular expression matches. As shown in the example above, the regular expression for ruby-talk mailing list posts is <tt>%r{\[ruby-talk:(\d+)\]}</tt>. The purpose of the ::regexp method is to return the regexp for matching.
+Ruwiki tokens are matched only through regular expression matches. As shown in
+the example above, the regular expression for ruby-talk mailing list posts is
+<tt>%r{\[ruby-\talk:(\d+)\]}</tt>. The purpose of the ::regexp method is to
+return the regexp for matching.
 
-For most inline matches, Ruwiki will ensure that the escape character (\) works automatically. For whole-line matches, it is necessary to match the escape character manually and provide a #restore method.
+For most inline matches, Ruwiki will ensure that the escape character (\)
+works automatically. For whole-line matches, it is necessary to match the
+escape character manually and provide a #restore method.
 
-As an example, the HRule class implements these methods.
+As an example, the \HRule class implements these methods.
 
   def self.regexp
     %r|^\\?-{4,}|
@@ -59,11 +77,17 @@ As an example, the HRule class implements these methods.
     @match[0][1 .. -1]
   end
 
-It may also be necessary to match escapes manually on inline matches that must be along word boundaries where the regular expression includes characters that normally match word boundaries. The project index match (e.g., \::Ruwiki) regular expression does this <tt>%r{(\B|\\)::([A-Z][a-z]+)}</tt>.
+It may also be necessary to match escapes manually on inline matches that must
+be along word boundaries where the regular expression includes characters that
+normally match word boundaries. The project index match (e.g., \::Ruwiki)
+regular expression does this <tt>%r{(\B|\\)::([A-Z][a-z]+)}</tt>.
 
 ==== #replace
 
-This returns the formatted token. In the \RubyTalkLinks class above, the matched regular expression will be replaced with a hyperlink. The text of the hyperlink will be the matched text; the target of the hyperlink will include the first captured value.
+This returns the formatted token. In the \RubyTalkLinks class above, the
+matched regular expression will be replaced with a hyperlink. The text of the
+hyperlink will be the matched text; the target of the hyperlink will include
+the first captured value.
 
   def replace
     lm = @match.captures[0]
@@ -73,11 +97,16 @@ This returns the formatted token. In the \RubyTalkLinks class above, the matched
 === Optional Methods
 ==== ::rank
 
-By default, a token will be processed in the order created. Tokens may be given a specific rank to ensure that they are processed in a particular order. The default rank is <tt>9999</tt>.
+By default, a token will be processed in the order created. Tokens may be
+given a specific rank to ensure that they are processed in a particular order.
+The default rank is <tt>9999</tt>.
 
 ==== #restore
 
-Restores the token without replacement. Implements the results of the escape character. Each Token class is responsible for its own restoration. As noted in #regexp, whole-line tokens are most likely to need a #restore implementation.
+Restores the token without replacement. Implements the results of the escape
+character. Each Token class is responsible for its own restoration. As noted
+in #regexp, whole-line tokens are most likely to need a #restore
+implementation.
 
 ==== ::post_replace
 
@@ -85,14 +114,15 @@ Performs any necessary massaging of the data. The Lists token uses this to
 ensure that lists are collapsed together; the Paragraph token uses this to
 ensure that there are no empty paragraph tag pairs (&lt;p&gt;&lt;/p&gt;).
 
-<b>Note:</b> This has been changed from Ruwiki 0.6.x. Plugins written for the
-Ruwiki 0.6.x Token API will need to be modified so that this is defined as:
+: <strong>Note:</strong> This has been changed from Ruwiki 0.6.x. Plugins
+: written for the Ruwiki 0.6.x Token API will need to be modified so that this
+: is defined as:
 
   def self.post_replace
     ...
   end
 
-as opposed to:
+: as opposed to:
 
   def post_replace
     ...
@@ -100,31 +130,41 @@ as opposed to:
 
 == Extending Ruwiki Backends
 
-Ruwiki can support varying backends, as the backend interface has been abstracted completely from the data store. The backend <b>must</b>:
+Ruwiki can support varying backends, as the backend interface has been
+abstracted completely from the data store. The backend <strong>must</strong>:
 
-# reside in <i>ruwiki/backends/</i> as <i>backend_name</i>.rb.
-# be registered by adding the <i>backend_name</i> as a symbol (e.g., :<i>backend_name</i>) to Ruwiki::KNOWN_BACKENDS.
-# inherit from Ruwiki::Backend.
-# exist as Ruwiki::Backend::<i>\Backend_name</i>.
+# reside in <em>ruwiki/backends/</em> as <em>backend_name</em>.rb.
+# be registered by adding the <em>backend_name</em> as a symbol (e.g., :<em>backend_name</em>) to \Ruwiki::KNOWN_BACKENDS.
+# inherit from \Ruwiki::Backend.
+# exist as \Ruwiki::Backend::<em>\Backend_name</em>.
 
 === Required Methods
 ==== #initialize(storage_options)
 
-The backend may only obtain its configuration information from the provided ruwiki instance (through Ruwiki#config) and must set @ruwiki (this can be achieved by calling <tt>super ruwiki</tt>).
+The backend may only obtain its configuration information from the provided
+ruwiki instance (through Ruwiki#config) and must set @ruwiki (this can be
+achieved by calling <tt>super ruwiki</tt>).
 
-If a configuration error is detected during initialization, the backend should raise Ruwiki::Backend::BackendError. This would be done with:
+If a configuration error is detected during initialization, the backend should
+raise the \Ruwiki::Backend exception class \BackendError. This would be done with:
 
   raise Ruwiki::Backend::BackendError.new([:message_symbol, [message_parameters]])
 
-Backend writers should add messages to the <i>lang/en.rb</i> at a minimum. The BackendDelegator will detect this and report the results appropriately.
+Backend writers should add messages to the <em>lang/en.rb</em> at a minimum. The
+\BackendDelegator will detect this and report the results appropriately.
 
 ==== #load(topic, project)
 
-The backend will be provided the name of the topic and project and must return the selected page as an array, one row per line. If the backend you have chosen returns the page as a single text block, it will be necessary to do a String#split("\n") on it.
+The backend will be provided the name of the topic and project and must return
+the selected page as an array, one row per line. If the backend you have
+chosen returns the page as a single text block, it will be necessary to do a
+String#split("\n") on it.
 
 ==== #save(page)
 
-This method must store the provided page in the backend. Note that the return value of the Page#rawtext method must be stored. This method may call the private method Backend#make_diff to generate the differences hash.
+This method must store the provided page in the backend. Note that the return
+value of the Page#rawtext method must be stored. This method may call the
+private method Backend#make_diff to generate the differences hash.
 
   diff = {
     'old_version' => page.old_version,
@@ -137,15 +177,21 @@ This method must store the provided page in the backend. Note that the return va
 
 ===== Backend#make_diff(page, oldpage, newpage)
 
-This method expects the page object, the old page text, and the new page text. They must be Diffable. Backend::Flatfiles provides oldpage and newpage to Diff#diff as arrays (each line as a separate entry in the array).
+This method expects the page object, the old page text, and the new page text.
+They must be Diffable. \Ruwiki::Backend::Flatfiles provides oldpage and newpage to
+Diff#diff as arrays (each line as a separate entry in the array).
 
 ==== #obtain_lock(page, address = 'UKNOWN', timeout = 600)
 
-Obtains an exclusive lock on the page. The lock should have a timeout and permit access from the same IP address without restriction. This should <b>not</b> be a filesystem lock. The time stored for purposes of locking should include the timeout (e.g., Time.now.to_i + time).
+Obtains an exclusive lock on the page. The lock should have a timeout and
+permit access from the same IP address without restriction. This should
+<strong>not</strong> be a filesystem lock. The time stored for purposes of locking
+should include the timeout (e.g., Time.now.to_i + time).
 
 ==== #release_lock(page, address = 'UNKNOWN')
 
-Releases the exclusive lock on the page. The lock should not be released unless the IP address on the lock is the same or the lock has expired.
+Releases the exclusive lock on the page. The lock should not be released
+unless the IP address on the lock is the same or the lock has expired.
 
 ==== #project_exists?(project)
 
@@ -156,11 +202,15 @@ Returns <tt>true</tt> if the page exists within the specified project.
 
 === Optional Methods
 
-Note that these methods are currently optional (they are not yet called from Ruwiki), but will become required moving forward as the functions are implemented in Ruwiki.
+Note that these methods are currently optional (they are not yet called from
+Ruwiki), but will become required moving forward as the functions are
+implemented in Ruwiki.
 
 ==== #destroy(page)
 
-Removes the page from the wiki. This should <b>not</b> remove the change history of the topic (in the event that the page has been removed maliciously). There will be a separate method to remove the page history.
+Removes the page from the wiki. This should <strong>not</strong> remove the change
+history of the topic (in the event that the page has been removed
+maliciously). There will be a separate method to remove the page history.
 
 ==== #create_project(project)
 
@@ -172,16 +222,23 @@ Attempts to destroy the project.
 
 == Translating Ruwiki Error Messages
 
-Ruwiki is internationalized. This method sets the Ruwiki error messages (and a few other messages) to the specified language Module. The language Module must have a constant Hash called <tt>Message</tt> containing a set of symbols and localized versions of the messages associated with them.
+Ruwiki is internationalized. This method sets the Ruwiki error messages (and a
+few other messages) to the specified language Module. The language Module must
+have a constant Hash called <tt>Message</tt> containing a set of symbols and
+localized versions of the messages associated with them.
 
-If the file <i>ruwiki/lang/es.rb</i> contains the module <tt>Ruwiki::Lang::ES</tt>, the messages for RSS could be localized to Spanish thus:
+If the file <em>ruwiki/lang/es.rb</em> contains the module
+<tt>\Ruwiki::Lang::ES</tt>, the messages for RSS could be localized to Spanish
+thus:
 
   require 'ruwiki/lang/es'
   ...
   wiki.config.language = Ruwiki::Lang::ES
 
-Localization is per wiki instance. In a servlet environment, this may mean that only a single language is recognised.
+Localization is per wiki instance. In a servlet environment, this may mean
+that only a single language is recognised.
 
-It is recommended that Message.default be set to a proc that reports unknown message keys.
+It is recommended that Message.default be set to a proc that reports unknown
+message keys.
 
   Message.default = proc { |h, k| "Language ERROR: Unknown message key #{k.inspect}." }

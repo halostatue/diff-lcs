@@ -29,3 +29,9 @@ pre { background-color: #FFFFA7; border: 1px solid black; }
   max-width: 48%;
   clear: none;
 }
+div.rw_calendar {
+  border: 1px solid black;
+  float: right;
+  clear: none;
+}
+.rw_calendar-today { background-color: #FFFFA7; }

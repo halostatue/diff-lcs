@@ -17,9 +17,9 @@ class Ruwiki
       end
 
       def replace
-        content = @match[4]
+        content = @match.captures[3]
 
-        if @match[3].nil?
+        if @match.captures[2].nil?
           char = '*'
           elem = 'ul'
         else
@@ -27,10 +27,10 @@ class Ruwiki
           elem = 'ol'
         end
 
-        indent = @match[1].count(char)
+        indent = @match.captures[0].count(char)
 
-        pre   = ""
-        post  = ""
+        pre   = ''
+        post  = ''
         indent.times do
           pre   << "<#{elem}><li>"
           post  << "</li></#{elem}>"
@@ -59,17 +59,25 @@ class Ruwiki
       # Produces block quotes.
     class Blockquotes < Ruwiki::Wiki::Token
       def self.regexp
-        %r{^\\?(:+)\s+(.*)$}
+        %r{^\\?((:+)|(>+))(\s+.*)$}
       end
 
       def replace
-        content = @match[2]
-        indent  = @match[1].count(":")
+        content = @match.captures[3]
 
-        pre   = ""
-        post  = ""
+        if @match.captures[2].nil?
+          char = ':'
+          cite = ''
+        else
+          char = '>'
+          cite = ' type="cite"'
+        end
+        indent  = @match.captures[0].count(char)
+
+        pre   = ''
+        post  = ''
         indent.times do
-          pre   << "<blockquote>"
+          pre   << "<blockquote#{cite}>"
           post  << "</blockquote>"
         end
         "#{pre}#{content}#{post}"
@@ -80,7 +88,9 @@ class Ruwiki
       end
 
       def self.post_replace(content)
-        content.gsub!(%r{</blockquote>(\n|<br ?/?>)?<blockquote>}, '')
+        content.gsub!(%r{</blockquote>(\n|<br ?/?>)?<blockquote[^>]*>}, '')
+        content.gsub!(%r{(</?blockquote[^>]*>\n?)\s*}, '\1')
+        content.gsub!(%r{</blockquote>(<blockquote[^>]*>)+}, '\1')
         content
       end
     end
@@ -92,12 +102,12 @@ class Ruwiki
       end
 
       def replace
-        definition  = @match[3]
-        term        = @match[2]
-        indent      = @match[1].count(';')
+        definition  = @match.captures[2]
+        term        = @match.captures[1]
+        indent      = @match.captures[0].count(';')
 
-        pre   = ""
-        post  = ""
+        pre   = ''
+        post  = ''
         indent.times do
           pre   << "<dl>"
           post  << "</dl>"
@@ -111,6 +121,7 @@ class Ruwiki
 
       def self.post_replace(content)
         content.gsub!(%r{</dl>(\n|<br ?/?>)?<dl>}, '')
+        content.gsub!(%r{</dl>(<dl>)+}, '\1')
         content
       end
     end

@@ -14,44 +14,45 @@
 require 'test/unit'
 require 'harness'
 require 'ruwiki/backend/flatfiles'
+require 'ostruct'
 
 # see if we can reproduce the LicenseandAuthor hang
 # described in bug id 147 on rubyforge
 class TC_LicenseAndAuthorHang < Test::Unit::TestCase
   def setup
     @ffopts = { :data_path => "../data" }
-    @storage_opts = {}
-    @storage_opts[:flatfiles] = @ffopts
+
+    @backend = nil
+    @pg = nil
   end
 
   # load "to the metal"
   def test_ffload
-    ffbackend = ::Ruwiki::Backend::Flatfiles.new(@ffopts)
-    pg = ffbackend.load('LicenseAndAuthorInfo', 'Ruwiki')
-    assert( pg != nil )
+    assert_nothing_raised do
+      @backend = ::Ruwiki::Backend::Flatfiles.new(@ffopts)
+    end
+    assert_not_nil(@backend)
+    assert_nothing_raised do
+      @pg = @backend.load('LicenseAndAuthorInfo', 'Ruwiki')
+    end
+    assert_not_nil(@pg)
   end
 
   # abstract backend retreive
   def test_beload
-    mock_ruwiki = Object.new
-    class << mock_ruwiki 
-      attr_accessor :config
+    @backend = nil
+    assert_nothing_raised do
+      mock_ruwiki = OpenStruct.new
+      mock_ruwiki.config = OpenStruct.new
+      mock_ruwiki.config.message = {}
+      mock_ruwiki.config.storage_options = { :flatfiles => @ffopts }
+
+      @backend = ::Ruwiki::BackendDelegator.new(mock_ruwiki, :flatfiles)
     end
-
-    mock_config = Object.new
-    mock_ruwiki.config = mock_config
-
-    class << mock_config
-      attr_accessor :message
-      attr_accessor :storage_options
+    assert_not_nil(@backend)
+    assert_nothing_raised do
+      @pg = @backend.retrieve('LicenseAndAuthorInfo', 'Ruwiki')
     end
-    mock_config.message         = Object.new
-    mock_config.storage_options = { :flatfiles => @ffopts }
-
-    backend = ::Ruwiki::BackendDelegator.new(mock_ruwiki, :flatfiles)
-    assert( backend != nil )
-
-    pg = backend.retrieve('LicenseAndAuthorInfo', 'Ruwiki')
-    assert( pg != nil )
+    assert_not_nil(@pg)
   end
 end

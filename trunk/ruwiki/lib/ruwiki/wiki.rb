@@ -69,14 +69,8 @@ class Ruwiki
         }
       end
 
-      token_classes = tokens.map { |token| token.class }.uniq.sort_by { |token| token.rank }
-
-      token_classes = tokens.map { |token| token.class }.uniq
-      token_classes.each { |tc| tc.post_replace(content) }
-#     tokens.each { |token| token.post_replace(content) }
-#     3.times do
-#       tokens.reverse_each { |token| token.post_replace(content) }
-#     end
+      token_classes = tokens.map { |token| token.class }.sort_by { |token| token.rank }
+      token_classes.uniq.each { |tc| tc.post_replace(content) }
 
       content
     end
