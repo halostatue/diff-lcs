@@ -119,7 +119,7 @@ class Ruwiki
     rescue Errno::EACCES => e
       raise Ruwiki::Backend::BackendError.new(e), @message[:no_access_to_destroy_topic] % [page.project, page.topic]
     rescue Exception => e
-      p = [project, topic, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
+      p = [page.project, page.topic, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
       raise Ruwiki::Backend::BackendError.new(e), @message[:cannot_destroy_topic] % p
     end
 
@@ -129,7 +129,7 @@ class Ruwiki
     rescue Ruwiki::Backend::BackendError
       raise Ruwiki::Backend::BackendError.new(nil), @message[:cannot_release_lock] % [page.project, page.topic]
     rescue Errno::EACCES, Exception => e
-      p = [project, topic, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
+      p = [page.project, page.topic, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
       raise Ruwiki::Backend::BackendError.new(e), @message[:error_releasing_lock] % p
     end
 
@@ -139,7 +139,7 @@ class Ruwiki
     rescue Ruwiki::Backend::BackendError
       raise Ruwiki::Backend::BackendError.new(nil), @message[:cannot_obtain_lock] % [page.project, page.topic]
     rescue Errno::EACCES, Exception => e
-      p = [project, topic, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
+      p = [page.project, page.topic, %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
       raise Ruwiki::Backend::BackendError.new(e), @message[:error_creating_lock] % p
     end
 
@@ -176,11 +176,11 @@ class Ruwiki
     end
 
     def search_all_projects(searchstr)
-      if @delegate.respond_to?( :search_all_projects )
-        return @delegate.search_all_projects(searchstr) 
+      if @delegate.respond_to?(:search_all_projects)
+        @delegate.search_all_projects(searchstr) 
+      else
+        search_all_projects_default(searchstr)
       end
-
-      search_all_projects_default(searchstr)
     end
 
     # Attempts to search all projects.

@@ -59,10 +59,7 @@ class Ruwiki::Wiki
 
       # Replaces the text to <pre>content</pre>.
     def replace
-      content = @match.captures[0]
-      content.gsub!(/&/, '&amp;')
-      content.gsub!(/</, '&lt;')
-      content.gsub!(/>/, '&gt;')
+      content = Ruwiki.clean_entities(@match.captures[0])
 
       %Q{</p><pre class="rwtk_Code">#{content}</pre>\n}
     end

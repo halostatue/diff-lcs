@@ -31,7 +31,7 @@
   # Look at Ruwiki::Markup::Token describes how to create Token objects.
 class Ruwiki::Wiki
   def parse(content, project)
-    content = content.dup
+    content = clean(content)
     tokens  = []
     project ||= @default_project
 
@@ -84,6 +84,53 @@ class Ruwiki::Wiki
     @default_project  = default_project
     @script           = script
     @title            = title
+  end
+
+private
+    # Find HTML tags
+  SIMPLE_TAG_RE = %r{<[^>]+?>}
+  HTML_TAG_RE   = %r{<(/)?\s*([\w:]+)(?:\s+([^>]+)(/)?\s*)?>}
+  ATTRIBUTES_RE = %r{([\w:]+)(=(?:\w+|"[^"]+?"|'[^']+?'))?}
+  ALLOWED_ATTR  = %w(style title type lang dir class id cite datetime abbr) +
+                  %w(colspan rowspan compact start media)
+  ALLOWED_HTML  = %w(abbr acronym address b big blockquote br caption cite) +
+                  %w(code col colgroup dd del dfn dir div dl dt em h1 h2 h3) +
+                  %w(h4 h5 h6 hr i ins kbd kbd li menu ol p pre q s samp) +
+                  %w(small span span strike strong style sub sup table tbody) +
+                  %w(td tfoot th thead tr tt u ul var)
+
+    # Clean the content of unsupported HTML and attributes. This includes
+    # XML namespaced HTML. Sorry, but there's too much possibility for
+    # abuse.
+  def clean(content)
+    content = content.gsub(SIMPLE_TAG_RE) do |tag|
+      tagset = HTML_TAG_RE.match(tag)
+
+      if tagset.nil?
+        tag = Ruwiki.clean_entities(tag)
+      else
+        closer, name, attributes, single = tagset.captures
+
+        if ALLOWED_HTML.include?(name.downcase)
+          unless closer or attributes.nil?
+            attributes = attributes.scan(ATTRIBUTES_RE).map do |set|
+              if ALLOWED_ATTR.include?(set[0].downcase)
+                set.join
+              else
+                ""
+              end
+            end.compact.join(" ")
+            tag = "<#{closer}#{name} #{attributes}#{single}>"
+          else
+            tag = "<#{closer}#{name}>"
+          end
+        else
+          tag = Ruwiki.clean_entities(tag)
+        end
+      end
+
+      tag
+    end
   end
 end
 

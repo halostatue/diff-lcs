@@ -120,7 +120,7 @@ module Ruwiki::Backend::CoreFiles
     if lock_okay
       open(lf, 'wb') { |lfh| lfh.puts "#{address}\n#{time + timeout}" }
     else
-      raise Ruwiki::Backend::BackendError(nil)
+      raise Ruwiki::Backend::BackendError.new(nil)
     end
   end
 

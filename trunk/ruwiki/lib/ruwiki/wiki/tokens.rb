@@ -108,7 +108,7 @@ class Ruwiki
         # Restores the token without replacement. By default, replaces
         # "dangerous" HTML characters.
       def restore
-        @match[0].gsub(/&/, "&amp;").gsub(/</, "&lt;").gsub(/>/, "&gt;")
+        Ruwiki.clean_entities(@match[0])
       end
 
         # The content may need massaging after processing.

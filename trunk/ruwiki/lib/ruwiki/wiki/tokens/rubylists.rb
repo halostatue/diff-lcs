@@ -23,7 +23,8 @@ class Ruwiki
 
       def replace
         lm = @match.captures[0]
-        %Q(<a class="rwtk_RubyTalkLinks" href="http://www.ruby-talk.org/#{lm}">#{@match[0]}</a>)
+#       %Q(<a class="rwtk_RubyTalkLinks" href="http://www.ruby-talk.org/#{lm}">#{@match[0]}</a>)
+        %Q(<a class="rwtk_RubyTalkLinks" href="http://blade.nagaokaut.ac.jp/cgi-bin/scat.rb/ruby/ruby-talk/#{lm}">#{@match[0]}</a>)
       end
     end
 

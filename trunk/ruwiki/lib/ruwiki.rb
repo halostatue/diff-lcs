@@ -383,7 +383,7 @@ p ee
       raise ArgumentError, self.message[:render_arguments] unless args.size == 2
       type  = args[0]
       error = {
-        :name => args[1].inspect.gsub(/&/, '&amp;').gsub(/</, '&lt;').gsub(/>/, '&gt;'),
+        :name => Ruwiki.clean_entitites(args[1].inspect),
         :backtrace => args[1].backtrace.join("<br />\n")
       }
       @page = Ruwiki::Page.new(Ruwiki::Page::NULL_PAGE)
@@ -480,6 +480,10 @@ p ee
 
       #TODO: add validation of modstr
     return modstr
+  end
+
+  def self.clean_entities(data)
+    data.gsub(/&/, '&amp;').gsub(/</, '&lt;').gsub(/>/, '&gt;')
   end
 
 private

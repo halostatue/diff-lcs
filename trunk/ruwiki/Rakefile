@@ -159,7 +159,7 @@ end
 
 desc "Build a Ruwiki .tar.gz distribution."
 task :tar => [ TARDIST ]
-file TARDIST => [ :test, :update_version] do |t|
+file TARDIST => [ :test, :update_version ] do |t|
   current = File.basename(Dir.pwd)
   Dir.chdir("..") do
     begin
