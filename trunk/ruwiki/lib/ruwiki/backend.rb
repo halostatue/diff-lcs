@@ -12,7 +12,7 @@ require 'diff/lcs'
 
 class Ruwiki
     # The list of known backends.
-  KNOWN_BACKENDS  = [:flatfiles]
+  KNOWN_BACKENDS  = [:flatfiles, :yaml, :marshal]
 
     # The Ruwiki backend delegator. Ruwiki will always instantiate a version
     # of this class which delegates the actual method execution to the Backend
@@ -21,6 +21,9 @@ class Ruwiki
   class BackendDelegator
     def initialize(ruwiki, backend)
       @message = ruwiki.config.message
+      @time_format = ruwiki.config.time_format || "%H:%M:%S"
+      @date_format = ruwiki.config.date_format || "%Y.%m.%d"
+      @datetime_format = ruwiki.config.datetime_format || "#{@date_format} #{@time_format}"
       options = ruwiki.config.storage_options
       options[:default_page] = ruwiki.config.default_page
 
@@ -46,16 +49,44 @@ class Ruwiki
       # after verifying that the project exists.
     def retrieve(topic, project = 'Default')
       unless page_exists?(topic, project)
+        exported = {
+          'ruwiki' => {
+            'content-version' => Ruwiki::CONTENT_VERSION,
+            'version'         => Ruwiki::VERSION
+          },
+          'properties' => {
+            'title'         => topic,
+            'topic'         => topic,
+            'project'       => project,
+            'creator'       => nil,
+            'creator-ip'    => nil,
+            'create-date'   => Time.now,
+            'editor'        => nil,
+            'editor-ip'     => nil,
+            'edit-date'     => Time.now,
+            'edit-comment'  => nil,
+            'editable'      => true,
+            'entropy'       => 0,
+            'html-headers'  => [],
+            'version'       => 0
+          },
+          'page' => {
+            'header'  => nil,
+            'footer'  => nil
+          },
+        }
+
         if project_exists?(project)
-          return { :content => "", :topic => topic, :project => project }
+          exported['page']['content'] = ""
         else
-          return { :content => @message[:project_does_not_exist] % [project],
-                   :topic   => topic, :project => project }
+          exported['page']['content'] = @message[:project_does_not_exist] % [project]
         end
+        return exported
       end
 
-      buffer = @delegate.load(topic, project)
-      return { :rawtext => buffer.join(""), :project => project, :topic => topic }
+      return @delegate.load(topic, project)
+    rescue Ruwiki::Backend::InvalidFormatError => e
+      raise Ruwiki::Backend::BackendError.new(nil), @message[:page_not_in_backend_format] % [project, topic, @delegate.class]
     rescue Errno::EACCES => e
       raise Ruwiki::Backend::BackendError.new(e), @message[:no_access_to_read_topic] % [project, topic]
     rescue Exception => e
@@ -73,20 +104,16 @@ class Ruwiki
         if (page.topic == 'RecentChanges')
           recent_changes = page.dup
         else
-          rawpage = retrieve('RecentChanges', page.project)
-          rawpage[:markup] = page.markup
-          recent_changes = Page.new(rawpage)
+          recent_changes = Page.new(retrieve('RecentChanges', page.project))
         end
 
-        changeline = "* #{Time.now}, #{page.topic}"
-        changeline += " : #{page.edit_comment}" unless page.edit_comment == ''
-        changeline += "\n"
+        changeline = "; #{Time.now.strftime(@datetime_format)}, #{page.topic} : #{page.edit_comment}\n"
 
         # add changeline to top of page
         recent_changes.content = changeline + recent_changes.content
         @delegate.store(recent_changes)
       rescue Exception => e
-        throw "Couldn't save RecentChanges\n#{e.backtrace}"
+        raise "Couldn't save RecentChanges\n#{e.backtrace}"
       end
 
     rescue Errno::EACCES => e
@@ -158,6 +185,17 @@ class Ruwiki
       raise Ruwiki::Backend::BackendError.new(e), @message[:cannot_destroy_project] % p
     end
 
+      # Attempts to search all projects.
+    def search_all_projects(searchstr)
+      hits = {}
+      list_projects.each do |project|
+        lhits = search_project(project, searchstr)
+          # Transform the keys from project local to global links.
+        lhits.each { |key, val| hits["#{project}::#{key}"] = val }
+      end
+      hits
+    end
+
       # Attempts to search a project
     def search_project(project, searchstr)
         #TODO: Validate searchstr is a safe regexp?
@@ -184,15 +222,18 @@ class Ruwiki
       raise Ruwiki::Backend::BackendError.new(e), @message[:no_access_list_topics] % [projname]
     rescue Exception => e
       p = ['', %Q~#{e}<br />\n#{e.backtrace.join('<br />\n')}~]
+$stderr.puts e, e.backtrace
       raise Ruwiki::Backend::BackendError.new(e), @message[:cannot_list_topics] % p
     end
   end
 
     # The Ruwiki backend abstract class and factory.
   class Backend
-    class ProjectExists < StandardError #:nodoc:
+    class ProjectExists < RuntimeError #:nodoc:
     end
-    class BackendError < StandardError #:nodoc:
+    class InvalidFormatError < RuntimeError #:nodoc:
+    end
+    class BackendError < RuntimeError #:nodoc:
       attr_reader :reason
 
       def initialize(reason, *args)
@@ -206,11 +247,11 @@ class Ruwiki
       # Creates the current diff object.
     def make_diff(page, oldpage, newpage)
       {
-        'old_version' => page.old_version,
+        'old_version' => ((page.version || 1) - 1),
         'new_version' => page.version,
-        'change_date' => Time.now,
-        'change_ip'   => page.change_ip,
-        'change_id'   => page.change_id,
+        'edit-date'   => page.edit_date,
+        'editor-ip'   => page.editor_ip,
+        'editor-id'   => page.editor,
         'diff'        => Diff::LCS.diff(oldpage, newpage)
       }
     end

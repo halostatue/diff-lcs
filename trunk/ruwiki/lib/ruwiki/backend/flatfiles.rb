@@ -8,193 +8,176 @@
 #
 # $Id$
 #++
-class Ruwiki
-  class Backend
-      # Stores Ruwiki pages as flatfiles.
-    class Flatfiles < Ruwiki::Backend
-        # Initializes the flatfile backend. This will read
-        # storage_options[:flatfiles] to determine the options set by the
-        # user. The following options are known for <tt>:flatfiles</tt>:
-        #
-        # :data_path::  The directory in which the wiki files will be found.
-        #               By default, this is "./data/"
-        # :extension::  The extension of the wiki files. By default, this is
-        #               +nil+.
-      def initialize(options)
-        @data_path      = options[:data_path] || File.join(".", "data")
-        @extension      = options[:extension]
-        if @extension.nil?
-          @extension_re = /$/
+require 'ruwiki/backend/_corefiles'
+
+  # Stores Ruwiki pages as flatfiles.
+class Ruwiki::Backend::Flatfiles < Ruwiki::Backend
+  include Ruwiki::Backend::CoreFiles
+
+    # Initializes the Flatfiles backend. The known options are known for
+    # Flatfiles:
+    #
+    # :data_path::    The directory in which the wiki files will be found. By
+    #                 default, this is "./data/"
+    # :extension::    The extension of the wiki files. By default, this is
+    #                 +nil+ in the backend.
+    # :default_page:: The default page for a project. By default, this is
+    #                 ProjectIndex. This is provided only so that the backend
+    #                 can make reasonable guesses.
+  def initialize(options)
+    super
+  end
+
+    # Provides a HEADER marker.
+  HEADER_RE = /^(?:([a-z]+)!)?([a-z][-a-z]+):\t(.*)$/
+  FIRST_TAB = /^\t/
+
+    # Loads the topic page from disk.
+  def load(topic, project)
+    Ruwiki::Backend::Flatfiles.load(File.read(page_file(topic, project)))
+  end
+
+    # Saves the topic page -- and its difference with the previous version
+    # -- to disk.
+  def store(page)
+    pagefile  = page_file(page.topic, page.project)
+    newpage   = Ruwiki::Backend::Flatfiles.dump(page.export)
+    make_rdiff(page, pagefile, newpage)
+
+    File.open(pagefile, 'wb') { |f| f.puts newpage }
+  end
+
+    # Destroys the topic page.
+  def destroy(page)
+    super
+  end
+
+    # Checks to see if the project exists.
+  def project_exists?(project)
+    super
+  end
+
+    # Checks to see if the page exists.
+  def page_exists?(topic, project = 'Default')
+    super
+  end
+
+    # Tries to create the project.
+  def create_project(project)
+    super
+  end
+
+    # Tries to destroy the project.
+  def destroy_project(project)
+    super
+  end
+
+    # String search all topic names and content in a project and return a
+    # has of topic hits
+  def search_project(project, searchstr)
+    super
+  end
+
+    # Attempts to obtain a lock on the topic page.
+  def obtain_lock(page, address = 'UNKNOWN', timeout = 600)
+    super
+  end
+
+    # Releases the lock on the topic page.
+  def release_lock(page, address = 'UNKNOWN')
+    super
+  end
+
+    # list projects found in data path
+  def list_projects
+    super
+  end
+
+    # list topics found in data path
+  def list_topics(project)
+    super
+  end
+
+  class << self
+    NL_RE       = /\n/
+    NL_END_RE   = /\n$/
+
+    def dump(page_hash)
+      dumpstr = ""
+
+      page_hash.keys.sort.each do |sect|
+        page_hash[sect].keys.sort.each do |item|
+          val = page_hash[sect][item]
+
+          case [sect, item]
+          when ['properties', 'create-date'], ['properties', 'edit-date']
+            val = val.to_i
+          when ['properties', 'editable']
+            val = (val ? 'true' : 'false')
+          else # string values
+            val = val.to_s
+            vala = val.split(NL_RE)
+            if vala.size == 1
+              line = val
+              line.gsub!(NL_END_RE) { "\\n" }
+            else
+              line = vala.shift
+              vala.each { |vl| line << "\n\t#{vl}" }
+            end
+          end
+          
+          dumpstr << "#{sect}!#{item}:\t#{line}\n"
+        end
+      end
+
+      dumpstr
+    end
+
+    def load(buffer)
+      page = Ruwiki::Page::NULL_PAGE.dup
+      return page if buffer.empty?
+
+      buffer = buffer.split(NL_RE)
+
+      if HEADER_RE.match(buffer[0]).nil?
+        raise Ruwiki::Backend::InvalidFormatError
+      end
+
+      sect = item = nil
+      
+      buffer.each do |line|
+        line.chomp!
+        match = HEADER_RE.match(line)
+
+          # If there is no match, add the current line to the previous match.
+          # Remove the leading \t, though.
+        if match.nil?
+          page[sect][item] << "\n#{line.gsub(FIRST_TAB, '')}"
         else
-          @extension_re = /\.#{@extension}$/
-        end
-        @default_page   = options[:default_page] || "ProjectIndex"
-        if not (File.exists?(@data_path) and File.directory?(@data_path))
-          raise Ruwiki::Backend::BackendError.new([:flatfiles_no_data_directory, [@data_path]])
-        end
-        super options
-      end
+          cap = match.captures
+            # Set the section, if provided.
+          sect = cap[0] unless cap[0].nil?
+          item = cap[1]
+          val  = cap[2]
 
-        # Loads the topic page from disk.
-      def load(topic, project)
-        pagefile = page_file(topic, project)
-        buffer = File.readlines(pagefile)
-      end
+          case [sect, item]
+          when ['ruwiki', 'content-version'], ['properties', 'version']
+            val = val.to_i
+          when ['properties', 'entropy']
+            val = val.to_f
+          when ['properties', 'create-date'], ['properties', 'edit-date']
+            val = Time.at(val.to_i)
+          when ['properties', 'editable']
+            val = (val == 'true')
+          else # string values
+            nil
+          end
 
-        # Saves the topic page -- and its difference with the previous version
-        # -- to disk.
-      def store(page)
-        pf = page_file(page.topic, page.project)
-        cf = "#{pf}.rdiff"
-
-        oldfile = File.readlines(pf) rescue []
-        oldfile.collect! { |e| e.chomp }
-        newfile = page.rawtext.split(/\n/)
-
-        diff = make_diff(page, oldfile, newfile)
-        diffs = []
-        File.open(cf, 'rb') { |f| diffs = Marshal.load(f) } if File.exists?(cf)
-        diffs << diff
-        changes = Marshal.dump(diffs)
-
-        File.open(cf, 'wb') { |cfh| cfh.print changes }
-        File.open(pf, 'wb') { |pfh| pfh.puts page.rawtext }
-      end
-
-        # Destroys the topic page.
-      def destroy(page)
-        pf = page_file(page.topic, page.project)
-        File.unlink(pf) if File.exists?(pf)
-      end
-
-        # Checks to see if the project exists.
-      def project_exists?(project)
-        pd = project_directory(project)
-        File.exists?(pd) and File.directory?(pd)
-      end
-
-        # Checks to see if the page exists.
-      def page_exists?(topic, project = 'Default')
-        pf = page_file(topic, project)
-        project_exists?(project) and File.exists?(pf)
-      end
-
-        # Tries to create the project.
-      def create_project(project)
-        pd = project_directory(project)
-        raise Ruwiki::Backend::ProjectExists if File.exists?(pd)
-        Dir.mkdir(pd)
-      end
-
-        # Tries to destroy the project.
-      def destroy_project(project)
-        pd = project_directory(project)
-        Dir.rmdir(pd) if File.exists?(pd) and File.directory?(pd)
-      end
-
-        # String search all topic names and content in a project and return a
-        # has of topic hits
-      def search_project(project, searchstr)
-        re_search = Regexp.new(searchstr, Regexp::IGNORECASE)
-
-        hits = Hash.new { |h, k| h[k] = 0 }
-        topic_list = list_topics(project)
-
-        return hits if topic_list.empty?
-
-          # search topic content
-        topic_list.each do |topic|
-            # search name
-          hits[topic] += topic.scan(re_search).size
-
-            # check content
-          buf = load(topic, project) rescue [""]
-          buf.each { |line| hits[topic] += line.scan(re_search).size }
-        end
-
-        hits
-      end
-
-        # Attempts to obtain a lock on the topic page.
-      def obtain_lock(page, address = 'UNKNOWN', timeout = 600)
-        pf = page_file(page.topic, page.project)
-        lf = "#{pf}.lock"
-        time = Time.now.to_i
-
-        lock_okay = false
-          # See if we have the lock already.
-        if File.exists?(lf)
-          data = File.readlines(lf)
-            # If the lock belongs to this address, we don't care how old it
-            # is. Thus, release it.
-          lock_okay ||= (data[0].chomp == address)
-            # If the lock is older than 10 minutes, release it.
-          lock_okay ||= (data[1].to_i < time)
-        else
-          lock_okay = true
-        end
-
-        if lock_okay
-          open(lf, 'w') { |lfh| lfh.puts "#{address}\n#{time + timeout}" }
-        else
-          raise Ruwiki::Backend::BackendError(nil)
+          page[sect][item] = val
         end
       end
 
-        # Releases the lock on the topic page.
-      def release_lock(page, address = 'UNKNOWN')
-        pf = page_file(page.topic, page.project)
-        lf = "#{pf}.lock"
-        time = Time.now.to_i
-
-        lock_okay = false
-        if File.exists?(lf)
-          data = File.readlines(lf)
-            # If the lock belongs to this address, then we can safely remove
-            # it.
-          lock_okay ||= (data[0].chomp == address)
-            # If the lock is older than 10 minutes, release it.
-          lock_okay ||= (data[1].to_i < time)
-        else
-          lock_okay = true
-        end
-
-        if lock_okay
-          File.unlink(lf) if File.exists?(lf)
-        else
-          raise Ruwiki::Backend::BackendError.new(nil)
-        end
-      end
-
-        # list projects found in data path
-      def list_projects
-        Dir[File.join(@data_path, "*")].select do |d|
-          File.directory?(d) and File.exist?(page_file(@default_page, File.basename(d)))
-        end.map { |d| File.basename(d) }
-      end
-
-        # list topics found in data path
-      def list_topics(project)
-        pd = project_directory(project)
-        raise Ruwiki::Backend::BackendError(:no_project) unless File.exist?(pd)
-
-        Dir[File.join(pd, "*")].select do |f|
-          f !~ /\.rdiff$/ and f !~ /\.lock$/ and File.file?(f) and f =~ @extension_re
-        end.map { |f| File.basename(f).sub(@extension_re, "") }
-      end
-
-    private
-      def project_directory(project)
-        File.join(@data_path, project)
-      end
-
-      def page_file(topic, project = 'Default')
-        if @extension.nil?
-          File.join(project_directory(project), topic)
-        else
-          File.join(project_directory(project), "#{topic}.#{@extension}")
-        end
-      end
+      page
     end
   end
 end

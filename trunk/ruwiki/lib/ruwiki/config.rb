@@ -15,8 +15,20 @@ class Ruwiki
     # Ruwiki configuration.
   class Config
       # Templates known to Ruwiki.
-    TEMPLATES = [ :body, :content, :error, :edit, :controls, :save ]
+    TEMPLATES = [ :body, :content, :error, :edit, :controls, :save, :footer ]
 
+      # Sets or returns the logger. The logger, if set, must respond to the
+      # same methods as WEBrick::Logger.
+    attr_accessor :logger
+      # Sets or returns the time format whenever time is outputted in Ruwiki.
+      # Default is <tt>%H:%M:%S</tt> (23:59:59).
+    attr_accessor :time_format
+      # Sets or returns the date format whenever time is outputted in Ruwiki.
+      # Default is <tt>%Y.%m.%d</tt> (2004.08.04).
+    attr_accessor :date_format
+      # Sets or returns the date-time format whenever time is outputted in Ruwiki.
+      # Default is <tt>%Y.%m.%d %H:%M:%S</tt> (2004.08.04 23:59:59).
+    attr_accessor :datetime_format
       # Adds additional information to the (rare) error reports. Defaults to
       # +false+.
     attr_accessor :debug
@@ -27,8 +39,11 @@ class Ruwiki
       # arguments or a project specification. Defaults to +Default+
     attr_accessor :default_project
       # The storage type as a Symbol. Corresponds to a filename that will be
-      # found in ruwiki/backend. In this version of Ruwiki, only flatfiles.rb
-      # (e.g., :flatfiles) is defined. Defaults to <tt>:flatfiles</tt>.
+      # found in ruwiki/backend. In this version of Ruwiki, versions for
+      # handling three different types of flat files will be found. The
+      # canonical default format is YAML (:yaml). Also supported in this
+      # version is :flatfiles (the old flatfile format with some additions),
+      # and a format based on Marshal::Dump (:marshal).
     attr_accessor :storage_type
       # The options for the specified storage type. This is a hash of hashes
       # with auto-vifification. See the storage type for available options.
@@ -106,7 +121,7 @@ class Ruwiki
       @debug            = false
       @default_project  = "Default"
       @default_page     = "ProjectIndex"
-      @storage_type     = :flatfiles
+      @storage_type     = :yaml
       @storage_options  = Hash.new { |h, k| h[k] = {} }
       @template_path    = "./templates/"
       @template_set     = "default"
@@ -115,6 +130,9 @@ class Ruwiki
       @title            = "Ruwiki"
       @features         = []
       @feature_options  = Hash.new { |h, k| h[k] = {} }
+      @time_format      = "%H:%M:%S"
+      @date_format      = "%Y.%m.%d"
+      @datetime_format  = "#{@date_format} #{@time_format}"
       
       self.language     = Ruwiki::Lang::EN
     end

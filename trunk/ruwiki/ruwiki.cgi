@@ -30,11 +30,16 @@ wiki.config.webmaster       = "webmaster@domain.com"
 # wiki.config.title           = "Ruwiki"
 # wiki.config.default_page    = "ProjectIndex"
 # wiki.config.default_project = "Default"
+  # This next defaults to :flatfiles for Ruby 1.8.1 or earlier and to :yaml for
+  # Ruby 1.8.2 or later.
 # wiki.config.storage_type    = :flatfiles
-# wiki.config.storage_options[:flatfiles][:data_path] = "./data/"
-wiki.config.storage_options[:flatfiles][:extension] = "ruwiki"
+# wiki.config.storage_options[wiki.config.storage_type][:data_path] = "./data/"
+wiki.config.storage_options[wiki.config.storage_type][:extension] = "ruwiki"
 # wiki.config.template_path   = "./templates/"
 # wiki.config.template_set    = "default"
 # wiki.config.css             = "ruwiki.css"
+# wiki.config.time_format     = "%H:%M:%S"
+# wiki.config.date_format     = "%Y.%m.%d"
+# wiki.config.datetime_format = "%Y.%m.%d %H:%M:%S"
 
 wiki.run

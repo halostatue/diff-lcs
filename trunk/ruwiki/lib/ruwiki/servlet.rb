@@ -28,6 +28,7 @@ class Ruwiki
 
         # Configuration defaults to certain values. This overrides the defaults.
       wiki.config = $config unless $config.nil?
+      wiki.config.logger = @config.logger
       wiki.run
     end
   end

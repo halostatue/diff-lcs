@@ -8,14 +8,13 @@
 <div class="rw_content">
   <form class="rw_edit_form" action="%cgi_url%/%page_project%/%page_raw_topic%" method="post">
     <span class="rw_accelerator">(#label_text_accelerator#)</span> #label_text#<br /><textarea accesskey="#label_text_accelerator#" class="rw_edit_content" rows="15" name="newpage">%page_content%</textarea>
-    <div class="rw_edit_comment"><span class="rw_accelerator">(#label_comment_accelerator#)</span> #label_edit_comment#<input accesskey="#label_comment_accelerator#" type="text" name="edcomment" /></div>
+    <div class="rw_edit_comment"><span class="rw_accelerator">(#label_comment_accelerator#)</span> #label_edit_comment#<input accesskey="#label_comment_accelerator#" type="text" name="edcomment" value="%edit_comment%" /></div>
     <input type="hidden" name="topic" value="%page_raw_topic%" />
     <input type="hidden" name="project" value="%page_project%" />
-    <input type="hidden" name="old_version" value="%page_old_version%" />
     <input type="hidden" name="version" value="%page_version%" /><br />
-    <button class="rw_edit_form_button" accesskey="#label_save_accelerator#" type="submit" name="action" value="save"><span class="rw_accelerator">(#label_save_accelerator#)</span> #label_save#</button>
-    <button class="rw_edit_form_button" accesskey="#label_cancel_accelerator#" type="submit" name="action" value="cancel"><span class="rw_accelerator">(#label_cancel_accelerator#)</span> #label_cancel#</button>
-    <button class="rw_edit_form_button" accesskey="#label_preview_accelerator#" type="submit" name="action" value="preview"><span class="rw_accelerator">(#label_preview_accelerator#)</span> #label_preview#</button>
+    <button class="rw_edit_form_button" accesskey="#label_save_accelerator#" type="submit" name="save"><span class="rw_accelerator">(#label_save_accelerator#)</span> #label_save#</button>
+    <button class="rw_edit_form_button" accesskey="#label_cancel_accelerator#" type="submit" name="cancel"><span class="rw_accelerator">(#label_cancel_accelerator#)</span> #label_cancel#</button>
+    <button class="rw_edit_form_button" accesskey="#label_preview_accelerator#" type="submit" name="preview"><span class="rw_accelerator">(#label_preview_accelerator#)</span> #label_preview#</button>
   </form>
   <h2 style="border-bottom: 1px solid black">#label_original_text#</h2>
   <div class="rw_edit_raw"><h2 class="rw_edit_title">#label_raw#</h2><pre>%pre_page_content%</pre></div>

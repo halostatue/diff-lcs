@@ -8,8 +8,13 @@
 #
 # $Id$
 #++
+
+class Ruwiki
+  VERSION         = '0.8.0'
+  CONTENT_VERSION = 2
+end
+
 require 'cgi'
-# require 'digest/md5'
 require 'ruwiki/handler'
 require 'ruwiki/template'
 require 'ruwiki/lang/en' # Default to the English language.
@@ -47,12 +52,10 @@ require 'ruwiki/page'
   #             Austin Ziegler (ruwiki@halostatue.ca)
   # Licence::   Ruby's
 class Ruwiki
-  VERSION         = '0.7'
-
   ALLOWED_ACTIONS = %w(edit create)
   EDIT_ACTIONS    = %w(save cancel)
-  EDIT_VARS       = %w(newpage topic project old_version version edcomment q)
-  RESERVED        = ['action', EDIT_VARS].flatten
+  EDIT_VARS       = %w(newpage version edcomment q)
+  RESERVED        = ['save', 'preview', 'cancel', EDIT_VARS].flatten
 
     # Returns the current configuration object.
   attr_reader :config
@@ -151,12 +154,6 @@ class Ruwiki
 
 #   @request.each_parameter { |key, val| puts "#{key} :: #{val.class}" }
 
-#   @request.each_parameter do |key, val|
-#     next if RESERVED.include?(key)
-#     @topic = key
-#   end
-
-    @project ||= @request.parameters['project']
     @project ||= @config.default_project
     @topic   ||= @config.default_page
   end
@@ -165,44 +162,35 @@ class Ruwiki
     # save, cancel, and display actions are present.
   def process_page
     content   = nil
-    page_init = @backend.retrieve(@topic, @project)
+    formatted = false
 
-    page_init[:markup]        = @markup
-    page_init[:project]     ||= @config.default_project
-    page_init[:remote_host]   = @request.environment['REMOTE_HOST']
-    page_init[:remote_addr]   = @request.environment['REMOTE_ADDR']
-
-    @page     = Ruwiki::Page.new(page_init)
-    content = @page.to_html
-
+    @page     = Ruwiki::Page.new(@backend.retrieve(@topic, @project))
     @type     = :content
 
       # TODO Detect if @action has already been set.
-    @action = @request.parameters['action'].downcase if @request.parameters['action']
+    @action ||= @request.parameters['action'].downcase if @request.parameters['action']
+    @action ||= 'save' if @request.parameters['save']
+    @action ||= 'cancel' if @request.parameters['cancel']
+    @action ||= 'preview' if @request.parameters['preview']
+
     case @action
     when 'search'
         # todo: add global search checkbox
         # get, validate, and cleanse the search string
       srchstr = validate_search_string(@request.parameters['q'])
       srchall = @request.parameters['a']
-      puts srchall
-      content = self.message[:search_results_for] % [srchstr]
+
+      @page.content = self.message[:search_results_for] % [srchstr]
       @page.topic = srchstr
-      if srchall == 'on'
-        hits = {}
-        @backend.list_projects.each do |bproj|
-          bhits = @backend.search_project(bproj,srchstr)
-          # transfrom from proj local to proj global links
-          bghits = {}
-          bhits.map { |key,val| bghits[bproj + "::" + key] = val }
-          hits.merge! bghits
-        end
+
+      unless srchall.nil?
+        hits = @backend.search_all_projects(srchstr)
       else
         hits = @backend.search_project(@page.project, srchstr)
       end
 
         # debug hit returns
-     hits.each { |key, val| $stderr << "  #{key} : #{val}\n" }
+#     hits.each { |key, val| $stderr << "  #{key} : #{val}\n" }
 
         # turn hit hash into content
       hitarr = []
@@ -216,13 +204,11 @@ class Ruwiki
         nhits = maxhits - rnhits - 1
 
         if nhits > 0
-          content << "\n== #{self.message[:number_of_hits] % [nhits]}\n* "
-          content << tarray.join("\n* ")
+          @page.content << "\n== #{self.message[:number_of_hits] % [nhits]}\n* "
+          @page.content << tarray.join("\n* ")
         end
       end
 
-      @page.content = content
-      content = @page.to_html
       @type = :search
     when 'topics'
       topic_list = @backend.list_topics(@page.project)
@@ -237,7 +223,6 @@ class Ruwiki
 EPAGE
       end
 
-      content = @page.to_html
       @type = :content
     when 'projects'
       proj_list = @backend.list_projects
@@ -253,8 +238,9 @@ EPAGE
 EPAGE
       end
 
-      content = @page.to_html
+      content = @page.to_html(@markup)
       content.gsub!(%r{\(a href='([^']+)/_topics' class='rw_minilink'\)}, '<a href="\1/_topics" class="rw_minilink">') #'
+      formatted = true
       @type = :content
     when 'edit', 'create'
         # Automatically create the project if it doesn't exist or if the action
@@ -264,6 +250,7 @@ EPAGE
       @backend.obtain_lock(@page, @request.environment['REMOTE_ADDR'])
 
       content = nil
+      formatted = true
       @type = :edit
     when 'save', 'preview'
       np = @request.parameters['newpage'].gsub(/\r/, '').chomp
@@ -283,9 +270,11 @@ EPAGE
         puts op
       else
         @page.content      = np
-        @page.old_version  = @request.parameters['old_version'].to_i + 1
         @page.version      = @request.parameters['version'].to_i + 1
-        @page.edit_comment = @request.parameters['edcomment']
+        edc = @request.parameters['edcomment']
+        unless (edc.nil? or edc.empty? or edc == "*")
+          @page.edit_comment = edc
+        end
 
         if @action == 'save'
           @type = :save
@@ -293,41 +282,38 @@ EPAGE
         
             # hack to ensure that Recent Changes are updated correctly
           if @page.topic == 'RecentChanges'
-            recentraw = @backend.retrieve(@page.topic, @page.project)
-            recentraw[:markup] = @page.markup
-            recentpg = Page.new(recentraw)
-            @page.content = recentpg.content
+            recent = Ruwiki::Page.new(@backend.retrieve(@page.topic, @page.project))
+            @page.content = recent.content
           end
 
           @backend.release_lock(@page, @request.environment['REMOTE_ADDR'])
-          content = @page.to_html
         else
           @type = :preview
           content = nil
+          formatted = true
         end
       end
     when 'cancel'
       @page.topic       = @request.parameters['topic']
       @page.project     = @request.parameters['project']
-      @page.old_version = @request.parameters['old_version'].to_i
       @page.version     = @request.parameters['version'].to_i
 
-      content           = @page.to_html
       @backend.release_lock(@page, @request.environment['REMOTE_ADDR'])
       @type = :content
     else
         # TODO AZ: This should probably return a 501 Not Implemented or some
         # other error unless @action.nil?
-      content = @page.to_html
+      nil
     end
-  rescue Exception => e  # recscue for def process_page
+    content = @page.to_html(@markup) if not formatted
+  rescue Exception => e  # rescue for def process_page
     @type = :error
     if e.kind_of?(Ruwiki::Backend::BackendError)
-      @error[:name] = "#{self.message[:error]}: #{e.to_s}"
+      name = "#{self.message[:error]}: #{e.to_s}"
     else
-      @error[:name] = "#{self.message[:complete_utter_failure]}: #{e.to_s}"
+      name = "#{self.message[:complete_utter_failure]}: #{e.to_s}"
     end
-    @error[:name] = CGI.escapeHTML(@error[:name])
+    @error[:name] = CGI.escapeHTML(name)
     @error[:backtrace] = e.backtrace.map { |el| CGI.escapeHTML(el) }.join("<br />\n")
     content = nil
   ensure
@@ -342,22 +328,31 @@ EPAGE
     else
       raise ArgumentError, self.message[:render_arguments] unless args.size == 2
       type  = args[0]
-      error = {}
-      error[:name] = args[1].inspect.gsub(/&/, '&amp;').gsub(/</, '&lt;').gsub(/>/, '&gt;')
-      error[:backtrace] = args[1].backtrace.join("<br />\n")
+      error = {
+        :name => args[1].inspect.gsub(/&/, '&amp;').gsub(/</, '&lt;').gsub(/>/, '&gt;'),
+        :backtrace => args[1].backtrace.join("<br />\n")
+      }
+      @page = Ruwiki::Page.new(Ruwiki::Page::NULL_PAGE)
     end
 
     @rendered_page = ""
-    values = { "css_link"   => @config.css_link,
-               "home_link"  => %Q(<a href="#{@request.script_url}">#{@config.title}</a>),
-               "encoding"   => @config.message[:charset_encoding],
-               "editable"   => true,
-               "cgi_url"    => @request.script_url,
-               "content"    => @content,
-               "page_project"   => @page.project,
-               "page_topic"     => CGI.unescape(@page.topic),
-               "page_raw_topic" => @page.topic
+    values = { "css_link"       => @config.css_link,
+               "home_link"      => %Q(<a href="#{@request.script_url}">#{@config.title}</a>),
+               "encoding"       => @config.message[:charset_encoding],
+               "editable"       => true,
+               "cgi_url"        => @request.script_url,
+               "content"        => @content,
              }
+
+    if @page.nil?
+      values["page_project"]    = ""
+      values["page_raw_topic"]  = ""
+      values["page_topic"]      = ""
+    else
+      values["page_project"]    = @page.project
+      values["page_raw_topic"]  = @page.topic
+      values["page_topic"]      = CGI.unescape(@page.topic)
+    end
 
     values["url_project"]       = %Q(#{values["cgi_url"]}/#{values["page_project"]})
     values["url_topic_search"]  = %Q(#{values["url_project"]}/_search?q=#{values["page_topic"]})
@@ -368,26 +363,31 @@ EPAGE
       values["wiki_title"]              = "#{self.message[:error]} - #{@config.title}" if @page.nil?
       values["wiki_title"]            ||= "#{@page.project}::#{CGI.unescape(@page.topic)} - #{@config.title}"
       values["label_topic_or_search"]   = self.message[:label_topic]
+      values["page_topic_name"]         = values["page_topic"]
       if type == :content or type == :search
-        template = TemplatePage.new(@config.template(:body), @config.template(:content), @config.template(:controls))
+        template = TemplatePage.new(@config.template(:body), @config.template(:content), @config.template(:controls), @config.template(:footer))
         if type == :search
           values["label_topic_or_search"] = self.message[:label_search]
         else
           values["page_topic"] = values["link_topic_search"]
         end
       else
-        # action type was save
+          # action type was save
         values["page_topic"] = values["link_topic_search"]
-        template = TemplatePage.new(@config.template(:body), @config.template(:save), @config.template(:controls))
+        template = TemplatePage.new(@config.template(:body), @config.template(:save), @config.template(:controls), @config.template(:footer))
       end
     when :edit, :preview
       template = TemplatePage.new(@config.template(:body), @config.template(:edit))
       values["wiki_title"]            = "#{self.message[:editing]}: #{@page.project}::#{CGI.unescape(@page.topic)} - #{@config.title}"
       values["page_content"]          = @page.content
-      values["page_old_version"]      = @page.old_version.to_s
       values["page_version"]          = @page.version.to_s
-      values["unedited_page_content"] = @page.to_html
+      values["unedited_page_content"] = @page.to_html(@markup)
       values["pre_page_content"]      = CGI.escapeHTML(@page.content)
+      if @request.parameters["edcomment"].nil? or @request.parameters["edcomment"].empty?
+        values["edit_comment"] = "*"
+      else
+        values["edit_comment"] = @request.parameters["edcomment"]
+      end
     when :error
       template = TemplatePage.new(@config.template(:body), @config.template(:error))
       values["wiki_title"]      = "#{self.message[:error]} - #{@config.title}"

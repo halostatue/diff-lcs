@@ -1,28 +1,32 @@
-id: 0
-topic: BugTracking
-version: 1
-#EHDR
-= Ruwiki 0.8.0 Bug Tracking
-This page is for tracking bugs in Ruwiki. Only bugs from recent distributions
-are tracked. In addition to this source-based bug tracking, there is the
-[http://rubyforge.org RubyForge]
-[http://rubyforge.org/tracker/?atid=407&group_id=84&func=browse bug tracker]
-for Ruwiki.
-
-Those interested in Ruwiki development may also find the Ruwiki::To_Do list
-useful.
-
-----
-== Open Bugs
-* 0.6.2: Not all formatting is applied consistently. The token rankings may need adjusting. Eivind Eklund has suggested a scheme that may help with this, but it will require architectural adjustment and will probably slow things down.
-
-----
-== Closed Bugs
-* 0.7.0: Fixed a link detection problem in \[wikiword] format. Thanks to [mailto:eivind@FreeBSD.org Eivind Eklund] for the patch.
-* 0.7.0: Fixed a problem with &lt;pre&gt; paragraph detection and generation.
-* 0.7.0: Fixed a problem with &lt;p&gt; generation.
-* 0.7.0: [http://rubyforge.org/tracker/index.php?func=detail&aid=197&group_id=84&atid=407 Run-away ruby on some links in default distribution]. This may be related to a runaway header problem that was reported to me on IRC some time back that I believe has been fixed. Please advise.
-* 0.6.1: Projects aren't created appropriately.
-* 0.6.1: Saving without editing (or repost) appears to cause problems. A fix has been applied to attempt to address this. Pages that have not been changed will not be saved.
-
-$Id$
+page!content:	= Ruwiki 0.8.0 Bug Tracking
+	This page is for tracking bugs in Ruwiki. Only bugs from recent distributions
+	are tracked. In addition to this source-based bug tracking, there is the
+	[http://rubyforge.org RubyForge]
+	[http://rubyforge.org/tracker/?atid=407&group_id=84&func=browse bug tracker]
+	for Ruwiki.
+	
+	Those interested in Ruwiki development may also find the Ruwiki::To_Do list
+	useful.
+	
+	----
+	== Open Bugs
+	* 0.6.2: Not all formatting is applied consistently. The token rankings may need adjusting. Eivind Eklund has suggested a scheme that may help with this, but it will require architectural adjustment and will probably slow things down.
+	
+	----
+	== Closed Bugs
+	* 0.7.0: Fixed a link detection problem in \[wikiword] format. Thanks to [mailto:eivind@FreeBSD.org Eivind Eklund] for the patch.
+	* 0.7.0: Fixed a problem with &lt;pre&gt; paragraph detection and generation.
+	* 0.7.0: Fixed a problem with &lt;p&gt; generation.
+	* 0.7.0: [http://rubyforge.org/tracker/index.php?func=detail&aid=197&group_id=84&atid=407 Run-away ruby on some links in default distribution]. This may be related to a runaway header problem that was reported to me on IRC some time back that I believe has been fixed. Please advise.
+	* 0.6.1: Projects aren't created appropriately.
+	* 0.6.1: Saving without editing (or repost) appears to cause problems. A fix has been applied to attempt to address this. Pages that have not been changed will not be saved.
+	
+	$Id$
+properties!editable:	
+properties!entropy:	0
+properties!project:	Ruwiki
+properties!title:	BugTracking
+properties!topic:	BugTracking
+properties!version:	1
+ruwiki!content-version:	2
+ruwiki!version:	0.8.0
