@@ -88,9 +88,16 @@ class Ruwiki::Wiki
 
 private
     # Find HTML tags
-  SIMPLE_TAG_RE = %r{<[^>]+?>}
-  HTML_TAG_RE   = %r{<(/)?\s*([\w:]+)(?:\s+([^>]+)(/)?\s*)?>}
-  ATTRIBUTES_RE = %r{([\w:]+)(=(?:\w+|"[^"]+?"|'[^']+?'))?}
+  SIMPLE_TAG_RE = %r{<[^<>]+?>}   # Ensure that only the tag is grabbed.
+  HTML_TAG_RE   = %r{\A<          # Tag must be at start of match.
+                        (/)?      # Closing tag?
+                        ([\w:]+)  # Tag name
+                        (?:\s+    # Space
+                         ([^>]+)  # Attributes
+                         (/)?     # Singleton tag?
+                        )?        # The above three are optional
+                       >}x
+  ATTRIBUTES_RE = %r{([\w:]+)(=(?:\w+|"[^"]+?"|'[^']+?'))?}x
   ALLOWED_ATTR  = %w(style title type lang dir class id cite datetime abbr) +
                   %w(colspan rowspan compact start media)
   ALLOWED_HTML  = %w(abbr acronym address b big blockquote br caption cite) +
