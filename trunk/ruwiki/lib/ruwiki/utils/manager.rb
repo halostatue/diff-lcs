@@ -100,6 +100,7 @@ to use this command-line tool. Try:
           else
             FileUtils.mkdir_p(dir)
           end
+          dest = dir
         when /;/o
           argv.push(*(arg.split(/;/o)))
         when /,/o

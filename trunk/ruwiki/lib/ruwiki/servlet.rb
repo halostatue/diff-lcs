@@ -34,5 +34,8 @@ class Ruwiki::Servlet < WEBrick::HTTPServlet::AbstractServlet
     wiki.config!
     wiki.config.logger = @config.logger
     wiki.run
+  rescue Exception => e
+    File.open("/tmp/servletrunner.log", "a+") { |f| f.puts e,
+    e.backtrace.join("\n") }
   end
 end

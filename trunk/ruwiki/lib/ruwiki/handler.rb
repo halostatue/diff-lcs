@@ -322,7 +322,7 @@ class Ruwiki::Handler
     end
 
     def <<(string)
-      @response.body << string
+      @response.body << string.to_s
       @written = true
     end
 
