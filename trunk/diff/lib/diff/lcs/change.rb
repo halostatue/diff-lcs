@@ -46,18 +46,18 @@ class Diff::LCS::Change
   end
 
   def deleting?
-    @action == :-
+    @action == '-'
   end
 
   def adding?
-    @action == :+
+    @action == '+'
   end
 
   def unchanged?
-    @action == :u
+    @action == 'u'
   end
 
   def changed?
-    @changed == :c
+    @changed == 'c'
   end
 end

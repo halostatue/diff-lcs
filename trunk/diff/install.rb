@@ -13,16 +13,16 @@ require 'test/unit/ui/console/testrunner'
 InstallOptions = OpenStruct.new
 
   # Set these values to what you want installed.
-bins  = %w{bin/**/*}
-rdoc  = %w{bin/**/*.rb lib/**/*.rb README ChangeLog Install}
-ri    = %w(bin/**/*.rb lib/**/*.rb)
+bins  = %w{bin/**/*}.reject { |e| e =~ /\.(bat|cmd)$/ }
+rdoc  = %w{bin/**/* lib/**/*.rb README ChangeLog Install}.reject { |e| e=~ /\.(bat|cmd)$/ }
+ri    = %w(bin/**/*.rb lib/**/*.rb).reject { |e| e=~ /\.(bat|cmd)$/ }
 libs  = %w{lib/**/*.rb}
 tests = %w{tests/**/*.rb}
 
-def do_bins(bins, strip = 'bin/')
+def do_bins(bins, target, strip = 'bin/')
   bins.each do |bf|
     obf = bf.gsub(/#{strip}/, '')
-    install_binfile(bf, obf)
+    install_binfile(bf, obf, target)
   end
 end
 
@@ -116,7 +116,7 @@ end
 
 def build_ri(files)
   ri = RDoc::RDoc.new
-  ri.document(%w{--ri-site --line-numbers --show-hash} + files)
+  ri.document(%w{--ri-site --show-hash} + files)
 rescue RDoc::RDocError => e
   $stderr.puts e.message
 rescue Exception => e
@@ -144,17 +144,16 @@ end
 # to insert a #! line; on a Unix install, the command is named as expected
 # (e.g., bin/rdoc becomes rdoc); the shebang line handles running it. Under
 # windows, we add an '.rb' extension and let file associations do their stuff.
-def install_binfile(from, op_file)
+def install_binfile(from, op_file, target)
   tmp_dir = nil
-  BinDirs.each do |t|
-    stat = File.stat(t) rescue next
-    if stat.directory? and stat.writable?
+  [target, Config::CONFIG['bindir'], ENV['TMP'], ENV['TEMP'], '/tmp', 'C:/temp'].each do |t|
+    if File.directory?(t) and File.writable?(t)
       tmp_dir = t
       break
     end
   end
   
-  fail "Cannot finda  temporary directory" unless tmp_dir
+  fail "Cannot find a temporary directory" unless tmp_dir
   tmp_file = File.join(tmp_dir, '_tmp')
 
   File.open(from) do |ip|
@@ -165,7 +164,21 @@ def install_binfile(from, op_file)
     end
   end
 
-  opfile += ".rb" if Config::CONFIG["target_os"] =~ /win/
+  if Config::CONFIG["target_os"] =~ /win/i
+    installed_wrapper = false
+
+    if File.exists?("#{from}.bat")
+      FileUtils.install("#{from}.bat", File.join(target, "#{opfile}.bat"), 0755, true)
+      installed_wrapper = true
+    end
+
+    if File.exists?("#{from}.cmd")
+      FileUtils.install("#{from}.cmd", File.join(target, "#{opfile}.cmd"), 0755, true)
+      installed_wrapper = true
+    end
+
+    opfile += ".rb" if not installed_wrapper
+  end
   FileUtils.install(tmp_file, File.join(TargetBinDir, opfile), 0755, true)
   FileUtils.unlink(tmp_file)
 end
@@ -189,5 +202,5 @@ tests = glob(tests)
 run_tests(tests) if InstallOptions.tests
 build_rdoc(rdoc) if InstallOptions.rdoc
 build_ri(ri) if InstallOptions.ri
-do_bins(bins)
+do_bins(bins, Config::CONFIG['bindir'])
 do_libs(libs)

@@ -1,6 +1,6 @@
 Diff::LCS README
 ================
-This is the 1.0.1 release of Diff::LCS for Ruby, based originally on Perl's
+This is the 1.0.2 release of Diff::LCS for Ruby, based originally on Perl's
 Algorithm::Diff[1]. It uses the McIlroy-Hunt longest common subsequence (LCS)
 algorithm to compute intelligent differences between two sequenced enumerable
 containers[2]. The implementation is based on Mario I. Wolczko's[3] Smalltalk

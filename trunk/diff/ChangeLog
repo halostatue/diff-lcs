@@ -1,6 +1,10 @@
 Revision history for Ruby library Diff::LCS. Unless explicitly noted otherwise,
 all changes are produced by Austin Ziegler <diff-lcs@halostatue.ca>.
 
+== Diff::LCS 1.0.2
+* Fixed an issue with ldiff not working because actions were changed from
+  symbols to strings.
+
 == Diff::LCS 1.0.1
 * Minor modifications to the gemspec, the README.
 * Renamed the diff program to ldiff (as well as the companion batch file) so as
