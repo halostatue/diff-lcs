@@ -270,7 +270,7 @@ class Ruwiki
         # get, validate, and cleanse the search string
         # TODO: add empty string rejection.
       srchstr = validate_search_string(@request.parameters['q'])
-      if srchstr.nil?
+      if not srchstr.nil?
         srchall = @request.parameters['a']
 
         @page.editable  = false
@@ -304,7 +304,7 @@ class Ruwiki
 
         @type = :search
       else
-        @sysmessage = self.message[:not_editing_current_version] % [ @page.project, @page.topic ]
+        @sysmessage = self.message[:no_empty_search_string] % [ @page.project, @page.topic ]
         @type = :content
       end
     when 'topics'
@@ -364,11 +364,16 @@ EPAGE
       @backend.create_project(@page.project) unless @backend.project_exists?(@page.project)
       @page.creator = @auth_token.name if @action == 'create' and @auth_token
       @page.indexable = false
-      @lock = @backend.obtain_lock(@page, @request.environment['REMOTE_ADDR'])
+      @lock = @backend.obtain_lock(@page, @request.environment['REMOTE_ADDR']) rescue nil
 
-      content = nil
-      formatted = true
-      @type = :edit
+      if @lock.nil?
+        @type = :content
+        @sysmessage = self.message[:page_is_locked]
+      else
+        content = nil
+        formatted = true
+        @type = :edit
+      end
     when 'save', 'preview'
       np = @request.parameters['newpage'].gsub(/\r/, '').chomp
       @page.topic = @request.parameters['topic']

@@ -255,12 +255,10 @@ page!content:	= Extending Ruwiki %RV#%
 	==== #obtain_lock(page, time, expire, address = 'UKNOWN')
 	Obtains an exclusive lock on the page. The \BackendDelegator is called
 	with the page, the address, and a timeout which is provided. The time
-	is provided .
-
-	Obtains an exclusive lock on the page. The lock should have a timeout and
-	permit access from the same IP address without restriction. This should
-	<strong>not</strong> be a filesystem lock. The time stored for purposes of locking
-	should include the timeout (e.g., Time.now.to_i + time).
+	is provided by the call to the BackendDelegate, and the expire is also
+	provided by the call to the BackendDelegate which is given a timeout
+	value (by default 600 seconds). If the lock is still in effect, a
+	second call to #obtain_lock should renew the timeout on the lock.
 	
 	==== #release_lock(page, address = 'UNKNOWN')
 	Releases the exclusive lock on the page. The lock should not be released

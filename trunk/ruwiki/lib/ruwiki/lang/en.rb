@@ -54,6 +54,7 @@ EOM
 The search field may not be empty. Please enter something in the search box
 before pressing the search button.
 EOM
+      :page_is_locked               => "The page is locked for editing. Please wait a few minutes and try again.",
 
         # Config-related messages.
       :config_not_ruwiki_config     => "Configuration must be of class Ruwiki::Config.",

@@ -57,6 +57,7 @@ EOM
 Das Suchfeld darf nicht leer sein. Bitte etwas eingeben bevor der Suchknopf
 gedrückt wird.
 EOM
+      :page_is_locked               => "Die Seite ist bereits zur Bearbeitung gesperrt. Bitte warte ein paar Minuten und versuche es dann noch ein mal.",
 
         # Config-related messages.
       :config_not_ruwiki_config     => "Die Konfiguration muss von Typ der Klasse Ruwiki::Config sein.",

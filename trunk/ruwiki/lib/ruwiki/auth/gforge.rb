@@ -46,7 +46,7 @@ rescue LoadError
       return AuthenticationResult.new if rows.size != 1
 
       user_name = rows[0].strip
-      sql       = %Q(SELECT unix_group_name FROM groups g, users u, user_group ug WHERE u.user_user_name = #{user_name} AND ug.user_id = u.user_id AND g.group_id = ug.group_id)
+      sql       = %Q(SELECT unix_group_name FROM groups g, users u, user_group ug WHERE u.user_name = '#{user_name}' AND ug.user_id = u.user_id AND g.group_id = ug.group_id)
 
       res       = %x(psql -q -t -U #{options['user']} #{options['pass']} -c \"#{sql}\")
       groups    = []
@@ -60,8 +60,7 @@ class Ruwiki::Auth::Gforge < Ruwiki::Auth
   def self.authenticate(request, response, options = {})
     options['user'] = options['user'].gsub!(%r{^(\w+)}, '\1')
     options['pass'] = options['pass'].gsub!(%r{^(\w+)}, '\1')
-    session_key = request.cookies['session_ser'].value[0].split(%r{=-\*-})[-1]
-    $stderr.puts session_key.inspect
+    session_key = request.cookies['session_ser'].value[0].split(%r{-\*-})[-1]
     token = GForgeAuthenticator.authenticate(session_key, options)
     token = Ruwiki::Auth::Token.new(token.user_name, token.groups)
     token.permissions.default = true if token.found?

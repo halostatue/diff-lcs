@@ -55,6 +55,7 @@ EOM
 El campo de búsqueda no puede estar vacío. Por favor introduzca el texto
 a buscar antes de pulsar sobre el botón de búsqueda.
 EOM
+      :page_is_locked               => "La pagina no puede ser editada al estar bloqueada en este momento. Por favor espere unos minutos y vuelva a intentar.",
 
         # Config-related messages.
       :config_not_ruwiki_config     => "La configuración debe ser de clase Ruwiki::Config.",
