@@ -39,6 +39,10 @@ class Ruwiki
         :no_access_to_store_topic     => "Kann %s::%s nicht speichern: %s.",
         :project_already_exists       => "Das Projekt %s existiert bereits.",
         :project_does_not_exist       => "Das Projekt %s existiert nicht.",
+        :no_access_list_projects      => "Keine Berechtigung um das Projektliste",
+        :no_access_list_topics        => "Keine Berechtigung um das Themaliste (%s).",
+        :search_project_fail          => "Suchprojektausfallen %s Zeichenkette %s",
+
           # Config-related messages.
         :config_not_ruwiki_config     => "Die Konfiguration muss von Typ der Klasse Ruwiki::Config sein.",
         :invalid_template_dir         => "Der angegebene Pfad für Schablonen (%s) existiert nicht oder ist kein Verzeichnis.",

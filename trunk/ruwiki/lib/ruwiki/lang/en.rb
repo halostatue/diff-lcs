@@ -38,8 +38,8 @@ class Ruwiki
         :no_access_to_store_topic     => "No permission to store the %s::%s.",
         :project_already_exists       => "Project %s already exists.",
         :project_does_not_exist       => "Project %s does not exist.",
-        :no_access_list_projects     => "No permission to list projects.",
-        :no_access_list_topics       => "No permission to list topics in project %s.",
+        :no_access_list_projects      => "No permission to list projects.",
+        :no_access_list_topics        => "No permission to list topics in project %s.",
         :search_project_fail          => "Failure searching project %s with string %s.",
 
           # Config-related messages.
