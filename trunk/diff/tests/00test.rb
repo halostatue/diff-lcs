@@ -1,6 +1,6 @@
 #! /usr/bin/env ruby
 #
-$:.unshift '../lib' if __FILE__ == $0 # Make this library first!
+$LOAD_PATH.unshift("#{File.dirname(__FILE__)}/../lib") if __FILE__ == $0
 
 require 'diff/lcs'
 require 'test/unit'
