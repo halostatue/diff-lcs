@@ -15,7 +15,9 @@ BugTracking.
 * Added configuration API for future work surrounding features. The existing wiki is mostly feature complete. Additional features (such as access controls) will be added through the feature interface.
 * Fixed project creation.
 * Fixed problems with WikiWord links.
-* TODO Added Wikipedia-style Wiki links (\[[list of words]]).
+* Added Wikipedia-style Wiki links (\[[list of words]]).
+* Fixed a potential problem with re-posted data or saving without editing.
+* Added the ability to put commands in the URL.
 
 == Version 0.6.0
 * Added Ruby mailing list reference support (e.g., \[ruby-talk:12345]).

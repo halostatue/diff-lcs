@@ -14,8 +14,10 @@ Ruwiki's WikiMarkup can be extended by creating a new Ruwiki::Wiki::Token.
 Tokens will be automatically loaded if they are placed in
 <i>ruwiki/wiki/tokens</i>.
 
-The
-following Ruwiki::Wiki::Token class will convert strings in the forms of
+It is recommended that new tokens be added to the test cases in
+<tt>tests/</tt>.
+
+The following Ruwiki::Wiki::Token class will convert strings in the forms of
 \[ruby-talk:12345] to links.
 
   class RubyTalkLinks < Ruwiki::Wiki::Token

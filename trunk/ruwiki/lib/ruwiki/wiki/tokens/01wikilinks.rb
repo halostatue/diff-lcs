@@ -15,8 +15,10 @@ class Ruwiki
       # This provides the basic WikiWord match. This supports WikiWord,
       # CPlusPlus, ThisIsALink, and C_Plus_Plus.
     RE_WIKI_WORDS       = %r{[[:upper:]][\w_]*(?:[[:lower:]]+[[:upper:]_]|[[:upper:]_]+[[:lower:]])[\w_]*}
-      # This provides wikipedia format matches, e.g., [[wikipedia links]].
-    RE_WIKIPEDIA_WORDS  = %r{\[\[(.+?)\]\]}
+      # This provides wikipedia format matches, e.g., [[wikipedia links]]. The
+      # only restriction on words in this format is that they must NOT begin
+      # with an underscore ('_').
+    RE_WIKIPEDIA_WORDS  = %r{\[\[([^_].*?)\]\]}
       # This provides the basic Wiki Project match.
     RE_PROJECT_WORD     = %r{[[:upper:]][[:lower:]]+}
 
@@ -43,30 +45,32 @@ class Ruwiki
         if @ruwiki.backend.page_exists?(topic, project)
           VIEW_LINK % ["#{@ruwiki.request.script_url}/#{project}/#{link}", "#{project}::#{topic.gsub(/_/, ' ')}"]
         else
-          EDIT_LINK % ["#{project}::#{topic.gsub(/_/, ' ')}", "#{@ruwiki.request.script_url}/#{project}/#{link}/edit"]
+          EDIT_LINK % ["#{project}::#{topic.gsub(/_/, ' ')}", "#{@ruwiki.request.script_url}/#{project}/#{link}/_edit"]
         end
       end
     end
 
+      # Creates a crosslink for a Project::WikiPage using a Wikipedia link
+      # format.
     class ProjectCrossLinkWikipedia < Ruwiki::Wiki::Token
       def self.rank
         502
       end
 
       def self.regexp
-        %r{(#{RE_PROJECT_WORD})::(#{RE_WIKIPEDIA_WORDS})}
+        %r{(#{RE_PROJECT_WORD})::#{RE_WIKIPEDIA_WORDS}}
       end
 
       def replace
         captures = @match.captures
         project = captures[0]
         link    = CGI.escape(captures[1])
-        topic   = captures[2]
+        topic   = captures[1]
 
         if @ruwiki.backend.page_exists?(topic, project)
           VIEW_LINK % ["#{@ruwiki.request.script_url}/#{project}/#{link}", "#{project}::#{topic}"]
         else
-          EDIT_LINK % ["#{project}::#{topic}", "#{@ruwiki.request.script_url}/#{project}/#{link}/edit"]
+          EDIT_LINK % ["#{project}::#{topic}", "#{@ruwiki.request.script_url}/#{project}/#{link}/_edit"]
         end
       end
     end
@@ -92,9 +96,9 @@ class Ruwiki
           VIEW_LINK % ["#{@ruwiki.request.script_url}/#{project}/ProjectIndex", project]
         else
           if @ruwiki.backend.project_exists?(project)
-            EDIT_LINK % [project, "#{@ruwiki.request.script_url}/#{project}/ProjectIndex/edit"]
+            EDIT_LINK % [project, "#{@ruwiki.request.script_url}/#{project}/ProjectIndex/_edit"]
           else
-            EDIT_LINK % [project, "#{@ruwiki.request.script_url}/#{project}/create"]
+            EDIT_LINK % [project, "#{@ruwiki.request.script_url}/#{project}/_create"]
           end
         end
       end
@@ -118,21 +122,23 @@ class Ruwiki
         topic = @match.captures[1]
         link  = CGI.escape(topic.dup)
 
-        if @ruwiki.backend.page_exists?(topic, project)
-          VIEW_LINK % ["#{@ruwiki.request.script_url}/#{@project}/#{link}", "#{@project}::#{topic.gsub(/_/, ' ')}"]
+        if @ruwiki.backend.page_exists?(topic, @project)
+          VIEW_LINK % ["#{@ruwiki.request.script_url}/#{@project}/#{link}", topic.gsub(/_/, ' ')]
         else
-          EDIT_LINK % ["#{@project}::#{topic.gsub(/_/, ' ')}", "#{@ruwiki.request.script_url}/#{@project}/#{link}/edit"]
+          EDIT_LINK % [topic.gsub(/_/, ' '), "#{@ruwiki.request.script_url}/#{@project}/#{link}/_edit"]
         end
       end
     end
 
+      # Creates a link to a WikiPage in the current project using a Wikipedia
+      # link format.
     class WikipediaLinks < Ruwiki::Wiki::Token
       def self.rank
         503
       end
 
       def self.regexp
-        %r{(\b|\\)(#{RE_WIKIPEDIA_WORDS})\b}
+        %r{(\B|\\)#{RE_WIKIPEDIA_WORDS}\B}
       end
 
       def restore
@@ -142,12 +148,12 @@ class Ruwiki
       def replace
         captures = @match.captures
         link     = CGI.escape(captures[1])
-        topic    = captures[2]
+        topic    = captures[1]
 
-        if @ruwiki.backend.page_exists?(topic, project)
-          VIEW_LINK % ["#{@ruwiki.request.script_url}/#{@project}/#{link}", "#{@project}::#{topic}"]
+        if @ruwiki.backend.page_exists?(topic, @project)
+          VIEW_LINK % ["#{@ruwiki.request.script_url}/#{@project}/#{link}", topic]
         else
-          EDIT_LINK % ["#{@project}::#{topic}", "#{@ruwiki.request.script_url}/#{@project}/#{link}/edit"]
+          EDIT_LINK % [topic, "#{@ruwiki.request.script_url}/#{@project}/#{link}/_edit"]
         end
       end
     end

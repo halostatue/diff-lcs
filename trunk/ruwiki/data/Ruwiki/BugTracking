@@ -12,9 +12,8 @@ You may also be interested in the Ruwiki::To_Do list.
 ----
 == Closed Bugs
 * Projects aren't created appropriately. Fixed in 0.6.1.
+* Saving without editing (or repost) appears to cause problems. A fix has been applied to attempt to address this. Pages that have not been changed will not be saved.
 
 ----
 == Open Bugs
 * Not all formatting is applied consistently. The token rankings may need adjusting.
-* Saving without editing (or repost) appears to cause problems.
-* Version on the document itself does not appear to be increased.

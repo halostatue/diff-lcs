@@ -8,6 +8,7 @@
 #
 # $Id$
 #++
+
 class Ruwiki
   class Wiki
       # The Paragraph Token class changes blank lines to <p> tags. This class,
@@ -21,7 +22,7 @@ class Ruwiki
 
         # Matches blank lines. %r{^\s*$}
       def self.regexp
-        %r{^\s*$}
+        %r{(^\s*$)}
       end
 
         # Replaces with "<p>"
@@ -31,6 +32,7 @@ class Ruwiki
 
         # Ensures that <p> won't be surrounded by <br> tags.
       def post_replace(content)
+        content.gsub!(%r{\n$}, '</p>')
         content.gsub!(%r{(\n|<br ?/?>)?<p>(\n|<br ?/?>)?}, '<p>')
         content.gsub!(%r{<p>}, '</p><p>')
         content.gsub!(%r{</p>(</p>)+}, '</p>')
@@ -38,6 +40,7 @@ class Ruwiki
         content.gsub!(%r{</body>}, '</p></body>')
         content.gsub!(%r{<p></p>}, '')
         content.gsub!(%r{(</h\d>)</p>}, '\1')
+        content.gsub!(%r{^</p>}, '')
         content
     end
   end
@@ -70,31 +73,33 @@ class Ruwiki
       end
     end
 
+    RE_URI_SCHEME = %r{[\w.]+?:}
+    RE_URI_PATH   = %r{[^\s<>\]]}
+    RE_URI_TEXT   = %r{[^\]]*}
+    RE_IMAGE      = /(jpg|jpeg|png|gif)$/
+
       # Converts URLs in the form of [url] to numbered links.
     class NumberedLinks < Ruwiki::Wiki::Token
       def self.rank
         2
       end
 
-      def initialize(ruwiki, match, parse, project = nil)
+      def initialize(ruwiki, match, project = nil)
         super
         @@count = 0
       end
 
-# URL regexp: %r!^(?:([^:/?#]+):)?(?:(?://)?([^/?#]*))?([^?#]*)(?:\?([^#]*))?(?:#(.*))?!)
       def self.regexp
-        %r{\[((https?|ftp|mailto|news):[^\s<>\]]*?)\]}
+        %r{\[(#{RE_URI_SCHEME}(?:#{RE_URI_PATH})*?)\]}
       end
 
-      IMAGE_RE = /(jpg|jpeg|png|gif)$/
-
       def replace
-        extlink = @match[1]
+        extlink = @match.captures[0]
 
         @@count += 1
         name = "[#{@@count}]"
 
-        if extlink =~ IMAGE_RE
+        if extlink =~ RE_IMAGE
           %Q{<img src="#{extlink}" title="#{name}" alt="#{name}" />}
         else
           %Q{<a class="rw_extlink" href="#{extlink}">#{name}</a>}
@@ -109,16 +114,14 @@ class Ruwiki
       end
 
       def self.regexp
-        %r{\[(((https?)|(ftp)|(mailto)|(news)):[^\s<>]*)\s+([^\]]*)\]}
+        %r{\[(#{RE_URI_SCHEME}(?:#{RE_URI_PATH})*?)\s+(#{RE_URI_TEXT})\]}
       end
 
-      IMAGE_RE = /(jpg|jpeg|png|gif)$/
-
       def replace
-        extlink = @match[1]
-        name    = @match[7]
+        extlink = @match.captures[0]
+        name    = @match.captures[1]
 
-        if extlink =~ IMAGE_RE
+        if extlink =~ RE_IMAGE
           %Q{<img src="#{extlink}" title="#{name}" alt="#{name}" />}
         else
           %Q{<a class="rw_extlink" href="#{extlink}">#{name}</a>}
@@ -129,19 +132,17 @@ class Ruwiki
       # Converts URLs to links where the "name" of the link is the URL itself.
     class ExternalLinks < Ruwiki::Wiki::Token
       def self.rank
-        4
+        504
       end
 
       def self.regexp
-        %r{\b((https?|ftp|mailto|news):[^\s<>]*)}
+        %r{\b(#{RE_URI_SCHEME}#{RE_URI_PATH}+)}
       end
-
-      IMAGE_RE = /(jpg|jpeg|png|gif)$/
 
       def replace
         extlink = @match[1]
 
-        if extlink =~ IMAGE_RE
+        if extlink =~ RE_IMAGE
           %Q{<img src="#{extlink}" title="Image at: #{extlink}" alt="Image at: #{extlink}" />}
         else
           %Q{<a class="rw_extlink" href="#{extlink}">#{extlink}</a>}

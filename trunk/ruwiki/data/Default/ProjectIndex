@@ -4,7 +4,7 @@ version: 1
 #EHDR
 = Ruwiki
 Ruwiki is a simple, extensible Wiki written in Ruby. It supports both CGI and
-WEBrick interfaces, templates, and CSS formatting. Additionally, it supports
+\WEBrick interfaces, templates, and CSS formatting. Additionally, it supports
 project namespaces, so that two pages can be named the same for differing
 projects without colliding or having to resort to odd naming conventions.
 Please see ::Ruwiki for more information.

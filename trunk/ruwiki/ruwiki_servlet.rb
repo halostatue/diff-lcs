@@ -39,10 +39,9 @@ $config.webmaster       = "webmaster@domain.com"
 # $config.css             = "ruwiki.css"
 # $config.template_file   = nil
 
-s = WEBrick::HTTPServer.new(
-      :Port => $OPT_p.to_i,
-      :StartThreads => 1,
-      :Logger       => WEBrick::Log::new($stderr, WEBrick::Log::DEBUG))
+s = WEBrick::HTTPServer.new :Port => $OPT_p.to_i, :StartThreads => 1,
+                            :Logger => WEBrick::Log::new($stderr, WEBrick::Log::DEBUG)
+
 s.mount("/", Ruwiki::Servlet)
 trap("INT") { s.shutdown; exit }
 s.start

@@ -9,6 +9,7 @@
 # $Id$
 #++
 require 'cgi'
+require 'digest/md5'
 require 'ruwiki/handler'
 require 'ruwiki/template'
 require 'ruwiki/lang/en' # Default to the English language.
@@ -85,7 +86,7 @@ class Ruwiki
     @config.message
   end
 
-    # Initializes Ruwiki. 
+    # Initializes Ruwiki.
   def initialize(handler)
     @request    = handler.request
     @response   = handler.response
@@ -132,41 +133,45 @@ class Ruwiki
     case path_info.size
     when 0 # Safety check.
       nil
-    when 1 # /PageTopic OR /edit
+    when 1 # /PageTopic OR /_edit
       set_page_name_or_action(path_info[0])
-    when 2 # /Project/ OR /Project/PageTopic OR /Project/edit OR /Project/create
+    when 2 # /Project/ OR /Project/PageTopic OR /Project/_edit OR /Project/create
       @project_name = path_info.shift
       set_page_name_or_action(path_info[0])
-    else # /Project/PageTopic/edit OR /Project/diff/3,4 OR something else.
+    else # /Project/PageTopic/_edit OR /Project/diff/3,4 OR something else.
       @project_name = path_info.shift
-      if action?(path_info[0])
-        @action = path_info.shift
+      item = path_info.shift
+      action = RE_ACTION.match(item)
+      if action
+        @action = action.captures[0]
         @params = path_info
       else
-        @page_name = path_info.shift
-        if action?(path_info[0])
-          @action = path_info.shift
+        @page_name = item
+        item = path_info.shift
+        action = RE_ACTION.match(item)
+        if action
+          @action = action.captures[0]
           @params = path_info
         end
       end
     end
 
-      @request.each_parameter do |key, val|
-        next if RESERVED.include?(key)
-        @page_name = key
-      end
+    @request.each_parameter do |key, val|
+      next if RESERVED.include?(key)
+      @page_name = key
+    end
 
     @project_name ||= @request.parameters['project']
-      @project_name ||= @config.default_project
-      @page_name    ||= @config.default_page
+    @project_name ||= @config.default_project
+    @page_name    ||= @config.default_page
   end
 
     # Processes the page through the necessary steps. This is where the edit,
     # save, cancel, and display actions are present.
   def process_page
-    content   = nil
-    @page     = @backend.retrieve(@page_name, @project_name)
-    @type     = :content
+    content = nil
+    @page   = @backend.retrieve(@page_name, @project_name)
+    @type   = :content
       # TODO Detect if @action has already been set.
     @action = @request.parameters['action'].downcase if @request.parameters['action']
 
@@ -176,23 +181,31 @@ class Ruwiki
           # Automatically create the project if it doesn't exist or if the
           # action is 'create'.
         @backend.create_project(@page.project) if @action == 'create'
-p @page.project, @backend.project_exists?(@page.project)
         @backend.create_project(@page.project) unless @backend.project_exists?(@page.project)
         @backend.obtain_lock(@page)
 
         content = nil
         @type = :edit
       when 'save'
-        @page.topic       = @request.parameters['topic']
-        @page.project     = @request.parameters['project']
-        @page.content     = @request.parameters['newpage']
-        @page.old_version = @request.parameters['old_version'].to_i + 1
-        @page.version     = @request.parameters['version'].to_i + 1
+        np = @request.parameters['newpage'].gsub(/\r/, "").chomp
+        @page.topic = @request.parameters['topic']
+        @page.project = @request.parameters['project']
+
+        op = @request.parameters['origpage'].unpack("m*")[0]
+
+        if np == op
+          @page.content = op
+          @type = :content
+        else
+          @page.content = np
+          @page.old_version = @request.parameters['old_version'].to_i + 1
+          @page.version = @request.parameters['version'].to_i + 1
+          @type = :save
+          @backend.store(@page)
+        end
+        @backend.release_lock(@page)
 
         content = @page.to_html
-        @backend.store(@page)
-        @backend.release_lock(@page)
-        @type = :save
       when 'cancel'
         @page.topic       = @request.parameters['topic']
         @page.project     = @request.parameters['project']
@@ -245,9 +258,9 @@ p @page.project, @backend.project_exists?(@page.project)
       values["wiki_title"]    ||= "#{@page.project}::#{CGI.unescape(@page.topic)} - #{@config.title}"
       values["page_topic"]      = CGI.unescape(@page.topic)
       values["page_raw_topic"]  = @page.topic
-      values["page_project"]  = @page.project
-      values["cgi_url"]       = @request.script_url
-      values["content"]       = @content
+      values["page_project"]    = @page.project
+      values["cgi_url"]         = @request.script_url
+      values["content"]         = @content
       if type == :content
         template = TemplatePage.new(@config.template(:body), @config.template(:content), @config.template(:controls))
       else
@@ -258,14 +271,14 @@ p @page.project, @backend.project_exists?(@page.project)
       values["wiki_title"]            = "#{message()[:editing]}: #{@page.project}::#{CGI.unescape(@page.topic)} - #{@config.title}"
       values["page_topic"]            = CGI.unescape(@page.topic)
       values["page_raw_topic"]        = @page.topic
-      values["page_project"] = @page.project
-      values["cgi_url"] = @request.script_url
-      values["page_content"] = @page.content
-      values["orig_page"] = [@page.content].pack("m*")
-      values["page_old_version"] = @page.old_version.to_s
-      values["page_version"] = @page.version.to_s
+      values["page_project"]          = @page.project
+      values["cgi_url"]               = @request.script_url
+      values["page_content"]          = @page.content
+      values["orig_page"]             = [@page.content].pack("m*")
+      values["page_old_version"]      = @page.old_version.to_s
+      values["page_version"]          = @page.version.to_s
       values["unedited_page_content"] = @page.to_html
-      values["pre_page_content"] = CGI.escapeHTML(@page.content)
+      values["pre_page_content"]      = CGI.escapeHTML(@page.content)
     when :error
       template = TemplatePage.new(@config.template(:body), @config.template(:error))
       values["wiki_title"]      = "#{message()[:error]} - #{@config.title}"
@@ -284,18 +297,16 @@ p @page.project, @backend.project_exists?(@page.project)
     @response.write_headers
     @response << @rendered_page
   end
-  
-private
-  def action?(x)
-    return false if x.nil?
-    (x == x.downcase) and (x.downcase == CGI.escape(x.downcase))
-  end
 
-  def set_page_name_or_action(x)
-    if action?(x)
-      @action     = x
+private
+  RE_ACTION = %r{^_([[:lower:]]+)$}
+
+  def set_page_name_or_action(item)
+    action = RE_ACTION.match(item)
+    if action
+      @action     = action.captures[0]
     else
-      @page_name  = x
+      @page_name  = item
     end
   end
 end
