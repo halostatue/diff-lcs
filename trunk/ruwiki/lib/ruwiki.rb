@@ -463,11 +463,11 @@ EPAGE
     # Outputs the page.
   def output
     return if @response.written?
-    if @request.environment["HTTP_ACCEPT"] =~ %r{application/xhtml\+xml}
-      @response.add_header("Content-type", "application/xhtml+xml")
-    else
+#   if @request.environment["HTTP_ACCEPT"] =~ %r{application/xhtml\+xml}
+#     @response.add_header("Content-type", "application/xhtml+xml")
+#   else
       @response.add_header("Content-type", "text/html")
-    end
+#   end
     @response.add_header("Cache-Control", "max_age=0")
     @response.write_headers
     @response << @rendered_page
