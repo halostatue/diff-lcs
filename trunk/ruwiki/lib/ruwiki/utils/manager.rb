@@ -302,7 +302,8 @@ module Ruwiki::Utils::Manager
       @ruwiki_servlet_cmd = File.join(@shared, "bin", "ruwiki_servlet.cmd")
       @ruwiki_service     = File.join(@shared, "bin", "ruwiki_service.rb")
       @ruwiki_cgi         = File.join(@shared, "bin", "ruwiki.cgi")
-      @ruwiki_pkg         = File.join(@shared, Ruwiki::Utils::Manager::DEFAULT_PACKAGE_NAME)
+      @ruwiki_pkg         = File.join(@shared, "share", "ruwiki",
+                                      Ruwiki::Utils::Manager::DEFAULT_PACKAGE_NAME)
     end
 
     def with(obj)
@@ -566,7 +567,7 @@ module Ruwiki::Utils::Manager
             svc.dependencies      = [] # Required because of a bug in Win32::Service
           end
           service.close
-          ioe[:output] << Ruwiki::Utils::Manager.manager(:manager_service_installed) % [ service_name ] << "\n"
+          ioe[:output] << Ruwiki::Utils::Manager.message(:manager_service_installed) % [ service_name ] << "\n"
         end
 
         if options[:service_start]
