@@ -17,7 +17,7 @@ require 'ostruct'
 require 'test/unit'
 require 'fileutils'
 
-class TC_Backend_Indexing < Test::Unit::TestCase
+class TC_Backend_Flatfile < Test::Unit::TestCase
   def setup
     @ffopts = { :data_path => "./test/data" }
 
@@ -44,6 +44,12 @@ class TC_Backend_Indexing < Test::Unit::TestCase
     @pg = nil
   end
 
+  def teardown
+    # remove testing flatabase
+    FileUtils.rm_rf( @ffopts[:data_path] )
+    Dir.rmdir("./test") # ugly but it works
+  end
+
   def test_list_projects
     assert_nothing_raised do
       @backend = ::Ruwiki::Backend::Flatfiles.new(@ffopts)
@@ -65,7 +71,4 @@ class TC_Backend_Indexing < Test::Unit::TestCase
     end
   end
 
-  def teardown
-    FileUtils.rm_rf( @ffopts[:data_path] )
-  end
 end
