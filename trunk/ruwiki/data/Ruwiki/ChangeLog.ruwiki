@@ -13,6 +13,14 @@ BugTracking.
 * AZ: Topic backlink search: searches for mentions of the topic in the other topics of the project.
 * AZ: New look! Ruwiki now sports a new look with CSS and template changes.
 * AZ: New templating engine. The Rdoc templating engine has been greatly enhanced in preparation for some changes that will happen surrounding antispam capabilities.
+; \Ruwiki::Wiki::Handler : Change the way that Tokens get their configuration information to be its own class.
+; Rename \Ruwiki::Handler to \Ruwiki::NetworkHandler to reduce confusion with the new Network Handler.
+; YAML : Convert the page, header, and diff formats to YAML from custom and Marshal formats.
+* Added a Ruwiki::Wiki::Handler class to cleanly handle external information required by Tokens.
+* Changed Ruwiki::Handler (ruwiki/handler.rb) to \Ruwiki::NetworkHandler (ruwiki/network_handler.rb).
+; Project topic listing : provide a special link (perhaps Project::_topics) that displays the list of topics known to that project.
+; Project listing : provide a special link (perhaps ::*) that displays the list of known projects.
+; Versioning : complete the change history. Change history is currently stored in a file <em>topic</em>.rdiff. There is no way to display the change history at this point.
 
 == Version 0.7.0
 * Changed the tokenization API so that the #post_replace call is made at the Token class level instead of the instance level.

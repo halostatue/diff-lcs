@@ -301,6 +301,8 @@ EPAGE
       @backend.release_lock(@page, @request.environment['REMOTE_ADDR'])
       @type = :content
     else
+        # TODO AZ: This should probably return a 501 Not Implemented or some
+        # other error unless @action.nil?
       content = @page.to_html
     end
   rescue Exception => e  # recscue for def process_page
@@ -390,14 +392,13 @@ EPAGE
     @response << @rendered_page
   end
 
-  # nil if string is invalid
+    # nil if string is invalid
   def validate_search_string(instr)
-    return nil if( instr == '' )
+    return nil if instr.empty?
 
     modstr = instr.dup
 
-    #TODO: add validation of modstr
-
+      #TODO: add validation of modstr
     return modstr
   end
 

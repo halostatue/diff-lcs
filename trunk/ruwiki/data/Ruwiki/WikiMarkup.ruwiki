@@ -91,6 +91,20 @@ If a Ruby mailing list message tag is provided, it will be converted appropriate
 * \[ruby-core:12345] will become [ruby-core:12345]
 * \[ruby-doc:12345] will become [ruby-doc:12345]
 
+==== ISBNs
+The Ruwiki engine converts ISBN markup in the form of \[ISBN=isbn-no] to
+Amazon.ca product listings (this can be changed, for the moment, by editing
+the lookup token; a future version of Ruwiki will support token option
+definition). The Amazon ID may be specified; a future version will allow this
+to be controlled by security definition. Any of the following are valid ISBN
+markups:
+
+* \[ISBN 0-201-61622-X] and \[ISBN 020161622X] both become [ISBN 020161622X], a reference to the book's ISBN without a title.
+* \[ISBN 0-201-61622-X, The Pragmatic Programmer] becomes [ISBN 0-201-61622-X, The Pragmatic Programmer]; with a title.
+* \[ISBN $<i>aid</i>, 0-201-61622-X] or \[ISBN $<i>aid</i>, 0-201-61622-X, The Pragmatic Programmer] refers to the book with the <i>Amazon Associate ID</i> specified.
+* \[<ISBN 0-201-61622-X, The Pragmatic Programmer] has an image on the left: [<ISBN 0-201-61622-X, The Pragmatic Programmer]
+* \[>ISBN 0-201-61622-X, The Pragmatic Programmer] has an image on the right: [<ISBN 0-201-61622-X, The Pragmatic Programmer]
+
 == Headings and Lists
 === Headings
 Use equals signs (=) for headings. Up to six equals signs can be used for HTML headings 1 - 6.

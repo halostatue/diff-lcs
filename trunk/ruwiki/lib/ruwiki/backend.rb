@@ -168,8 +168,8 @@ class Ruwiki
     end
 
     # Return an array of projects
-    def list_projects()
-      @delegate.list_projects()
+    def list_projects
+      @delegate.list_projects
     rescue Errno::EACCES => e
       raise Ruwiki::Backend::BackendError.new(e), @message[:no_access_list_projects]
     rescue Exception => e
@@ -178,7 +178,7 @@ class Ruwiki
     end
 
     # Return an array of projects
-    def list_topics( projname )
+    def list_topics(projname)
       @delegate.list_topics(projname)
     rescue Errno::EACCES => e
       raise Ruwiki::Backend::BackendError.new(e), @message[:no_access_list_topics] % [projname]
