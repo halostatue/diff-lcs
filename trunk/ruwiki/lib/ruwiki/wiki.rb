@@ -30,10 +30,17 @@
   # == Tokens
   # Look at Ruwiki::Markup::Token describes how to create Token objects.
 class Ruwiki::Wiki
+  ESCAPED_TAGS_RE = %r{\\<([^>]+)>}
+
   def parse(content, project)
     content = clean(content)
     tokens  = []
     project ||= @default_project
+
+    content.gsub!(ESCAPED_TAGS_RE) do |mm|
+      tag = Regexp.last_match.captures[0]
+      %Q(&lt;#{tag}&gt;)
+    end
 
     Token.tokenlist.each do |token|
       content.gsub!(token.regexp) do |mm|

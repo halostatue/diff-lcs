@@ -54,8 +54,7 @@ class Ruwiki::Wiki
 
       # Matches indented text. %r{^(\s+\S?.*)$}
     def self.regexp
-#     %r{^(\s+.*)$}
-      %r{^([ \t]+[^\n]*)\n?}
+      %r{^([ \t]+[^\n]*)}
     end
 
       # Replaces the text to <pre>content</pre>.

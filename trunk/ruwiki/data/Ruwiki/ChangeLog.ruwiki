@@ -2,6 +2,10 @@ page!content:	= Ruwiki %RV#% ChangeLog
 	Uncompleted to-do items can be found in To_Do. Bugs in Ruwiki are
 	tracked in BugTracking.
 	
+	== 0.9.4
+	* Fixed a \<pre> rendering problem.
+	* Added the ability to escape HTML tags. The opening and closing tags must be escaped independently, e.g., \\<pre> and \\</pre>.
+	
 	== 0.9.3
 	* Fixed a deployment problem because a RPA-modified file was checked in, preventing it from working on RubyGems.
 	
