@@ -39,7 +39,7 @@ task :test do |t|
     load testcase
   end
 
-  suite = Test::Unit::TestSuite.new
+  suite = Test::Unit::TestSuite.new("Diff::LCS Tests")
 
   ObjectSpace.each_object(Class) do |testcase|
     suite << testcase.suite if testcase < Test::Unit::TestCase
