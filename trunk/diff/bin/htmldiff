@@ -18,6 +18,7 @@ begin
   require_gem 'diff-lcs', "1.1.1"
   require 'diff/lcs/string'
 rescue LoadError
+  require 'diff/lcs'
   require 'diff/lcs/string'
 end
 
@@ -32,17 +33,17 @@ class HTMLDiff #:nodoc:
 
     # This will be called with both lines are the same
   def match(event)
-    @output << %Q|<pre class="match">#{event.old_el}</pre>\n|
+    @output << %Q|<pre class="match">#{event.old_element}</pre>\n|
   end
 
     # This will be called when there is a line in A that isn't in B
   def discard_a(event)
-    @output << %Q|<pre class="only_a">#{event.old_el}</pre>\n|
+    @output << %Q|<pre class="only_a">#{event.old_element}</pre>\n|
   end
 
     # This will be called when there is a line in B that isn't in A
   def discard_b(event)
-    @output << %Q|<pre class="only_b">#{event.new_el}</pre>\n|
+    @output << %Q|<pre class="only_b">#{event.new_element}</pre>\n|
   end
 end
 
