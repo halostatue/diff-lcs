@@ -60,14 +60,23 @@ task :package_data => [ :clean_data ] do
 end
 
 task :make_readonly do
+  data = nil
   Dir["data/**/*.ruwiki"].each do |file|
-    data = File.read(file)
+    File.open(file, "rb") { |f| data = f.read }
+    FileUtils.cp(file, "#{file}.orig")
     if data =~ %r{properties!editable:}o
       data.gsub!(%r{^properties!editable:[ \t].*?$}, "properties!editable:\tfalse")
     else
       data << "properties!editable:\tfalse\n"
     end
-    File.open(file, "w") { |out| out.write(data) }
+    File.open(file, "wb") { |out| out.write(data) }
+  end
+end
+
+task :clean_readonly do
+  Data["data/**/*.ruwiki"].each do |file|
+    orig = "#{file}.orig"
+    FileUtils.mv(orig, file) if File.exists?(orig)
   end
 end
 
@@ -76,7 +85,7 @@ spec = Gem::Specification.new do |s|
   s.version   = Ruwiki::VERSION
   s.summary   = %q{A simple, extensible, and fast Wiki-clone.}
 
-  s.add_dependency('diff-lcs', '~> 1.1.1')
+  s.add_dependency('diff-lcs', '~> 1.1.2')
   s.add_dependency('archive-tar-minitar', '~> 0.5.1')
 
   s.has_rdoc          = true
@@ -93,7 +102,16 @@ spec = Gem::Specification.new do |s|
   s.test_files    = %w{tests/testall.rb}
 
   files = Dir["**/*"].delete_if do |item|
-    item =~ %r{(?:\bCVS\b|\.svn\b|\.bak$|[Rr]akefile|install.rb$|~$|gem(?:spec)?$|lib/archive|lib/diff)}
+    item =~ %r{\bCVS\b |
+               \.svn\b |
+               \.bak$  |
+               [Rr]akefile |
+               install\.rb$ |
+               ~$ |
+               gem(spec)?$ |
+               lib/archive |
+               lib/diff |
+               \.ruwiki\.orig$}x
   end
   files << "ruwiki.pkg"
   s.files = files
@@ -185,4 +203,4 @@ file TARDIST => [ :test, :update_version ] do |t|
 end
 
 desc "Build everything."
-task :default => [ :tar, :gem ]
+task :default => [ :tar, :gem, :remove_readonly ]

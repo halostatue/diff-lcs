@@ -363,7 +363,6 @@ EPAGE
     end
     content = @page.to_html(@markup) if not formatted
   rescue Exception => ee  # rescue for def process_page
-p ee
     @type = :error
     if ee.kind_of?(Ruwiki::Backend::BackendError)
       name = "#{self.message[:error]}: #{ee.to_s}"
