@@ -180,12 +180,10 @@ def run_tests(test_list)
     require test
   end
 
-  tests = []
-  ObjectSpace.each_object { |o| tests << o if o.kind_of?(Class) } 
-  tests.delete_if { |o| !o.ancestors.include?(Test::Unit::TestCase) }
-  tests.delete_if { |o| o == Test::Unit::TestCase }
+  tests = Test::Unit::TestSuite.new
+  ObjectSpace.each_object(Class) { |o| tests << o.suite if o < Test::Unit::TestCase }
 
-  tests.each { |test| Test::Unit::UI::Console::TestRunner.run(test) }
+  Test::Unit::UI::Console::TestRunner.run(tests)
   $:.shift
 end
 
