@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.bindir = %(bin)
   s.default_executable = %(ldiff)
 
-  s.test_suite_file = %w{tests/00test.rb}
+  s.test_files = %w{tests/00test.rb}
 
   s.autorequire = %{diff/lcs}
   s.require_paths = %w{lib}

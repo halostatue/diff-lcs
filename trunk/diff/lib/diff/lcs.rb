@@ -144,7 +144,7 @@ module Diff
     # Common Subsequences</em>, CACM, vol.20, no.5, pp.350-353, May 1977, with
     # a few minor improvements to improve the speed."
   module LCS
-    VERSION = '1.1.0'
+    VERSION = '1.1.1'
   end
 end
 

@@ -2,7 +2,6 @@
 $LOAD_PATH.unshift('lib')
 
 require 'rubygems'
-require 'rake/testtask'
 require 'rake/gempackagetask'
 require 'ruwiki'
 require 'ruwiki/utils'
@@ -130,6 +129,8 @@ spec = Gem::Specification.new do |s|
   s.description = description[2..-1].join(" ")
 end
 desc "Build the RubyGem for Ruwiki."
+task :gem => [ :test ]
+task :gem => [ :update_version ]
 task :gem => [ "Readme" ]
 task :gem => [ :package_data ]
 task :gem => [ :make_readonly ]
@@ -158,7 +159,7 @@ end
 
 desc "Build a Ruwiki .tar.gz distribution."
 task :tar => [ TARDIST ]
-file TARDIST do |t|
+file TARDIST => [ :test, :update_version] do |t|
   current = File.basename(Dir.pwd)
   Dir.chdir("..") do
     begin
@@ -201,4 +202,4 @@ file TARDIST do |t|
 end
 
 desc "Build everything."
-task :default => [ :test, :update_version, :tar, :gem ]
+task :default => [ :tar, :gem ]
