@@ -1,12 +1,13 @@
 Diff::LCS README
 ================
-Diff::LCS is a port of Algorithm::Diff[1] that uses the McIlroy-Hunt longest
-common subsequence (LCS) algorithm to compute intelligent differences between
-two sequenced enumerable containers[2]. The implementation is based on Mario I.
-Wolczko's[3] Smalltalk version (1.2, 1993)[4] and Ned Konz's[5] Perl version
-(Algorithm::Diff)[6].
+Diff::LCS is a port of Algorithm::Diff[1] that uses the McIlroy-Hunt
+longest common subsequence (LCS) algorithm to compute intelligent
+differences between two sequenced enumerable containers[2]. The
+implementation is based on Mario I. Wolczko's[3] Smalltalk version (1.2,
+1993)[4] and Ned Konz's[5] Perl version (Algorithm::Diff)[6].
 
-This release is version 1.0.3. It contains only bug fixes over 1.0.2.
+This release is version 1.0.4. It contains only bug fixes over 1.0.2 and
+1.0.3.
 
 Using this module is quite simple. By default, Diff::LCS does not extend
 objects with the Diff::LCS interface, but will be called as if it were a
@@ -32,8 +33,8 @@ Objects can be extended with Diff::LCS:
   seq = seq1.traverse_sequences(seq2, callback_obj)
   bal = seq1.traverse_balanced(seq2, callback_obj)
 
-By requiring 'diff/lcs/array' or 'diff/lcs/string', Array or String will be
-extended for use this way.
+By requiring 'diff/lcs/array' or 'diff/lcs/string', Array or String will
+be extended for use this way.
 
 Copyright
 =========
@@ -43,9 +44,9 @@ Copyright
 #     Smalltalk by Mario I. Wolczko <mario@wolczko.com>
 #   implements McIlroy-Hunt diff algorithm
 #
-# This program is free software. It may be redistributed and/or modified under
-# the terms of the GPL version 2 (or later), the Perl Artistic licence, or the
-# Ruby licence.
+# This program is free software. It may be redistributed and/or modified
+# under the terms of the GPL version 2 (or later), the Perl Artistic
+# licence, or the Ruby licence.
 # 
 # $Id$
 

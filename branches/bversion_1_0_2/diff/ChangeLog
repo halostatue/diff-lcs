@@ -1,6 +1,12 @@
 Revision history for Ruby library Diff::LCS. Unless explicitly noted otherwise,
 all changes are produced by Austin Ziegler <diff-lcs@halostatue.ca>.
 
+== Diff::LCS 1.0.4
+* Fixed a problem with bin/ldiff output, especially for unified format.
+  Newlines that should have been present weren't.
+* Changed the .tar.gz installer to generate Windows batch files if ones do not
+  exist already. Removed the existing batch files as they didn't work.
+
 == Diff::LCS 1.0.3
 * Fixed a problem with #traverse_sequences where the first difference from the
   left sequence might not be appropriately captured.

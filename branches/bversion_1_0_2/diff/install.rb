@@ -1,20 +1,49 @@
-##
-# Install utility for HaloStatue scripts and libraries. Based heavily on the
-# original RDoc installation script by Pragmatic Programmers.
+#! /usr/bin/env ruby
+#--
+# Copyright 2004 Austin Ziegler <ruby-install@halostatue.ca>
+#   Install utility. Based on the original installation script for rdoc by the
+#   Pragmatic Programmers.
 #
+# This program is free software. It may be redistributed and/or modified under
+# the terms of the GPL version 2 (or later) or the Ruby licence.
+#
+# Usage
+# -----
+# In most cases, if you have a typical project layout, you will need to do
+# absolutely nothing to make this work for you. This layout is:
+#
+#   bin/    # executable files -- "commands"
+#   lib/    # the source of the library
+#   tests/  # unit tests
+#
+# The default behaviour:
+# 1) Run all unit test files (ending in .rb) found in all directories under
+#    tests/.
+# 2) Build Rdoc documentation from all files in bin/ (excluding .bat and .cmd),
+#    all .rb files in lib/, ./README, ./ChangeLog, and ./Install.
+# 3) Build ri documentation from all files in bin/ (excluding .bat and .cmd),
+#    and all .rb files in lib/. This is disabled by default on Win32.
+# 4) Install commands from bin/ into the Ruby bin directory. On Windows, if a
+#    if a corresponding batch file (.bat or .cmd) exists in the bin directory,
+#    it will be copied over as well. Otherwise, a batch file (always .bat) will
+#    be created to run the specified command.
+# 5) Install all library files ending in .rb from lib/ into Ruby's
+#    site_lib/version directory.
+#
+# $Id$
+#++
+
 require 'rbconfig'
 require 'find'
 require 'fileutils'
 require 'rdoc/rdoc'
 require 'optparse'
 require 'ostruct'
-require 'test/unit/ui/console/testrunner'
 
 InstallOptions = OpenStruct.new
 
 def glob(list)
-  g = []
-  list.each { |i| g << Dir.glob(i) }
+  g = list.map { |i| Dir.glob(i) }
   g.flatten!
   g.compact!
   g.reject! { |e| e =~ /CVS/ }
@@ -60,18 +89,24 @@ def prepare_installation
   ARGV.options do |opts|
     opts.banner = "Usage: #{File.basename($0)} [options]"
     opts.separator ""
-    opts.on('--no-rdoc', FalseClass,
-            'Prevents the creation of RDoc output.') do |onrdoc|
+    opts.on('--[no-]rdoc', 'Prevents the creation of RDoc output.', 'Default on.') do |onrdoc|
       InstallOptions.rdoc = onrdoc
     end
-    opts.on('--[no-]ri',
-            'Prevents the creation of RI output.',
-            'Default off on mswin32.') do |onri|
+    opts.on('--[no-]ri', 'Prevents the creation of RI output.', 'Default off on mswin32.') do |onri|
       InstallOptions.ri = onri
     end
-    opts.on('--no-tests', FalseClass,
-            'Prevents the execution of unit tests.') do |ontest|
+    opts.on('--[no-]tests', 'Prevents the execution of unit tests.', 'Default on.') do |ontest|
       InstallOptions.tests = ontest
+    end
+    opts.on('--quick', 'Performs a quick installation. Only the', 'installation is done.') do |quick|
+      InstallOptions.rdoc   = false
+      InstallOptions.ri     = false
+      InstallOptions.tests  = false
+    end
+    opts.on('--full', 'Performs a full installation. All', 'optional installation steps are run.') do |full|
+      InstallOptions.rdoc   = true
+      InstallOptions.ri     = true
+      InstallOptions.tests  = true
     end
     opts.separator("")
     opts.on_tail('--help', "Shows this help text.") do
@@ -120,7 +155,7 @@ end
 def build_rdoc(files)
   r = RDoc::RDoc.new
   r.document(["--main", "README", "--title", "Diff::LCS -- A Diff Algorithm",
-              "--line-numbers", "--show-hash"] + files)
+              "--line-numbers"] + files)
 
 rescue RDoc::RDocError => e
   $stderr.puts e.message
@@ -130,7 +165,7 @@ end
 
 def build_ri(files)
   ri = RDoc::RDoc.new
-  ri.document(%w{--ri-site --show-hash} + files)
+  ri.document(["--ri-site", "--merge"] + files)
 rescue RDoc::RDocError => e
   $stderr.puts e.message
 rescue Exception => e
@@ -138,6 +173,7 @@ rescue Exception => e
 end
 
 def run_tests(test_list)
+  require 'test/unit/ui/console/testrunner'
   $:.unshift "lib"
   test_list.each do |test|
     next if File.directory?(test)
@@ -169,6 +205,7 @@ def install_binfile(from, op_file, target)
   
   fail "Cannot find a temporary directory" unless tmp_dir
   tmp_file = File.join(tmp_dir, '_tmp')
+  ruby = File.join(Config::CONFIG['bindir'], Config::CONFIG['ruby_install_name'])
 
   File.open(from) do |ip|
     File.open(tmp_file, "w") do |op|
@@ -178,7 +215,7 @@ def install_binfile(from, op_file, target)
     end
   end
 
-  if Config::CONFIG["target_os"] =~ /win/i
+  if Config::CONFIG["target_os"] =~ /win/io
     installed_wrapper = false
 
     if File.exists?("#{from}.bat")
@@ -191,11 +228,32 @@ def install_binfile(from, op_file, target)
       installed_wrapper = true
     end
 
-    op_file += ".rb" if not installed_wrapper
+    if not installed_wrapper
+      tmp_file2 = File.join(tmp_dir, '_tmp_wrapper')
+      cwn = File.join(Config::CONFIG['bindir'], op_file)
+      cwv = CMD_WRAPPER.gsub('<ruby>', ruby.gsub(%r{/}) { "\\" }).gsub!('<command>', cwn.gsub(%r{/}) { "\\" } )
+
+      File.open(tmp_file2, "wb") { |cw| cw.puts cwv }
+      FileUtils.install(tmp_file2, File.join(target, "#{op_file}.bat"), :mode => 0755, :verbose => true)
+
+      File.unlink(tmp_file2)
+      installed_wrapper = true
+    end
   end
   FileUtils.install(tmp_file, File.join(target, op_file), :mode => 0755, :verbose => true)
   File.unlink(tmp_file)
 end
+
+CMD_WRAPPER = <<-EOS
+@echo off
+if "%OS%"=="Windows_NT" goto WinNT
+<ruby> -x "<command>" %1 %2 %3 %4 %5 %6 %7 %8 %9
+goto done
+:WinNT
+<ruby> -x "<command>" %*
+goto done
+:done
+EOS
 
 prepare_installation
 
