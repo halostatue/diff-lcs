@@ -1,0 +1,86 @@
+Ruwiki %RV#%
+------------
+Ruwiki is a simple, extensible Wiki-clone written in Ruby. It supports both
+CGI and WEBrick interfaces, templates, and CSS formatting. This Wiki differs
+from most other Wikis in that it supports project namespaces, so that two
+topics may be named the same for differing projects without colliding or
+having to resort to odd naming conventions. Please see the ::Ruwiki project in
+the running Wiki for more information. Ruwiki %RV#% has German and Spanish
+translations available.
+
+Upgrading
+---------
+Ruwiki %RV#% has a flatfile format that is incompatible with older versions of
+Ruwiki. If you are upgrading from one of these versions, you must use the
+bin/convert. The simple case will be (assuming that your data files are in
+./data):
+
+  % convert ./data
+
+The convert utility is automatically installed by RubyGems.
+
+Requirements
+------------
+Ruwiki currently requires:
+  * Ruby 1.8
+  * Diff::LCS 1.2.0
+  * Archive::Tar::Minitar 0.5.1
+
+The YAML backend requires Ruby 1.8.2 after preview2. You should have been
+prompted to load these dependencies on installation.
+
+Quick Start (WEBrick Readonly)
+------------------------------
+1. Type:
+
+   % ruwiki_servlet --gem-data
+
+2. Point your web browser to <http://localhost:8808/>.
+
+Quick Start (CGI)
+-----------------
+1. Create a directory in a place that your webserver can execute CGI programs
+   and type:
+
+   % ruwiki install cgi,data --to <directory>
+
+2. Ensure that ruwiki.cgi is executable on your webserver.
+3. Point your web browser to the appropriate URL.
+
+Quick Start (WEBrick)
+---------------------
+1. Create a directory to store your data and templates and type:
+
+   % ruwiki install data --to <directory>
+
+2. Type:
+
+   % ruwiki_servlet
+
+3. Point your web browser to <http://localhost:8808/>.
+
+Configuration
+-------------
+There are extensive configuration options available. The Ruwiki WEBrick
+servlet offers command-line options that simplify the configuration of Ruwiki
+without editing the servlet; use ruwiki_servlet --help for more information.
+
+Copyright
+---------
+Copyright:  Copyright © 2002 - 2004, Alan Chen and Austin Ziegler
+Authors:    Alan Chen (alan@digikata.com)
+            Austin Ziegler (ruwiki@halostatue.ca)
+Licence:    Ruby's
+
+Credits
+-------
+* This software includes portions of Diff::LCS by Austin Ziegler, available
+  for download from the Ruwiki RubyForge project:
+  [http://rubyforge.org/projects/ruwiki/]
+* Portions of this software are derived from Dave Thomas's RDoc system, now
+  part of the Ruby distribution.
+
+* Translation to German by [mailto:chneukirchen@yahoo.de Christian Neukirchen].
+* Translation to Spanish by [mailto:batsman.geo@yahoo.com Mauricio Fernández].
+
+$Id$

@@ -1,0 +1,48 @@
+page!content:	= Ruwiki
+	Ruwiki is a simple, extensible Wiki written in Ruby. It supports both
+	CGI and \WEBrick interfaces, templates, and CSS formatting.
+	Additionally, it supports project namespaces, so that two pages can be
+	named the same for differing projects without colliding or odd naming
+	conventions. Please see the ::Ruwiki project for more information.
+	
+	Ruwiki is also an internationalised Wiki, although more testing,
+	especially testing with multibyte character encodings and Unicode
+	(UTF-8) is required. There are German and Spanish localisations of the
+	messages included with the Ruwiki distribution.
+	
+	The current version is %RV#%. Enhancements and changes include:
+	* a deployment system, whereby Ruwiki deployments can be installed from a package manager like that used for RPA (rpa-base) or \RubyGems (see Ruwiki::RuwikiUtilities);
+	* support for Ruwiki as a Windows service on NT, 2000, XP, and 2003 systems;
+	* demotion of YAML and Marshal storage types to formats of the Flatfiles storage type;
+	* external user authentication (currently to \RubyForge only);
+	* antispam efforts including robot and IP exclusion and URL redirection (see Ruwiki::[[Antispam]]); and
+	* protection against cross-site scripting (XSS) attacks with HTML and CSS cleaning.
+	The full list of changes can be found in Ruwiki::ChangeLog, with
+	discussions of various features in Ruwiki::WikiMarkup,
+	Ruwiki::Configuring_Ruwiki, and Ruwiki::Extending_Ruwiki.
+	
+	If you are upgrading from a version of Ruwiki older than 0.8.0, please
+	read Ruwiki::RuwikiUtilities.
+	
+	Certain Ruwiki \APIs are considered stable at this point, others will
+	be changing leading up to 1.0. Some of this is discussed in
+	Ruwiki::To_Do, with further architectural discussions in
+	Ruwiki::[[Roadmap]].
+	
+	%projects()
+	
+	Please review ::Tutorial and ::Ruwiki if you are unfamiliar with the
+	concept of Wikis in general. If you want to play with \WikiFormatting
+	for Ruwiki, use the Ruwiki::SandBox.
+	
+	[http://rubyforge.org/projects/ruwiki Ruwiki development] is hosted at
+	[http://rubyforge.org RubyForge]. The current release of Ruwiki can
+	always be [http://rubyforge.org/frs/?group_id=84 downloaded] from
+	\RubyForge or the development (unstable) version can be obtained from
+	CVS.
+properties!project:	Default
+properties!title:	ProjectIndex
+properties!topic:	ProjectIndex
+properties!version:	1
+ruwiki!content-version:	2
+ruwiki!version:	%RV#%
