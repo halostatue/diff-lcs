@@ -208,6 +208,7 @@ EOH
 Unpackages the provided Ruwiki package (default "./%1$s") into the
 specified directory (default ".").
 EOH
+      :manager_service_broken       => "Cannot manage a Win32 service if Win32::Service is not installed.", 
       :manager_service_lo_argcount  => "Insufficient arguments: %1$s",
       :manager_service_hi_argcount  => "Too many arguments: %1$s",
       :manager_service_help         => <<-EOH ,

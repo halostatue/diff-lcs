@@ -534,7 +534,7 @@ module Ruwiki::Utils::Manager
       # The work here is based on Daniel Berger's Instiki Service Tutorial.
       # http://rubyforge.org/docman/view.php/85/107/instiki_service_tutorial.txt
       def manage_windows_service(options, ioe)
-        raise unless HasWin32Service
+        raise Ruwiki::Utils::Manager.message(:manager_service_broken) unless HasWin32Service
 
         service_name  = options[:service_name] || 'RuwikiSvc'
 

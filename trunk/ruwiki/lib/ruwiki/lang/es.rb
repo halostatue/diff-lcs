@@ -164,6 +164,7 @@ relativa a esta herramienta de la línea de comandos. Intente:
 EOH
       :manager_missing_parameter    => "Falta parámetro para la opción: %1$s",
       :manager_dest_not_directory   => "El destino (%1$s) no es un directorio.",
+      :manager_service_broken       => "No pudo crearse un servicio de Win32 al no estar instalado Win32::Service.", 
       :manager_install_help         => <<-EOH ,
     ruwiki install [OPCIONES] [--to DEST]
 
