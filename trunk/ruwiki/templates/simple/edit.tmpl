@@ -4,10 +4,11 @@
   <strong>%page_topic%</strong>
   &raquo;
   <strong>%page_project%</strong>
-  [<strong><em>#label_editing#</em></strong>]
+  [<strong><em>#label_editing#</em> #%page_version%</strong>]
 </div>
 
 <div class="rw_content">
+  [?message|<div class="rw_message">%message%</div>?]
   <form class="rw_edit_form" action="%cgi_url%/%page_project%/%page_raw_topic%" method="post">
     <span class="rw_accelerator">(#label_text_accelerator#)</span> #label_text#<br /><textarea accesskey="#label_text_accelerator#" class="rw_edit_content" rows="15" name="newpage">%page_content%</textarea>
     <div class="rw_edit_comment"><span class="rw_accelerator">(#label_comment_accelerator#)</span> #label_edit_comment#<input accesskey="#label_comment_accelerator#" type="text" name="edcomment" value="%edit_comment%" /></div>

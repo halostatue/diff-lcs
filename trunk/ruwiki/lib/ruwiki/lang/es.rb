@@ -117,9 +117,9 @@ module Ruwiki::Lang
       :converter_extension_desc     => [ "Especifica la extensión de los ficheros",
                                          "de datos de Ruwiki (por defecto .ruwiki)" ],
       :converter_extension_error    => "La extensión no debe estar vacía.",
-      :converter_noextension_desc   => [ "Indica que los ficheros de datos de"
+      :converter_noextension_desc   => [ "Indica que los ficheros de datos de",
                                          "Ruwiki no tienen ninguna extensión." ],
-      :converter_quiet_desc         => [ "Ejecución silenciosa. Por defecto se "
+      :converter_quiet_desc         => [ "Ejecución silenciosa. Por defecto se ",
                                          "ejecuta con mensajes normales." ],
       :converter_language_desc      => [ "Especifica el idioma a emplear con LANG.",
                                          "Por defecto 'en' (inglés).",
@@ -250,8 +250,8 @@ EOH
       :runner_webrick_options       => "Opciones de WEBrick:",
       :runner_port_desc             => [ "Ejecutar el servlet Ruwiki en el puerto",
                                          "especificado; por defecto 8808." ],
-      :runner_address_desc          => [ "Aceptar únicamente conexiones desde las"
-                                         "direcciones especificadas (separadas por"
+      :runner_address_desc          => [ "Aceptar únicamente conexiones desde las",
+                                         "direcciones especificadas (separadas por",
                                          "comas). Puede usarse repetidamente. Por",
                                          "defecto todas las direcciones serán",
                                          "aceptadas" ],
@@ -289,7 +289,7 @@ EOH
                                          'Por defecto; "./data".' ],
       :runner_extension_desc        => [ 'Extensión para ficheros de datos.',
                                          'Por defecto "ruwiki".' ],
-      :runner_gemdata_desc          => [ 'Ejecuta Ruwiki con los datos del',
+      :runner_central_desc          => [ 'Ejecuta Ruwiki con los datos del',
                                          'directorio RubyGem.' ],
       :runner_general_info          => "Información general:",
       :runner_help_desc             => [ "Muestra este texto." ],

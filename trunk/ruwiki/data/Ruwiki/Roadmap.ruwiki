@@ -218,8 +218,6 @@ page!content:	= Ruwiki %RV#%: The Road Ahead
 	Ruwiki 1.0.0 does not represent the end of the line for Ruwiki, but
 	what the future holds is unclear. We&rsquo;ll see what the future
 	brings.
-	
-	$Id$
 properties!project:	Ruwiki
 properties!title:	Roadmap
 properties!topic:	Roadmap

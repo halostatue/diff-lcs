@@ -42,8 +42,6 @@ end
   # Load all of the known backends.
 require 'ruwiki/utils'
 require 'ruwiki/backend/flatfiles'
-require 'ruwiki/backend/yaml'
-require 'ruwiki/backend/marshal'
 require 'ruwiki/utils/converter'
 
 exit Ruwiki::Utils::Converter.run(ARGV)

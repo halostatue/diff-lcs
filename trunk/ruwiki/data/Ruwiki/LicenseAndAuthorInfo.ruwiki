@@ -23,8 +23,6 @@ page!content:	= Ruwiki Licence
 	* [http://raa.ruby-lang.org/list.rhtml?name=trans-simple Transaction::Simple], \RubyForge [http://rubyforge.org/projects/trans-simple project].
 	* [http://raa.ruby-lang.org/list.rhtml?name=uninheritable Uninheritable], Transaction::Simple&rsquo;s \RubyForge [http://rubyforge.org/projects/trans-simple project].
 	* [http://raa.ruby-lang.org/list.rhtml?name=diff-lcs Diff::LCS], Ruwiki&rsquo;s \RubyForge [http://rubyforge.org/projects/ruwiki project].
-	
-	$Id$
 properties!project:	Ruwiki
 properties!title:	LicenseAndAuthorInfo
 properties!topic:	LicenseAndAuthorInfo

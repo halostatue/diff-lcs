@@ -8,9 +8,6 @@ page!content:	Ruwiki is a [http://www.ruby-lang.org Ruby]-based wiki. It is
 	* Has flatfile storage with simple versioning.
 	* Offers project namespaces. Different projects can have the same topic names and not collide. Thus, \Default::ReadMe and \Project::ReadMe are two different pages.
 	* Offers a calendar for date-based collaborative editing.
-	
-	$Id$
-properties!entropy:	0
 properties!project:	Ruwiki
 properties!title:	WikiFeatures
 properties!topic:	WikiFeatures

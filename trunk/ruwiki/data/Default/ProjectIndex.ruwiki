@@ -18,7 +18,7 @@ page!content:	= Ruwiki
 	Ruwiki::Configuring_Ruwiki, and Ruwiki::Extending_Ruwiki.
 	
 	If you are upgrading from an older version of Ruwiki, please read
-	Ruwiki::[[Upgrading and Converting]].
+	Ruwiki::RuwikiUtilities.
 	
 	Certain Ruwiki \APIs are considered stable at this point, others will
 	be changing leading up to 1.0. Some of this is discussed in
@@ -36,10 +36,6 @@ page!content:	= Ruwiki
 	always be [http://rubyforge.org/frs/?group_id=84 downloaded] from
 	\RubyForge or the development (unstable) version can be obtained from
 	CVS.
-	
-	$Id$
-page!footer:	
-page!header:	
 properties!project:	Default
 properties!title:	ProjectIndex
 properties!topic:	ProjectIndex

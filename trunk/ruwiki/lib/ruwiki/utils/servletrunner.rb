@@ -205,22 +205,18 @@ COPYRIGHT
           @rc.storage_options[@rc.storage_type]['extension'] ||= "ruwiki"
         }
         o.on('--data-path PATH', *self.message(:runner_datapath_desc)) { |fdp|
-          @rc.storage_options[:flatfiles]['data-path'] = fdp
-          @rc.storage_options[:yaml]['data-path'] = fdp
-          @rc.storage_options[:marshal]['data-path'] = fdp
+          @rc.storage_options['flatfiles']['data-path'] = fdp
         }
         o.on('--extension EXT', *self.message(:runner_extension_desc)) { |ext|
-          @rc.storage_options[:flatfiles]['extension'] = ext
-          @rc.storage_options[:yaml]['extension'] = ext
-          @rc.storage_options[:marshal]['extension'] = ext
+          @rc.storage_options['flatfiles']['data-path'] = fdp
         }
         if defined?(Gem::Cache)
           o.separator ""
-          o.on('--gem-data', *self.message(:runner_gemdata_desc)) {
+          o.on('--central', *self.message(:runner_central_desc)) {
             gempath = Gem::Cache.from_installed_gems.search("ruwiki", "=#{Ruwiki::VERSION}").last.full_gem_path
-            @rc.storage_type    = :flatfiles
-            @rc.storage_options[:flatfiles]['data-path'] = "#{gempath}/data"
-            @rc.storage_options[:flatfiles]['extension'] = "ruwiki"
+            @rc.storage_type    = 'flatfiles'
+            @rc.storage_options['flatfiles']['data-path'] = "#{gempath}/data"
+            @rc.storage_options['flatfiles']['extension'] = "ruwiki"
             @rc.template_path   = "#{gempath}/templates"
           }
         end

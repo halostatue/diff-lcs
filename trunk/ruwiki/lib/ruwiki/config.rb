@@ -55,11 +55,10 @@ class Ruwiki::Config
   attr_accessor :auth_options
   exportable :auth_options
     # The storage type as a String. Corresponds to a filename that will be
-    # found in ruwiki/backend. In this version of Ruwiki, versions for handling
-    # three different types of flat files will be found. The canonical default
-    # format is a tagged data format ('flatfiles'). Also supported in this
-    # version is YAML ('yaml'), and a format based on Marshal::Dump
-    # ('marshal').
+    # found in ruwiki/backend. NOTE: The yaml and marshal storage types have
+    # been removed from Ruwiki 0.9.0, to be replaced with a single storage
+    # type of Flatfiles. Now, the YAML and Marshal formats can be enabled by
+    # setting options in the @storage_options field.
   attr_accessor :storage_type
   exportable :storage_type
     # The options for the specified storage type. This is a hash of hashes with
@@ -143,9 +142,9 @@ class Ruwiki::Config
 
     case rc['storage-type']
     when nil, ""
-      @storage_type   = :flatfiles
+      @storage_type   = 'flatfiles'
     else
-      @storage_type   = rc['storage-type'].intern
+      @storage_type   = rc['storage-type']
     end
 
       # in 'type!name:<Tab>value\n' format.
@@ -154,12 +153,13 @@ class Ruwiki::Config
     else
       @storage_options = Ruwiki::Exportable.load(rc['storage-options'])
       @storage_options.keys.each do |key|
-        @storage_options[key.to_sym] = @storage_options.delete(key)
+        @storage_options[key] = @storage_options.delete(key)
       end
     end
     if @storage_options.empty?
       @storage_options[@storage_type]['extension'] = "ruwiki"
       @storage_options[@storage_type]['data-path'] = "./data"
+      @storage_options[@storage_type]['format']    = "exportable"
     end
 
     @storage_options.each_value do |vv|

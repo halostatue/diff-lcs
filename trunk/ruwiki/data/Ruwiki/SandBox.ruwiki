@@ -1,8 +1,5 @@
-page!content:	This page is intended for users to play with freely to
-	practice their \WikiFormatting.
-	
-	$Id$
-properties!indexable:	false
+page!content:	This page is intended for users to play with freely to practice
+	their \WikiFormatting.
 properties!project:	Ruwiki
 properties!title:	SandBox
 properties!topic:	SandBox

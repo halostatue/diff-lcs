@@ -431,16 +431,10 @@ module Ruwiki::Utils::Manager
           dp = "./data"
         else
           so = Ruwiki::Exportable.load(so)
-          if so['flatfiles']
-            key = 'flatfiles'
-          elsif so['yaml']
-            key = 'yaml'
-          elsif so['marshal']
-            key = 'marshal'
-          end
+          key = 'flatfiles'
+          dp = so[key]['data-path']
         end
 
-        dp = so[key]['data-path']
         dp = "./data" if dp.nil? or dp.empty?
         bndp = File.basename(dp)
         bntp = File.basename(tp)
@@ -507,20 +501,20 @@ module Ruwiki::Utils::Manager
         FileUtils.install(Ruwiki::Utils::Manager.ruwiki_servlet, dest, :mode => 0755)
         if RUBY_PLATFORM =~ /win32/
           if File.exists?(Ruwiki::Utils::Manager.ruwiki_servlet_bat)
-            FileUtils.install(Ruwiki::Utils::Manager.ruwiki_servlet_bat, dest)
+            FileUtils.install(Ruwiki::Utils::Manager.ruwiki_servlet_bat, dest, :mode => 0755)
           end
           if File.exists?(Ruwiki::Utils::Manager.ruwiki_servlet_cmd)
-            FileUtils.install(Ruwiki::Utils::Manager.ruwiki_servlet_cmd, dest)
+            FileUtils.install(Ruwiki::Utils::Manager.ruwiki_servlet_cmd, dest, :mode => 0755)
           end
         end
       end
 
       if RUBY_PLATFORM =~ /win32/ and options['service']
-        FileUtils.install(Ruwiki::Utils::Manager.ruwiki_service, dest)
+        FileUtils.install(Ruwiki::Utils::Manager.ruwiki_service, dest, :mode => 0755)
       end
 
       if options['cgi']
-        FileUtils.install(Ruwiki::Utils::Manager.ruwiki_cgi, dest, :mode => 755)
+        FileUtils.install(Ruwiki::Utils::Manager.ruwiki_cgi, dest, :mode => 0755)
       end
 
       if options['data']

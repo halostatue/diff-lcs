@@ -12,7 +12,7 @@ require 'diff/lcs'
 
 class Ruwiki
     # The list of known backends.
-  KNOWN_BACKENDS  = [:flatfiles, :yaml, :marshal]
+  KNOWN_BACKENDS  = %w(flatfiles)
 
     # The Ruwiki backend delegator. Ruwiki will always instantiate a version
     # of this class which delegates the actual method execution to the Backend
@@ -31,9 +31,9 @@ class Ruwiki
         raise RuntimeError, @message[:backend_unknown] % [backend] 
       end
 
-      beconst = (befile = backend.id2name).capitalize
+      beconst = backend.capitalize
 
-      require "ruwiki/backend/#{befile}"
+      require "ruwiki/backend/#{backend}"
 
       beoptions = options[backend]
       @delegate = Ruwiki::Backend.const_get(beconst).new(beoptions)
@@ -125,7 +125,8 @@ class Ruwiki
 
       # Releases the lock on the page.
     def release_lock(page, address = 'UNKNOWN')
-      @delegate.release_lock(page, address)
+      time    = Time.now.to_i
+      @delegate.release_lock(page, time, address)
     rescue Ruwiki::Backend::BackendError
       raise Ruwiki::Backend::BackendError.new(nil), @message[:cannot_release_lock] % [page.project, page.topic]
     rescue Errno::EACCES, Exception => e
@@ -133,9 +134,11 @@ class Ruwiki
       raise Ruwiki::Backend::BackendError.new(e), @message[:error_releasing_lock] % p
     end
 
-      # Attempts to obtain a lock on the page.
+      # Attempts to obtain a lock on the page. The lock 
     def obtain_lock(page, address = 'UNKNOWN', timeout = 600)
-      @delegate.obtain_lock(page, address, timeout)
+      time    = Time.now.to_i
+      expire  = time + timeout
+      @delegate.obtain_lock(page, time, expire, address)
     rescue Ruwiki::Backend::BackendError
       raise Ruwiki::Backend::BackendError.new(nil), @message[:cannot_obtain_lock] % [page.project, page.topic]
     rescue Errno::EACCES, Exception => e
@@ -183,9 +186,9 @@ class Ruwiki
       end
     end
 
-    # Attempts to search all projects.
-    # this is the default search_all_projects used unless the delegate implements
-    # a specialized search_all_projects
+      # Attempts to search all projects. This is the default
+      # search_all_projects used unless the delegate implements
+      # a specialized search_all_projects.
     def search_all_projects_default(searchstr)
       hits = {}
       list_projects.each do |project|
@@ -205,7 +208,7 @@ class Ruwiki
       raise Ruwiki::Backend::BackendError.new(e), @message[:search_project_fail] % p
     end
 
-    # Return an array of projects
+      # Return an array of projects
     def list_projects
       @delegate.list_projects
     rescue Errno::EACCES => e
@@ -215,13 +218,12 @@ class Ruwiki
       raise Ruwiki::Backend::BackendError.new(e), @message[:cannot_list_projects] % p
     end
 
-    # Return an array of projects
+      # Return an array of projects
     def list_topics(projname)
       @delegate.list_topics(projname)
     rescue Errno::EACCES => e
       raise Ruwiki::Backend::BackendError.new(e), @message[:no_access_list_topics] % [projname]
     rescue Exception => e
-#     p = [projname, %Q~#{e.mes}<br />\n#{e.backtrace.join('<br />\n')}~]
       p = [projname, e.message]
       raise Ruwiki::Backend::BackendError.new(e), @message[:cannot_list_topics] % p
     end

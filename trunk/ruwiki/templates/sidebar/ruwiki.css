@@ -170,6 +170,18 @@ body > div#rw_content
   float: left;
 }
 
+.rw_message
+{
+  background-color: #fab;
+  border: 3px dotted red;
+  float: left;
+  font-weight: bolder;
+  font-size: 90%;
+  padding: 0.5em;
+  width: 65%;
+  margin-top: 3em;
+}
+
 .rw_edit_content
 {
   border: 1px dashed #059;

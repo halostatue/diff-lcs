@@ -21,15 +21,16 @@ $wiki = Ruwiki.new(Ruwiki::Handler.from_cgi(CGI.new))
   # Configuration defaults to certain values. This overrides the defaults.
   # The webmaster.
 $wiki.config.webmaster = "webmaster@domain.com"
-$wiki.config.storage_type = :flatfiles
+$wiki.config.storage_type = 'flatfiles'
 
 dp = nil
 dp = "../data" if File.exists?("../data")
 dp = "./data" if File.exists?("./data")
 raise "Cannot find either ./data or ../data for tests. Aborting." if dp.nil?
 
-$wiki.config.storage_options[:flatfiles]['data-path'] = dp
-$wiki.config.storage_options[:flatfiles]['extension'] = "ruwiki"
+$wiki.config.storage_options['flatfiles']['data-path'] = dp
+$wiki.config.storage_options['flatfiles']['format'] = "exportable"
+$wiki.config.storage_options['flatfiles']['extension'] = "ruwiki"
 
 tp = nil
 tp = "../templates" if File.exists?("../templates")

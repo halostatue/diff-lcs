@@ -7,16 +7,16 @@ page!content:	= Ruwiki %RV#% Bug Tracking
 	
 	Those interested in Ruwiki development may also find the Ruwiki::To_Do
 	list and the Ruwiki::[[Roadmap]] useful. The format of the bug list is
-	&ldquo;version: description&rdquo;. For open bugs, the version is the
-	version in which the bug was first reported. For closed bugs, the
-	version is the version in which the bug was closed.
+	&ldquo;version: description&rdquo;.
 	
-	----
 	== Open Bugs
+	The version number is the version in which the bug was first reported.
 	* 0.6.2: Not all formatting is applied consistently. The token rankings may need adjusting. Eivind Eklund has suggested a scheme that may help with this, but it will require architectural adjustment and will probably slow things down.
 	
 	----
 	== Closed Bugs
+	The version number is the version in which the bug was fixed.
+	* 0.9.0: Fixed a problem with old page edits being applied inappropriately.
 	* 0.8.0: [http://rubyforge.org/tracker/index.php?func=detail&aid=707&group_id=84&atid=407 Sub-Numbered bullets don&rsquo;t increment]. Fixed a list numbering problem. I think that lists are a bit slower now, but they are completely accurate.
 	* 0.7.0: Fixed a link detection problem in \[wikiword] format. Thanks to [mailto:eivind@FreeBSD.org Eivind Eklund] for the patch.
 	* 0.7.0: Fixed a problem with &lt;pre&gt; paragraph detection and generation.
@@ -24,8 +24,6 @@ page!content:	= Ruwiki %RV#% Bug Tracking
 	* 0.7.0: [http://rubyforge.org/tracker/index.php?func=detail&aid=197&group_id=84&atid=407 Run-away ruby on some links in default distribution]. This may be related to a runaway header problem that was reported to me on IRC some time back that I believe has been fixed. Please advise.
 	* 0.6.1: Projects aren&rsquo;t created appropriately.
 	* 0.6.1: Saving without editing (or repost) appears to cause problems. A fix has been applied to attempt to address this. Pages that have not been changed will not be saved.
-	
-	$Id$
 properties!project:	Ruwiki
 properties!title:	BugTracking
 properties!topic:	BugTracking

@@ -58,6 +58,10 @@ page!content:	= Extending Ruwiki %RV#%
 	; <tt>%webmaster%</tt> : The email address of the webmaster.
 	
 	== Translating Ruwiki Messages
+	: NOTE: The mechanism for specifying language may be changed in a
+	: future version of Ruwiki, although the internationalisation mechanism
+	: will not be changing.
+	
 	Ruwiki is internationalized. This method sets the Ruwiki error messages
 	(and a few other messages) to the specified language Module. The
 	language Module must have a constant Hash called <tt>Message</tt>
@@ -245,7 +249,11 @@ page!content:	= Extending Ruwiki %RV#%
 	representation. It will return a hash representing the difference set
 	between the two pages.
 	
-	==== #obtain_lock(page, address = 'UKNOWN', timeout = 600)
+	==== #obtain_lock(page, time, expire, address = 'UKNOWN')
+	Obtains an exclusive lock on the page. The \BackendDelegator is called
+	with the page, the address, and a timeout which is provided. The time
+	is provided .
+
 	Obtains an exclusive lock on the page. The lock should have a timeout and
 	permit access from the same IP address without restriction. This should
 	<strong>not</strong> be a filesystem lock. The time stored for purposes of locking
@@ -299,8 +307,6 @@ page!content:	= Extending Ruwiki %RV#%
 	a looping search through all projects. A backend may have a more
 	efficient backend global search mechanism. If the backend responds to
 	#global_search, then the \BackendDelegate will use this method.
-	
-	$Id$
 properties!project:	Ruwiki
 properties!title:	Extending_Ruwiki
 properties!topic:	Extending_Ruwiki

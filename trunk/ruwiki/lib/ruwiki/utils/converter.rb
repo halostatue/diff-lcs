@@ -100,7 +100,7 @@ module Ruwiki::Utils::Converter
         end
         opts.on('--backup-extension=EXTENSION', *message(:converter_backupext_desc)) do |ee|
           if ee.nil? or ee.empty?
-            @error << message(:converter_backupext_error) if ee.nil? or ee.empty?
+            @error << message(:converter_backupext_error) << "\n" if ee.nil? or ee.empty?
             @error << "#{opts}\n"
             return 0
           end
@@ -108,7 +108,7 @@ module Ruwiki::Utils::Converter
         end
         opts.on('--extension=EXTENSION', *message(:converter_extension_desc)) do |ee|
           if ee.nil? or ee.empty?
-            @error << message(:converter_extension_error) if ee.nil? or ee.empty?
+            @error << message(:converter_extension_error) << "\n" if ee.nil? or ee.empty?
             @error << "#{opts}\n"
             return 0
           end
@@ -234,7 +234,7 @@ module Ruwiki::Utils::Converter
         # Try YAML
       if page_format.nil?
         begin
-          page = YAML.load(data)
+          page = ::YAML.load(data)
           page_format = 'YAML'
         rescue Exception
           nil
@@ -245,14 +245,14 @@ module Ruwiki::Utils::Converter
       if page_format.nil?
         begin
           page = Ruwiki::Backend::Flatfiles.load(data)
-          page_format = 'Flatfiles'
+          page_format = 'Exportable'
         rescue Exception =>e
           nil
         end
       end
 
       if page_format.nil? # Cannot detect page type.
-        @error << %Q|Cannot detect the page format. |
+        @error << @message[:converter_page_format_error] << "\n"
         raise PageLoadException
       end
       [page, page_format]

@@ -60,7 +60,11 @@ class Ruwiki::Handler
     end
 
     def expires=(t) #:nodoc:
-      @expires = t.kind_of?(Time) ? t : Time.parse(t)
+      @expires = if t.nil? or t.kind_of?(Time)
+                   t
+                 else
+                   Time.parse(t.to_s)
+                 end
     end
 
     def to_s
@@ -177,14 +181,14 @@ class Ruwiki::Handler
       @parameters   = req.query
       @cookies      = {}
       req.cookies.each do |rqc|
-        @cookies[name] = Handler::Cookie.new(rqc.name, rqc.value) do |oc|
-          oc.version  = cookie.version
-          oc.domain   = cookie.domain
-          oc.path     = cookie.path
-          oc.secure   = cookie.secure
-          oc.comment  = cookie.comment
-          oc.expires  = cookie.expires
-          oc.max_age  = cookie.max_age
+        @cookies[rqc.name] = Ruwiki::Handler::Cookie.new(rqc.name, rqc.value) do |oc|
+          oc.version  = rqc.version
+          oc.domain   = rqc.domain
+          oc.path     = rqc.path
+          oc.secure   = rqc.secure
+          oc.comment  = rqc.comment
+          oc.expires  = rqc.expires
+          oc.max_age  = rqc.max_age
         end
       end
       super

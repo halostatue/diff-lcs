@@ -147,8 +147,6 @@ page!content:	= Ruwiki %RV#% Templating
 	  State: TX
 	 
 	  Name: Dave
-	
-	$Id$
 properties!project:	Ruwiki
 properties!title:	RuwikiTemplatingLibrary
 properties!topic:	RuwikiTemplatingLibrary

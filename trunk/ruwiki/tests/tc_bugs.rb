@@ -28,6 +28,7 @@ class TC_LicenseAndAuthorHang < Test::Unit::TestCase
     raise "Cannot find either ./data or ../data for tests. Aborting." if dp.nil?
 
     @ffopts['data-path'] = dp
+    @ffopts['format'] = 'exportable'
 
     @backend = nil
     @pg = nil
@@ -52,9 +53,9 @@ class TC_LicenseAndAuthorHang < Test::Unit::TestCase
       mock_ruwiki = OpenStruct.new
       mock_ruwiki.config = OpenStruct.new
       mock_ruwiki.config.message = {}
-      mock_ruwiki.config.storage_options = { :flatfiles => @ffopts }
+      mock_ruwiki.config.storage_options = { 'flatfiles' => @ffopts }
 
-      @backend = ::Ruwiki::BackendDelegator.new(mock_ruwiki, :flatfiles)
+      @backend = ::Ruwiki::BackendDelegator.new(mock_ruwiki, 'flatfiles')
     end
     assert_not_nil(@backend)
     assert_nothing_raised do

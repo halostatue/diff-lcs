@@ -2,8 +2,6 @@ page!content:	= Ruwiki %RV#% Tutorial
 	This tutorial is incomplate.
 	
 	%topics(Tutorial)
-	
-	$Id$
 properties!project:	Tutorial
 properties!title:	ProjectIndex
 properties!topic:	ProjectIndex

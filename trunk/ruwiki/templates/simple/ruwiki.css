@@ -34,6 +34,18 @@ body
   margin-right: 1em;
 }
 
+.rw_message
+{
+  background-color: #fab;
+  border: 3px dotted red;
+  font-weight: bolder;
+  font-size: 90%;
+  padding: 0.5em;
+  margin-left: 3em;
+  margin-right: 3em;
+}
+
+
 .rw_edit_content
 {
   border: 1px solid black;

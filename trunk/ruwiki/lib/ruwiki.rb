@@ -112,6 +112,59 @@ class Ruwiki
   def set_backend
     @backend = BackendDelegator.new(self, @config.storage_type)
     @markup.backend = @backend
+      # Load the blacklists here because I don't as of yet know where else
+      # to put them. :(
+    @banned_agents    = load_blacklist('agents.banned')
+    @banned_hostip    = load_blacklist('hostip.banned')
+    @readonly_agents  = load_blacklist('agents.readonly')
+    @readonly_hostip  = load_blacklist('hostip.readonly')
+  end
+
+  def load_blacklist(filename)
+    data = []
+    filename = File.join(@config.storage_options[@config.storage_type]['data-path'], filename)
+    ii = '^'
+    jj = /^#{ii}/o
+    File.open(filename, 'rb') do |f|
+      f.each do |line|
+        line.gsub!(%r{^\s*#.*$}, '')
+        line.strip!
+        if line.empty?
+          data << nil
+        else
+          if line =~ jj
+            data << "(?:#{line}\n)"
+          else
+            data << line
+          end
+        end
+      end
+    end
+    data.compact!
+    if data.empty?
+      nil
+    else
+      Regexp.new(data.join("|"), Regexp::EXTENDED)
+    end
+  end
+
+  def check_useragent
+    addr = @request.environment['REMOTE_ADDRESS']
+    user = @request.environment['HTTP_USER_AGENT']
+
+    if user.nil? or user.empty?
+      :forbidden
+    elsif @banned_hostip and addr and addr =~ @banned_hostip
+      :forbidden
+    elsif @banned_agents and user =~ @banned_agents
+      :forbidden
+    elsif @readonly_hostip and addr and addr =~ @readonly_hostip
+      :read_only
+    elsif @readonly_agents and user =~ @readonly_agents
+      :read_only
+    else
+      :clean
+    end
   end
 
     # Runs the steps to process the wiki.
@@ -170,6 +223,8 @@ class Ruwiki
     @topic   ||= @config.default_page
   end
 
+  PROJECT_LIST_ITEM = %~%1$s (a href='\\%2$s/%1$s/_topics' class='rw_minilink')%3$s\\</a\\>~
+
     # Processes the page through the necessary steps. This is where the edit,
     # save, cancel, and display actions are present.
   def process_page
@@ -179,15 +234,15 @@ class Ruwiki
     @page     = Ruwiki::Page.new(@backend.retrieve(@topic, @project))
     @type     = :content
 
-    agent_ok = Ruwiki::Auth.check_useragent(@request.environment['HTTP_USER_AGENT'])
+    agent_ok = check_useragent
     case agent_ok
-    when false
+    when :read_only
       @page.editable = false
       case @action
       when 'edit', 'save', 'preview', 'cancel', 'search'
         @page.indexable = false
       end
-    when nil
+    when :forbidden
       forbidden
       return
     else
@@ -284,7 +339,7 @@ EPAGE
         @page.content = self.message[:no_projects]
       else
           # TODO make this localized
-        proj_list.map! { |proj| %[#{proj} (a href='\\#{@request.script_url}/#{proj}/_topics' class='rw_minilink')#{self.message[:project_topics_link]}</a>] }
+        proj_list.map! { |proj| PROJECT_LIST_ITEM % [ proj, @request.script_url, self.message[:project_topics_link] ] }
         @page.content = <<EPAGE
 = #{self.message[:wiki_projects] % [@config.title]}
 * ::#{proj_list.join("\n* ::")}
@@ -293,6 +348,8 @@ EPAGE
 
       content = @page.to_html(@markup)
       content.gsub!(%r{\(a href='([^']+)/_topics' class='rw_minilink'\)}, '<a href="\1/_topics" class="rw_minilink">') #'
+      content.gsub!(%r{\\&lt;}, '<')
+      content.gsub!(%r{\\&gt;}, '>')
       formatted = true
       @type = :content
     when 'edit', 'create'
@@ -301,7 +358,8 @@ EPAGE
       @backend.create_project(@page.project) if @action == 'create'
       @backend.create_project(@page.project) unless @backend.project_exists?(@page.project)
       @page.creator = @auth_token.name if @action == 'create' and @auth_token
-      @backend.obtain_lock(@page, @request.environment['REMOTE_ADDR'])
+      @page.indexable = false
+      @lock = @backend.obtain_lock(@page, @request.environment['REMOTE_ADDR'])
 
       content = nil
       formatted = true
@@ -311,48 +369,95 @@ EPAGE
       @page.topic = @request.parameters['topic']
       @page.project = @request.parameters['project']
       @page.editor_ip = @request.environment['REMOTE_ADDR']
-
       @page.indexable = false
 
-      if @action == 'save'
-        @page.editor = @auth_token.name if @auth_token
-        op = @page.content
-      else
-        op = nil
-      end
+      save_ver = @backend.retrieve(@page.topic, @page.project)['properties']['version'].to_i
+      sent_ver = @request.parameters['version'].to_i
 
-      if np == op and @action == 'save'
-        @page.content = op
-        @type = :content
-      else
-        @page.content      = np
+      if sent_ver < save_ver
+        @type = :edit
+
+        np = np.split($/)
+        content_diff = Diff::LCS.sdiff(np, @page.content.split($/), Diff::LCS::ContextDiffCallbacks)
+        content_diff.reverse_each do |hunk|
+          case hunk
+          when Array
+            hunk.reverse_each do |diff|
+              case diff.action
+              when '+'
+#               np.insert(diff.old_position, "+#{diff.new_element}")
+                np.insert(diff.old_position, "#{diff.new_element}")
+              when '-'
+                np.delete_at(diff.old_position)
+#               np[diff.old_position] = "-#{diff.old_element}"
+              when '!'
+                np[diff.old_position] = "-#{diff.old_element}"
+                np.insert(diff.old_position + 1, "+#{diff.new_element}")
+              end
+            end
+          when Diff::LCS::ContextChange
+            case hunk.action
+            when '+'
+              np.insert(hunk.old_position, "#{hunk.new_element}")
+#             np.insert(hunk.old_position, "+#{hunk.new_element}")
+            when '-'
+              np.delete_at(hunk.old_position)
+#             np[diff.old_position] = "-#{hunk.old_element}"
+            when '!'
+              np[hunk.old_position] = "-#{hunk.old_element}"
+              np.insert(hunk.old_position + 1, "+#{hunk.new_element}")
+            end
+          end
+        end
+        @page.content = np.join("\n")
+
         edc = @request.parameters['edcomment']
         unless (edc.nil? or edc.empty? or edc == "*")
           @page.edit_comment = edc
         end
 
+        @sysmessage = self.message[:not_editing_current_version] % [ @page.project, @page.topic ]
+      else
         if @action == 'save'
-          @type = :save
-          @page.version = @request.parameters['version'].to_i + 1
-          @backend.store(@page)
-        
-            # hack to ensure that Recent Changes are updated correctly
-          if @page.topic == 'RecentChanges'
-            recent = Ruwiki::Page.new(@backend.retrieve(@page.topic, @page.project))
-            @page.content = recent.content
+          @page.editor = @auth_token.name if @auth_token
+          op = @page.content
+        else
+          op = nil
+        end
+
+        if (np == op) and (@action == 'save')
+          @type = :content
+        else
+          @page.content = np
+          edc = @request.parameters['edcomment']
+          unless (edc.nil? or edc.empty? or edc == "*")
+            @page.edit_comment = edc
           end
 
-          @backend.release_lock(@page, @request.environment['REMOTE_ADDR'])
-        else
-          @type = :preview
-          content = nil
-          formatted = true
+          if @action == 'save'
+            @type = :save
+            @page.version = @request.parameters['version'].to_i + 1
+            @backend.store(@page)
+
+              # hack to ensure that Recent Changes are updated correctly
+            if @page.topic == 'RecentChanges'
+              recent = Ruwiki::Page.new(@backend.retrieve(@page.topic, @page.project))
+              @page.content = recent.content
+            end
+
+            @backend.release_lock(@page, @request.environment['REMOTE_ADDR'])
+          else
+            @type = :preview
+            @lock = @backend.obtain_lock(@page, @request.environment['REMOTE_ADDR'])
+            content = nil
+            formatted = true
+          end
         end
       end
     when 'cancel'
-      @page.topic       = @request.parameters['topic']
-      @page.project     = @request.parameters['project']
-      @page.version     = @request.parameters['version'].to_i
+#     @page.topic       = @request.parameters['topic']
+#     @page.project     = @request.parameters['project']
+#     @page.version     = @request.parameters['version'].to_i
 
       @backend.release_lock(@page, @request.environment['REMOTE_ADDR'])
       @type = :content
@@ -409,13 +514,14 @@ EPAGE
       values["page_project"]    = @page.project
       values["page_raw_topic"]  = @page.topic
       values["page_topic"]      = CGI.unescape(@page.topic)
-      values["editable"]        = @page.editable || true
+      values["editable"]        = @page.editable
       values["indexable"]       = @page.indexable
     end
 
     values["url_project"]       = %Q(#{values["cgi_url"]}/#{values["page_project"]})
     values["url_topic_search"]  = %Q(#{values["url_project"]}/_search?q=#{values["page_topic"]})
     values["link_topic_search"] = %Q(<a href='#{values["url_topic_search"]}'><strong>#{values["page_topic"]}</strong></a>)
+    values["message"]           = @sysmessage unless @sysmessage.nil?
 
     case type
     when :content, :save, :search

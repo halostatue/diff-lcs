@@ -98,13 +98,14 @@ private
                         )?        # The above three are optional
                        >}x
   ATTRIBUTES_RE = %r{([\w:]+)(=(?:\w+|"[^"]+?"|'[^']+?'))?}x
+  STYLE_NOVD_RE = %r{(?:\s?(visibility|display):[^'";]+;?)}x
   ALLOWED_ATTR  = %w(style title type lang dir class id cite datetime abbr) +
                   %w(colspan rowspan compact start media)
   ALLOWED_HTML  = %w(abbr acronym address b big blockquote br caption cite) +
                   %w(code col colgroup dd del dfn dir div dl dt em h1 h2 h3) +
-                  %w(h4 h5 h6 hr i ins kbd kbd li menu ol p pre q s samp) +
-                  %w(small span span strike strong style sub sup table tbody) +
-                  %w(td tfoot th thead tr tt u ul var)
+                  %w(h4 h5 h6 hr i ins kbd li menu ol p pre q s samp small) +
+                  %w(span strike strong style sub sup table tbody td tfoot) +
+                  %w(th thead tr tt u ul var)
 
     # Clean the content of unsupported HTML and attributes. This includes
     # XML namespaced HTML. Sorry, but there's too much possibility for
@@ -122,9 +123,12 @@ private
           unless closer or attributes.nil?
             attributes = attributes.scan(ATTRIBUTES_RE).map do |set|
               if ALLOWED_ATTR.include?(set[0].downcase)
+                if set[0] == 'style'
+                  set[1].gsub!(%r{(?: ?(visibility|display):[^'";]+;?)}, '')
+                end
                 set.join
               else
-                ""
+                nil
               end
             end.compact.join(" ")
             tag = "<#{closer}#{name} #{attributes}#{single}>"
@@ -135,8 +139,7 @@ private
           tag = Ruwiki.clean_entities(tag)
         end
       end
-
-      tag
+      tag.gsub(%r{((?:href|src)=["'])(#{Ruwiki::Wiki::RE_URI_SCHEME})}) { "#{$1}\\#{$2}" }
     end
   end
 end

@@ -57,9 +57,9 @@ else
 # wiki.config.title           = "Ruwiki"
 # wiki.config.default_page    = "ProjectIndex"
 # wiki.config.default_project = "Default"
-    # This next defaults to :flatfiles. Conversion of the default data
-    # will be necessary to use other formats.
-# wiki.config.storage_type    = :flatfiles
+    # This next defaults to 'flatfiles'. Conversion of the default data will
+    # be necessary to use other formats.
+# wiki.config.storage_type    = 'flatfiles'
 # wiki.config.storage_options[wiki.config.storage_type][:data_path] = "./data/"
   wiki.config.storage_options[wiki.config.storage_type][:extension] = "ruwiki"
 # wiki.config.template_path   = "./templates/"

@@ -30,12 +30,12 @@ body > div#rw_header { position: fixed; }
    */
 div#rw_footer
 {
-  position: absolute;
+/*position: absolute;
   width: 100%;
   bottom: 0;
   left: 0;
   height: 2.25em;
-  background-color: #F7FEFF;
+  background-color: #F7FEFF;*/
 }
 
   /* position: fixed - header and footer don't scroll; modern browsers */
@@ -126,6 +126,19 @@ body
   margin-top: 2em;
   margin-left: 3em;
   margin-right: 3em;
+}
+
+.rw_message
+{
+  background-color: #fab;
+  border: 3px dotted red;
+  font-weight: bolder;
+  clear: both;
+  font-size: 90%;
+  padding: 1em;
+  margin-top: 3em;
+  margin-left: 5em;
+  margin-right: 5em;
 }
 
 .rw_edit_content

@@ -30,7 +30,7 @@ module Ruwiki::Lang
       :cannot_store_topic           => "Cannot store %1$s::%2$s: %3$s",
       :cannot_list_topics           => "Cannot list topics for project %1$s: %2$s",
       :error_creating_lock          => "Error creating lock on %1$s::%2$s: %3$s",
-      :error_releasing_lock         => "Error releasing lock on %1s::%2$s: %3$s",
+      :error_releasing_lock         => "Error releasing lock on %1$s::%2$s: %3$s",
       :flatfiles_no_data_directory  => "The data directory (%1$s) does not exist.",
       :no_access_list_projects      => "No permission to list projects.",
       :no_access_list_topics        => "No permission to list topics in project %1$s.",
@@ -44,6 +44,12 @@ module Ruwiki::Lang
       :project_does_not_exist       => "Project %1$s does not exist.",
       :search_project_fail          => "Failure searching project %1$s with string %2$s.",
       :yaml_requires_182_or_higher  => "YAML flatfile support exists only for Ruby version 1.8.2 or higher.",
+      :not_editing_current_version  => <<EOM ,
+You have submitted an old version of %1$s::%2$s. The differences between
+your version and the current version of this page have been merged.
+Conflicting lines have both lines shown. Please ensure that you have edited
+the entire page before saving again.
+EOM
 
         # Config-related messages.
       :config_not_ruwiki_config     => "Configuration must be of class Ruwiki::Config.",
@@ -129,6 +135,7 @@ module Ruwiki::Lang
       :converter_done               => "done.",
       :converter_not_ruwiki         => "not a Ruwiki file; skipping.",
       :converter_nosave_modified    => "cannot save modified %1$s.",
+      :converter_page_format_error  => "Error: Cannot detect the page format.",
 
         # Messages from Ruwiki::Utils::Manager
       :manager_unknown_command      => "Unknown command: %1$s",
@@ -284,7 +291,7 @@ EOH
                                          'Default is "./data".' ],
       :runner_extension_desc        => [ 'The extension for data files.',
                                          'Default is "ruwiki".' ],
-      :runner_gemdata_desc          => [ 'Runs Ruwiki with the data in the default',
+      :runner_central_desc          => [ 'Runs Ruwiki with the data in the default',
                                          'RubyGem location.' ],
       :runner_general_info          => "General info:",
       :runner_help_desc             => [ "Shows this text." ],

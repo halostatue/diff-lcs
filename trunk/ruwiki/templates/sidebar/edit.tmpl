@@ -3,11 +3,12 @@
     <div class="rw_titlebar_tab">%home_link%</div>
     <div class="rw_titlebar_tab">#label_topic#<b>%page_topic%</b></div>
     <div class="rw_titlebar_tab">#label_project#<b>%page_project%</b></div>
-    <div class="rw_titlebar_tab" id="rw_editing_tab"><strong><em>#label_editing#</em></strong></div>
+    <div class="rw_titlebar_tab" id="rw_editing_tab"><strong><em>#label_editing#</em> #%page_version%</strong></div>
   </div>
 </div>
 
 <div id="rw_content">
+  [?message|<div class="rw_message">%message%</div>?]
   <div class="rw_content_edit">
     <form class="rw_edit_form" action="%cgi_url%/%page_project%/%page_raw_topic%" method="post">
       <span class="rw_accelerator">(#label_text_accelerator#)</span> #label_text#<br /><textarea accesskey="#label_text_accelerator#" class="rw_edit_content" rows="15" name="newpage">%page_content%</textarea>

@@ -7,8 +7,6 @@ page!content:	= Adding Projects
 	end of the Project link is a hyperlinked question mark; clicking on
 	this will open the \Project::ProjectIndex in Ruwiki for editing and
 	create the new project.
-	
-	$Id$
 properties!project:	Tutorial
 properties!title:	AddingProjects
 properties!topic:	AddingProjects

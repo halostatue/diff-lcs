@@ -9,29 +9,33 @@ page!content:	= Ruwiki %RV#%
 	* Who wrote Ruwiki? Read the LicenseAndAuthorInfo.
 	
 	== Requirements
-	Ruwiki currently requires Ruby 1.8, Diff::LCS 1.2.0 (portions included
-	with the <tt>.tar.gz</tt>), and Archive::Tar::Minitar 0.5.1 (portions
-	included with the <tt>.tar.gz</tt>). The YAML backend requires Ruby
-	1.8.2.
+	Ruwiki currently requires Ruby 1.8, Diff::LCS 1.2.0 and
+	Archive::Tar::Minitar 0.5.1. These packages are included in the
+	<em>packages/</em> directory in the
+	<code>ruwiki-0.9.0-full.tar.gz</code> form of the distribution.
+	
+	The YAML backend requires Ruby 1.8.2.
 	
 	== Upgrading
-	Ruwiki %RV#% has a flatfile format that is incompatible with older
-	versions of Ruwiki. If you are upgrading from one of these versions,
-	you must use the bin/convert. The simple case will be (assuming that
-	your data files are in ./data):
+	Ruwiki %RV#% has a flatfile format that is incompatible with versions
+	of Ruwiki older than Ruwiki 0.8.0. If you are upgrading from one of
+	these versions, you must use the bin/convert. The simple case will be
+	(assuming that your data files are in ./data):
 	
 	  % convert ./data
 	
 	The convert utility is automatically installed by \RubyGems. See
-	RuwikiUtilities for more information. Also see [[Upgrading and Converting]].
+	RuwikiUtilities for more information. Note that this utility will
+	probably be incorporated into the main Ruwiki utility in a future
+	version.
 	
 	== Getting Started
-	There are some differences between the <tt>.tar.gz</tt> and \RubyGems
-	installation of Ruwiki.
+	There are some differences between the startup of <tt>.tar.gz</tt>,
+	\RubyGems, and RPA installations of Ruwiki.
 	
-	=== \QuickStart (Read-only: \RubyGem Installation Only)
+	=== \QuickStart (Read-only: \RubyGem and RPA Installation Only)
 	Run:
-	  % ruwiki_servlet --gem-data
+	  % ruwiki_servlet --central
 	
 	Point your web browser to \http://localhost:8808/.
 	
@@ -65,12 +69,11 @@ page!content:	= Ruwiki %RV#%
 	If this wiki doesn&rsquo;t have the right combination of features, (or if it
 	just doesn&rsquo;t feel right) try these other Ruby-based Wikis:
 	
+	* [http://pimwiki.rubyforge.org/ PIMWiki]
 	* [http://instiki.rubyforge.org/ Instiki]
 	* [http://www.walrus-ruby.org/amrita/cgi-bin/aswiki/aswiki.cgi Amrita Wiki]
 	* [http://rwiki.jin.gr.jp/cgi-bin/rw-cgi.rb?cmd=view;name=top RWiki]
 	* [http://www.xpsd.com/MiniRubyWiki MiniRubyWiki]
-	
-	$Id$
 properties!project:	Ruwiki
 properties!title:	ProjectIndex
 properties!topic:	ProjectIndex

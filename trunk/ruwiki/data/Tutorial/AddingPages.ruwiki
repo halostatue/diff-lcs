@@ -7,8 +7,6 @@ page!content:	= Adding Pages
 	At the end of the new \WikiWord is a hyperlinked question mark;
 	clicking on this will open the edit page for the new \WikiWord in
 	Ruwiki.
-	
-	$Id$
 properties!project:	Tutorial
 properties!title:	AddingPages
 properties!topic:	AddingPages
