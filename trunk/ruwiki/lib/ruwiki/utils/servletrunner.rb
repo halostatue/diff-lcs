@@ -113,7 +113,10 @@ COPYRIGHT
 
       save_config = nil
 
-      argv.extend(OptionParser::Arguable) unless argv.respond_to?(:options)
+      if argv.kind_of?(Array)
+        ARGV.replace(argv)
+        argv = ARGV
+      end
 
       argv.options do |o|
         o.banner = "Usage: #{File.basename($0)} [options]"
@@ -288,9 +291,6 @@ Ruwiki options:
       server.mount(@sc.mount, Ruwiki::Servlet)
       trap("INT") { server.shutdown; return }
       server.start
-    rescue Exception => e
-      File.open("/tmp/servletrunner.log", "a+") { |f| f.puts e,
-      e.backtrace.join("\n") }
     end
   end
 end

@@ -26,15 +26,6 @@ else
   ReleaseDate = nil
 end
 
-  # This rakefile must do the following:
-  # 1. Run the unit tests, successfully.
-  # 2. Modify the Readme.tarfile, Readme.rubygems, and data files to include
-  #    the proper version #.
-  # 2. Create a package.
-  # 3. Modify the existing pages so that properties!editable is set to
-  #    +false+.
-  # 4. 
-
 task :test do |t|
   require 'test/unit/testsuite'
   require 'test/unit/ui/console/testrunner'
@@ -80,22 +71,17 @@ task :make_readonly do
   end
 end
 
-file "Readme" => [ "Readme.rubygems", "Readme.tarfile" ] do
-  FileUtils.mv("Readme.rubygems", "Readme")
-  FileUtils.rm_f("Readme.tarfile")
-end
-
 spec = Gem::Specification.new do |s|
   s.name      = %q(ruwiki)
-  s.version   = %q(0.8.1)
+  s.version   = Ruwiki::VERSION
   s.summary   = %q{A simple, extensible, and fast Wiki-clone.}
 
   s.add_dependency('diff-lcs', '~> 1.1.1')
   s.add_dependency('archive-tar-minitar', '~> 0.5.1')
 
   s.has_rdoc          = true
-  s.rdoc_options      = ["--title", "Ruwiki - An Extensible Wiki", "--main", "Readme", "--line-numbers"]
-  s.extra_rdoc_files  = %w(Readme)
+  s.rdoc_options      = ["--title", "Ruwiki - An Extensible Wiki", "--main", "Readme.tarfile", "--line-numbers"]
+  s.extra_rdoc_files  = %w(Readme.tarfile Readme.rubygems)
 
   s.bindir        = 'bin'
   s.executables   = Dir['bin/**/*'].delete_if do |item|
@@ -107,9 +93,8 @@ spec = Gem::Specification.new do |s|
   s.test_files    = %w{tests/testall.rb}
 
   files = Dir["**/*"].delete_if do |item|
-    item =~ %r{(?:\bCVS\b|\.svn\b|\.bak$|Readme.*$|[Rr]akefile|install.rb$|~$|gem(?:spec)?$|lib/archive|lib/diff)}
+    item =~ %r{(?:\bCVS\b|\.svn\b|\.bak$|[Rr]akefile|install.rb$|~$|gem(?:spec)?$|lib/archive|lib/diff)}
   end
-  files << "Readme"
   files << "ruwiki.pkg"
   s.files = files
 
@@ -131,7 +116,6 @@ end
 desc "Build the RubyGem for Ruwiki."
 task :gem => [ :test ]
 task :gem => [ :update_version ]
-task :gem => [ "Readme" ]
 task :gem => [ :package_data ]
 task :gem => [ :make_readonly ]
 Rake::GemPackageTask.new(spec) do |g|
@@ -177,7 +161,6 @@ file TARDIST => [ :test, :update_version ] do |t|
             mode = 0644
           end
           data = File.read(dd)
-          ddnew.gsub!(/Readme.tarfile$/, "Readme")
           { :name => ddnew, :mode => mode, :data => data, :size => data.size,
             :mtime => mtime }
         end
