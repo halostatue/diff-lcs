@@ -12,12 +12,21 @@ require 'test/unit/ui/console/testrunner'
 
 InstallOptions = OpenStruct.new
 
+def glob(list)
+  g = []
+  list.each { |i| g << Dir.glob(i) }
+  g.flatten!
+  g.compact!
+  g.reject! { |e| e =~ /CVS/ }
+  g
+end
+
   # Set these values to what you want installed.
-bins  = %w{bin/**/*}.reject { |e| e =~ /\.(bat|cmd)$/ }
-rdoc  = %w{bin/**/* lib/**/*.rb README ChangeLog Install}.reject { |e| e=~ /\.(bat|cmd)$/ }
-ri    = %w(bin/**/*.rb lib/**/*.rb).reject { |e| e=~ /\.(bat|cmd)$/ }
-libs  = %w{lib/**/*.rb}
-tests = %w{tests/**/*.rb}
+bins  = glob(%w{bin/**/*}).reject { |e| e =~ /\.(bat|cmd)$/ }
+rdoc  = glob(%w{bin/**/* lib/**/*.rb README ChangeLog Install}).reject { |e| e=~ /\.(bat|cmd)$/ }
+ri    = glob(%w(bin/**/*.rb lib/**/*.rb)).reject { |e| e=~ /\.(bat|cmd)$/ }
+libs  = glob(%w{lib/**/*.rb})
+tests = glob(%w{tests/**/*.rb})
 
 def do_bins(bins, target, strip = 'bin/')
   bins.each do |bf|
@@ -184,26 +193,11 @@ def install_binfile(from, op_file, target)
 
     op_file += ".rb" if not installed_wrapper
   end
-  FileUtils.install(tmp_file, File.join(InstallOptions.bin_dir, op_file), :mode => 0755, :verbose => true)
+  FileUtils.install(tmp_file, File.join(target, op_file), :mode => 0755, :verbose => true)
   File.unlink(tmp_file)
 end
 
-def glob(list)
-  g = []
-  list.each { |i| g << Dir.glob(i) }
-  g.flatten!
-  g.compact!
-  g.reject! { |e| e =~ /CVS/ }
-  g
-end
-
 prepare_installation
-
-bins  = glob(bins)
-rdoc  = glob(rdoc)
-ri    = glob(ri)
-libs  = glob(libs)
-tests = glob(tests)
 
 run_tests(tests) if InstallOptions.tests
 build_rdoc(rdoc) if InstallOptions.rdoc
