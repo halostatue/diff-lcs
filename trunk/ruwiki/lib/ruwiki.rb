@@ -17,7 +17,6 @@ require 'ruwiki/config'
 require 'ruwiki/backend'
 require 'ruwiki/wiki'
 require 'ruwiki/page'
-require 'ruqiki/actions'
 
   # = Ruwiki
   # Ruwiki is a simple, extensible Wiki written in Ruby. It supports both CGI
