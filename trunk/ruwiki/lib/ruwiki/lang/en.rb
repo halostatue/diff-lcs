@@ -65,6 +65,7 @@ module Ruwiki::Lang
 
           # Labels
       :label_search_project         => "Search Project",
+      :label_search_all             => "All",
       :label_search                 => "Search: ",
       :label_project                => "Project: ",
       :label_topic                  => "Topic: ",

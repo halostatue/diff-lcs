@@ -184,12 +184,25 @@ class Ruwiki
         # todo: add global search checkbox
         # get, validate, and cleanse the search string
       srchstr = validate_search_string(@request.parameters['q'])
+      srchall = @request.parameters['a']
+      puts srchall
       content = self.message[:search_results_for] % [srchstr]
       @page.topic = srchstr
-      hits = @backend.search_project(@page.project, srchstr)
+      if srchall == 'on'
+        hits = {}
+        @backend.list_projects.each do |bproj|
+          bhits = @backend.search_project(bproj,srchstr)
+          # transfrom from proj local to proj global links
+          bghits = {}
+          bhits.map { |key,val| bghits[bproj + "::" + key] = val }
+          hits.merge! bghits
+        end
+      else
+        hits = @backend.search_project(@page.project, srchstr)
+      end
 
         # debug hit returns
-#     hits.each { |key, val| $stderr << "  #{key} : #{val}\n" }
+     hits.each { |key, val| $stderr << "  #{key} : #{val}\n" }
 
         # turn hit hash into content
       hitarr = []
