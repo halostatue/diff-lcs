@@ -63,8 +63,28 @@ class Ruwiki
     end
 
       # Stores the specified topic and project page.
-    def store(page)
+    def store(page, edit_comment='')
       @delegate.store(page)
+
+      # update change page
+      begin
+        unless( page.topic == 'RecentChanges' )
+          rawpage = retrieve( 'RecentChanges', page.project )
+          rawpage[:markup] = page.markup
+          recent_changes = Page.new(rawpage)
+
+          changeline = "* #{page.topic}, #{Time.now}"
+          changeline += " : #{edit_comment}" unless edit_comment == ''
+          changeline += "\n"
+
+          # add changeline to top of page
+          recent_changes.content = changeline + recent_changes.content
+          store(recent_changes)
+        end
+      rescue Exception => e
+        throw "Couldn't save RecentChanges\n#{e.backtrace}"
+      end
+
     rescue Errno::EACCES => e
       raise Ruwiki::Backend::BackendError.new(e), @message[:no_access_to_store_topic] % [page.project, page.topic]
     rescue Exception => e

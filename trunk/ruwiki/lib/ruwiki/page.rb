@@ -25,6 +25,7 @@ class Ruwiki
     attr_reader   :content
       # Formatted page text.
     attr_accessor :formatted
+    attr_accessor :markup
 
       # The IP address of the person who made the last change.
     def change_ip
