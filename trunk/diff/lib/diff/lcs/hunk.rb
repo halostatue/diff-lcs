@@ -12,6 +12,7 @@
 # 
 # $Id$
 #++
+# Contains Diff::LCS::Hunk for bin/ldiff.
 
 require 'diff/lcs/block'
 

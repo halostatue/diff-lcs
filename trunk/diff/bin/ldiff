@@ -1,5 +1,5 @@
 #!/user/bin/env ruby
-# = Diff::LCS 1.0.1
+# = Diff::LCS 1.1.0
 # == ldiff Usage
 #   ldiff [options] oldfile newfile
 #
@@ -31,10 +31,10 @@ require 'optparse'
 require 'ostruct'
 
 begin
-  require 'diff/lcs'
-rescue
   require 'rubygems'
-  require_gem 'diff-lcs', "1.0.1"
+  require_gem 'diff-lcs', "1.1.0"
+rescue
+  require 'diff/lcs'
 end
 
 require 'diff/lcs/hunk'
@@ -218,10 +218,12 @@ $Id$
         end
       ensure
         oldhunk = hunk
+        output << "\n"
       end
       end
 
       output << oldhunk.diff(@format)
+      output << "\n"
 
       if @format == :ed
         output.reverse_each { |e| real_output << e.diff(:ed_finish) }
@@ -232,6 +234,4 @@ $Id$
   end
 end
 
-if $0 =~ /ldiff/
-  exit Diff::diffprog(ARGV, $stdout, $stderr)
-end
+exit Diff::diffprog(ARGV, $stdout, $stderr)

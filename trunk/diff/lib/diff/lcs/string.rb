@@ -12,10 +12,7 @@
 # 
 # $Id$
 #++
-#
-# Includes Diff::LCS into the String built-in class.
-
-require 'diff/array'
+# Includes Diff::LCS into String.
 
 class String
   include Diff::LCS

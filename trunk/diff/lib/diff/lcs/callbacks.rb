@@ -12,7 +12,6 @@
 # 
 # $Id$
 #++
-#
 # Contains definitions for all default callback objects.
 
 require 'diff/lcs/change'

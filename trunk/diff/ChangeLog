@@ -1,8 +1,22 @@
 Revision history for Ruby library Diff::LCS. Unless explicitly noted otherwise,
 all changes are produced by Austin Ziegler <diff-lcs@halostatue.ca>.
 
-== Difff::LCS 1.1.0
+== Diff::LCS 1.1.0
 * Eliminated the need for Diff::LCS::Event and removed it.
+* Added a contextual diff callback, Diff::LCS::ContextDiffCallback.
+* Implemented patching/unpatching for standard Diff callback output formats
+  with both #diff and #sdiff.
+* Extensive documentation changes.
+
+== Diff::LCS 1.0.4
+* Fixed a problem with bin/ldiff output, especially for unified format.
+  Newlines that should have been present weren't.
+* Changed the .tar.gz installer to generate Windows batch files if ones do not
+  exist already. Removed the existing batch files as they didn't work.
+
+== Diff::LCS 1.0.3
+* Fixed a problem with #traverse_sequences where the first difference from the
+  left sequence might not be appropriately captured.
 
 == Diff::LCS 1.0.2
 * Fixed an issue with ldiff not working because actions were changed from

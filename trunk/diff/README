@@ -1,10 +1,15 @@
 Diff::LCS README
 ================
-This is the 1.1.0 release of Diff::LCS for Ruby, based originally on Perl's
-Algorithm::Diff[1]. It uses the McIlroy-Hunt longest common subsequence (LCS)
-algorithm to compute intelligent differences between two sequenced enumerable
-containers[2]. The implementation is based on Mario I. Wolczko's[3] Smalltalk
-version (1.2, 1993)[4] and Ned Konz's[5] Perl version (Algorithm::Diff)[6].
+Diff::LCS is a port of Algorithm::Diff[1] that uses the McIlroy-Hunt
+longest common subsequence (LCS) algorithm to compute intelligent
+differences between two sequenced enumerable containers[2]. The
+implementation is based on Mario I. Wolczko's[3] Smalltalk version (1.2,
+1993)[4] and Ned Konz's[5] Perl version (Algorithm::Diff)[6].
+
+This release is version 1.1.0 with the addition of new features,
+including the ability to #patch and #unpatch changes as well as a new
+contextual diff callback, Diff::LCS::ContextDiffCallbacks, that should
+improve the context sensitivity of patching.
 
 Using this module is quite simple. By default, Diff::LCS does not extend
 objects with the Diff::LCS interface, but will be called as if it were a
@@ -20,6 +25,10 @@ function:
   sdiff = Diff::LCS.sdiff(seq1, seq2)
   seq = Diff::LCS.traverse_sequences(seq1, seq2, callback_obj)
   bal = Diff::LCS.traverse_balanced(seq1, seq2, callback_obj)
+  seq2 == Diff::LCS.patch!(seq1, diffs)
+  seq1 == Diff::LCS.unpatch!(seq2, diffs)
+  seq2 == Diff::LCS.patch!(seq1, sdiff)
+  seq1 == Diff::LCS.unpatch!(seq2, sdiff)
 
 Objects can be extended with Diff::LCS:
 
@@ -29,9 +38,13 @@ Objects can be extended with Diff::LCS:
   sdiff = seq1.sdiff(seq2)
   seq = seq1.traverse_sequences(seq2, callback_obj)
   bal = seq1.traverse_balanced(seq2, callback_obj)
+  seq2 == seq1.patch!(diffs)
+  seq1 == seq2.unpatch!(diffs)
+  seq2 == seq1.patch!(sdiff)
+  seq1 == seq2.unpatch!(sdiff)
 
-By requiring 'diff/lcs/array' or 'diff/lcs/string', Array or String
-will be extended for use this way.
+By requiring 'diff/lcs/array' or 'diff/lcs/string', Array or String will
+be extended for use this way.
 
 Copyright
 =========
@@ -41,9 +54,9 @@ Copyright
 #     Smalltalk by Mario I. Wolczko <mario@wolczko.com>
 #   implements McIlroy-Hunt diff algorithm
 #
-# This program is free software. It may be redistributed and/or modified under
-# the terms of the GPL version 2 (or later), the Perl Artistic licence, or the
-# Ruby licence.
+# This program is free software. It may be redistributed and/or modified
+# under the terms of the GPL version 2 (or later), the Perl Artistic
+# licence, or the Ruby licence.
 # 
 # $Id$
 

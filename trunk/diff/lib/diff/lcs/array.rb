@@ -12,7 +12,6 @@
 # 
 # $Id$
 #++
-#
 # Includes Diff::LCS into the Array built-in class.
 
 require 'diff/lcs'

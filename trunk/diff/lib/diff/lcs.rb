@@ -176,9 +176,15 @@ module Diff::LCS
   end
 
     # Attempts to unpatch +self+ with the provided +patchset+. See
-    # Diff::LCS#unpatch.
-  def unpatch(patchset)
-    Diff::LCS::unpatch(self, patchset)
+    # Diff::LCS#patch!. Does no autodiscovery.
+  def patch!(patchset)
+    Diff::LCS::patch!(self, patchset)
+  end
+
+    # Attempts to unpatch +self+ with the provided +patchset+. See
+    # Diff::LCS#unpatch. Does no autodiscovery.
+  def unpatch!(patchset)
+    Diff::LCS::unpatch!(self, patchset)
   end
 end
 
@@ -367,16 +373,18 @@ module Diff::LCS
       b_size = seq2.size
       ai = bj = 0
 
-      (0 ... matches.size).each do |ii|
+      (0 .. matches.size).each do |ii|
         b_line = matches[ii]
 
         ax = string ? seq1[ii, 1] : seq1[ii]
         bx = string ? seq2[bj, 1] : seq2[bj]
 
         if b_line.nil?
-          event = Diff::LCS::ContextChange.new('-', ii, ax, bj, bx)
-          event = yield event if block_given?
-          callbacks.discard_a(event)
+          unless ax.nil?
+            event = Diff::LCS::ContextChange.new('-', ii, ax, bj, bx)
+            event = yield event if block_given?
+            callbacks.discard_a(event)
+          end
         else
           loop do
             break unless bj < b_line
@@ -648,62 +656,118 @@ module Diff::LCS
       end
     end
 
-      # Given a patchset, convert the current version to the new version.
+    PATCH_MAP = { #:nodoc:
+      :patch => { '+' => '+', '-' => '-', '!' => '!', '=' => '=' },
+      :unpatch => { '+' => '-', '-' => '+', '!' => '!', '=' => '=' }
+    }
+
+      # Given a patchset, convert the current version to the new
+      # version. If +direction+ is not specified (must be
+      # <tt>:patch</tt> or <tt>:unpatch</tt>), then discovery of the
+      # direction of the patch will be attempted.
     def patch(src, patchset, direction = nil)
-      patchset = patchset.flatten
-      direction = Diff::LCS.__diff_direction(src, patchset) if direction.nil?
-
       string = src.kind_of?(String)
+        # Start with a new empty type of the source's class
+      res = src.class.new
 
-      n = src.class.new
+        # Normalize the patchset.
+      patchset = __normalize_patchset(patchset)
+
+      direction ||= Diff::LCS.__diff_direction(src, patchset)
+      direction ||= :patch
+
       ai = bj = 0
 
-      uses_splat = true
-
       patchset.each do |change|
-        action = change.action
+          # Both Change and ContextChange support #action
+        action = PATCH_MAP[direction][change.action]
 
-        if direction == :unpatch
+        case change
+        when Diff::LCS::ContextChange
+          case direction
+          when :patch
+            el = change.new_element
+            op = change.old_position
+            np = change.new_position
+          when :unpatch
+            el = change.old_element
+            op = change.new_position
+            np = change.old_position
+          end
+
+          case action
+          when '-' # Remove details from the old string
+            while ai < op
+              res << (string ? src[ai, 1] : src[ai])
+              ai += 1
+              bj += 1
+            end
+            ai += 1
+          when '+'
+            while bj < np
+              res << (string ? src[ai, 1] : src[ai])
+              ai += 1
+              bj += 1
+            end
+
+            res << el
+            bj += 1
+          when '='
+              # This only appears in sdiff output with the SDiff callback.
+              # Therefore, we only need to worry about dealing with a single
+              # element.
+            res << el
+
+            ai += 1
+            bj += 1
+          when '!'
+            while ai < op
+              res << (string ? src[ai, 1] : src[ai])
+              ai += 1
+              bj += 1
+            end
+
+            bj += 1
+            ai += 1
+
+            res << el
+          end
+        when Diff::LCS::Change
           case action
           when '-'
-            action = '+'
+            while ai < change.position
+              res << (string ? src[ai, 1] : src[ai])
+              ai += 1
+              bj += 1
+            end
+            ai += 1
           when '+'
-            action = '-'
-          end
-        end
+            while bj < change.position
+              res << (string ? src[ai, 1] : src[ai])
+              ai += 1
+              bj += 1
+            end
 
-        case action
-        when '-' # Delete
-          while ai < change.position
-            n << (string ? src[ai, 1] : src[ai])
-            ai += 1
             bj += 1
-          end
-          ai += (change.text.kind_of?(String) ? 1 : change.text.size)
-        when '+' # Insert
-          while bj < change.position
-            n << (string ? src[ai, 1]: src[ai])
-            ai += 1
-            bj += 1
-          end
 
-          if change.text.kind_of?(String)
-            n << change.text
-          else
-            n.push(*change.text)
+            res << change.element
           end
-
-          bj += (change.text.kind_of?(String) ? 1 : change.text.size)
         end
       end
 
-      n
+      res
     end
 
       # Given a set of patchset, convert the current version to the prior
-      # version.
-    def unpatch(src, patchset)
+      # version. Does no auto-discovery.
+    def unpatch!(src, patchset)
       Diff::LCS.patch(src, patchset, :unpatch)
+    end
+
+      # Given a set of patchset, convert the current version to the next
+      # version. Does no auto-discovery.
+    def patch!(src, patchset)
+      Diff::LCS.patch(src, patchset, :patch)
     end
 
 # private
@@ -844,14 +908,6 @@ module Diff::LCS
       patchset.each do |change|
         count += 1
 
-        if change.kind_of?(Array)
-          if change[1].kind_of?(Array)
-            change = Diff::LCS::ContextChange.from_a(change)
-          else
-            change = Diff::LCS::Change.from_a(change)
-          end
-        end
-
         case change
         when Diff::LCS::Change
             # With a simplistic change, we can't tell the difference between
@@ -879,9 +935,8 @@ module Diff::LCS
             end
           end
         when Diff::LCS::ContextChange
-
           case change.action
-          when '-'
+          when '-' # Remove details from the old string
             element = string ? src[change.old_position, 1] : src[change.old_position]
             if element == change.old_element
               left += 1
@@ -895,6 +950,12 @@ module Diff::LCS
             else
               right_miss += 1
             end
+          when '='
+            le = string ? src[change.old_position, 1] : src[change.old_position]
+            re = string ? src[change.new_position, 1] : src[change.new_position]
+
+            left_miss += 1 if le != change.old_element
+            right_miss += 1 if re != change.new_element
           when '!'
             element = string ? src[change.old_position, 1] : src[change.old_position]
             if element == change.old_element
@@ -908,12 +969,6 @@ module Diff::LCS
                 right_miss += 1
               end
             end
-          when '='
-            le = string ? src[change.old_position, 1] : src[change.old_position]
-            re = string ? src[change.new_position, 1] : src[change.new_position]
-
-            left_miss += 1 if le != change.old_element
-            right_miss += 1 if re != change.new_element
           end
         end
 
@@ -931,6 +986,85 @@ module Diff::LCS
       else
         raise "The provided patchset does not appear to apply to the provided value as either source or destination value."
       end
+    end
+
+      # Normalize the patchset. A patchset is always a sequence of changes, but
+      # how those changes are represented may vary, depending on how they were
+      # generated. In all cases we support, we also support the array
+      # representation of the changes. The formats are:
+      #
+      #   [ # patchset <- Diff::LCS.diff(a, b)
+      #     [ # one or more hunks
+      #       Diff::LCS::Change # one or more changes
+      #     ] ]
+      #
+      #   [ # patchset, equivalent to the above
+      #     [ # one or more hunks
+      #       [ action, line, value ] # one or more changes
+      #     ] ]
+      #
+      #   [ # patchset <- Diff::LCS.diff(a, b, Diff::LCS::ContextDiffCallbacks)
+      #     #       OR <- Diff::LCS.sdiff(a, b, Diff::LCS::ContextDiffCallbacks)
+      #     [ # one or more hunks
+      #       Diff::LCS::ContextChange # one or more changes
+      #     ] ]
+      #
+      #   [ # patchset, equivalent to the above
+      #     [ # one or more hunks
+      #       [ action, [ old line, old value ], [ new line, new value ] ]
+      #         # one or more changes
+      #     ] ]
+      #
+      #   [ # patchset <- Diff::LCS.sdiff(a, b)
+      #     #       OR <- Diff::LCS.diff(a, b, Diff::LCS::SDiffCallbacks)
+      #     Diff::LCS::ContextChange # one or more changes
+      #   ]
+      #
+      #   [ # patchset, equivalent to the above
+      #     [ action, [ old line, old value ], [ new line, new value ] ]
+      #       # one or more changes
+      #   ]
+      #
+      # The result of this will be either of the following.
+      #
+      #   [ # patchset
+      #     Diff::LCS::ContextChange # one or more changes
+      #   ]
+      #
+      #   [ # patchset
+      #     Diff::LCS::Change # one or more changes
+      #   ]
+      #
+      # If either of the above is provided, it will be returned as such.
+      #
+    def __normalize_patchset(patchset)
+      patchset.map do |hunk|
+        case hunk
+        when Diff::LCS::ContextChange, Diff::LCS::Change
+          hunk
+        when Array
+          if (not hunk[0].kind_of?(Array)) and hunk[1].kind_of?(Array) and hunk[2].kind_of?(Array)
+            Diff::LCS::ContextChange.from_a(hunk)
+          else
+            hunk.map do |change|
+              case change
+              when Diff::LCS::ContextChange, Diff::LCS::Change
+                change
+              when Array
+                  # change[1] will ONLY be an array in a ContextChange#to_a call.
+                  # In Change#to_a, it represents the line (singular).
+                if change[1].kind_of?(Array)
+                  Diff::LCS::ContextChange.from_a(change)
+                else
+                  Diff::LCS::Change.from_a(change)
+                end
+              end
+            end
+          end
+        else
+          raise ArgumentError, "Cannot normalise a hunk of class #{hunk.class}."
+        end
+      end.flatten
     end
   end
 end

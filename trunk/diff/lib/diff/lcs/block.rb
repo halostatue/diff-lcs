@@ -12,7 +12,6 @@
 # 
 # $Id$
 #++
-# 
 # Contains Diff::LCS::Block for bin/ldiff.
 
   # A block is an operation removing, adding, or changing a group of items.

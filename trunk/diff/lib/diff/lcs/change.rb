@@ -136,8 +136,12 @@ class Diff::LCS::ContextChange
 
     # Creates a ContextChange from an array produced by ContextChange#to_a.
   def self.from_a(arr)
-    Diff::LCS::ContextChange.new(arr[0], arr[1][0], arr[1][1], arr[2][0],
-                                 arr[2][1])
+    if arr.size == 5
+      Diff::LCS::ContextChange.new(arr[0], arr[1], arr[2], arr[3], arr[4])
+    else
+      Diff::LCS::ContextChange.new(arr[0], arr[1][0], arr[1][1], arr[2][0],
+                                   arr[2][1])
+    end
   end
 
     # Simplifies a context change for use in some diff callbacks. '<' actions
