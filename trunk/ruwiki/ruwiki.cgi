@@ -44,5 +44,6 @@ wiki.config.storage_options[wiki.config.storage_type][:extension] = "ruwiki"
 # wiki.config.time_format     = "%H:%M:%S"
 # wiki.config.date_format     = "%Y.%m.%d"
 # wiki.config.datetime_format = "%Y.%m.%d %H:%M:%S"
+wiki.config = wiki.config
 
 wiki.run
