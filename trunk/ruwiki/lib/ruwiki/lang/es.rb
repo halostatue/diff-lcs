@@ -45,7 +45,7 @@ module Ruwiki::Lang
       :project_does_not_exist       => "El proyecto %1$s no existe.",
       :search_project_fail          => "Error al buscar la cadena %2$s en el proyecto %1$s.",
       :yaml_requires_182_or_higher  => "El soporte para archivos YAML sólo está disponible en Ruby versión 1.8.2 o superior.",
- 
+
         # Config-related messages.
       :config_not_ruwiki_config     => "La configuración debe ser de clase Ruwiki::Config.",
       :invalid_template_dir         => "El path para plantillas (%1$s) no existe o no es un directorio.",
@@ -66,8 +66,8 @@ module Ruwiki::Lang
       :no_topics                    => "El proyecto %1$s no tiene nigún tema.",
       :search_results_for           => "= Resultados de la búsqueda de: %1$s",
       :number_of_hits               => "%1$d Resultados",
- 
-          # Labels
+
+        # Labels
       :label_search_project         => "Buscar en projecto",
       :label_search_all             => "Todo",
       :label_search                 => "Buscar: ",
@@ -94,31 +94,30 @@ module Ruwiki::Lang
       :label_send_report_by         => "Enviar notificación al administrador del Wiki por email.",
       :label_send_report            => "Enviar notificación.",
       :label_saved_page             => "Página salvada: ",
- 
+
         # Messages from Ruwiki::Utils::Converter
         # Note to translators: certain words should be left alone. These
         # will be marked in comments. Description lines are restricted to 40
         # characters and should be an array. Use this as a ruler.
         #                           => [ "----------------------------------------" ]
       :converter_usage              => "Modo de empleo: %1$s [opciones] <dir.>",
-      :converter_format_desc        => [ "Convierte los ficheros encountrados files",
-                                         "independientemente de su formato), al",
+      :converter_format_desc        => [ "Convertir los ficheros encontrados",
+                                         "(independientemente de su formato), al",
                                          "formato especificado; por defecto ",
-                                         "archivos planos.",
-                                         "Formatos permitidos:",
+                                         "archivos planos. Formatos permitidos:",
                                          "   yaml marshal flatfiles" ],
       :converter_backup_desc        => [ "Crear copias de seguridad de ficheros ",
                                          "actualizados. La opción por defecto es ",
                                          "--backup." ],
       :converter_backupext_desc     => [ 'Especificar la extensión para las copias',
-                                         'de seguridad, por defecto "~", que se',
-                                         'añade al nombre del fichero de datos'],
-      :converter_backupext_error    => ["La extensión para copias de seguridad", 
-                                        "no debe estar vacía."],
+                                         'de seguridad (por defecto "~") que se',
+                                         'añade al nombre del fichero de datos' ],
+      :converter_backupext_error    => [ "La extensión para copias de seguridad",
+                                         "no debe estar vacía." ],
       :converter_extension_desc     => [ "Especifica la extensión de los ficheros",
-                                         "de datos de Ruwiki; por defecto .ruwiki" ],
+                                         "de datos de Ruwiki (por defecto .ruwiki)" ],
       :converter_extension_error    => "La extensión no debe estar vacía.",
-      :converter_noextension_desc   => [ "Indica que los ficheros de datos de" 
+      :converter_noextension_desc   => [ "Indica que los ficheros de datos de"
                                          "Ruwiki no tienen ninguna extensión." ],
       :converter_quiet_desc         => [ "Ejecución silenciosa. Por defecto se "
                                          "ejecuta con mensajes normales." ],
@@ -135,76 +134,76 @@ module Ruwiki::Lang
       :converter_done               => "hecho.",
       :converter_not_ruwiki         => "no es un fichero de Ruwiki; ignorando.",
       :converter_nosave_modified    => "no pudo salvarse %1$s.",
- 
+
         # Messages from Ruwiki::Utils::Manager
       :manager_unknown_command      => "Comando desconocido: %1$s",
       :manager_help_commands        => <<EOH ,
 Los comandos reconocidos por 'ruwiki' son:
- 
+
     ruwiki install              Instala el entorno por defecto.
     ruwiki package              Empaqueta una instalación de Ruwiki.
     ruwiki unpackage            Desempaqueta una instalación de Ruwiki.
     ruwiki service              Gestiona un Win32::Service para Ruwiki.
- 
+
 EOH
       :manager_help_help            => <<-EOH ,
 Este es un mensaje de ayuda básico con referencias a información suplementaria
 relativa a esta herramienta de la línea de comandos. Intente:
- 
+
     ruwiki help commands        mostrar todos los comandos de ruwiki
     ruwiki help <COMANDO>       mostrar ayuda sobre <COMANDO>
                                   (p.ej., 'ruwiki help install')
- 
+
 EOH
       :manager_missing_parameter    => "Falta parámetro para la opción: %1$s",
       :manager_dest_not_directory   => "El destino (%1$s) no es un directorio.",
       :manager_install_help         => <<-EOH ,
     ruwiki install [OPCIONES] [--to DEST]
- 
-Crea una instancia de Ruwiki. Por defecto, esto instala los ficheros de datos,
+
+Crea una instancia de Ruwiki. Por defecto, se instala los ficheros de datos,
 plantillas y la configuración por defecto en el directorio actual. El destino
 puede ser cambiado con la opción --to, y los elementos a instalar con la lista
 de OPCIONES, que puede ser delimitada por espacios, comas o puntos y comas.
 Así pues,
- 
+
     ruwiki install data;servlet
     ruwiki install data,servlet
     ruwiki install data servlet
- 
+
 son equivalentes. Las opciones pueden especificarse en mayúsculas/minúsculas.
 Las opciones de instalación son:
- 
+
     servlet       # Instala el stub para el servlet Ruwiki
     service       # Instala el stub para el Win32::Service Ruwiki
     CGI           # Instala el script CGI Ruwiki
     data          # Instala los datos, plantillas y configuración de Ruwiki
- 
-Las opciones pueden deshabilitarse precendiéndolas de un guión o 'no':
- 
+
+Las opciones pueden deshabilitarse precediéndolas de un guión o 'no':
+
     ruwiki install cgi -data
     ruwiki install cgi nodata
- 
-Las anteriores instalarán el script CGI pero no los datos.
+
+instalarán el script CGI pero no los datos.
 EOH
       :manager_package_help         => <<-EOH ,
     ruwiki package [FUENTE] [--output PAQUETE] [--replace]
     ruwiki package [FUENTE] [-o PAQUETE] [--replace]
- 
-Empaqueta los ficheros de Ruwiki (datos, plantillas y ejecutables) de la 
+
+Empaqueta los ficheros de Ruwiki (datos, plantillas y ejecutables) de la
 FUENTE especificada o el directorio actual en el archivo de salida
 especificado (o "../%1$s"). Si la FUENTE es un fichero de configuración
 de rukiwi (p.ej. "%2$s"), será empleado para determinar la localización
 y el nombre de los directorios de datos y plantillas.
- 
+
     NOTA: El proceso de empaquetado normaliza los nombres de los
           ficheros de datos y plantillas para que sean relativos al
           directorio de desempaquetado. NUNCA serán paths absolutos.
- 
+
 EOH
       :manager_unpackage_help       => <<-EOH ,
     ruwiki unpackage [FUENTE] [--output DIRECTORIO]
     ruwiki unpackage [FUENTE] [-o DIRECTORIO]
- 
+
 Desempaqueta el paquete de Ruwiki provisto (por defecto "./%1$s")
 en el directorio indicado (por defecto ".").
 EOH
@@ -215,10 +214,10 @@ EOH
     ruwiki service start   NOMBRE
     ruwiki service stop    NOMBRE
     ruwiki service delete  NOMBRE
- 
+
 Gestiona el servlet Ruwiki para WEBrick como un servicio de Windows, bajo el
 NOMBRE indicado. install soporta además las opciones siguientes:
- 
+
   --rubybin RUBYPATH      Path del ejecutable Ruby.
   --exec    SERVICEPATH   Path del ejecutable del servicio.
   --home    PATHTOHOME    Path del directorio home.
@@ -229,25 +228,25 @@ EOH
       :manager_service_started      => "Servicio %1$s iniciado.",
       :manager_service_stopped      => "Servicio %1$s parado.",
       :manager_service_deleted      => "Servicio %1$s borrado.",
- 
+
         # Messages from Ruwiki::Utils::Converter
         # Note to translators: certain words should be left alone. These
         # will be marked in comments. Description lines are restricted to 40
         # characters and should be an array. Use this as a ruler.
         #                           => [ "----------------------------------------" ]
       :runner_usage                 => "Modo de empleo: %1$s [opciones]",
-      :runner_general_options       => "Options generales:",
+      :runner_general_options       => "Opciones generales:",
       :runner_saveconfig_desc       => [ "Salvar la configuración en FILENAME y",
                                          "salir. Si no se emplea FILENAME, la",
-                                         "configuración por defecto será empleada.",
+                                         "configuración por defecto será usada.",
                                          "Todas las opciones serán leídas del",
                                          "fichero existente y de la línea de",
                                          "comandos y salvadas. El servlet no se",
-                                         "arrancará. El nombre por defecto es:"],
+                                         "arrancará. El nombre por defecto es:" ],
       :runner_config_desc           => [ "Leer la configuración por defecto de",
                                          "FILENAME en vez del fichero por defecto",
                                          "Las opciones especificadas anteriormente",
-                                         "serán sobrescritas"],
+                                         "serán sobrescritas" ],
       :runner_webrick_options       => "Opciones de WEBrick:",
       :runner_port_desc             => [ "Ejecutar el servlet Ruwiki en el puerto",
                                          "especificado; por defecto 8808." ],
@@ -255,10 +254,10 @@ EOH
                                          "direcciones especificadas (separadas por"
                                          "comas). Puede usarse repetidamente. Por",
                                          "defecto todas las direcciones serán",
-                                         "aceptadas"],
+                                         "aceptadas" ],
       :runner_local_desc            => [ "Aceptar únicamente conexiones locales",
                                          "(127.0.0.1). Anula las direcciones",
-                                         "indicadas en -A"],
+                                         "indicadas previamente en -A" ],
       :runner_mountpoint_desc       => [ "URI relativo en el que Ruwiki estará",
                                          'accesible. Por defecto "/".' ],
       :runner_log_desc              => [ "Realizar log de la actividad de WEBrick.",
@@ -267,12 +266,11 @@ EOH
                                          "WEBrick. Por defecto, el standard error." ],
       :runner_threads_desc          => [ "Asigna al threadcount de WEBrick." ],
       :runner_ruwiki_options        => "Opciones de Ruwiki:",
-      :runner_language_desc         => [ 'Idioma del inferfaz de Ruwiki.',
+      :runner_language_desc         => [ 'Idioma de la inferfaz de Ruwiki.',
                                          'Por defecto "en". Puede ser "en", ',
                                          '"de", o  "es".' ],
       :runner_webmaster_desc        => [ 'Email del webmaster de Ruwiki.',
                                          'Por defecto "webmaster@domain.tld".' ],
-      :runner_log_desc              => [ "----------------------------------------" ],
       :runner_debug_desc            => [ 'Activa debugging de Ruwiki. Por defecto',
                                          'inhabilitado.' ],
       :runner_title_desc            => 'Título del Ruwiki. Por defecto "Ruwiki".',
@@ -299,7 +297,7 @@ EOH
       :runner_rejected_address      => "Dirección remota %1$s rechazada. Sólo se admiten conexiones desde %2$s.",
       :runner_banner                => <<-BANNER ,
 %1$s
- 
+
 Opciones de WEBrick:
   Puerto                 %2$d
   Direcciones admitidas  %3$s
@@ -307,7 +305,7 @@ Opciones de WEBrick:
   Logging?               %5$s
   Destino del log        %6$s
   Hebras                 %7$s
- 
+
 Opciones de Ruwiki:
   Webmaster              %8$s
   Debugging?             %9$s
@@ -317,7 +315,7 @@ Opciones de Ruwiki:
   Path para plantillas   %13$s
   Conjunto de plantillas %14$s
   Fuente CSS             %15$s
- 
+
   Tipo de almacenamiento %16$s
   Path de datos          %17$s
   Extensión              %18$s

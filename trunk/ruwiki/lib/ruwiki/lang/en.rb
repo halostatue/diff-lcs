@@ -265,7 +265,6 @@ EOH
                                          '"es".' ],
       :runner_webmaster_desc        => [ 'The Ruwiki webmaster email address.',
                                          'Defaults to "webmaster@domain.tld".' ],
-      :runner_log_desc              => [ "----------------------------------------" ],
       :runner_debug_desc            => [ 'Turns on Ruwiki debugging. Defaults',
                                          'to --no-debug.' ],
       :runner_title_desc            => [ 'Provides the Ruwiki title. Default is',

@@ -269,7 +269,6 @@ EOH
                                          '"es" sein.' ],
       :runner_webmaster_desc        => [ 'Die Ruwiki-Wwebmaster Email-Adresse.',
                                          'Standard: "webmaster@domain.tld".' ],
-      :runner_log_desc              => [ "----------------------------------------" ],
       :runner_debug_desc            => [ 'Aktiviert Ruwuki-Debugging. Standard:',
                                          '--no-debug.' ],
       :runner_title_desc            => [ 'Gibt den Ruwiki-Titel an. Standard ist',
