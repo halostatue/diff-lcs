@@ -9,7 +9,7 @@
 # $Id$
 #++
 require 'cgi'
-require 'digest/md5'
+# require 'digest/md5'
 require 'ruwiki/handler'
 require 'ruwiki/template'
 require 'ruwiki/lang/en' # Default to the English language.
@@ -158,7 +158,7 @@ class Ruwiki
 
     @project ||= @request.parameters['project']
     @project ||= @config.default_project
-    @topic    ||= @config.default_page
+    @topic   ||= @config.default_page
   end
 
     # Processes the page through the necessary steps. This is where the edit,
@@ -241,7 +241,7 @@ EPAGE
       end
 
       content = @page.to_html
-      content.gsub!(%r{\(a href='([^']+)/_topics' class='rw_minilink'\)}, '<a href="\1/_topics" class="rw_minilink">')
+      content.gsub!(%r{\(a href='([^']+)/_topics' class='rw_minilink'\)}, '<a href="\1/_topics" class="rw_minilink">') #'
       @type = :content
     when 'edit', 'create'
         # Automatically create the project if it doesn't exist or if the action
@@ -266,6 +266,8 @@ EPAGE
       if np == op and @action == 'save'
         @page.content = op
         @type = :content
+        # debug
+        puts op
       else
         @page.content      = np
         @page.old_version  = @request.parameters['old_version'].to_i + 1
@@ -336,37 +338,38 @@ EPAGE
     values = { "css_link"   => @config.css_link,
                "home_link"  => %Q(<a href="#{@request.script_url}">#{@config.title}</a>),
                "encoding"   => @config.message[:charset_encoding],
-               "editable"   => true
+               "editable"   => true,
+               "cgi_url"    => @request.script_url,
+               "content"    => @content,
+               "page_project"   => @page.project,
+               "page_topic"     => CGI.unescape(@page.topic),
+               "page_raw_topic" => @page.topic
              }
+
+    values["url_project"]       = %Q(#{values["cgi_url"]}/#{values["page_project"]})
+    values["url_topic_search"]  = %Q(#{values["url_project"]}/_search?q=#{values["page_topic"]})
+    values["link_topic_search"] = %Q(<a href='#{values["url_topic_search"]}'><strong>#{values["page_topic"]}</strong></a>)
 
     case type
     when :content, :save, :search
       values["wiki_title"]              = "#{self.message[:error]} - #{@config.title}" if @page.nil?
       values["wiki_title"]            ||= "#{@page.project}::#{CGI.unescape(@page.topic)} - #{@config.title}"
-      values["page_topic"]              = CGI.unescape(@page.topic)
-      values["page_raw_topic"]          = @page.topic
-      values["page_project"]            = @page.project
-      values["cgi_url"]                 = @request.script_url
-      values["content"]                 = @content
       values["label_topic_or_search"]   = self.message[:label_topic]
       if type == :content or type == :search
         template = TemplatePage.new(@config.template(:body), @config.template(:content), @config.template(:controls))
         if type == :search
           values["label_topic_or_search"] = self.message[:label_search]
         else
-          values["page_topic"] = [%Q(<a href='#{values["cgi_url"]}/#{values["page_project"]}/_search?q=#{values["page_topic"]}'><strong>#{values["page_topic"]}</strong></a>)]
+          values["page_topic"] = values["link_topic_search"]
         end
       else
-        values["page_topic"] = self.message[:tab_topic] % [%Q(<a href='#{values["cgi_url"]}/#{values["page_project"]}/_search?q=#{values["page_topic"]}'><strong>#{values["page_topic"]}</strong></a>)]
+        # action type was save
+        values["page_topic"] = values["link_topic_search"]
         template = TemplatePage.new(@config.template(:body), @config.template(:save), @config.template(:controls))
       end
     when :edit, :preview
       template = TemplatePage.new(@config.template(:body), @config.template(:edit))
       values["wiki_title"]            = "#{self.message[:editing]}: #{@page.project}::#{CGI.unescape(@page.topic)} - #{@config.title}"
-      values["page_topic"]            = CGI.unescape(@page.topic)
-      values["page_raw_topic"]        = @page.topic
-      values["page_project"]          = @page.project
-      values["cgi_url"]               = @request.script_url
       values["page_content"]          = @page.content
       values["page_old_version"]      = @page.old_version.to_s
       values["page_version"]          = @page.version.to_s
