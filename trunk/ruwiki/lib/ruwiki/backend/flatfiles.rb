@@ -34,7 +34,7 @@ class Ruwiki::Backend::Flatfiles < Ruwiki::Backend
   def load(topic, project)
     page = Ruwiki::Page::NULL_PAGE.dup
     hash = Ruwiki::Exportable.load(File.read(page_file(topic, project)))
-    page.merge(hash)
+    hash.each_key { |ss| hash[ss].each { |ii, vv| page[ss][ii] = vv } }
     page
   rescue Ruwiki::Exportable::InvalidFormatError
     raise Ruwiki::Backend::InvalidFormatError

@@ -239,7 +239,6 @@ class Ruwiki
 = #{self.message[:topics_for_project] % [@page.project]}
 * #{topic_list.join("\n* ")}
 EPAGE
-$stderr.puts @page.content.inspect
       end
 
       @type = :content
