@@ -17,7 +17,7 @@ class Ruwiki
       }
 
       def self.regexp
-        %r!@{([^}]*)}!
+        %r!@\{([^\}]*)\}!
       end
 
       def replace
