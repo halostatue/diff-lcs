@@ -310,7 +310,8 @@ EPAGE
     else
       @error[:name] = "#{self.message[:complete_utter_failure]}: #{e.to_s}"
     end
-    @error[:backtrace] = e.backtrace.join("<br />\n")
+    @error[:name] = CGI.escapeHTML(@error[:name])
+    @error[:backtrace] = e.backtrace.map { |el| CGI.escapeHTML(el) }.join("<br />\n")
     content = nil
   ensure
     @content = content
@@ -376,7 +377,7 @@ EPAGE
       values["webmaster"]       = @config.webmaster
     end
 
-    template.write_html_on(@rendered_page, values)
+    template.process(@rendered_page, values)
   end
 
     # Outputs the page.

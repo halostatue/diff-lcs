@@ -87,34 +87,24 @@ class Ruwiki
         Dir.rmdir(pd) if File.exists?(pd) and File.directory?(pd)
       end
 
-      # string search all topic names and content in a project and return a
-      # has of topic hits
+        # String search all topic names and content in a project and return a
+        # has of topic hits
       def search_project(project, searchstr)
-
         re_search = Regexp.new(searchstr, Regexp::IGNORECASE)
 
-        hits = {}
+        hits = Hash.new { |h, k| h[k] = 0 }
         topic_list = list_topics(project)
 
-        return hits if( topic_list.size == 0 )
+        return hits if topic_list.empty?
 
-        topic_list.each { |topicname| hits[topicname] = 0 }
+          # search topic content
+        topic_list.each do |topic|
+            # search name
+          hits[topic] += topic.scan(re_search).size
 
-        # search topic content
-        topic_list.each do |topicname|
-          # search name
-          topicname.gsub(re_search) { |mtxt| hits[topicname] += 1 }
-
-          # check content
-          begin
-            buf = load( topicname, project )
-          rescue
-            # in dev CVS is a directory and fails...
-            buf = ['']
-          end
-          buf.each do |line|
-            line.gsub(re_search) { |mtxt| hits[topicname] += 1 }
-          end
+            # check content
+          buf = load(topic, project) rescue [""]
+          buf.each { |line| hits[topic] += topic.scan(re_search).size }
         end
 
         hits
@@ -171,31 +161,21 @@ class Ruwiki
         end
       end
 
-      # list projects found in data path
-      def list_projects()
-        projs = []
-        Dir[@data_path + "/*" ].each do |fpath|
-          next unless File.directory?( fpath )
-          pdir,projdir = File.split(fpath)
-          projs.push projdir if File.exist?( fpath + "/ProjectIndex" )
-        end
-        projs
+        # list projects found in data path
+      def list_projects
+        Dir["#{@data_path}/*"].select do |d|
+          File.directory?(d) and File.exist?("#{d}/ProjectIndex")
+        end.map { |d| File.basename(d) }
       end
 
-      # list topics found in data path
+        # list topics found in data path
       def list_topics(project)
-          pjdir =  project_directory(project)
-          unless File.exist?(pjdir)
-            raise Ruwiki::Backend::BackendError(:no_project)
-          end
+        pd = project_directory(project)
+        raise Ruwiki::Backend::BackendError(:no_project) unless File.exist?(pd)
 
-          topiclist = []
-          Dir[pjdir + "/*"].each do |tpfile|
-             next if( tpfile =~ /.rdiff$/ )
-             next unless( File.file?( tpfile ) )
-             topiclist.push( File.split(tpfile)[1] )
-          end
-          topiclist
+        Dir["#{pd}/*"].select do |f|
+          f !~ /.rdiff$/ and f !~ /.lock$/ and File.file?(f)
+        end.map { |f| File.basename(f) }
       end
 
     private
