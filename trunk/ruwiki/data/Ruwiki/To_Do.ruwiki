@@ -3,7 +3,7 @@ page!content:	= Ruwiki %RV#% To Do Tracking
 	are tracked in BugTracking.
 	
 	== Well-Defined To Do Items
-	=== Ruwiki 0.9.0
+	=== Ruwiki 0.10.0
 	; Versioning : complete the change history interface. Change history is currently stored in a file <em>topic[.extension]</em>.rdiff. There is no way to display the change history at this point.
 	; Action objects : Actions will be generalised to pull the processing out of the main ruwiki.rb inasmuch as is possible.
 	; Function tokens : generalize the %&lt;function-name&gt;[(&lt;args&gt;)] calling method so that function tokens can be created without having to create a custom regular expression.
@@ -11,16 +11,14 @@ page!content:	= Ruwiki %RV#% To Do Tracking
 	; Frozen content : make it so that frozen content can be provided on a per-page or Wiki basis. Will provide both headers and footers. <strong>Note:</strong> Ruwiki 0.9.0 will only provide the ability to present the information, not create or modify it.
 	; Blacklisting : Allow the specification of an allow/deny list for \IPs or hostnames, aimed at blocking known spammers. Entries in this list can be permanent or temporary (e.g., &ldquo;* DENY&rdquo;, &ldquo;spammer.com DENY UNTIL 20040723&rdquo;, &ldquo;139.244.33.25 ALLOW&rdquo;).
 	; External URL redirection : Force \URIs that allow redirection (e.g., HTTP and HTTPS) are redirected through a single point on an instance of Ruwiki (e.g., &lt;ruwiki-uri&gt;_redirect?&lt;url&gt;) unless the specific \URIs or hosts are whitelisted (e.g., rubycentral.com, rubyforge.org, ruby-lang.org, etc.).
-	; Robot exclusion : Recognise known robot user agents; when found, allow them to index and follow links on all pages except command pages (e.g., Project/Topic/_edit, Project/_create, etc.).
 	; \GlobalRecentChanges : Recent changes for all projects.
-	=== Ruwiki 0.10.0
-	; Authentication : allow user creation and authentication. Authenticate users bypass blacklist checking; thus, if &ldquo;msn.com&rdquo; is blocked, joe.blog@msn.com could still authenticate with Ruwiki and edit the pages.
+	=== Ruwiki 0.11.0
+	; Authentication : complete authentication to provide for a standard Ruwiki authentication mechanism, not just an external API. This may require changes to the existing external API. Allows for user creation and authentication. Authenticate users bypass blacklist checking; thus, if &ldquo;msn.com&rdquo; is blocked, joe.blog@msn.com could still authenticate with Ruwiki and edit the pages.
 	; Topic renaming : add the ability to rename a topic within a project. Topic change history should be maintained.
 	; Topic moving : add the ability to move and/or rename a topic between projects. Topic change history should be maintained.
 	; Complete documentation : Complete the documentation of Ruwiki.
 	; Antispam : Allow the on-line editing of antispam lists to authenticated and authorised users.
 	=== Ruwiki 1.0.0
-	; Escape HTML Entities : HTML Entities such as &amp;, &lt;, and &gt; are not currently escaped. This may cause problems with some browsers and should be fixed <strong>without</strong> impairing the ability to add at least some raw HTML. Note that the current engine does not check raw HTML and thus could potentially be vulnerable to cross-site-scripting attacks.
 	; RSS Feed : Ruwiki must be able to offer \RecentChanges and \GlobalRecentChanges as RSS feeds. This may not be ideal with the current \RecentChanges format. It may be easier to move to a two-stage \RecentChanges format.
 	; Static content : Allow the creation and editing of static content.
 	; Frozen pages : provide the ability to freeze content in place; the page is no longer &ldquo;wiki&rdquo; editable and is effectively a plain HTML page.

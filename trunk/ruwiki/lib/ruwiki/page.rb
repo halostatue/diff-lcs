@@ -18,8 +18,8 @@ class Ruwiki::Page
   exportable_group 'ruwiki'
     # Returns the content version of the page. If the page has a greater
     # content version than this version of Ruwiki does, we should probably
-    # throw an exception, because attempting to save such a page will cause a
-    # loss of data. Immutable.
+    # throw an exception, because attempting to save such a page will cause
+    # a loss of data. Immutable.
     #
     # Class:: +ruwiki+
     # ID::    +content-version+
@@ -35,37 +35,38 @@ class Ruwiki::Page
 
   exportable_group 'properties'
     # Returns or sets the displayed title of the page, which may differ from
-    # the topic of the page. As of Ruwiki 0.8.0, this is not currently used and
-    # it may disappear.
+    # the topic of the page. As of Ruwiki 0.8.0, this is not currently used
+    # and it may disappear.
     #
     # Class:: +properties+
     # ID::    +title+
   attr_accessor :title
   exportable :title
-    # Returns or sets the topic of the page, which may differ from the title.
-    # This is used to set the topic on a page being saved.
+    # Returns or sets the topic of the page, which may differ from the
+    # title. This is used to set the topic on a page being saved.
     #
     # Class:: +properties+
     # ID::    +topic+
   attr_accessor :topic
   exportable :topic
-    # Returns or sets the project of the page, which may differ from the title.
-    # This is used to set the project on a page being saved.
+    # Returns or sets the project of the page, which may differ from the
+    # title. This is used to set the project on a page being saved.
     #
     # Class:: +properties+
     # ID::    +project+
   attr_accessor :project
   exportable :project
-    # Returns or sets the creator of the page. Unless we know the user (via a
-    # cookie, not yet implemented in Ruwiki 0.8.0), this will be +nil+.
+    # Returns or sets the creator of the page. Unless we know the user
+    # (through the authentication mechanism, only partially implemented for
+    # Ruwiki 0.9.0), this will be +nil+.
     #
     # Class:: +properties+
     # ID::    +creator+
   attr_accessor :creator
   exportable :creator
-    # Returns or sets the creator's IP address. This should always be set. It
-    # will have a value of "UNKNOWN" on the off-chance that something prevents
-    # this from working.
+    # Returns or sets the creator's IP address. This should always be set.
+    # It will have a value of "UNKNOWN" on the off-chance that something
+    # prevents this from working.
     #
     # Class:: +properties+
     # ID::    +creator-ip+
@@ -77,16 +78,17 @@ class Ruwiki::Page
     # ID::    +create-date+
   attr_accessor :create_date
   exportable :create_date
-    # Returns or sets the last editor of the page. Unless we know the user (via
-    # a cookie, not yet implemented in Ruwiki 0.8.0), this will be +nil+.
+    # Returns or sets the last editor of the page. Unless we know the user
+    # (through the authentication mechanism, only partially implemented for
+    # Ruwiki 0.9.0), this will be +nil+.
     #
     # Class:: +properties+
     # ID::    +editor+
   attr_accessor :editor
   exportable :editor
-    # Returns or sets the last editor's IP address. This should always be set.
-    # It will have a value of "UNKNOWN" on the off-chance that something
-    # prevents this from working.
+    # Returns or sets the last editor's IP address. This should always be
+    # set. It will have a value of "UNKNOWN" on the off-chance that
+    # something prevents this from working.
     #
     # Class:: +properties+
     # ID::    +editor-ip+
@@ -106,33 +108,34 @@ class Ruwiki::Page
   attr_accessor :editable
   exportable :editable
     # Indicates whether the page is indexable. Non-indexable pages are
-    # invisible to compliant web robots, and their links may not be followed.
+    # invisible to compliant web robots, and their links may not be
+    # followed.
     #
     # Class:: +properties+
     # ID::    +indexable+
   attr_accessor :indexable
   exportable :indexable
-    # The current version of the page. The old version is always (#version -
-    # 1).
+    # The current version of the page. The old version is always (#version
+    # - 1).
     #
     # Class:: +properties+
     # ID::    +version+
   attr_accessor :version
   exportable :version
     # An array of complete tags that will appear in the HTML <HEAD> section.
-    # Can be used to specify additional CSS, <META> tags, or even JavaScript on
-    # a per-page basis. Currently unused.
+    # Can be used to specify additional CSS, <META> tags, or even JavaScript
+    # on a per-page basis. Currently unused.
     #
     # Class:: +properties+
     # ID::    +html-headers+
   attr_accessor :html_headers
   exportable :html_headers
-    # The entropy of the page. This is a ratio of the number of lines changed
-    # in the file vs. the total number of lines in the file. This value is
-    # currently unused. (And, sad to say, I don't remember why I included it.
-    # However, it's an interesting value that may be useful in spam fighting
-    # techniques. It is currently stored in the meta-data, but that may change
-    # moving forward.)
+    # The entropy of the page. This is a ratio of the number of lines
+    # changed in the file vs. the total number of lines in the file. This
+    # value is currently unused. (And, sad to say, I don't remember why
+    # I included it. However, it's an interesting value that may be useful
+    # in spam fighting techniques. It is currently stored in the meta-data,
+    # but that may change moving forward.)
     #
     # Class:: +properties+
     # ID::    +entropy+
@@ -146,19 +149,19 @@ class Ruwiki::Page
   exportable :edit_comment
 
   exportable_group 'page'
-    # The header content of the page. This is static content (in either Wiki or
-    # HTML formats) that appears before the editable contents of the page. If
-    # both this and Wiki-level header content are specified, this will appear
-    # *after* the Wiki-level header content.
+    # The header content of the page. This is static content (in either Wiki
+    # or HTML formats) that appears before the editable contents of the
+    # page. If both this and Wiki-level header content are specified, this
+    # will appear *after* the Wiki-level header content.
     #
     # Class:: +page+
     # ID::    +header+
   attr_accessor :header
   exportable :header
-    # The footer content of the page. This is static content (in either Wiki or
-    # HTML formats) that appears before the editable contents of the page. If
-    # both this and Wiki-level footer content are specified, this will appear
-    # *before* the Wiki-level footer content.
+    # The footer content of the page. This is static content (in either Wiki
+    # or HTML formats) that appears before the editable contents of the
+    # page. If both this and Wiki-level footer content are specified, this
+    # will appear *before* the Wiki-level footer content.
     #
     # Class:: +page+
     # ID::    +footer+

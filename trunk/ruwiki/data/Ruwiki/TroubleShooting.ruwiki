@@ -15,8 +15,8 @@ page!content:	= Ruwiki %RV#%
 	  % find . | xargs dos2unix
 	
 	The developers of Ruwiki do what they can to ensure that Ruwiki is
-	distributed in a way that works well for both Unix and Windows systems,
-	but this will occasionally cause problems.
+	distributed in a way that works well for both Unix and Windows
+	systems, but this will occasionally cause problems.
 	
 	$Id$
 properties!project:	Ruwiki

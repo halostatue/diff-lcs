@@ -3,14 +3,19 @@ page!content:	= Configuring Ruwiki %RV#%
 	The biggest distinction is that because the Wiki servlet is created
 	after the \WEBrick server is created (during the dispatch to the
 	servlet), it is necessary to configure the wiki with a global
-	Ruwiki::Config object, <em>$config</em>. Thus, in the examples below,
-	replace <em>wiki.config</em> with <em>$config</em> where necessary.
+	Ruwiki::Config object stored in Ruwiki::Servlet.config. This must be a
+	valid Ruwiki::Config object. In the examples below,
+	<em>wiki.config</em> may be simply considered a random Ruwiki::Config
+	object.
+	
+	> This has changed in Ruwiki 0.9.0 from a global configuration object
+	> named $config.
 	
 	: Additional configuration options will be added from time to time. The
 	: form for specifying configuration may be changed prior to 1.0.
 	
-	If you are looking for the discussion on templates, this has been moved
-	to Extending_Ruwiki.
+	If you are looking for discussion on templates, this has been moved to
+	Extending_Ruwiki.
 	
 	== Ruwiki Configuration Options
 	=== wiki.config.title

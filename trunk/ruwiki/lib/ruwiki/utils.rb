@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 #--
-# Ruwiki version 0.8.0
+# Ruwiki
 #   Copyright © 2002 - 2004, Digikata and HaloStatue
 #   Alan Chen (alan@digikata.com)
 #   Austin Ziegler (ruwiki@halostatue.ca)
@@ -15,7 +15,7 @@
   # So that Ruwiki doesn't have to be loaded in full to use the bloody thing.
 unless defined?(Ruwiki)
   class Ruwiki
-    VERSION = "0.8.1"
+    VERSION = "0.9.0"
   end
 end
 

@@ -2,18 +2,21 @@ page!content:	= Ruwiki %RV#% ChangeLog
 	Uncompleted to-do items can be found in To_Do. Bugs in Ruwiki are
 	tracked in BugTracking.
 	
-	== 0.8.1
-	* Moved executable files to bin/.
-	* Moved core servlet code and other utilities to Ruwiki::Utils::*.
-	* Refactored Flatfiles format (section!item:<Tab>value) to Ruwiki::Exportable.
-	* Incorporated Ruwiki::Exportable into Ruwiki::Config to allow for the saving of configuration files.
-	* Incorporated Ruwiki::Exportable into Ruwiki::Utils::ServletRunner to allow for the saving of configuration files.
-	* Added Ruwiki manager code for installation and management of Ruwiki deployments.
-	* Added code for running the Ruwiki servlet as a Windows service on Win32. (Currently untested.)
-	* Added a draft authentication API and RubyForge authentication.
-	* Added draft robot exclusion code.
-	* Added draft HTML cleaning code.
-	* Added Rakefile to generate Rubygem and tarfile.
+	== 0.9.0
+	* Created a Ruwiki deployment system. Various steps were required to accomplish this:
+	** Moved executable files to bin/ for better packaging; moved core servlet code and other utilities to Ruwiki::Utils namespace.
+	** Refactored Flatfile format (section!item:<Tab>value) to Ruwiki::Exportable, loosened the format restrictions to allow for either section!item:<Tab>value or section!item:<Space>value.
+	** Incorporated Ruwiki::Exportable into Ruwiki::Config to allow for the saving of configuration files.
+	** Incorporated Ruwiki::Exportable into Ruwiki::Utils::ServletRunner to allow for the saving of configuration files.
+	** Added Ruwiki manager code for installation and management of Ruwiki deployments.
+	** Added code for running the Ruwiki servlet as a Windows service on Win32. (Currently minimally tested and unworking.)
+	* Added draft APIs for authentication, robot exclusion, and HTML cleaning.
+	** Implemented initial authentication for RubyForge. It verifies a user against their current RubyForge cookie.
+	** Implemented known robot list. It may be require further refinement. It contains two classes of robots:
+	*** Benign: known to be good (like the Googlebot) or neutral (most other crawlers). They are permitted to read, index, and follow links on all non-command pages.
+	*** Malign: known to be bad, essentially spam-crawlers. These robot will uniformly get a 403 Forbidden result.
+	** HTML cleaning: HTML entities such as &amp;, &lt;, and &gt; will be escaped. Only HTML tags and attributes from a &ldquo;known good&rdquo; list will be passed through unchanged. This, unfortunately, has the side effect of making it impossible to put namespace tags or attributes in XHTML tags within a Ruwiki page.
+	* Added a Rakefile for packaging. Currently incomplete.
 	
 	== 0.8.0
 	* AC: Added topic list (_topics) and project list (_projects) controls on templates and backend.

@@ -1,4 +1,16 @@
 #!/usr/bin/env ruby
+#--
+# Ruwiki
+#   Copyright © 2002 - 2004, Digikata and HaloStatue
+#   Alan Chen (alan@digikata.com)
+#   Austin Ziegler (ruwiki@halostatue.ca)
+#
+# Licensed under the same terms as Ruby.
+#
+# This file may be renamed to change the URI for the wiki.
+#
+# $Id$
+#++
 
   # Customize this if you put the RuWiki files in a different location.
 require 'webrick'
@@ -100,6 +112,8 @@ COPYRIGHT
       read_config(Ruwiki::Config::CONFIG_NAME)
 
       save_config = nil
+
+      argv.extend(OptionParser::Arguable) unless argv.respond_to?(:options)
 
       argv.options do |o|
         o.banner = "Usage: #{File.basename($0)} [options]"

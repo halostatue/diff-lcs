@@ -10,7 +10,7 @@
 #++
 
 class Ruwiki
-  VERSION         = '0.8.1'
+  VERSION         = '0.9.0'
   CONTENT_VERSION = 2
 end
 
@@ -25,12 +25,13 @@ require 'ruwiki/wiki'
 require 'ruwiki/page'
 
   # = Ruwiki
-  # Ruwiki is a simple, extensible Wiki written in Ruby. It supports both CGI
-  # and WEBrick interfaces, templates, and CSS formatting. Additionally, it
-  # supports project namespaces, so that two pages can be named the same for
-  # differing projects without colliding or having to resort to odd naming
-  # conventions. Please see the ::Ruwiki project in the running Wiki for more
-  # information. Ruwiki 0.7.0 has German and Spanish translations available.
+  # Ruwiki is a simple, extensible Wiki written in Ruby. It supports both
+  # CGI and WEBrick interfaces, templates, and CSS formatting. Additionally,
+  # it supports project namespaces, so that two pages can be named the same
+  # for differing projects without colliding or having to resort to odd
+  # naming conventions. Please see the ::Ruwiki project in the running Wiki
+  # for more information. Ruwiki 0.9.0 has German and Spanish translations
+  # available.
   #
   # == Quick Start (CGI)
   # 1. Place the Ruwiki directory in a place that your webserver can execute
@@ -191,8 +192,8 @@ class Ruwiki
       return
     else
       unless @config.auth_mechanism.nil?
-        @auth_token = Ruwiki::Auth[@config.auth_mechanism].authenticate(@request, @response, @config.auth_options)
-        @page.editable = @auth_token.permissions['edit']
+        @auth_token     = Ruwiki::Auth[@config.auth_mechanism].authenticate(@request, @response, @config.auth_options)
+        @page.editable  = @auth_token.permissions['edit']
       end
     end
 
@@ -295,10 +296,11 @@ EPAGE
       formatted = true
       @type = :content
     when 'edit', 'create'
-        # Automatically create the project if it doesn't exist or if the action
-        # is 'create'.
+        # Automatically create the project if it doesn't exist or if the
+        # action is 'create'.
       @backend.create_project(@page.project) if @action == 'create'
       @backend.create_project(@page.project) unless @backend.project_exists?(@page.project)
+      @page.creator = @auth_token.name if @action == 'create' and @auth_token
       @backend.obtain_lock(@page, @request.environment['REMOTE_ADDR'])
 
       content = nil
@@ -313,6 +315,7 @@ EPAGE
       @page.indexable = false
 
       if @action == 'save'
+        @page.editor = @auth_token.name if @auth_token
         op = @page.content
       else
         op = nil

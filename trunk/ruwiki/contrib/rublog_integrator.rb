@@ -6,6 +6,8 @@
 #
 # Licensed under the same terms as Ruby.
 #
+# This integrator based on work by Chad Fowler.
+#
 # $Id$
 #++
 

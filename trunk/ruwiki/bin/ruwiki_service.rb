@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 #--
-# Ruwiki version 0.8.1
+# Ruwiki
 #   Copyright © 2002 - 2004, Digikata and HaloStatue
 #   Alan Chen (alan@digikata.com)
 #   Austin Ziegler (ruwiki@halostatue.ca)
@@ -20,7 +20,7 @@ load_state = 1
 begin
   if 1 == load_state
     require 'rubygems'
-    require_gem 'ruwiki', '= 0.8.1'
+    require_gem 'ruwiki', '= 0.9.0'
   else
     require 'ruwiki'
   end
@@ -47,11 +47,24 @@ class Ruwiki::Utils::Daemon < Win32::Daemon
 
   def initialize
     @logfile = File.open(File.join(LOCATION, "ruwiki_service.log"), "ab+")
+  rescue Exception => e
+    File.open(File.join(LOCATION, "temp.log"), "a+") do |f|
+      f.puts "Logfile error: #{e}"
+      f.puts "Backtrace:\n#{e.backtrace.join(', ')}"
+    end
+    exit
   end
 
   def service_main
     argv = [ "--config", File.join(LOCATION, Ruwiki::Config::CONFIG_NAME), "--logfile", File.join(LOCATION, "ruwiki_servlet.log") ]
     Ruwiki::Utils::ServletRunner.run(argv, @logfile, @logfile, @logfile)
+  rescue Exception => e
+    file = LOCATION + '/temp.log'
+    File.open(file, "a+") do |f|
+      f.puts "Error: #{e}"
+      f.puts "Backtrace: #{e.backtrace.join(', ')}"
+    end
+    exit
   end
 end
 

@@ -14,11 +14,12 @@ page!content:	= Ruwiki %RV#% Templating
 	found, not the furthest resolving key.
 	
 	=== Including Other Templates
-	Templates may include other templates to any arbitrary level by using the
-	<tt>!INCLUDE!</tt> directive. When the \TemplatePage is created, an
-	array of template strings are provided; these will be used to satisfy
-	<tt>!INCLUDE!</tt> directives. If there are not enough template
-	strings provided, <tt>!INCLUDE!</tt> won&rsquo;t be translated.
+	Templates may include other templates to any arbitrary level by using
+	the <tt>!INCLUDE!</tt> directive. When the \TemplatePage is created,
+	an array of template strings are provided; these will be used to
+	satisfy <tt>!INCLUDE!</tt> directives. If there are not enough
+	template strings provided, <tt>!INCLUDE!</tt> won&rsquo;t be
+	translated.
 	
 	: This may change before Ruwiki reaches 1.0, so that templates are
 	: named instead of iterated.

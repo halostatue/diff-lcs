@@ -1,4 +1,16 @@
-# By Javier Fontan <jfontan@pc3d.cesga.es>
+#!/usr/bin/env ruby
+#--
+# Ruwiki
+#   Copyright © 2002 - 2004, Digikata and HaloStatue
+#   Alan Chen (alan@digikata.com)
+#   Austin Ziegler (ruwiki@halostatue.ca)
+#
+# This token by Javier Fontan <jfontan@pc3d.cesga.es>.
+#
+# Licensed under the same terms as Ruby.
+#
+# $Id$
+#++
 
 require "open3"
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 #--
-# Ruwiki version 0.6.1
+# Ruwiki
 #   Copyright © 2002 - 2003, Digikata and HaloStatue
 #   Alan Chen (alan@digikata.com)
 #   Austin Ziegler (ruwiki@halostatue.ca)
@@ -312,8 +312,10 @@ class TokenTestCases < Test::Unit::TestCase
     token   = Ruwiki::Wiki::RubyTalkLinks
     content = "[ruby-talk:12345] \\[ruby-talk:12345]"
     tkv     = "TOKEN_0 \\TOKEN_1"
-    rpv     = %Q(<a class="rwtk_RubyTalkLinks" href="http://www.ruby-talk.org/12345">[ruby-talk:12345]</a> [ruby-talk:12345])
-    res     = %Q(<a class="rwtk_RubyTalkLinks" href="http://www.ruby-talk.org/12345">[ruby-talk:12345]</a> [ruby-talk:12345])
+#   rpv     = %Q(<a class="rwtk_RubyTalkLinks" href="http://www.ruby-talk.org/12345">[ruby-talk:12345]</a> [ruby-talk:12345])
+    rpv     = %Q(<a class="rwtk_RubyTalkLinks" href="http://blade.nagaokaut.ac.jp/cgi-bin/scat.rb/ruby/12345">[ruby-talk:12345]</a> [ruby-talk:12345])
+#   res     = %Q(<a class="rwtk_RubyTalkLinks" href="http://www.ruby-talk.org/12345">[ruby-talk:12345]</a> [ruby-talk:12345])
+    res     = %Q(<a class="rwtk_RubyTalkLinks" href="http://blade.nagaokaut.ac.jp/cgi-bin/scat.rb/ruby/12345">[ruby-talk:12345]</a> [ruby-talk:12345])
 
     __process(token, content, tkv, rpv, res)
   end

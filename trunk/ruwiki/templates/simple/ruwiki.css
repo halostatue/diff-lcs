@@ -130,8 +130,7 @@ li { margin-top: 0.25em; margin-bottom: 0.25em; }
 .rwtk_Paragraph { }
 .rwtk_Code
 {
-  background-color: #EEE;
-  border: 1px solid black;
+  border-left: 1em solid #999;
 }
 .rwtk_Image { border: none; }
 .rwtk_NumberedLinks

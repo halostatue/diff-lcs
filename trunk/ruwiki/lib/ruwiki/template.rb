@@ -10,11 +10,11 @@
 #
 # $Id$
 #++
-
 require 'cgi'
 
-  # Ruwiki templating, based originally on RDoc's "cheap-n-cheerful" HTML page
-  # template system, which is a line-oriented, text-based templating system.
+  # Ruwiki templating, based originally on RDoc's "cheap-n-cheerful" HTML
+  # page template system, which is a line-oriented, text-based templating
+  # system.
   #
   # Templates can contain:
   # 

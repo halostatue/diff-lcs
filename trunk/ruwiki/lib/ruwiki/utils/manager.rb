@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 #--
-# Ruwiki version 0.8.0
+# Ruwiki
 #   Copyright © 2002 - 2004, Digikata and HaloStatue
 #   Alan Chen (alan@digikata.com)
 #   Austin Ziegler (ruwiki@halostatue.ca)
@@ -23,7 +23,7 @@ require 'ruwiki/config'
 
 begin
   require 'rubygems'
-  require_gem 'archive-tar-minitar', '>=0.5.1'
+  require_gem 'archive-tar-minitar', '~> 0.5.1'
 rescue LoadError
   require 'archive/tar/minitar'
 end
@@ -362,7 +362,7 @@ NAMEd. install supports the following additional options:
       group = {
         :name   => name,
         :data   => data,
-        :mode   => 0400,
+        :mode   => 0644,
       }
       return group
     rescue Exception => e

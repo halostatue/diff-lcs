@@ -1,8 +1,8 @@
 page!content:	= Ruwiki %RV#%: Upgrading and Converting
-	The flatfile backend format in Ruwiki %RV#% is not compatible with that
-	of earlier versions of Ruwiki. There are a number of reasons for this,
-	but because of this and that there are now three different backends,
-	Ruwiki now has a converter utility between backends.
+	The flatfile backend format in Ruwiki %RV#% is not compatible with
+	that of earlier versions of Ruwiki. There are a number of reasons for
+	this, but because of this and that there are now three different
+	backends, Ruwiki now has a converter utility between backends.
 	
 	There are two other incompatibilities of note:
 	# Ruwiki now defaults to &ldquo;ruwiki&rdquo; as an extension (e.g., \ProjectIndex.ruwiki) to the storage files. This is, of course, is something that can be modified with a configuration option, but you may find it desirable to rename your files to match this naming convention.

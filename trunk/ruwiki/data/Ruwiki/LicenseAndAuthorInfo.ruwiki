@@ -1,11 +1,11 @@
 page!content:	= Ruwiki Licence
-	Ruwiki is copyright © 2002 - 2004 [mailto:alan@digikata.com Alan Chen] and
-	[mailto:ruwiki@halostatue.ca Austin Ziegler].
+	Ruwiki is copyright &copy; 2002 - 2004 [mailto:alan@digikata.com Alan
+	Chen] and [mailto:ruwiki@halostatue.ca Austin Ziegler].
 	
-	Ruwiki is provided free of use and without any warranty express or implied.
-	You may use, distribute, or modify Ruwiki under the conditions of Ruby&rsquo;s
-	licence or the [http://www.gnu.org/copyleft/gpl.html GNU General Public
-	Licence].
+	Ruwiki is provided free of use and without any warranty express or
+	implied. You may use, distribute, or modify Ruwiki under the conditions
+	of Ruby&rsquo;s licence or the [http://www.gnu.org/copyleft/gpl.html
+	GNU General Public Licence].
 	
 	* Ruwiki includes parts of Diff::LCS by Austin.
 	* Ruwiki includes parts of Archive::Tar::Minitar by Austin.
