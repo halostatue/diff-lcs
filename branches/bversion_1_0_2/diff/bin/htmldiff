@@ -17,7 +17,7 @@ begin
   require 'diff/lcs/string'
 rescue
   require 'rubygems'
-  require_gem 'diff-lcs', "1.0.1"
+  require_gem 'diff-lcs', "1.0.3"
   require 'diff/lcs/string'
 end
 

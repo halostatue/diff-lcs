@@ -14,7 +14,7 @@
 #++
 
 module Diff
-    # = Diff::LCS 1.0.2
+    # = Diff::LCS 1.0.3
     # Computes "intelligent" differences between two ordered Enumerables. This
     # is an implementation of the McIlroy-Hunt "diff" algorithm for Enumerable
     # objects that include Diffable.
@@ -130,7 +130,7 @@ module Diff
     # Common Subsequences</em>, CACM, vol.20, no.5, pp.350-353, May 1977, with
     # a few minor improvements to improve the speed.
   module LCS
-    VERSION = '1.0.2'   #:nodoc:
+    VERSION = '1.0.3'   #:nodoc:
   end
 end
 
@@ -455,15 +455,17 @@ module Diff::LCS
       b_size = b.size
       ai = bj = 0
 
-      (0 ... matches.size).each do |ii|
+      (0 .. matches.size).each do |ii|
         b_line = matches[ii]
 
         ax = string ? a[ii, 1] : a[ii]
         bx = string ? b[bj, 1] : b[bj]
 
         if b_line.nil?
-          event = Diff::LCS::Event.new(:discard_a, ax, ii, bx, bj)
-          callbacks.discard_a(event)
+          unless ax.nil?
+            event = Diff::LCS::Event.new(:discard_a, ax, ii, bx, bj)
+            callbacks.discard_a(event)
+          end
         else
           loop do
             break unless bj < b_line

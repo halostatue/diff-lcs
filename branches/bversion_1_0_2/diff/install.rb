@@ -41,7 +41,11 @@ end
 #
 def prepare_installation
   InstallOptions.rdoc  = true
-  InstallOptions.ri    = true
+  if RUBY_PLATFORM == "i386-mswin32"
+    InstallOptions.ri  = false
+  else
+    InstallOptions.ri  = true
+  end
   InstallOptions.tests = true
 
   ARGV.options do |opts|
@@ -51,12 +55,13 @@ def prepare_installation
             'Prevents the creation of RDoc output.') do |onrdoc|
       InstallOptions.rdoc = onrdoc
     end
-    opts.on('--no-ri', FalseClass,
-            'Prevents the creation of RI output.') do |onri|
+    opts.on('--[no-]ri',
+            'Prevents the creation of RI output.',
+            'Default off on mswin32.') do |onri|
       InstallOptions.ri = onri
     end
     opts.on('--no-tests', FalseClass,
-            'Prevents the execution of nit tests.') do |ontest|
+            'Prevents the execution of unit tests.') do |ontest|
       InstallOptions.tests = ontest
     end
     opts.separator("")
@@ -146,7 +151,7 @@ end
 # windows, we add an '.rb' extension and let file associations do their stuff.
 def install_binfile(from, op_file, target)
   tmp_dir = nil
-  [target, Config::CONFIG['bindir'], ENV['TMP'], ENV['TEMP'], '/tmp', 'C:/temp'].each do |t|
+  InstallOptions.bin_dirs.each do |t|
     if File.directory?(t) and File.writable?(t)
       tmp_dir = t
       break
@@ -179,7 +184,7 @@ def install_binfile(from, op_file, target)
 
     opfile += ".rb" if not installed_wrapper
   end
-  FileUtils.install(tmp_file, File.join(TargetBinDir, opfile), 0755, true)
+  FileUtils.install(tmp_file, File.join(InstallOptions.bin_dir, opfile), 0755, true)
   FileUtils.unlink(tmp_file)
 end
 
@@ -188,6 +193,7 @@ def glob(list)
   list.each { |i| g << Dir.glob(i) }
   g.flatten!
   g.compact!
+  g.reject! { |e| e =~ /CVS/ }
   g
 end
 

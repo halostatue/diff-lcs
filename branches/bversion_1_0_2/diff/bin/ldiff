@@ -1,5 +1,5 @@
 #!/user/bin/env ruby
-# = Diff::LCS 1.0.1
+# = Diff::LCS 1.0.3
 # == ldiff Usage
 #   ldiff [options] oldfile newfile
 #
@@ -34,7 +34,7 @@ begin
   require 'diff/lcs'
 rescue
   require 'rubygems'
-  require_gem 'diff-lcs', "1.0.1"
+  require_gem 'diff-lcs', "1.0.3"
 end
 
 require 'diff/lcs/hunk'

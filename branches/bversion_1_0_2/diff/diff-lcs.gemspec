@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = %{diff-lcs}
-  s.version = %{1.0.2}
+  s.version = %{1.0.3}
   s.author = %{Austin Ziegler}
   s.email = %{diff-lcs@halostatue.ca}
   s.homepage = %{http://rubyforge.org/projects/ruwiki/}
