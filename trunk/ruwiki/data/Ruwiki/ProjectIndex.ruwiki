@@ -6,6 +6,7 @@ page!content:	= Ruwiki %RV#%
 	* This wiki supports a variety of WikiFeatures that you may be interested in. The rules for WikiMarkup are similar to some other wikis, but there are a few unique markup capabilities in Ruwiki.
 	* Configuring_Ruwiki is simple.
 	* Extending_Ruwiki is almost as simple.
+	* What you need to know for using Ruwiki's [[Antispam]] capabilities.
 	* Who wrote Ruwiki? Read the LicenseAndAuthorInfo.
 	
 	== Requirements
@@ -19,14 +20,14 @@ page!content:	= Ruwiki %RV#%
 	== Upgrading
 	Ruwiki %RV#% has a flatfile format that is incompatible with versions
 	of Ruwiki older than Ruwiki 0.8.0. If you are upgrading from one of
-	these versions, you must use the bin/convert. The simple case will be
-	(assuming that your data files are in ./data):
+	these versions, you must use the bin/ruwiki_convert. The simple case
+	will be (assuming that your data files are in ./data):
 	
-	  % convert ./data
+	  % ruwiki_convert ./data
 	
-	The convert utility is automatically installed by \RubyGems. See
-	RuwikiUtilities for more information. Note that this utility will
-	probably be incorporated into the main Ruwiki utility in a future
+	The ruwiki_convert utility is automatically installed by \RubyGems and
+	RPA. See RuwikiUtilities for more information. Note that this utility
+	will probably be incorporated into the main Ruwiki utility in a future
 	version.
 	
 	== Getting Started

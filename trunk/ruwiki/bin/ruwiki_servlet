@@ -48,8 +48,6 @@ rescue LoadError
   retry
 end
 
-p Ruwiki.constants
-
 require 'ruwiki/utils/servletrunner'
 
 exit Ruwiki::Utils::ServletRunner.run(ARGV)

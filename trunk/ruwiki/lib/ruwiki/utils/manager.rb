@@ -22,10 +22,14 @@ require 'ruwiki/utils/command'
 require 'ruwiki/config'
 
 begin
-  require 'archive/tar/minitar'
-rescue LoadError
-  require 'rubygems'
-  require_gem 'archive-tar-minitar', '~> 0.5.1'
+  if defined?(Gem::Cache)
+    require_gem 'archive-tar-minitar', '~> 0.5.1'
+  else
+    require 'archive/tar/minitar'
+  end
+rescue LoadError => ex
+  $stderr.puts ex.message
+  raise
 end
 
 module Ruwiki::Utils::Manager

@@ -10,9 +10,14 @@
 #++
 
 begin
-  require 'diff/lcs'
-rescue LoadError
-  require 'rubygems'
+  if defined?(Gem::Cache)
+    require_gem 'diff-lcs', '~> 1.1.2'
+  else
+    require 'diff/lcs'
+  end
+rescue LoadError => ex
+  $stderr.puts ex.message
+  raise
 end
 
 class Ruwiki
@@ -103,7 +108,7 @@ class Ruwiki
           recent_changes = Page.new(retrieve('RecentChanges', page.project))
         end
 
-        changeline = "\n; #{Time.now.strftime(@datetime_format)}, #{page.topic} : #{page.edit_comment}"
+        changeline = "\n; #{page.editor_ip} (#{Time.now.strftime(@datetime_format)}), #{page.topic} : #{page.edit_comment}"
 
         # add changeline to top of page
         recent_changes.content = changeline + (recent_changes.content || "")

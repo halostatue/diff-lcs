@@ -115,7 +115,7 @@ page!content:	= Ruwiki %RV#% Utilities
 	: NOTE: This command can probably be used to manage other Win32
 	: services that respond to the appropriate commands.
 	
-	== Upgrading and Converting: convert
+	== Upgrading and Converting: ruwiki_convert
 	: This section was formerly a separate entry in the Wiki entitled
 	: &ldquo;Upgrading and Converting&rdquo;.
 	
@@ -129,7 +129,7 @@ page!content:	= Ruwiki %RV#% Utilities
 	# Ruwiki now defaults to &ldquo;ruwiki&rdquo; as an extension (e.g., \ProjectIndex.ruwiki) to the storage files. This is, of course, is something that can be modified with a configuration option, but you may find it desirable to rename your files to match this naming convention.
 	# The rdiff format is incompatible. It is recommended that you remove all .rdiff files from your data directory before using Ruwiki.
 	
-	=== convert [options] <directory>+
+	=== ruwiki_convert [options] <directory>+
 	The converter utility will work on all files in a directory and its
 	subdirectories.
 	
@@ -139,7 +139,7 @@ page!content:	= Ruwiki %RV#% Utilities
 	is converted to the specified format. By default, the converted files
 	will be backed up.
 	
-	==== convert Options
+	==== ruwiki_convert Options
 	; --format=FORMAT : Converts encountered files (regardless of the current format), to the specified format. Default is yaml. Allowed formats are: yaml marshal flatfiles
 	; --[no-]backup : Create backups of upgraded files. Default is --backup.
 	; --backup-extension=EXTENSION : Specify the backup extension. Default is "~", which is appended to the data filename.

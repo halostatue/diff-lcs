@@ -149,7 +149,7 @@ class Ruwiki
   end
 
   def check_useragent
-    addr = @request.environment['REMOTE_ADDRESS']
+    addr = @request.environment['REMOTE_ADDR']
     user = @request.environment['HTTP_USER_AGENT']
 
     if user.nil? or user.empty?

@@ -5,11 +5,13 @@ page!content:	= Ruwiki %RV#% ChangeLog
 	== 0.9.0
 	* Created a Ruwiki deployment system. Various steps were required to accomplish this:
 	** Moved executable files to bin/ for better packaging; moved core servlet code and other utilities to Ruwiki::Utils namespace.
+	** Renamed bin/convert to bin/ruwiki_convert. This will ultimately be moved into the ruwiki command.
 	** Refactored Flatfile format (section!\item:<Tab>value) to Ruwiki::Exportable, loosened the format restrictions to allow for either section!\item:<Tab>value or section!\item:<Space>value.
 	** Incorporated Ruwiki::Exportable into Ruwiki::Config to allow for the saving of configuration files.
 	** Incorporated Ruwiki::Exportable into Ruwiki::\Utils::ServletRunner to allow for the saving of configuration files.
 	** Added Ruwiki manager code for installation and management of Ruwiki deployments.
 	** Added code for running the Ruwiki servlet as a Windows service on Win32. (Currently minimally tested and unworking.)
+	** Added --central to bin/ruwiki_servlet, to run a read-only instance of Ruwiki using the centralised data from RPA or \RubyGems.
 	* Removed YAML and Marshal storage types as separate classes and incorporated them as formats of the Flatfiles storage type. Added the 'format' option to the Flatfiles storage_options hash.
 	* Added draft \APIs for authentication, robot exclusion, IP exclusion, and HTML cleaning.
 	** Implemented initial authentication for \RubyForge. It verifies a user against their current \RubyForge cookie.
@@ -28,6 +30,9 @@ page!content:	= Ruwiki %RV#% ChangeLog
 	* Added a Rakefile for packaging. Currently incomplete.
 	* Modified the default template style to remove the bottom control bar, as it was blocking the last bit of text on some pages in lesser browsers.
 	* Updated more documentation.
+	* Added a message facility so that non-error messages can be communicated to the user.
+	* Fixed a bug with submitting an old version of the code with an expired lock reverting changes. The changed versions are now merged automatically and re-presented to the user. It's a simplistic merge, to be improved in a later version of Ruwiki. A message is displayed to the user.
+	* Modified searching for empty strings so that instead of throwing an error, a message is displayed to the user.
 	
 	== 0.8.0
 	* AC: Added topic list (_topics) and project list (_projects) controls on templates and backend.
