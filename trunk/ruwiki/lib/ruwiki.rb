@@ -185,7 +185,7 @@ class Ruwiki
         # get, validate, and cleanse the search string
       srchstr = validate_search_string(@request.parameters['q'])
       content = self.message[:search_results_for] % [srchstr]
-      @page.topic = self.message[:search_text] % [srchstr]
+      @page.topic = srchstr
       hits = @backend.search_project(@page.project, srchstr)
 
         # debug hit returns
@@ -210,7 +210,7 @@ class Ruwiki
 
       @page.content = content
       content = @page.to_html
-      @type = :content
+      @type = :search
     when 'topics'
       topic_list = @backend.list_topics(@page.project)
 
@@ -336,7 +336,7 @@ EPAGE
              }
 
     case type
-    when :content, :save
+    when :content, :save, :search
       values["wiki_title"]      = "#{self.message[:error]} - #{@config.title}" if @page.nil?
       values["wiki_title"]    ||= "#{@page.project}::#{CGI.unescape(@page.topic)} - #{@config.title}"
       values["page_topic"]      = CGI.unescape(@page.topic)
@@ -344,8 +344,13 @@ EPAGE
       values["page_project"]    = @page.project
       values["cgi_url"]         = @request.script_url
       values["content"]         = @content
-      if type == :content
+      if type == :content or type == :search
         template = TemplatePage.new(@config.template(:body), @config.template(:content), @config.template(:controls))
+        if type == :search
+          values["page_topic_or_search"] = self.message[:tab_search] % [values["page_topic"]]
+        else
+          values["page_topic_or_search"] = self.message[:tab_topic] % [%Q(<a href='#{values["cgi_url"]}/#{values["page_project"]}/_search?q=#{values["page_topic"]}'><strong>#{values["page_topic"]}</strong></a>)]
+        end
       else
         template = TemplatePage.new(@config.template(:body), @config.template(:save), @config.template(:controls))
       end

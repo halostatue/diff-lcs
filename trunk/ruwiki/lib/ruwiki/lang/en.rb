@@ -61,8 +61,9 @@ class Ruwiki
         :no_projects                  => "No known projects.",
         :no_topics                    => "No topics in project.",
         :search_results_for           => "= Search results for: %s",
-        :search_text                  => "Search: %s",
         :number_of_hits               => "%d Hits",
+        :tab_topic                    => "Topic: %s",
+        :tab_search                   => "Search: %s",
       }
       Message.default = proc { |h, k| "Language ERROR: Unknown message key #{k.inspect}." }
     end
