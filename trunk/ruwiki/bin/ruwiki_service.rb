@@ -39,6 +39,7 @@ rescue LoadError
   retry
 end
 
+require 'win32/service'
 require 'ruwiki/utils/servletrunner'
 
 class Ruwiki::Utils::Daemon < Win32::Daemon
@@ -49,7 +50,7 @@ class Ruwiki::Utils::Daemon < Win32::Daemon
   end
 
   def service_main
-    argv = [ "--config", File.join(LOCATION, Ruwiki::Config::CONFIG_NAME) ]
+    argv = [ "--config", File.join(LOCATION, Ruwiki::Config::CONFIG_NAME), "--logfile", File.join(LOCATION, "ruwiki_servlet.log") ]
     Ruwiki::Utils::ServletRunner.run(argv, @logfile, @logfile, @logfile)
   end
 end

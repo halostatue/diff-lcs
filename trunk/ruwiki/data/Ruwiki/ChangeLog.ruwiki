@@ -76,7 +76,6 @@ page!content:	= Ruwiki %RV#% ChangeLog
 	* Cleaned up a lot of tokenizing code.
 	
 	$Id$
-properties!editable:	false
 properties!project:	Ruwiki
 properties!title:	ChangeLog
 properties!topic:	ChangeLog

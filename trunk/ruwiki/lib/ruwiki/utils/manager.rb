@@ -109,7 +109,7 @@ to use this command-line tool. Try:
         end
       end
 
-      options = {}
+      options = { 'data' => true }
 
       while (arg = argv.shift)
         case arg
@@ -120,7 +120,7 @@ to use this command-line tool. Try:
         end
       end
 
-      Ruwiki::Utils::Manager.install(dir, options)
+      Ruwiki::Utils::Manager.install(dest, options)
 
       0
     end
@@ -254,50 +254,71 @@ specified directory (default ".").
       end
 
       def call(args, opts = {}, ioe = {})
-        raise ArgumentError if args.size < 2
         ioe = Ruwiki::Utils::CommandPattern.default_ioe(ioe)
+
+        if args.size < 2
+          ioe[:output] << %<Insufficient arguments: #{args.join(" ")}\n>
+          ioe[:output] << self.help
+          return 0
+        end
 
         command = args.shift
         service = args.shift
 
+        options ||= {}
         options[:service_name] = service
+        options[:service_home] = File.expand_path(".")
+
+        argv  = []
+        while (arg = args.shift)
+          case arg
+          when "--rubybin"
+            options[:ruby_bin] = args.shift
+            raise ARgumentError if options[:ruby_bin].nil?
+          when "--exec"
+            options[:service_bin] = args.shift
+            raise ArgumentError if options[:service_bin].nil?
+          when "--home"
+            options[:service_home] = args.shift
+            raise ArgumentError if options[:service_home].nil?
+          else
+            argv << arg
+          end
+        end
+
         options[:service_desc] = args.join(" ") if args.size > 0
 
         case command
         when "install"
           options[:service_install] = true
-        when
+        when "start"
           options[:service_start] = true
-        when
+        when "stop"
           options[:service_stop] = true
-        when
+        when "delete"
           options[:service_delete] = true
         else
           raise ArgumentError, "Unknown command #{command}."
         end
 
-        manage_windows_service(options, ioe)
+        Ruwiki::Utils::Manager.manage_windows_service(options, ioe)
 
         0
       end
 
       def help
       help = <<-EOH
-    ruwiki service install NAME [DESCRIPTION]
-    ruwiki service start   NAME 
+    ruwiki service install NAME [DESCRIPTION] [options]
+    ruwiki service start   NAME
     ruwiki service stop    NAME
     ruwiki service delete  NAME
 
-Unpackages the provided Ruwiki package (default "./#{Ruwiki::Utils::Manager::DEFAULT_PACKAGE_NAME}") into the
-specified directory (default ".").
-# ARGV.options do |opts|
-#    opts.on("-d", "--delete", "Delete the service"){ OPTIONS[:delete] = true }
-#    opts.on("-s", "--start",  "Start the service"){ OPTIONS[:start] = true }
-#    opts.on("-x", "--stop",   "Stop the service"){ OPTIONS[:stop] = true }
-#    opts.on("-i", "--install","Install the service"){ OPTIONS[:install] = true }
-#    opts.on("-h", "--help",   "Show this help message."){ puts opts; exit }
-#    opts.parse!
-# end
+Manages the Ruwiki WEBrick servlet as a Windows service. The service must be
+NAMEd. install supports the following additional options:
+
+  --rubybin RUBYPATH      The path to the Ruby binary.
+  --exec    SERVICEPATH   The path to the service executable.
+  --home    PATHTOHOME    The path to the home directory.
       EOH
       end
     end
@@ -320,11 +341,11 @@ specified directory (default ".").
     attr_reader   :ruwiki_pkg
     def shared=(shared)
       @shared             = shared
-      @ruwiki_servlet     = File.join(@shared, "ruwiki_servlet")
-      @ruwiki_servlet_bat = File.join(@shared, "ruwiki_servlet.bat")
-      @ruwiki_servlet_cmd = File.join(@shared, "ruwiki_servlet.cmd")
-      @ruwiki_service     = File.join(@shared, "ruwiki_service.rb")
-      @ruwiki_cgi         = File.join(@shared, "ruwiki.cgi")
+      @ruwiki_servlet     = File.join(@shared, "bin", "ruwiki_servlet")
+      @ruwiki_servlet_bat = File.join(@shared, "bin", "ruwiki_servlet.bat")
+      @ruwiki_servlet_cmd = File.join(@shared, "bin", "ruwiki_servlet.cmd")
+      @ruwiki_service     = File.join(@shared, "bin", "ruwiki_service.rb")
+      @ruwiki_cgi         = File.join(@shared, "bin", "ruwiki.cgi")
       @ruwiki_pkg         = File.join(@shared, Ruwiki::Utils::Manager::DEFAULT_PACKAGE_NAME)
     end
 
@@ -542,24 +563,35 @@ specified directory (default ".").
       begin
         require 'win32/service'
         require 'rbconfig'
-        @has_win32_service = true
+        HasWin32Service = true
       rescue LoadError
-        @has_win32_service = false
+        HasWin32Service = false
       end
 
       # The work here is based on Daniel Berger's Instiki Service Tutorial.
       # http://rubyforge.org/docman/view.php/85/107/instiki_service_tutorial.txt
       def manage_windows_service(options, ioe)
-        return nil unless @has_win32_service
+        raise unless HasWin32Service
 
-        service_home  = options[:service_home].tr('/', '\\')
-        program       = File.join(service_home, "ruwiki_service.rb").tr('/', '\\')
         service_name  = options[:service_name] || 'RuwikiSvc'
-        service_desc  = options[:service_desc] || 'Ruwiki'
-        binpath       = options[:service_bin]  || File.join(Config::CONFIG['bindir'], program)
-        binpath       = binpath.tr('/', '\\')
 
         if options[:service_install]
+          service_home  = options[:service_home]
+
+          program       = options[:service_bin]
+          if program.nil? or program.empty?
+            program     = File.join(service_home, "ruwiki_service.rb")
+          elsif program !~ %r{[/\\]}
+            program     = File.join(service_home, program)
+          end
+          program       = %<"#{program}">
+
+          ruby          = options[:ruby_bin] || %<"#{File.join(Config::CONFIG['bindir'], 'ruby.exe')}">
+
+          service_desc  = options[:service_desc] || 'Ruwiki'
+
+          binpath       = "#{ruby} #{program}".tr('/', '\\')
+
           service = Win32::Service.new
           service.create_service do |s|
             s.service_name      = service_name
@@ -568,7 +600,7 @@ specified directory (default ".").
             s.dependencies      = [] # Required because of a bug in Win32::Service
           end
           service.close
-          ioe[:output] << "#{service_desc} service installed.\n"
+          ioe[:output] << "#{service_name} service installed.\n"
         end
 
         if options[:service_start]
@@ -581,7 +613,7 @@ specified directory (default ".").
             ioe[:output] << "One moment, #{status.current_state}\n"
             sleep 1
           end
-          ioe[:output] << "#{service_desc} service started.\n"
+          ioe[:output] << "#{service_name} service started.\n"
         end
 
         if options[:service_stop]
@@ -594,13 +626,13 @@ specified directory (default ".").
             ioe[:output] << "One moment, #{status.current_state}\n"
             sleep 1
           end
-          ioe[:output] << "#{service_desc} service stopped.\n"
+          ioe[:output] << "#{service_name} service stopped.\n"
         end
 
         if options[:service_delete]
           Win32::Service.stop(service_name) rescue nil
           Win32::Service.delete(service_name)
-          ioe[:output] << "#{service_desc} service deleted.\n"
+          ioe[:output] << "#{service_name} service deleted.\n"
         end
       end
     end

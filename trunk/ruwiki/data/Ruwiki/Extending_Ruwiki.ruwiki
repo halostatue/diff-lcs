@@ -301,7 +301,6 @@ page!content:	= Extending Ruwiki %RV#%
 	#global_search, then the \BackendDelegate will use this method.
 	
 	$Id$
-properties!editable:	false
 properties!project:	Ruwiki
 properties!title:	Extending_Ruwiki
 properties!topic:	Extending_Ruwiki

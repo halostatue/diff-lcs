@@ -45,7 +45,6 @@ page!content:	= Ruwiki %RV#% To Do Tracking
 	; Arbitrary-depth project namespace support : Foo::Bar::\BazPage.
 	
 	$Id$
-properties!editable:	false
 properties!project:	Ruwiki
 properties!title:	To_Do
 properties!topic:	To_Do

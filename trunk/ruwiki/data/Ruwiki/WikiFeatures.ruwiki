@@ -10,7 +10,6 @@ page!content:	Ruwiki is a [http://www.ruby-lang.org Ruby]-based wiki. It is
 	* Offers a calendar for date-based collaborative editing.
 	
 	$Id$
-properties!editable:	false
 properties!entropy:	0
 properties!project:	Ruwiki
 properties!title:	WikiFeatures

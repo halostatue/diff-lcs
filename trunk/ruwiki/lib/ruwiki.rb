@@ -407,7 +407,7 @@ p ee
       values["page_project"]    = @page.project
       values["page_raw_topic"]  = @page.topic
       values["page_topic"]      = CGI.unescape(@page.topic)
-      values["editable"]        = @page.editable
+      values["editable"]        = @page.editable || true
       values["indexable"]       = @page.indexable
     end
 

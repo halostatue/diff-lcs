@@ -12,7 +12,6 @@ require 'zlib'
 DISTDIR = "ruwiki-#{Ruwiki::VERSION}"
 TARDIST = "../#{DISTDIR}.tar.gz"
 
-
 DATE_RE = %r<(\d{4})[./-]?(\d{2})[./-]?(\d{2})(?:[\sT]?(\d{2})[:.]?(\d{2})[:.]?(\d{2})?)?>
 
 if ENV['RELEASE_DATE']
@@ -100,18 +99,20 @@ spec = Gem::Specification.new do |s|
   s.extra_rdoc_files  = %w(Readme)
 
   s.bindir        = 'bin'
-  s.executables   = Dir['files/*'].delete_if do |item|
-    item =~ %r{(?:|\bCVS\b|\.svn\b|[Rr]akefile|install.rb$|~$|gem(?:spec)?$)}
-  end
+  s.executables   = Dir['bin/**/*'].delete_if do |item|
+    item =~ %r{(?:\bCVS\b|\.svn\b|[Rr]akefile|install.rb$|~$|gem(?:spec)?$)}
+  end.map { |item| item.gsub(%r{^bin/}, "") }
   s.autorequire   = %q{ruwiki}
   s.require_paths = %w{lib}
 
   s.test_files    = %w{tests/testall.rb}
 
-  s.files = Dir["**/*"].delete_if do |item|
-    item =~ %r{(?:\bCVS\b|\.svn\b|Readme.*$|[Rr]akefile|install.rb$|~$|gem(?:spec)?$|lib/archive|lib/diff)}
+  files = Dir["**/*"].delete_if do |item|
+    item =~ %r{(?:\bCVS\b|\.svn\b|\.bak$|Readme.*$|[Rr]akefile|install.rb$|~$|gem(?:spec)?$|lib/archive|lib/diff)}
   end
-  s.files << "Readme"
+  files << "Readme"
+  files << "ruwiki.pkg"
+  s.files = files
 
   s.author            = %q{Austin Ziegler and Alan Chen}
   s.email             = %q{ruwiki-discuss@rubyforge.org}

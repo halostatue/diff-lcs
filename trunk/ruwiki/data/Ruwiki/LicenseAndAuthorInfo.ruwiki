@@ -25,7 +25,6 @@ page!content:	= Ruwiki Licence
 	* [http://raa.ruby-lang.org/list.rhtml?name=diff-lcs Diff::LCS], Ruwiki&rsquo;s \RubyForge [http://rubyforge.org/projects/ruwiki project].
 	
 	$Id$
-properties!editable:	false
 properties!project:	Ruwiki
 properties!title:	LicenseAndAuthorInfo
 properties!topic:	LicenseAndAuthorInfo

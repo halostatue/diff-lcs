@@ -148,7 +148,6 @@ page!content:	= Ruwiki %RV#% Templating
 	  Name: Dave
 	
 	$Id$
-properties!editable:	false
 properties!project:	Ruwiki
 properties!title:	RuwikiTemplatingLibrary
 properties!topic:	RuwikiTemplatingLibrary

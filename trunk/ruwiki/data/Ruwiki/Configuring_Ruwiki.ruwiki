@@ -103,7 +103,6 @@ page!content:	= Configuring Ruwiki %RV#%
 	; --flatfiles-extension <em>EXT</em> : The extension for data files. Default is &ldquo;ruwiki&rdquo;. <em>--flatfiles</em> is used even for <em>yaml</em> and <em>marshal</em> because they are all flatfile oriented systems.
 	
 	$Id$
-properties!editable:	false
 properties!project:	Ruwiki
 properties!title:	Configuring_Ruwiki
 properties!topic:	Configuring_Ruwiki

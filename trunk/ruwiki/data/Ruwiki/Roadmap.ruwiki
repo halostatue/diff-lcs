@@ -216,7 +216,6 @@ page!content:	= Ruwiki %RV#%: The Road Ahead
 	the future holds is unclear. We&rsquo;ll see what the future brings.
 	
 	$Id$
-properties!editable:	false
 properties!project:	Ruwiki
 properties!title:	Roadmap
 properties!topic:	Roadmap

@@ -42,7 +42,7 @@ require 'ruwiki/utils/manager'
 
   # RPA Maintainers: Change this to the appropriate location on installation.
   # This is the right place for RubyGems, basically.
-ss = "#{File.dirname(File.expand_path(__FILE__))}/shared"
+ss = "#{File.dirname(File.expand_path(__FILE__))}/.."
 
 Ruwiki::Utils::Manager.shared = ss
 
