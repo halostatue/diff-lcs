@@ -59,6 +59,7 @@ end
 
 spec = eval(File.read("archive-tar-minitar.gemspec"))
 desc "Build the RubyGem for Archive::Tar::Minitar."
+task :gem => [ :test ]
 Rake::GemPackageTask.new(spec) do |g|
   g.need_tar    = false
   g.need_zip    = false
@@ -76,7 +77,7 @@ file TARDIST do |t|
         ddnew = dd.gsub(/^#{current}/, DISTDIR)
         mtime = ReleaseDate || File.stat(dd).mtime
         if File.directory?(dd)
-          { :name => ddnew, :mode => 0555, :dir => true, :mtime => mtime }
+          { :name => ddnew, :mode => 0755, :dir => true, :mtime => mtime }
         else
           if dd =~ %r{bin/}
             mode = 0755
@@ -106,7 +107,19 @@ file TARDIST do |t|
     end
   end
 end
+task TARDIST => [ :test ]
+
+def sign(file)
+  sh %("C:\\Program Files\\Windows Privacy Tools\\GnuPG\\Gpg.exe" -ba #{file})
+end
+
+task :signtar => [ :tar ] do
+  sign TARDIST
+end
+task :signgem => [ :gem ] do
+  sign "../#{DISTDIR}.gem"
+end
 
 desc "Build everything."
-task :default => [ :test, :tar, :gem ] do
+task :default => [ :signtar, :signgem ] do
 end
