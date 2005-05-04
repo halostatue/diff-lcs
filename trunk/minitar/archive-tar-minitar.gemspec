@@ -19,7 +19,6 @@ Gem::Specification.new do |s|
 
   s.executables = %w(minitar)
   s.bindir = %(bin)
-  s.default_executable = %(minitar)
 
   s.test_files = %w{tests/testall.rb}
 
