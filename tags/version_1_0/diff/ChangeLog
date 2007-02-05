@@ -1,5 +1,0 @@
-Revision history for Ruby library Diff::LCS. Unless explicitly noted otherwise,
-all changes are produced by Austin Ziegler <diff-lcs@halostatue.ca>.
-
-== Diff::LCS 1.0
-* Initial release based mostly on Perl's Algorithm::Diff.
