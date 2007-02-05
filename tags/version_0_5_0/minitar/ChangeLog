@@ -1,8 +1,0 @@
-Revision history for Ruby library Archive::Tar::Minitar. Unless explicitly
-noted otherwise, all changes are produced by Austin Ziegler
-<minitar@halostatue.ca>.
-
-== Archive::Tar::Minitar
-* Initial release. Does files and directories. Command does create, extract,
-* and list.
-
