@@ -3,4 +3,4 @@ Installing this package is as simple as:
 % ruby install.rb
 
 Alternatively, you can use the RubyGem version of Archive::Tar::Minitar
-available as archive-tar-minitar-0.5.1.gem from the usual sources.
+available as archive-tar-minitar-0.5.2.gem from the usual sources.

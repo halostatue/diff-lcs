@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = %{archive-tar-minitar}
-  s.version = %{0.5.1}
+  s.version = %{0.5.2}
   s.author = %{Austin Ziegler, Mauricio Fernandez}
   s.email = %{minitar@halostatue.ca}
   s.homepage = %{http://rubyforge.org/projects/ruwiki/}
@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.summary = %{Provides POSIX tarchive management from Ruby programs.}
   s.platform = Gem::Platform::RUBY
 
-  s.required_ruby_version = %(>=1.8.1)
+  s.required_ruby_version = %(>=1.8.2)
 
   s.executables = %w(minitar)
   s.bindir = %(bin)

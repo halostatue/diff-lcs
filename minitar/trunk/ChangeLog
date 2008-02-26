@@ -1,6 +1,9 @@
 Revision history for Ruby library Archive::Tar::Minitar. Unless explicitly
 noted otherwise, all changes are produced by Austin Ziegler
-<minitar@halostatue.ca>.
+<austin@rubyforge.org>.
+
+== 0.5.2
+* Fixed a Ruby 1.9 compatibility error.
 
 == 0.5.1
 * Fixed a variable name error.

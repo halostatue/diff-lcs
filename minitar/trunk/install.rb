@@ -1,6 +1,6 @@
 #! /usr/bin/env ruby
 #--
-# Copyright 2004 Austin Ziegler <ruby-install@halostatue.ca>
+# Copyright 2004, 2008 Austin Ziegler <ruby-install@halostatue.ca>
 #   Install utility. Based on the original installation script for rdoc by the
 #   Pragmatic Programmers.
 #

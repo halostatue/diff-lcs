@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 #--
-# Archive::Tar::Baby 0.5.1
-#   Copyright © 2004 Mauricio Julio Fernández Pradier and Austin Ziegler
+# Archive::Tar::Baby 0.5.2
+#   Copyright 2004 Mauricio Julio Ferna'ndez Pradier and Austin Ziegler
 #   This is free software with ABSOLUTELY NO WARRANTY.
 #
 # This program is based on and incorporates parts of RPA::Package from
@@ -9,7 +9,7 @@
 # adapted to be more generic by Austin.
 #
 # This file contains an adaptation of Ruby/ProgressBar by Satoru
-# Takabayashi <satoru@namazu.org>, copyright © 2001 - 2004.
+# Takabayashi <satoru@namazu.org>, copyright 2001 - 2004.
 #
 # It is licensed under the GNU General Public Licence or Ruby's licence.
 #
@@ -787,7 +787,7 @@ Sort Fields:
     if argv.include?("--version")
       output << <<-EOB
 minitar #{Archive::Tar::Minitar::VERSION}
-  Copyright 2004 Mauricio Julio Fernández Pradier and Austin Ziegler
+  Copyright 2004 Mauricio Julio Ferna'ndez Pradier and Austin Ziegler
   This is free software with ABSOLUTELY NO WARRANTY.
 
   see http://rubyforge.org/projects/ruwiki for more information
