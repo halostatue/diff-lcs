@@ -32,9 +32,7 @@ task :test do |t|
   runner = Test::Unit::UI::Console::TestRunner
 
   $LOAD_PATH.unshift('tests')
-  $stderr.puts "Checking for test cases:" if t.verbose
   Dir['tests/tc_*.rb'].each do |testcase|
-    $stderr.puts "\t#{testcase}" if t.verbose
     load testcase
   end
 
