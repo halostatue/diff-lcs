@@ -473,7 +473,7 @@ class TC_Tar__Input < Test::Unit::TestCase
   ]
 
   TEST_DATA_CONTENTS = [
-    [ "data",          0, 010644 ],
+    [ "data",          0, 040755 ],
     [ "data/file1",   16, 010644 ],
     [ "data/file2",   16, 010644 ],
     [ "data/__dir__",  0, 010644 ],
@@ -532,7 +532,7 @@ class TC_Tar__Input < Test::Unit::TestCase
 
           assert_equal(TEST_CONTENTS[ii][1], File.stat(name).size)
         end
-        assert_equal(TEST_CONTENTS[ii][2], File.stat(name).mode) unless RUBY_PLATFORM =~ /win32/
+        assert_equal(TEST_CONTENTS[ii][2], File.stat(name).mode & 0777) unless RUBY_PLATFORM =~ /win32/
 
         if 0 == ii
         begin
