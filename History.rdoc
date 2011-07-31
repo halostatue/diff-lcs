@@ -5,6 +5,7 @@
   - Issue 4 (https://github.com/halostatue/diff-lcs/issues/4) fixed.
     In the process, HTMLDiff was made easier to use outside of the htmldiff
     command.
+  - Issue 3 (https://github.com/halostatue/diff-lcs/issues/3) fixed.
 
 == 1.1.2 / 2004-10-20
 * Fixed a problem reported by Mauricio Fernandez in htmldiff. Future versions

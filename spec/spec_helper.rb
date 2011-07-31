@@ -126,6 +126,42 @@ module Diff::LCS::SpecHelper
     end
   end
 
+  def balanced_traversal(s1, s2, callback_type)
+    callback = __send__(callback_type)
+    Diff::LCS.traverse_balanced(s1, s2, callback)
+    callback
+  end
+
+  def balanced_reverse(change_result)
+    new_result = []
+    change_result.each { |line|
+      line = [ line[0], line[2], line[1] ]
+      case line[0]
+      when '<'
+        line[0] = '>'
+      when '>'
+        line[0] = '<'
+      end
+      new_result << line
+    }
+    new_result.sort_by { |line| line[1] }
+  end
+
+  def map_to_no_change(change_result)
+    new_result = []
+    change_result.each { |line|
+      case line[0]
+      when '!'
+        new_result << [ '<', line[1], line[2] ]
+        new_result << [ '>', line[1] + 1, line[2] ]
+      else
+        new_result << line
+      end
+    }
+    new_result
+  end
+
+
   def simple_callback
     callbacks = Object.new
     class << callbacks
@@ -245,26 +281,5 @@ end
 RSpec.configure do |conf|
   conf.include Diff::LCS::SpecHelper
 end
-
-
-=begin
-RSpec::Matchers.define :be_a_multiple_of do |expected|
-  match do |actual|
-    actual % expected == 0
-  end
-
-  failure_message_for_should do |actual|
-    "expected that #{actual} would be a multiple of #{expected}"
-  end
-
-  failure_message_for_should_not do |actual|
-    "expected that #{actual} would not be a multiple of #{expected}"
-  end
-
-  description do
-    "be multiple of #{expected}"
-  end
-end
-=end
 
 # vim: ft=ruby
