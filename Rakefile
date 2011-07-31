@@ -1,116 +1,25 @@
-#! /usr/bin/env rake
-$LOAD_PATH.unshift('lib')
+# -*- ruby encoding: utf-8 -*-
 
 require 'rubygems'
-require 'rake/gempackagetask'
-require 'rake/contrib/rubyforgepublisher'
-require 'diff/lcs'
-require 'archive/tar/minitar'
-require 'zlib'
+require 'hoe'
 
-DISTDIR = "diff-lcs-#{Diff::LCS::VERSION}"
-TARDIST = "../#{DISTDIR}.tar.gz"
+Hoe.plugin :doofus
+Hoe.plugin :gemspec
+Hoe.plugin :git
 
-DATE_RE = %r<(\d{4})[./-]?(\d{2})[./-]?(\d{2})(?:[\sT]?(\d{2})[:.]?(\d{2})[:.]?(\d{2})?)?>
+Hoe.spec 'diff-lcs' do |spec|
+  spec.rubyforge_name = 'ruwiki'
 
-if ENV['RELEASE_DATE']
-  year, month, day, hour, minute, second = DATE_RE.match(ENV['RELEASE_DATE']).captures
-  year ||= 0
-  month ||= 0
-  day ||= 0
-  hour ||= 0
-  minute ||= 0
-  second ||= 0
-  ReleaseDate = Time.mktime(year, month, day, hour, minute, second)
-else
-  ReleaseDate = nil
+  developer('Austin Ziegler', 'austin@rubyforge.org')
+
+  spec.remote_rdoc_dir = 'diff-lcs/rdoc'
+  spec.rsync_args << ' --exclude=statsvn/'
+
+  spec.history_file = 'History.rdoc'
+  spec.readme_file = 'README.rdoc'
+  spec.extra_rdoc_files = FileList["*.rdoc"].to_a
+
+  spec.extra_dev_deps << ['rspec', '~> 2.0']
 end
 
-task :test do |t|
-  require 'test/unit/testsuite'
-  require 'test/unit/ui/console/testrunner'
-
-  runner = Test::Unit::UI::Console::TestRunner
-
-  $LOAD_PATH.unshift('tests')
-  $stderr.puts "Checking for test cases:" if t.verbose
-  Dir['tests/*test*.rb'].each do |testcase|
-    $stderr.puts "\t#{testcase}" if t.verbose
-    load testcase
-  end
-
-  suite = Test::Unit::TestSuite.new("Diff::LCS Tests")
-
-  ObjectSpace.each_object(Class) do |testcase|
-    suite << testcase.suite if testcase < Test::Unit::TestCase
-  end
-
-  runner.run(suite)
-end
-
-spec = eval(File.read("diff-lcs.gemspec"))
-desc "Build the RubyGem for Diff::LCS."
-task :gem => [ :test ]
-Rake::GemPackageTask.new(spec) do |g|
-  g.need_tar    = false
-  g.need_zip    = false
-  g.package_dir = ".."
-end
-
-desc "Build an Diff::LCS .tar.gz distribution."
-task :tar => [ TARDIST ]
-file TARDIST => [ :test ] do |t|
-  current = File.basename(Dir.pwd)
-  Dir.chdir("..") do
-    begin
-      files = Dir["#{current}/**/*"].select { |dd| dd !~ %r{(?:/CVS/?|~$)} }
-      files.map! do |dd|
-        ddnew = dd.gsub(/^#{current}/, DISTDIR)
-        mtime = ReleaseDate || File.stat(dd).mtime
-        if File.directory?(dd)
-          { :name => ddnew, :mode => 0755, :dir => true, :mtime => mtime }
-        else
-          if dd =~ %r{bin/}
-            mode = 0755
-          else
-            mode = 0644
-          end
-          data = File.read(dd)
-          { :name => ddnew, :mode => mode, :data => data, :size => data.size,
-            :mtime => mtime }
-        end
-      end
-
-      ff = File.open(t.name.gsub(%r{^\.\./}o, ''), "wb")
-      gz = Zlib::GzipWriter.new(ff)
-      tw = Archive::Tar::Minitar::Writer.new(gz)
-
-      files.each do |entry|
-        if entry[:dir]
-          tw.mkdir(entry[:name], entry)
-        else
-          tw.add_file_simple(entry[:name], entry) { |os| os.write(entry[:data]) }
-        end
-      end
-    ensure
-      tw.close if tw
-      gz.close if gz
-    end
-  end
-end
-task TARDIST => [ :test ]
-
-def sign(file)
-  sh %("C:\\Program Files\\Windows Privacy Tools\\GnuPG\\Gpg.exe" -ba #{file})
-end
-
-task :signtar => [ :tar ] do
-  sign TARDIST
-end
-task :signgem => [ :gem ] do
-  sign "../#{DISTDIR}.gem"
-end
-
-desc "Build everything."
-task :default => [ :signtar, :signgem ] do
-end
+# vim: syntax=ruby

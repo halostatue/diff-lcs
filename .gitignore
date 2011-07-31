@@ -1,0 +1,13 @@
+spec/ldap.yml
+.rvmrc
+pkg/
+*.swp
+*.pyc
+html/
+doc/
+publish/
+coverage/
+coverage.info
+.rake_tasks~
+.DS_Store
+website/index.html
