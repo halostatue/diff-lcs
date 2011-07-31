@@ -5,11 +5,13 @@ require 'spec_helper'
 describe "Diff::LCS.diff" do
   include Diff::LCS::SpecHelper::Matchers
 
-  it "should correctly diff the sequences" do
+  it "should correctly diff seq1 to seq2" do
     diff_s1_s2 = Diff::LCS.diff(seq1, seq2)
-    diff_s2_s1 = Diff::LCS.diff(seq2, seq1)
-
     change_diff(correct_forward_diff).should == diff_s1_s2
+  end
+
+  it "should correctly diff seq2 to seq1" do
+    diff_s2_s1 = Diff::LCS.diff(seq2, seq1)
     change_diff(correct_backward_diff).should == diff_s2_s1
   end
 

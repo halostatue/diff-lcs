@@ -1,8 +1,6 @@
 # -*- ruby encoding: utf-8 -*-
 
 require 'rubygems'
-require 'bundler'
-
 require 'pathname'
 
 file   = Pathname.new(__FILE__).expand_path
