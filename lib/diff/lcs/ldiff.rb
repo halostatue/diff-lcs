@@ -33,7 +33,7 @@ require 'diff/lcs/hunk'
 module Diff::LCS::Ldiff
   BANNER = <<-COPYRIGHT
 ldiff #{Diff::LCS::VERSION}
-  Copyright © 2004 Austin Ziegler
+  Copyright 2004-2011 Austin Ziegler
 
   Part of Diff::LCS.
   http://rubyforge.org/projects/ruwiki/
@@ -42,67 +42,51 @@ ldiff #{Diff::LCS::VERSION}
 
   This program is free software. It may be redistributed and/or modified under
   the terms of the GPL version 2 (or later), the Perl Artistic licence, or the
-  Ruby licence.
+  MIT licence.
 
 $Id$
               COPYRIGHT
-  
+
   class << self
     attr_reader   :format, :lines       #:nodoc:
     attr_reader   :file_old, :file_new  #:nodoc:
     attr_reader   :data_old, :data_new  #:nodoc:
 
     def run(args, input = $stdin, output = $stdout, error = $stderr) #:nodoc:
+      @binary = nil
+
       args.options do |o|
         o.banner = "Usage: #{File.basename($0)} [options] oldfile newfile"
         o.separator ""
-        o.on('-c',
-            'Displays a context diff with 3 lines of',
-            'context.') do |ctx|
+        o.on('-c', 'Displays a context diff with 3 lines of', 'context.') do |ctx|
           @format = :context
           @lines  = 3
         end
-        o.on('-C', '--context [LINES]', Numeric,
-            'Displays a context diff with LINES lines',
-            'of context. Default 3 lines.') do |ctx|
+        o.on('-C', '--context [LINES]', Numeric, 'Displays a context diff with LINES lines', 'of context. Default 3 lines.') do |ctx|
           @format = :context
           @lines  = ctx || 3
         end
-        o.on('-u',
-            'Displays a unified diff with 3 lines of',
-            'context.') do |ctx|
+        o.on('-u', 'Displays a unified diff with 3 lines of', 'context.') do |ctx|
           @format = :unified
           @lines  = 3
         end
-        o.on('-U', '--unified [LINES]', Numeric,
-            'Displays a unified diff with LINES lines',
-            'of context. Default 3 lines.') do |ctx|
+        o.on('-U', '--unified [LINES]', Numeric, 'Displays a unified diff with LINES lines', 'of context. Default 3 lines.') do |ctx|
           @format = :unified
           @lines  = ctx || 3
         end
-        o.on('-e',
-            'Creates an \'ed\' script to change',
-            'oldfile to newfile.') do |ctx|
+        o.on('-e', 'Creates an \'ed\' script to change', 'oldfile to newfile.') do |ctx|
           @format = :ed
         end
-        o.on('-f',
-            'Creates an \'ed\' script to change',
-            'oldfile to newfile in reverse order.') do |ctx|
+        o.on('-f', 'Creates an \'ed\' script to change', 'oldfile to newfile in reverse order.') do |ctx|
           @format = :reverse_ed
         end
-        o.on('-a', '--text',
-             'Treat the files as text and compare them',
-             'line-by-line, even if they do not seem',
-             'to be text.') do |txt|
+        o.on('-a', '--text', 'Treat the files as text and compare them', 'line-by-line, even if they do not seem', 'to be text.') do |txt|
           @binary = false
         end
-        o.on('--binary',
-             'Treats the files as binary.') do |bin|
+        o.on('--binary', 'Treats the files as binary.') do |bin|
           @binary = true
         end
-        o.on('-q', '--brief',
-             'Report only whether or not the files',
-             'differ, not the details.') do |ctx|
+        o.on('-q', '--brief', 'Report only whether or not the files', 'differ, not the details.') do |ctx|
           @format = :report
         end
         o.on_tail('--help', 'Shows this text.') do
@@ -123,7 +107,7 @@ $Id$
         return 127
       end
 
-        # Defaults are for old-style diff
+      # Defaults are for old-style diff
       @format ||= :old
       @lines  ||= 0
 
@@ -138,15 +122,15 @@ $Id$
         char_new = '+' * 3
       end
 
-        # After we've read up to a certain point in each file, the number of
-        # items we've read from each file will differ by FLD (could be 0).
+      # After we've read up to a certain point in each file, the number of
+      # items we've read from each file will differ by FLD (could be 0).
       file_length_difference = 0
 
       if @binary.nil? or @binary
         data_old = IO::read(file_old)
         data_new = IO::read(file_new)
 
-          # Test binary status
+        # Test binary status
         if @binary.nil?
           old_txt = data_old[0...4096].grep(/\0/).empty?
           new_txt = data_new[0...4096].grep(/\0/).empty?
@@ -163,7 +147,7 @@ $Id$
         data_new = IO::readlines(file_new).map! { |e| e.chomp }
       end
 
-        # diff yields lots of pieces, each of which is basically a Block object
+      # diff yields lots of pieces, each of which is basically a Block object
       if @binary
         diffs = (data_old == data_new)
       else
@@ -185,8 +169,8 @@ $Id$
         puts "#{char_new} #{file_new}\t#{ft}"
       end
 
-        # Loop over hunks. If a hunk overlaps with the last hunk, join them.
-        # Otherwise, print out the old one.
+      # Loop over hunks. If a hunk overlaps with the last hunk, join them.
+      # Otherwise, print out the old one.
       oldhunk = hunk = nil
 
       if @format == :ed
@@ -195,22 +179,22 @@ $Id$
       end
 
       diffs.each do |piece|
-      begin
-        hunk = Diff::LCS::Hunk.new(data_old, data_new, piece, @lines,
-                                   file_length_difference)
-        file_length_difference = hunk.file_length_difference
+        begin
+          hunk = Diff::LCS::Hunk.new(data_old, data_new, piece, @lines,
+                                    file_length_difference)
+          file_length_difference = hunk.file_length_difference
 
-        next unless oldhunk
+          next unless oldhunk
 
-        if (@lines > 0) and hunk.overlaps?(oldhunk)
-          hunk.unshift(oldhunk)
-        else
-          output << oldhunk.diff(@format)
+          if (@lines > 0) and hunk.overlaps?(oldhunk)
+            hunk.unshift(oldhunk)
+          else
+            output << oldhunk.diff(@format)
+          end
+        ensure
+          oldhunk = hunk
+          output << "\n"
         end
-      ensure
-        oldhunk = hunk
-        output << "\n"
-      end
       end
 
       output << oldhunk.diff(@format)
