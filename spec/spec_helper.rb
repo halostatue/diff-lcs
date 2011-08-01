@@ -142,7 +142,7 @@ module Diff::LCS::SpecHelper
       end
       new_result << line
     }
-    new_result.sort_by { |line| line[1] }
+    new_result.sort_by { |line| [ line[1], line[2] ] }
   end
 
   def map_to_no_change(change_result)
