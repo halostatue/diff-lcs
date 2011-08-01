@@ -39,8 +39,8 @@ describe "Diff::LCS.traverse_balanced" do
       [ '=', 2, 2 ]
     ]
 
-    it_should_behave_like "with a #change callback", s1, s2, result
-    it_should_behave_like "without a #change callback", s1, s2, result
+    it_has_behavior "with a #change callback", s1, s2, result
+    it_has_behavior "without a #change callback", s1, s2, result
   end
 
   describe "sequences %w(a x y c) & %w(a v w c)" do
@@ -54,8 +54,8 @@ describe "Diff::LCS.traverse_balanced" do
       [ '=', 3, 3 ]
     ]
 
-    it_should_behave_like "with a #change callback", s1, s2, result
-    it_should_behave_like "without a #change callback", s1, s2, result
+    it_has_behavior "with a #change callback", s1, s2, result
+    it_has_behavior "without a #change callback", s1, s2, result
   end
 
   describe "sequences %w(x y c) & %w(v w c)" do
@@ -67,8 +67,8 @@ describe "Diff::LCS.traverse_balanced" do
       [ '=', 2, 2 ]
     ]
 
-    it_should_behave_like "with a #change callback", s1, s2, result
-    it_should_behave_like "without a #change callback", s1, s2, result
+    it_has_behavior "with a #change callback", s1, s2, result
+    it_has_behavior "without a #change callback", s1, s2, result
   end
 
   describe "sequences %w(a x y z) & %w(b v w)" do
@@ -81,8 +81,8 @@ describe "Diff::LCS.traverse_balanced" do
       [ '<', 3, 3 ]
     ]
 
-    it_should_behave_like "with a #change callback", s1, s2, result
-    it_should_behave_like "without a #change callback", s1, s2, result
+    it_has_behavior "with a #change callback", s1, s2, result
+    it_has_behavior "without a #change callback", s1, s2, result
   end
 
   describe "sequences %w(a z) & %w(a)" do
@@ -93,8 +93,8 @@ describe "Diff::LCS.traverse_balanced" do
       [ '<', 1, 1 ]
     ]
 
-    it_should_behave_like "with a #change callback", s1, s2, result
-    it_should_behave_like "without a #change callback", s1, s2, result
+    it_has_behavior "with a #change callback", s1, s2, result
+    it_has_behavior "without a #change callback", s1, s2, result
   end
 
   describe "sequences %w(z a) & %w(a)" do
@@ -105,8 +105,8 @@ describe "Diff::LCS.traverse_balanced" do
       [ '=', 1, 0 ]
     ]
 
-    it_should_behave_like "with a #change callback", s1, s2, result
-    it_should_behave_like "without a #change callback", s1, s2, result
+    it_has_behavior "with a #change callback", s1, s2, result
+    it_has_behavior "without a #change callback", s1, s2, result
   end
 
   describe "sequences %w(a b c) & %w(x y z)" do
@@ -118,8 +118,8 @@ describe "Diff::LCS.traverse_balanced" do
       [ '!', 2, 2 ]
     ]
 
-    it_should_behave_like "with a #change callback", s1, s2, result
-    it_should_behave_like "without a #change callback", s1, s2, result
+    it_has_behavior "with a #change callback", s1, s2, result
+    it_has_behavior "without a #change callback", s1, s2, result
   end
 
   describe "sequences %w(abcd efgh ijkl mnoopqrstuvwxyz) & []" do
@@ -132,8 +132,8 @@ describe "Diff::LCS.traverse_balanced" do
       [ '<', 3, 0 ]
     ]
 
-    it_should_behave_like "with a #change callback", s1, s2, result
-    it_should_behave_like "without a #change callback", s1, s2, result
+    it_has_behavior "with a #change callback", s1, s2, result
+    it_has_behavior "without a #change callback", s1, s2, result
   end
 
   describe "strings %Q(a b c) & %Q(a x c)" do
@@ -148,8 +148,8 @@ describe "Diff::LCS.traverse_balanced" do
       [ '=', 4, 4 ]
     ]
 
-    it_should_behave_like "with a #change callback", s1, s2, result
-    it_should_behave_like "without a #change callback", s1, s2, result
+    it_has_behavior "with a #change callback", s1, s2, result
+    it_has_behavior "without a #change callback", s1, s2, result
   end
 
   describe "strings %Q(a x y c) & %Q(a v w c)" do
@@ -166,8 +166,8 @@ describe "Diff::LCS.traverse_balanced" do
       [ '=', 6, 6 ]
     ]
 
-    it_should_behave_like "with a #change callback", s1, s2, result
-    it_should_behave_like "without a #change callback", s1, s2, result
+    it_has_behavior "with a #change callback", s1, s2, result
+    it_has_behavior "without a #change callback", s1, s2, result
   end
 
   describe "strings %Q(x y c) & %Q(v w c)" do
@@ -181,8 +181,8 @@ describe "Diff::LCS.traverse_balanced" do
       [ '=', 4, 4 ]
     ]
 
-    it_should_behave_like "with a #change callback", s1, s2, result
-    it_should_behave_like "without a #change callback", s1, s2, result
+    it_has_behavior "with a #change callback", s1, s2, result
+    it_has_behavior "without a #change callback", s1, s2, result
   end
 
   describe "strings %Q(a x y z) & %Q(b v w)" do
@@ -198,8 +198,8 @@ describe "Diff::LCS.traverse_balanced" do
       [ '<', 6, 5 ]
     ]
 
-    it_should_behave_like "with a #change callback", s1, s2, result
-    it_should_behave_like "without a #change callback", s1, s2, result
+    it_has_behavior "with a #change callback", s1, s2, result
+    it_has_behavior "without a #change callback", s1, s2, result
   end
 
   describe "strings %Q(a z) & %Q(a)" do
@@ -211,8 +211,8 @@ describe "Diff::LCS.traverse_balanced" do
       [ '<', 2, 1 ]
     ]
 
-    it_should_behave_like "with a #change callback", s1, s2, result
-    it_should_behave_like "without a #change callback", s1, s2, result
+    it_has_behavior "with a #change callback", s1, s2, result
+    it_has_behavior "without a #change callback", s1, s2, result
   end
 
   describe "strings %Q(z a) & %Q(a)" do
@@ -224,8 +224,8 @@ describe "Diff::LCS.traverse_balanced" do
       [ '=', 2, 0 ]
     ]
 
-    it_should_behave_like "with a #change callback", s1, s2, result
-    it_should_behave_like "without a #change callback", s1, s2, result
+    it_has_behavior "with a #change callback", s1, s2, result
+    it_has_behavior "without a #change callback", s1, s2, result
   end
 
   describe "strings %Q(a b c) & %Q(x y z)" do
@@ -239,8 +239,8 @@ describe "Diff::LCS.traverse_balanced" do
       [ '!', 4, 4 ]
     ]
 
-    it_should_behave_like "with a #change callback", s1, s2, result
-    it_should_behave_like "without a #change callback", s1, s2, result
+    it_has_behavior "with a #change callback", s1, s2, result
+    it_has_behavior "without a #change callback", s1, s2, result
   end
 
   describe "strings %Q(abcd efgh ijkl mnopqrstuvwxyz) & %Q()" do
@@ -278,8 +278,8 @@ describe "Diff::LCS.traverse_balanced" do
       [ '<', 28, 0 ],
     ]
 
-    it_should_behave_like "with a #change callback", s1, s2, result
-    it_should_behave_like "without a #change callback", s1, s2, result
+    it_has_behavior "with a #change callback", s1, s2, result
+    it_has_behavior "without a #change callback", s1, s2, result
   end
 end
 

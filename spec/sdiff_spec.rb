@@ -20,7 +20,7 @@ describe "Diff::LCS.sdiff" do
     let(:s2) { seq2 }
     let(:result) { correct_forward_sdiff }
 
-    it_should_behave_like "compare sequences correctly"
+    it_has_behavior "compare sequences correctly"
   end
 
   describe "using %w(abc def yyy xxx ghi jkl) & %w(abc dxf xxx ghi jkl)" do
@@ -37,7 +37,7 @@ describe "Diff::LCS.sdiff" do
       ]
     }
 
-    it_should_behave_like "compare sequences correctly"
+    it_has_behavior "compare sequences correctly"
   end
 
   describe "using %w(a b c d e) & %w(a e)" do
@@ -53,7 +53,7 @@ describe "Diff::LCS.sdiff" do
       ]
     }
 
-    it_should_behave_like "compare sequences correctly"
+    it_has_behavior "compare sequences correctly"
   end
 
   describe "using %w(a e) & %w(a b c d e)" do
@@ -69,7 +69,7 @@ describe "Diff::LCS.sdiff" do
       ]
     }
 
-    it_should_behave_like "compare sequences correctly"
+    it_has_behavior "compare sequences correctly"
   end
 
   describe "using %w(v x a e) & %w(w y a b c d e)" do
@@ -87,7 +87,7 @@ describe "Diff::LCS.sdiff" do
       ]
     }
 
-    it_should_behave_like "compare sequences correctly"
+    it_has_behavior "compare sequences correctly"
   end
 
   describe "using %w(x a e) & %w(a b c d e)" do
@@ -104,7 +104,7 @@ describe "Diff::LCS.sdiff" do
       ]
     }
 
-    it_should_behave_like "compare sequences correctly"
+    it_has_behavior "compare sequences correctly"
   end
 
   describe "using %w(a e) & %w(x a b c d e)" do
@@ -121,7 +121,7 @@ describe "Diff::LCS.sdiff" do
       ]
     }
 
-    it_should_behave_like "compare sequences correctly"
+    it_has_behavior "compare sequences correctly"
   end
 
   describe "using %w(a e v) & %w(x a b c d e w x)" do
@@ -140,7 +140,7 @@ describe "Diff::LCS.sdiff" do
       ]
     }
 
-    it_should_behave_like "compare sequences correctly"
+    it_has_behavior "compare sequences correctly"
   end
 
   describe "using %w() & %w(a b c)" do
@@ -154,7 +154,7 @@ describe "Diff::LCS.sdiff" do
       ]
     }
 
-    it_should_behave_like "compare sequences correctly"
+    it_has_behavior "compare sequences correctly"
   end
 
   describe "using %w(a b c) & %w(1)" do
@@ -168,7 +168,7 @@ describe "Diff::LCS.sdiff" do
       ]
     }
 
-    it_should_behave_like "compare sequences correctly"
+    it_has_behavior "compare sequences correctly"
   end
 
   describe "using %w(a b c) & %w(c)" do
@@ -182,7 +182,7 @@ describe "Diff::LCS.sdiff" do
       ]
     }
 
-    it_should_behave_like "compare sequences correctly"
+    it_has_behavior "compare sequences correctly"
   end
 
   describe "using %w(abcd efgh ijkl mnop) & []" do
@@ -197,7 +197,7 @@ describe "Diff::LCS.sdiff" do
       ]
     }
 
-    it_should_behave_like "compare sequences correctly"
+    it_has_behavior "compare sequences correctly"
   end
 end
 

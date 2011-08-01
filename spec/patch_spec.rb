@@ -28,7 +28,7 @@ describe "Diff::LCS.patch" do
   describe "using a Diff::LCS.diff patchset" do
     describe "with default diff callbacks (DiffCallbacks)" do
       describe "forward (s1 -> s2)" do
-        it_should_behave_like "patch sequences correctly" do
+        it_has_behavior "patch sequences correctly" do
           let(:s1) { seq1 }
           let(:s2) { seq2 }
           let(:patch_set) { Diff::LCS.diff(seq1, seq2) }
@@ -36,7 +36,7 @@ describe "Diff::LCS.patch" do
       end
 
       describe "reverse (s2 -> s1)" do
-        it_should_behave_like "patch sequences correctly" do
+        it_has_behavior "patch sequences correctly" do
           let(:s1) { seq2 }
           let(:s2) { seq1 }
           let(:patch_set) { Diff::LCS.diff(seq2, seq1) }
@@ -46,7 +46,7 @@ describe "Diff::LCS.patch" do
 
     describe "with context diff callbacks (ContextDiffCallbacks)" do
       describe "forward (s1 -> s2)" do
-        it_should_behave_like "patch sequences correctly" do
+        it_has_behavior "patch sequences correctly" do
           let(:s1) { seq1 }
           let(:s2) { seq2 }
           let(:patch_set) {
@@ -56,7 +56,7 @@ describe "Diff::LCS.patch" do
       end
 
       describe "reverse (s2 -> s1)" do
-        it_should_behave_like "patch sequences correctly" do
+        it_has_behavior "patch sequences correctly" do
           let(:s1) { seq2 }
           let(:s2) { seq1 }
           let(:patch_set) {
@@ -68,7 +68,7 @@ describe "Diff::LCS.patch" do
 
     describe "with sdiff callbacks (SDiffCallbacks)" do
       describe "forward (s1 -> s2)" do
-        it_should_behave_like "patch sequences correctly" do
+        it_has_behavior "patch sequences correctly" do
           let(:s1) { seq1 }
           let(:s2) { seq2 }
           let(:patch_set) {
@@ -78,7 +78,7 @@ describe "Diff::LCS.patch" do
       end
 
       describe "reverse (s2 -> s1)" do
-        it_should_behave_like "patch sequences correctly" do
+        it_has_behavior "patch sequences correctly" do
           let(:s1) { seq2 }
           let(:s2) { seq1 }
           let(:patch_set) {
@@ -92,7 +92,7 @@ describe "Diff::LCS.patch" do
   describe "using a Diff::LCS.sdiff patchset" do
     describe "with default diff callbacks (DiffCallbacks)" do
       describe "forward (s1 -> s2)" do
-        it_should_behave_like "patch sequences correctly" do
+        it_has_behavior "patch sequences correctly" do
           let(:s1) { seq1 }
           let(:s2) { seq2 }
           let(:patch_set) {
@@ -102,7 +102,7 @@ describe "Diff::LCS.patch" do
       end
 
       describe "reverse (s2 -> s1)" do
-        it_should_behave_like "patch sequences correctly" do
+        it_has_behavior "patch sequences correctly" do
           let(:s1) { seq2 }
           let(:s2) { seq1 }
           let(:patch_set) {
@@ -114,7 +114,7 @@ describe "Diff::LCS.patch" do
 
     describe "with context diff callbacks (DiffCallbacks)" do
       describe "forward (s1 -> s2)" do
-        it_should_behave_like "patch sequences correctly" do
+        it_has_behavior "patch sequences correctly" do
           let(:s1) { seq1 }
           let(:s2) { seq2 }
           let(:patch_set) {
@@ -124,7 +124,7 @@ describe "Diff::LCS.patch" do
       end
 
       describe "reverse (s2 -> s1)" do
-        it_should_behave_like "patch sequences correctly" do
+        it_has_behavior "patch sequences correctly" do
           let(:s1) { seq2 }
           let(:s2) { seq1 }
           let(:patch_set) {
@@ -136,7 +136,7 @@ describe "Diff::LCS.patch" do
 
     describe "with sdiff callbacks (SDiffCallbacks)" do
       describe "forward (s1 -> s2)" do
-        it_should_behave_like "patch sequences correctly" do
+        it_has_behavior "patch sequences correctly" do
           let(:s1) { seq1 }
           let(:s2) { seq2 }
           let(:patch_set) { Diff::LCS.sdiff(seq1, seq2) }
@@ -144,7 +144,7 @@ describe "Diff::LCS.patch" do
       end
 
       describe "reverse (s2 -> s1)" do
-        it_should_behave_like "patch sequences correctly" do
+        it_has_behavior "patch sequences correctly" do
           let(:s1) { seq2 }
           let(:s2) { seq1 }
           let(:patch_set) { Diff::LCS.sdiff(seq2, seq1) }
