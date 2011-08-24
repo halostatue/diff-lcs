@@ -4,8 +4,6 @@ require 'rubygems'
 require 'rspec'
 require 'hoe'
 
-p RSpec
-
 Hoe.plugin :doofus
 Hoe.plugin :gemspec
 Hoe.plugin :git

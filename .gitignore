@@ -3,6 +3,7 @@ spec/ldap.yml
 pkg/
 *.swp
 *.pyc
+*.rbc
 html/
 doc/
 publish/
