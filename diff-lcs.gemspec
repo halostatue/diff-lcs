@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{diff-lcs}
-  s.version = "1.1.3.20110823233632"
+  s.version = "1.1.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Austin Ziegler"]
-  s.date = %q{2011-08-23}
+  s.authors = [%q{Austin Ziegler}]
+  s.date = %q{2011-08-24}
   s.description = %q{Diff::LCS is a port of Perl's Algorithm::Diff that uses the McIlroy-Hunt
 longest common subsequence (LCS) algorithm to compute intelligent differences
 between two sequenced enumerable containers. The implementation is based on
@@ -23,14 +23,14 @@ This library is called Diff::LCS because of an early version of Algorithm::Diff
 which was restrictively licensed. This version has seen a minor license change:
 instead of being under Ruby's license as an option, the third optional license
 is the MIT license.}
-  s.email = ["austin@rubyforge.org"]
-  s.executables = ["htmldiff", "ldiff"]
-  s.extra_rdoc_files = ["docs/COPYING.txt", "History.rdoc", "License.rdoc", "README.rdoc"]
-  s.files = ["History.rdoc", "License.rdoc", "README.rdoc", "Rakefile", "bin/htmldiff", "bin/ldiff", "diff-lcs.gemspec", "docs/COPYING.txt", "docs/artistic.html", "lib/diff/lcs.rb", "lib/diff/lcs/array.rb", "lib/diff/lcs/block.rb", "lib/diff/lcs/callbacks.rb", "lib/diff/lcs/change.rb", "lib/diff/lcs/hunk.rb", "lib/diff/lcs/ldiff.rb", "lib/diff/lcs/string.rb", "tests/00test.rb", ".gemtest"]
-  s.rdoc_options = ["--main", "README.rdoc"]
-  s.require_paths = ["lib"]
+  s.email = [%q{austin@rubyforge.org}]
+  s.executables = [%q{htmldiff}, %q{ldiff}]
+  s.extra_rdoc_files = [%q{Manifest.txt}, %q{docs/COPYING.txt}, %q{History.rdoc}, %q{License.rdoc}, %q{README.rdoc}]
+  s.files = [%q{History.rdoc}, %q{License.rdoc}, %q{Manifest.txt}, %q{README.rdoc}, %q{Rakefile}, %q{bin/htmldiff}, %q{bin/ldiff}, %q{diff-lcs.gemspec}, %q{docs/COPYING.txt}, %q{docs/artistic.html}, %q{lib/diff-lcs.rb}, %q{lib/diff/lcs.rb}, %q{lib/diff/lcs/array.rb}, %q{lib/diff/lcs/block.rb}, %q{lib/diff/lcs/callbacks.rb}, %q{lib/diff/lcs/change.rb}, %q{lib/diff/lcs/htmldiff.rb}, %q{lib/diff/lcs/hunk.rb}, %q{lib/diff/lcs/ldiff.rb}, %q{lib/diff/lcs/string.rb}, %q{spec/diff_spec.rb}, %q{spec/lcs_spec.rb}, %q{spec/patch_spec.rb}, %q{spec/sdiff_spec.rb}, %q{spec/spec_helper.rb}, %q{spec/traverse_balanced_spec.rb}, %q{spec/traverse_sequences_spec.rb}]
+  s.rdoc_options = [%q{--main}, %q{README.rdoc}]
+  s.require_paths = [%q{lib}]
   s.rubyforge_project = %q{ruwiki}
-  s.rubygems_version = %q{1.5.1}
+  s.rubygems_version = %q{1.8.6}
   s.summary = %q{Diff::LCS is a port of Perl's Algorithm::Diff that uses the McIlroy-Hunt longest common subsequence (LCS) algorithm to compute intelligent differences between two sequenced enumerable containers}
 
   if s.respond_to? :specification_version then
