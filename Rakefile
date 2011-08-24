@@ -1,7 +1,10 @@
 # -*- ruby encoding: utf-8 -*-
 
 require 'rubygems'
+require 'rspec'
 require 'hoe'
+
+p RSpec
 
 Hoe.plugin :doofus
 Hoe.plugin :gemspec
