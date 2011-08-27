@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!ruby -w
 
 require 'diff/lcs'
 require 'diff/lcs/ldiff'

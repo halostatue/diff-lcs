@@ -1,15 +1,17 @@
-== 1.1.3 / 2011-07-30
+== 1.1.3 / 2011-08-27
 * Converted to 'hoe' for release.
 * Converted tests to RSpec 2.
+* Extracted the body of htmldiff into a class available from
+  diff/lcs/htmldiff.
+* Migrated development and issue tracking to GitHub.
 * Bugs fixed:
-  - Issue 4 (https://github.com/halostatue/diff-lcs/issues/4) fixed.
-    In the process, HTMLDiff was made easier to use outside of the htmldiff
-    command.
-  - Issue 3 (https://github.com/halostatue/diff-lcs/issues/3) fixed.
+  - Eliminated the explicit use of RubyGems in both bin/htmldiff and bin/ldiff.
+    Resolves issue 4 (https://github.com/halostatue/diff-lcs/issues/4).
+  - Eliminated Ruby warnings. Resolves issue 3
+    (https://github.com/halostatue/diff-lcs/issues/3).
 
 == 1.1.2 / 2004-10-20
-* Fixed a problem reported by Mauricio Fernandez in htmldiff. Future versions
-  of Diff::LCS will be removing this program.
+* Fixed a problem reported by Mauricio Fernandez in htmldiff.
 
 == 1.1.1 / 2004-09-25
 * Fixed bug #891:
@@ -45,7 +47,7 @@
 * Minor modifications to the gemspec, the README.
 * Renamed the diff program to ldiff (as well as the companion batch file) so as
   to not collide with the standard diff program.
-* Fixed issues with RubyGEMs. Requires RubyGems > 0.6.1 or >= 0.6.1 with the
+* Fixed issues with RubyGems. Requires RubyGems > 0.6.1 or >= 0.6.1 with the
   latest CVS version.
 
 == 1.0 / -
