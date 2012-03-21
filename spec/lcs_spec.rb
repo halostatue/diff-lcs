@@ -2,10 +2,10 @@
 
 require 'spec_helper'
 
-describe "Diff::LCS.LCS and Diff::LCS.__lcs" do
+describe "Diff::LCS.__lcs" do
   include Diff::LCS::SpecHelper::Matchers
 
-  it "should return the correct raw values from Diff::LCS.__lcs" do
+  it "should return a meaningful LCS array with (seq1, seq2)" do
     res = Diff::LCS.__lcs(seq1, seq2)
     # The result of the LCS (less the +nil+ values) must be as long as the
     # correct result.
@@ -20,6 +20,18 @@ describe "Diff::LCS.LCS and Diff::LCS.__lcs" do
     x_seq2.should == correct_lcs
   end
 
+  it "should return all indexes with (hello, hello)" do
+    Diff::LCS.__lcs(hello, hello).should == (0...hello.size).to_a
+  end
+
+  it "should return all indexes with (hello_ary, hello_ary)" do
+    Diff::LCS.__lcs(hello_ary, hello_ary).should == (0...hello_ary.size).to_a
+  end
+end
+
+describe "Diff::LCS.LCS" do
+  include Diff::LCS::SpecHelper::Matchers
+
   it "should return the correct compacted values from Diff::LCS.LCS" do
     res = Diff::LCS.LCS(seq1, seq2)
     res.should == correct_lcs
@@ -30,6 +42,14 @@ describe "Diff::LCS.LCS and Diff::LCS.__lcs" do
     res = Diff::LCS.LCS(seq2, seq1)
     res.should == correct_lcs
     res.compact.should == res
+  end
+
+  it "should return %W(h e l l o) with (hello, hello)" do
+    Diff::LCS.LCS(hello, hello).should == hello.split(//)
+  end
+
+  it "should return hello_ary with (hello_ary, hello_ary)" do
+    Diff::LCS.LCS(hello_ary, hello_ary).should == hello_ary
   end
 end
 

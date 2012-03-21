@@ -30,6 +30,14 @@ describe "Diff::LCS.diff" do
     correct_diff.each { |hunk| hunk.each { |change| change[0] = '+' } }
     change_diff(correct_diff).should == diff
   end
+
+  it "should return an empty diff with (hello, hello)" do
+    Diff::LCS.diff(hello, hello).should == []
+  end
+
+  it "should return an empty diff with (hello_ary, hello_ary)" do
+    Diff::LCS.diff(hello_ary, hello_ary).should == []
+  end
 end
 
 # vim: ft=ruby

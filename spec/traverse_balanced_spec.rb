@@ -29,6 +29,32 @@ describe "Diff::LCS.traverse_balanced" do
     end
   end
 
+  describe "identical string sequences ('abc')" do
+    s1 = s2 = "abc"
+
+    result = [
+      [ '=', 0, 0 ],
+      [ '=', 1, 1 ],
+      [ '=', 2, 2 ]
+    ]
+
+    it_has_behavior "with a #change callback", s1, s2, result
+    it_has_behavior "without a #change callback", s1, s2, result
+  end
+
+  describe "identical array sequences %w(a b c)" do
+    s1 = s2 = %w(a b c)
+
+    result = [
+      [ '=', 0, 0 ],
+      [ '=', 1, 1 ],
+      [ '=', 2, 2 ]
+    ]
+
+    it_has_behavior "with a #change callback", s1, s2, result
+    it_has_behavior "without a #change callback", s1, s2, result
+  end
+
   describe "sequences %w(a b c) & %w(a x c)" do
     s1 = %w(a b c)
     s2 = %w(a x c)

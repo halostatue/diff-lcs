@@ -1,3 +1,15 @@
+== ? / 2012-03-??
+* Major Enhancements:
+* Minor Enhancements:
+  * Added special case handling for Diff::LCS.patch so that it handles patches
+    that are empty or contain no changes.
+* Bug Fixes:
+  * Resolved Issue #2 by handling string[string.size, 1] properly (it returns
+    "" not nil).
+* Code Style Changes:
+  * Trailing spaces
+  * Calling class methods using '.' instead of '::'.
+
 == 1.1.3 / 2011-08-27
 * Converted to 'hoe' for release.
 * Converted tests to RSpec 2.

@@ -45,12 +45,12 @@ module Diff
   #   seq2 == seq1.patch!(sdiff)
   #   seq1 == seq2.unpatch(sdiff)
   #   seq1 == seq2.unpatch!(sdiff)
-  # 
+  #
   # Default extensions are provided for Array and String objects through the
   # use of 'diff/lcs/array' and 'diff/lcs/string'.
   #
   # == Introduction (by Mark-Jason Dominus)
-  # 
+  #
   # <em>The following text is from the Perl documentation. The only changes
   # have been to make the text appear better in Rdoc</em>.
   #
@@ -71,7 +71,7 @@ module Diff
   # new sequence *S* which can be obtained from the first sequence by
   # deleting some items, and from the second sequence by deleting other
   # items. You also want *S* to be as long as possible. In this case *S* is:
-  # 
+  #
   #    a b c d f g j z
   #
   # From there it's only a small step to get diff-like output:
@@ -91,7 +91,7 @@ module Diff
   #
   # A naive approach might start by matching up the +a+ and +b+ that appear
   # at the beginning of each sequence, like this:
-  # 
+  #
   #    a x b y c         z p d q
   #    a   b   c a b y c z
   #
@@ -147,20 +147,20 @@ module Diff::LCS
   # Returns the difference set between +self+ and +other+. See
   # Diff::LCS#diff.
   def diff(other, callbacks = nil, &block)
-    Diff::LCS::diff(self, other, callbacks, &block)
+    Diff::LCS.diff(self, other, callbacks, &block)
   end
 
   # Returns the balanced ("side-by-side") difference set between +self+ and
   # +other+. See Diff::LCS#sdiff.
   def sdiff(other, callbacks = nil, &block)
-    Diff::LCS::sdiff(self, other, callbacks, &block)
+    Diff::LCS.sdiff(self, other, callbacks, &block)
   end
 
   # Traverses the discovered longest common subsequences between +self+ and
   # +other+. See Diff::LCS#traverse_sequences.
   def traverse_sequences(other, callbacks = nil, &block)
     traverse_sequences(self, other, callbacks ||
-                       Diff::LCS::YieldingCallbacks, &block)
+                       Diff::LCS.YieldingCallbacks, &block)
   end
 
   # Traverses the discovered longest common subsequences between +self+ and
@@ -168,31 +168,31 @@ module Diff::LCS
   # Diff::LCS#traverse_balanced.
   def traverse_balanced(other, callbacks = nil, &block)
     traverse_balanced(self, other, callbacks ||
-                      Diff::LCS::YieldingCallbacks, &block)
+                      Diff::LCS.YieldingCallbacks, &block)
   end
 
   # Attempts to patch a copy of +self+ with the provided +patchset+. See
   # Diff::LCS#patch.
   def patch(patchset)
-    Diff::LCS::patch(self.dup, patchset)
+    Diff::LCS.patch(self.dup, patchset)
   end
 
   # Attempts to unpatch a copy of +self+ with the provided +patchset+. See
   # Diff::LCS#patch.
   def unpatch(patchset)
-    Diff::LCS::unpatch(self.dup, patchset)
+    Diff::LCS.unpatch(self.dup, patchset)
   end
 
   # Attempts to patch +self+ with the provided +patchset+. See
   # Diff::LCS#patch!. Does no autodiscovery.
   def patch!(patchset)
-    Diff::LCS::patch!(self, patchset)
+    Diff::LCS.patch!(self, patchset)
   end
 
   # Attempts to unpatch +self+ with the provided +patchset+. See
   # Diff::LCS#unpatch. Does no autodiscovery.
   def unpatch!(patchset)
-    Diff::LCS::unpatch!(self, patchset)
+    Diff::LCS.unpatch!(self, patchset)
   end
 end
 
@@ -230,7 +230,7 @@ module Diff::LCS
     # Diff::LCS.diff computes the smallest set of additions and deletions
     # necessary to turn the first sequence into the second, and returns a
     # description of these changes.
-    # 
+    #
     # See Diff::LCS::DiffCallbacks for the default behaviour. An alternate
     # behaviour may be implemented with Diff::LCS::ContextDiffCallbacks. If
     # a Class argument is provided for +callbacks+, #diff will attempt to
@@ -395,7 +395,7 @@ module Diff::LCS
         bx = string ? seq2[bj, 1] : seq2[bj]
 
         if b_line.nil?
-          unless ax.nil?
+          unless ax.nil? or (string and ax.empty?)
             event = Diff::LCS::ContextChange.new('-', ii, ax, bj, bx)
             event = yield event if block_given?
             callbacks.discard_a(event)
@@ -624,7 +624,7 @@ module Diff::LCS
           end
         end
 
-          # Match
+        # Match
         ax = string ? seq1[ai, 1] : seq1[ai]
         bx = string ? seq2[bj, 1] : seq2[bj]
         event = Diff::LCS::ContextChange.new('=', ai, ax, bj, bx)
@@ -680,16 +680,24 @@ module Diff::LCS
     # version. If +direction+ is not specified (must be
     # <tt>:patch</tt> or <tt>:unpatch</tt>), then discovery of the
     # direction of the patch will be attempted.
+    #
+    # If the patchset is empty or all 'unchanged', the src value will be
+    # returned as either <tt>src.dup</tt> or <tt>src</tt>.
     def patch(src, patchset, direction = nil)
+      patchset = __normalize_patchset(patchset)
+
+      if patchset.empty? or patchset.all? { |ps| ps.unchanged? }
+        return src.dup if src.respond_to? :dup
+        return src
+      end
+
       string = src.kind_of?(String)
         # Start with a new empty type of the source's class
       res = src.class.new
 
         # Normalize the patchset.
-      patchset = __normalize_patchset(patchset)
 
-      direction ||= Diff::LCS.__diff_direction(src, patchset)
-      direction ||= :patch
+      direction ||= Diff::LCS.__diff_direction(src, patchset) || :patch
 
       ai = bj = 0
 
@@ -791,7 +799,6 @@ module Diff::LCS
       Diff::LCS.patch(src, patchset, :patch)
     end
 
-# private
     # Compute the longest common subsequence between the sequenced
     # Enumerables +a+ and +b+. The result is an array whose contents is such
     # that
@@ -934,7 +941,7 @@ module Diff::LCS
     #
     # Note: This will be deprecated as a public function in a future release.
     def __diff_direction(src, patchset, limit = nil)
-      count = left = left_miss = right = right_miss = 0
+      count = left_match = left_miss = right_match = right_miss = 0
       string = src.kind_of?(String)
 
       patchset.each do |change|
@@ -950,13 +957,13 @@ module Diff::LCS
           case change.action
           when '-'
             if element == change.element
-              left += 1
+              left_match += 1
             else
               left_miss += 1
             end
           when '+'
             if element == change.element
-              right += 1
+              right_match += 1
             else
               right_miss += 1
             end
@@ -970,15 +977,16 @@ module Diff::LCS
           case change.action
           when '-' # Remove details from the old string
             element = string ? src[change.old_position, 1] : src[change.old_position]
+
             if element == change.old_element
-              left += 1
+              left_match += 1
             else
               left_miss += 1
             end
           when '+'
             element = string ? src[change.new_position, 1] : src[change.new_position]
             if element == change.new_element
-              right += 1
+              right_match += 1
             else
               right_miss += 1
             end
@@ -991,11 +999,11 @@ module Diff::LCS
           when '!'
             element = string ? src[change.old_position, 1] : src[change.old_position]
             if element == change.old_element
-              left += 1
+              left_match += 1
             else
               element = string ? src[change.new_position, 1] : src[change.new_position]
               if element == change.new_element
-                right += 1
+                right_match += 1
               else
                 left_miss += 1
                 right_miss += 1
@@ -1007,8 +1015,11 @@ module Diff::LCS
         break if (not limit.nil?) && (count > limit)
       end
 
-      no_left = (left == 0) and (left_miss >= 0)
-      no_right = (right == 0) and (right_miss >= 0)
+      if left_match.zero?
+      end
+
+      no_left = (left_match == 0) && (left_miss >= 0)
+      no_right = (right_match == 0) && (right_miss >= 0)
 
       case [no_left, no_right]
       when [false, true]

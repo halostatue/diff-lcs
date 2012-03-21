@@ -12,6 +12,14 @@ $:.unshift parent.join('lib')
 require 'diff-lcs'
 
 module Diff::LCS::SpecHelper
+  def hello
+    "hello"
+  end
+
+  def hello_ary
+    %W(h e l l o)
+  end
+
   def seq1
     %w(a b c e h j l m n p)
   end
@@ -159,7 +167,6 @@ module Diff::LCS::SpecHelper
     new_result
   end
 
-
   def simple_callback
     callbacks = Object.new
     class << callbacks
@@ -279,6 +286,9 @@ end
 RSpec.configure do |conf|
   conf.include Diff::LCS::SpecHelper
   conf.alias_it_should_behave_like_to :it_has_behavior, 'has behavior:'
+  conf.filter_run_excluding :broken => true
+# conf.filter_run_including :broken => true
+# conf.filter_run_including :only => true
 end
 
 # vim: ft=ruby
