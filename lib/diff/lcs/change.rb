@@ -30,15 +30,15 @@ module Diff::LCS::ChangeTypeTests
   end
 
   def changed?
-    @changed == '!'
+    @action == '!'
   end
 
   def finished_a?
-    @changed == '>'
+    @action == '>'
   end
 
   def finished_b?
-    @changed == '<'
+    @action == '<'
   end
 end
 
