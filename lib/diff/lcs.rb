@@ -134,6 +134,7 @@ module Diff
 end
 
 require 'diff/lcs/callbacks'
+require 'diff/lcs/internals'
 
 module Diff::LCS
   # Returns an Array containing the longest common subsequence(s) between
@@ -213,7 +214,7 @@ module Diff::LCS
     # +seq1+ in turn and may be modified before they are placed into the
     # returned Array of subsequences.
     def LCS(seq1, seq2, &block) #:yields seq1[ii] for each matched:
-      matches = Diff::LCS.__lcs(seq1, seq2)
+      matches = Diff::LCS::Internals.lcs(seq1, seq2)
       ret = []
       matches.each_with_index do |ee, ii|
         unless matches[ii].nil?
@@ -379,7 +380,7 @@ module Diff::LCS
     # sequence is reached, if +a+ has not yet reached the end of +A+ or +b+
     # has not yet reached the end of +B+.
     def traverse_sequences(seq1, seq2, callbacks = Diff::LCS::SequenceCallbacks, &block) #:yields change events:
-      matches = Diff::LCS.__lcs(seq1, seq2)
+      matches = Diff::LCS::Internals.lcs(seq1, seq2)
 
       run_finished_a = run_finished_b = false
       string = seq1.kind_of?(String)
@@ -569,7 +570,7 @@ module Diff::LCS
     # +a+ and +b+ are considered to be pointing to matching or changed
     # elements.
     def traverse_balanced(seq1, seq2, callbacks = Diff::LCS::BalancedCallbacks)
-      matches = Diff::LCS.__lcs(seq1, seq2)
+      matches = Diff::LCS::Internals.lcs(seq1, seq2)
       a_size = seq1.size
       b_size = seq2.size
       ai = bj = mb = 0
@@ -676,34 +677,67 @@ module Diff::LCS
       :unpatch => { '+' => '-', '-' => '+', '!' => '!', '=' => '=' }
     }
 
-    # Given a patchset, convert the current version to the new
-    # version. If +direction+ is not specified (must be
-    # <tt>:patch</tt> or <tt>:unpatch</tt>), then discovery of the
-    # direction of the patch will be attempted.
+    # Applies a +patchset+ to the sequence +src+ according to the
+    # +direction+ (<tt>:patch</tt> or <tt>:unpatch</tt>).
     #
-    # If the patchset is empty or all 'unchanged', the src value will be
-    # returned as either <tt>src.dup</tt> or <tt>src</tt>.
+    # If the +direction+ is not specified, Diff::LCS::patch will attempt to
+    # discover the direction of the +patchset+.
+    #
+    # A +patchset+ can be considered to apply forward (<tt>:patch</tt>) if
+    # the following expression is true:
+    #
+    #     patch(s1, diff(s1, s2)) -> s2
+    #
+    # A +patchset+ can be considered to apply backward (<tt>:unpatch</tt>)
+    # if the following expression is true:
+    #
+    #     patch(s2, diff(s1, s2)) -> s1
+    #
+    # If the +patchset+ contains no changes, the +src+ value will be
+    # returned as either <tt>src.dup</tt> or +src+. A +patchset+ can be
+    # deemed as having no changes if the following predicate returns true:
+    #
+    #     patchset.empty? or
+    #       patchset.flatten.all? { |change| change.unchanged? }
+    #
+    # === Patchsets
+    # A +patchset+ is always an enumerable sequence of changes, hunks of
+    # changes, or a mix of the two. A hunk of changes is an enumerable
+    # sequence of changes:
+    #
+    #     [ # patchset
+    #       # change
+    #       [ # hunk
+    #         # change
+    #       ]
+    #     ]
+    #
+    # The +patch+ method accepts <tt>patchset</tt>s that are enumerable
+    # sequences containing either Diff::LCS::Change objects (or a subclass)
+    # or the array representations of those objects. Prior to application,
+    # array representations of Diff::LCS::Change objects will be reified.
     def patch(src, patchset, direction = nil)
-      patchset = __normalize_patchset(patchset)
+      # Normalize the patchset.
+      has_changes, patchset = Diff::LCS::Internals.analyze_patchset(patchset)
 
-      if patchset.empty? or patchset.all? { |ps| ps.unchanged? }
+      if not has_changes
         return src.dup if src.respond_to? :dup
         return src
       end
 
       string = src.kind_of?(String)
-        # Start with a new empty type of the source's class
+      # Start with a new empty type of the source's class
       res = src.class.new
 
-        # Normalize the patchset.
-
-      direction ||= Diff::LCS.__diff_direction(src, patchset) || :patch
+      direction ||= Diff::LCS.__diff_direction(src, patchset)
 
       ai = bj = 0
 
-      patchset.each do |change|
-          # Both Change and ContextChange support #action
-        action = PATCH_MAP[direction][change.action]
+      patch_map = PATCH_MAP[direction]
+
+      patchset.flatten.each do |change|
+        # Both Change and ContextChange support #action
+        action = patch_map[change.action]
 
         case change
         when Diff::LCS::ContextChange
@@ -733,12 +767,12 @@ module Diff::LCS
               bj += 1
             end
 
-            res << el
-            bj += 1
+          res << el
+          bj += 1
           when '='
-              # This only appears in sdiff output with the SDiff callback.
-              # Therefore, we only need to worry about dealing with a single
-              # element.
+            # This only appears in sdiff output with the SDiff callback.
+            # Therefore, we only need to worry about dealing with a single
+            # element.
             res << el
 
             ai += 1
@@ -750,10 +784,10 @@ module Diff::LCS
               bj += 1
             end
 
-            bj += 1
-            ai += 1
+          bj += 1
+          ai += 1
 
-            res << el
+          res << el
           end
         when Diff::LCS::Change
           case action
@@ -797,318 +831,6 @@ module Diff::LCS
     # version. Does no auto-discovery.
     def patch!(src, patchset)
       Diff::LCS.patch(src, patchset, :patch)
-    end
-
-    # Compute the longest common subsequence between the sequenced
-    # Enumerables +a+ and +b+. The result is an array whose contents is such
-    # that
-    #
-    #     result = Diff::LCS.__lcs(a, b)
-    #     result.each_with_index do |e, ii|
-    #       assert_equal(a[ii], b[e]) unless e.nil?
-    #     end
-    #
-    # Note: This will be deprecated as a public function in a future release.
-    def __lcs(a, b)
-      a_start = b_start = 0
-      a_finish = a.size - 1
-      b_finish = b.size - 1
-      vector = []
-
-      # Prune off any common elements at the beginning...
-      while (a_start <= a_finish) and
-        (b_start <= b_finish) and
-        (a[a_start] == b[b_start])
-        vector[a_start] = b_start
-        a_start += 1
-        b_start += 1
-      end
-
-      # Now the end...
-      while (a_start <= a_finish) and
-        (b_start <= b_finish) and
-        (a[a_finish] == b[b_finish])
-        vector[a_finish] = b_finish
-        a_finish -= 1
-        b_finish -= 1
-      end
-
-      # Now, compute the equivalence classes of positions of elements.
-      b_matches = Diff::LCS.__position_hash(b, b_start .. b_finish)
-
-      thresh = []
-      links = []
-
-      (a_start .. a_finish).each do |ii|
-        ai = a.kind_of?(String) ? a[ii, 1] : a[ii]
-        bm = b_matches[ai]
-        kk = nil
-        bm.reverse_each do |jj|
-          if kk and (thresh[kk] > jj) and (thresh[kk - 1] < jj)
-            thresh[kk] = jj
-          else
-            kk = Diff::LCS.__replace_next_larger(thresh, jj, kk)
-          end
-          links[kk] = [ (kk > 0) ? links[kk - 1] : nil, ii, jj ] unless kk.nil?
-        end
-      end
-
-      unless thresh.empty?
-        link = links[thresh.size - 1]
-        while not link.nil?
-          vector[link[1]] = link[2]
-          link = link[0]
-        end
-      end
-
-      vector
-    end
-
-    # Find the place at which +value+ would normally be inserted into the
-    # Enumerable. If that place is already occupied by +value+, do nothing
-    # and return +nil+. If the place does not exist (i.e., it is off the end
-    # of the Enumerable), add it to the end. Otherwise, replace the element
-    # at that point with +value+. It is assumed that the Enumerable's values
-    # are numeric.
-    #
-    # This operation preserves the sort order.
-    #
-    # Note: This will be deprecated as a public function in a future release.
-    def __replace_next_larger(enum, value, last_index = nil)
-        # Off the end?
-      if enum.empty? or (value > enum[-1])
-        enum << value
-        return enum.size - 1
-      end
-
-        # Binary search for the insertion point
-      last_index ||= enum.size
-      first_index = 0
-      while (first_index <= last_index)
-        ii = (first_index + last_index) >> 1
-
-        found = enum[ii]
-
-        if value == found
-          return nil
-        elsif value > found
-          first_index = ii + 1
-        else
-          last_index = ii - 1
-        end
-      end
-
-        # The insertion point is in first_index; overwrite the next larger
-        # value.
-      enum[first_index] = value
-      return first_index
-    end
-
-    # If +vector+ maps the matching elements of another collection onto this
-    # Enumerable, compute the inverse +vector+ that maps this Enumerable
-    # onto the collection. (Currently unused.)
-    #
-    # Note: This will be deprecated as a public function in a future release.
-    def __inverse_vector(a, vector)
-      inverse = a.dup
-      (0 ... vector.size).each do |ii|
-        inverse[vector[ii]] = ii unless vector[ii].nil?
-      end
-      inverse
-    end
-
-    # Returns a hash mapping each element of an Enumerable to the set of
-    # positions it occupies in the Enumerable, optionally restricted to the
-    # elements specified in the range of indexes specified by +interval+.
-    #
-    # Note: This will be deprecated as a public function in a future release.
-    def __position_hash(enum, interval = 0 .. -1)
-      hash = Hash.new { |hh, kk| hh[kk] = [] }
-      interval.each do |ii|
-        kk = enum.kind_of?(String) ? enum[ii, 1] : enum[ii]
-        hash[kk] << ii
-      end
-      hash
-    end
-
-    # Examine the patchset and the source to see in which direction the
-    # patch should be applied.
-    #
-    # WARNING: By default, this examines the whole patch, so this could take
-    # some time. This also works better with Diff::LCS::ContextChange or
-    # Diff::LCS::Change as its source, as an array will cause the creation
-    # of one of the above.
-    #
-    # Note: This will be deprecated as a public function in a future release.
-    def __diff_direction(src, patchset, limit = nil)
-      count = left_match = left_miss = right_match = right_miss = 0
-      string = src.kind_of?(String)
-
-      patchset.each do |change|
-        count += 1
-
-        case change
-        when Diff::LCS::Change
-          # With a simplistic change, we can't tell the difference between
-          # the left and right on '!' actions, so we ignore those. On '='
-          # actions, if there's a miss, we miss both left and right.
-          element = string ? src[change.position, 1] : src[change.position]
-
-          case change.action
-          when '-'
-            if element == change.element
-              left_match += 1
-            else
-              left_miss += 1
-            end
-          when '+'
-            if element == change.element
-              right_match += 1
-            else
-              right_miss += 1
-            end
-          when '='
-            if element != change.element
-              left_miss += 1
-              right_miss += 1
-            end
-          end
-        when Diff::LCS::ContextChange
-          case change.action
-          when '-' # Remove details from the old string
-            element = string ? src[change.old_position, 1] : src[change.old_position]
-
-            if element == change.old_element
-              left_match += 1
-            else
-              left_miss += 1
-            end
-          when '+'
-            element = string ? src[change.new_position, 1] : src[change.new_position]
-            if element == change.new_element
-              right_match += 1
-            else
-              right_miss += 1
-            end
-          when '='
-            le = string ? src[change.old_position, 1] : src[change.old_position]
-            re = string ? src[change.new_position, 1] : src[change.new_position]
-
-            left_miss += 1 if le != change.old_element
-            right_miss += 1 if re != change.new_element
-          when '!'
-            element = string ? src[change.old_position, 1] : src[change.old_position]
-            if element == change.old_element
-              left_match += 1
-            else
-              element = string ? src[change.new_position, 1] : src[change.new_position]
-              if element == change.new_element
-                right_match += 1
-              else
-                left_miss += 1
-                right_miss += 1
-              end
-            end
-          end
-        end
-
-        break if (not limit.nil?) && (count > limit)
-      end
-
-      if left_match.zero?
-      end
-
-      no_left = (left_match == 0) && (left_miss >= 0)
-      no_right = (right_match == 0) && (right_miss >= 0)
-
-      case [no_left, no_right]
-      when [false, true]
-        return :patch
-      when [true, false]
-        return :unpatch
-      else
-        raise "The provided patchset does not appear to apply to the provided value as either source or destination value."
-      end
-    end
-
-    # Normalize the patchset. A patchset is always a sequence of changes, but
-    # how those changes are represented may vary, depending on how they were
-    # generated. In all cases we support, we also support the array
-    # representation of the changes. The formats are:
-    #
-    #   [ # patchset <- Diff::LCS.diff(a, b)
-    #     [ # one or more hunks
-    #       Diff::LCS::Change # one or more changes
-    #     ] ]
-    #
-    #   [ # patchset, equivalent to the above
-    #     [ # one or more hunks
-    #       [ action, line, value ] # one or more changes
-    #     ] ]
-    #
-    #   [ # patchset <- Diff::LCS.diff(a, b, Diff::LCS::ContextDiffCallbacks)
-    #     #       OR <- Diff::LCS.sdiff(a, b, Diff::LCS::ContextDiffCallbacks)
-    #     [ # one or more hunks
-    #       Diff::LCS::ContextChange # one or more changes
-    #     ] ]
-    #
-    #   [ # patchset, equivalent to the above
-    #     [ # one or more hunks
-    #       [ action, [ old line, old value ], [ new line, new value ] ]
-    #         # one or more changes
-    #     ] ]
-    #
-    #   [ # patchset <- Diff::LCS.sdiff(a, b)
-    #     #       OR <- Diff::LCS.diff(a, b, Diff::LCS::SDiffCallbacks)
-    #     Diff::LCS::ContextChange # one or more changes
-    #   ]
-    #
-    #   [ # patchset, equivalent to the above
-    #     [ action, [ old line, old value ], [ new line, new value ] ]
-    #       # one or more changes
-    #   ]
-    #
-    # The result of this will be either of the following.
-    #
-    #   [ # patchset
-    #     Diff::LCS::ContextChange # one or more changes
-    #   ]
-    #
-    #   [ # patchset
-    #     Diff::LCS::Change # one or more changes
-    #   ]
-    #
-    # If either of the above is provided, it will be returned as such.
-    #
-    # Note: This will be deprecated as a public function in a future release.
-    def __normalize_patchset(patchset)
-      patchset.map do |hunk|
-        case hunk
-        when Diff::LCS::ContextChange, Diff::LCS::Change
-          hunk
-        when Array
-          if (not hunk[0].kind_of?(Array)) and hunk[1].kind_of?(Array) and hunk[2].kind_of?(Array)
-            Diff::LCS::ContextChange.from_a(hunk)
-          else
-            hunk.map do |change|
-              case change
-              when Diff::LCS::ContextChange, Diff::LCS::Change
-                change
-              when Array
-                  # change[1] will ONLY be an array in a ContextChange#to_a call.
-                  # In Change#to_a, it represents the line (singular).
-                if change[1].kind_of?(Array)
-                  Diff::LCS::ContextChange.from_a(change)
-                else
-                  Diff::LCS::Change.from_a(change)
-                end
-              end
-            end
-          end
-        else
-          raise ArgumentError, "Cannot normalise a hunk of class #{hunk.class}."
-        end
-      end.flatten
     end
   end
 end

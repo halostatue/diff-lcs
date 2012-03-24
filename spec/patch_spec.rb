@@ -320,7 +320,7 @@ describe "Diff::LCS.patch" do
         Diff::LCS.patch(@s2, @patch_set_s1_s2).should == @s1
       end
 
-      it "should correctly patch left-to-right (explicit patch)" do
+      it "should correctly patch left-to-right (explicit patch)", :only => true do
         Diff::LCS.patch(@s1, @patch_set_s1_s2, :patch).should == @s2
         Diff::LCS.patch(@s2, @patch_set_s2_s1, :patch).should == @s1
         Diff::LCS.patch!(@s1, @patch_set_s1_s2).should == @s2

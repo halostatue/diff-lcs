@@ -2,11 +2,11 @@
 
 require 'spec_helper'
 
-describe "Diff::LCS.__lcs" do
+describe "Diff::LCS::Internals.lcs" do
   include Diff::LCS::SpecHelper::Matchers
 
   it "should return a meaningful LCS array with (seq1, seq2)" do
-    res = Diff::LCS.__lcs(seq1, seq2)
+    res = Diff::LCS::Internals.lcs(seq1, seq2)
     # The result of the LCS (less the +nil+ values) must be as long as the
     # correct result.
     res.compact.size.should == correct_lcs.size
@@ -21,11 +21,11 @@ describe "Diff::LCS.__lcs" do
   end
 
   it "should return all indexes with (hello, hello)" do
-    Diff::LCS.__lcs(hello, hello).should == (0...hello.size).to_a
+    Diff::LCS::Internals.lcs(hello, hello).should == (0...hello.size).to_a
   end
 
   it "should return all indexes with (hello_ary, hello_ary)" do
-    Diff::LCS.__lcs(hello_ary, hello_ary).should == (0...hello_ary.size).to_a
+    Diff::LCS::Internals.lcs(hello_ary, hello_ary).should == (0...hello_ary.size).to_a
   end
 end
 
