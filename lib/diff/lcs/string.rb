@@ -1,4 +1,3 @@
-#! /usr/env/bin ruby
 #--
 # Copyright 2004 Austin Ziegler <diff-lcs@halostatue.ca>
 #   adapted from:
