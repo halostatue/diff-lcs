@@ -185,31 +185,6 @@ module Diff::LCS::Internals # :nodoc:
         count += 1
 
         case change
-        when Diff::LCS::Change
-          # With a simplistic change, we can't tell the difference between
-          # the left and right on '!' actions, so we ignore those. On '='
-          # actions, if there's a miss, we miss both left and right.
-          element = string ? src[change.position, 1] : src[change.position]
-
-          case change.action
-          when '-'
-            if element == change.element
-              left_match += 1
-            else
-              left_miss += 1
-            end
-          when '+'
-            if element == change.element
-              right_match += 1
-            else
-              right_miss += 1
-            end
-          when '='
-            if element != change.element
-              left_miss += 1
-              right_miss += 1
-            end
-          end
         when Diff::LCS::ContextChange
           case change.action
           when '-' # Remove details from the old string
@@ -245,6 +220,31 @@ module Diff::LCS::Internals # :nodoc:
                 left_miss += 1
                 right_miss += 1
               end
+            end
+          end
+        when Diff::LCS::Change
+          # With a simplistic change, we can't tell the difference between
+          # the left and right on '!' actions, so we ignore those. On '='
+          # actions, if there's a miss, we miss both left and right.
+          element = string ? src[change.position, 1] : src[change.position]
+
+          case change.action
+          when '-'
+            if element == change.element
+              left_match += 1
+            else
+              left_miss += 1
+            end
+          when '+'
+            if element == change.element
+              right_match += 1
+            else
+              right_miss += 1
+            end
+          when '='
+            if element != change.element
+              left_miss += 1
+              right_miss += 1
             end
           end
         end

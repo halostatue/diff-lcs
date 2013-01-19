@@ -729,7 +729,7 @@ module Diff::LCS
       # Start with a new empty type of the source's class
       res = src.class.new
 
-      direction ||= Diff::LCS.__diff_direction(src, patchset)
+      direction ||= Diff::LCS::Internals.diff_direction(src, patchset)
 
       ai = bj = 0
 
