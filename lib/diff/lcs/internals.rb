@@ -258,14 +258,14 @@ module Diff::LCS::Internals # :nodoc:
       no_left = (left_match == 0) && (left_miss >= 0)
       no_right = (right_match == 0) && (right_miss >= 0)
 
-      direction = case [no_left, no_right]
-                  when [false, true]
-                    :patch
-                  when [true, false]
-                    :unpatch
-                  else
-                    raise "The provided patchset does not appear to apply to the provided value as either source or destination value."
-                  end
+      case [no_left, no_right]
+      when [false, true]
+        :patch
+      when [true, false]
+        :unpatch
+      else
+        raise "The provided patchset does not appear to apply to the provided value as either source or destination value."
+      end
     end
   end
 end
