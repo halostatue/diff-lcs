@@ -140,7 +140,7 @@ module Diff::LCS
   # +self+ and +other+. See Diff::LCS#LCS.
   #
   #   lcs = seq1.lcs(seq2)
-  def lcs(other, &block) #:yields self[ii] if there are matched subsequences:
+  def lcs(other, &block) #:yields self[i] if there are matched subsequences:
     Diff::LCS.lcs(self, other, &block)
   end
 
@@ -197,15 +197,15 @@ module Diff::LCS
 end
 
 class << Diff::LCS
-  def lcs(seq1, seq2, &block) #:yields seq1[ii] for each matched:
+  def lcs(seq1, seq2, &block) #:yields seq1[i] for each matched:
     matches = Diff::LCS::Internals.lcs(seq1, seq2)
     ret = []
-    matches.each_with_index do |ee, ii|
-      unless matches[ii].nil?
+    matches.each_with_index do |e, i|
+      unless matches[i].nil?
         if block_given?
-          ret << (yield seq1[ii])
+          ret << (yield seq1[i])
         else
-          ret << seq1[ii]
+          ret << seq1[i]
         end
       end
     end
@@ -319,11 +319,11 @@ class << Diff::LCS
   # their respective sequences. #traverse_sequences will advance the arrows
   # through the sequences one element at a time, calling a method on the
   # user-specified callback object before each advance. It will advance the
-  # arrows in such a way that if there are elements <tt>A[ii]</tt> and
-  # <tt>B[jj]</tt> which are both equal and part of the longest common
+  # arrows in such a way that if there are elements <tt>A[i]</tt> and
+  # <tt>B[j]</tt> which are both equal and part of the longest common
   # subsequence, there will be some moment during the execution of
-  # #traverse_sequences when arrow +a+ is pointing to <tt>A[ii]</tt> and
-  # arrow +b+ is pointing to <tt>B[jj]</tt>. When this happens,
+  # #traverse_sequences when arrow +a+ is pointing to <tt>A[i]</tt> and
+  # arrow +b+ is pointing to <tt>B[j]</tt>. When this happens,
   # #traverse_sequences will call <tt>callbacks#match</tt> and then it will
   # advance both arrows.
   #
@@ -337,8 +337,8 @@ class << Diff::LCS
   #
   # The methods for <tt>callbacks#match</tt>, <tt>callbacks#discard_a</tt>,
   # and <tt>callbacks#discard_b</tt> are invoked with an event comprising
-  # the action ("=", "+", or "-", respectively), the indicies +ii+ and +jj+,
-  # and the elements <tt>A[ii]</tt> and <tt>B[jj]</tt>. Return values are
+  # the action ("=", "+", or "-", respectively), the indicies +i+ and +j+,
+  # and the elements <tt>A[i]</tt> and <tt>B[j]</tt>. Return values are
   # discarded by #traverse_sequences.
   #
   # === End of Sequences
@@ -346,18 +346,18 @@ class << Diff::LCS
   # If arrow +a+ reaches the end of its sequence before arrow +b+ does,
   # #traverse_sequence will try to call <tt>callbacks#finished_a</tt> with
   # the last index and element of +A+ (<tt>A[-1]</tt>) and the current index
-  # and element of +B+ (<tt>B[jj]</tt>). If <tt>callbacks#finished_a</tt>
+  # and element of +B+ (<tt>B[j]</tt>). If <tt>callbacks#finished_a</tt>
   # does not exist, then <tt>callbacks#discard_b</tt> will be called on each
   # element of +B+ until the end of the sequence is reached (the call will
-  # be done with <tt>A[-1]</tt> and <tt>B[jj]</tt> for each element).
+  # be done with <tt>A[-1]</tt> and <tt>B[j]</tt> for each element).
   #
   # If +b+ reaches the end of +B+ before +a+ reaches the end of +A+,
   # <tt>callbacks#finished_b</tt> will be called with the current index and
-  # element of +A+ (<tt>A[ii]</tt>) and the last index and element of +B+
+  # element of +A+ (<tt>A[i]</tt>) and the last index and element of +B+
   # (<tt>A[-1]</tt>). Again, if <tt>callbacks#finished_b</tt> does not exist
   # on the callback object, then <tt>callbacks#discard_a</tt> will be called
   # on each element of +A+ until the end of the sequence is reached
-  # (<tt>A[ii]</tt> and <tt>B[-1]</tt>).
+  # (<tt>A[i]</tt> and <tt>B[-1]</tt>).
   #
   # There is a chance that one additional <tt>callbacks#discard_a</tt> or
   # <tt>callbacks#discard_b</tt> will be called after the end of the
@@ -373,15 +373,15 @@ class << Diff::LCS
     b_size = seq2.size
     ai = bj = 0
 
-    (0 .. matches.size).each do |ii|
-      b_line = matches[ii]
+    (0..matches.size).each do |i|
+      b_line = matches[i]
 
-      ax = string ? seq1[ii, 1] : seq1[ii]
+      ax = string ? seq1[i, 1] : seq1[i]
       bx = string ? seq2[bj, 1] : seq2[bj]
 
       if b_line.nil?
         unless ax.nil? or (string and ax.empty?)
-          event = Diff::LCS::ContextChange.new('-', ii, ax, bj, bx)
+          event = Diff::LCS::ContextChange.new('-', i, ax, bj, bx)
           event = yield event if block_given?
           callbacks.discard_a(event)
         end
@@ -389,18 +389,18 @@ class << Diff::LCS
         loop do
           break unless bj < b_line
           bx = string ? seq2[bj, 1] : seq2[bj]
-          event = Diff::LCS::ContextChange.new('+', ii, ax, bj, bx)
+          event = Diff::LCS::ContextChange.new('+', i, ax, bj, bx)
           event = yield event if block_given?
           callbacks.discard_b(event)
           bj += 1
         end
         bx = string ? seq2[bj, 1] : seq2[bj]
-        event = Diff::LCS::ContextChange.new('=', ii, ax, bj, bx)
+        event = Diff::LCS::ContextChange.new('=', i, ax, bj, bx)
         event = yield event if block_given?
         callbacks.match(event)
         bj += 1
       end
-      ai = ii
+      ai = i
     end
     ai += 1
 
@@ -519,11 +519,11 @@ class << Diff::LCS
   # their respective sequences. #traverse_sequences will advance the arrows
   # through the sequences one element at a time, calling a method on the
   # user-specified callback object before each advance. It will advance the
-  # arrows in such a way that if there are elements <tt>A[ii]</tt> and
-  # <tt>B[jj]</tt> which are both equal and part of the longest common
+  # arrows in such a way that if there are elements <tt>A[i]</tt> and
+  # <tt>B[j]</tt> which are both equal and part of the longest common
   # subsequence, there will be some moment during the execution of
-  # #traverse_sequences when arrow +a+ is pointing to <tt>A[ii]</tt> and
-  # arrow +b+ is pointing to <tt>B[jj]</tt>. When this happens,
+  # #traverse_sequences when arrow +a+ is pointing to <tt>A[i]</tt> and
+  # arrow +b+ is pointing to <tt>B[j]</tt>. When this happens,
   # #traverse_sequences will call <tt>callbacks#match</tt> and then it will
   # advance both arrows.
   #
@@ -546,12 +546,12 @@ class << Diff::LCS
   # The methods for <tt>callbacks#match</tt>, <tt>callbacks#discard_a</tt>,
   # <tt>callbacks#discard_b</tt>, and <tt>callbacks#change</tt> are invoked
   # with an event comprising the action ("=", "+", "-", or "!",
-  # respectively), the indicies +ii+ and +jj+, and the elements
-  # <tt>A[ii]</tt> and <tt>B[jj]</tt>. Return values are discarded by
+  # respectively), the indicies +i+ and +j+, and the elements
+  # <tt>A[i]</tt> and <tt>B[j]</tt>. Return values are discarded by
   # #traverse_balanced.
   #
   # === Context
-  # Note that +ii+ and +jj+ may not be the same index position, even if +a+
+  # Note that +i+ and +j+ may not be the same index position, even if +a+
   # and +b+ are considered to be pointing to matching or changed elements.
   def traverse_balanced(seq1, seq2, callbacks = Diff::LCS::BalancedCallbacks)
     matches = Diff::LCS::Internals.lcs(seq1, seq2)

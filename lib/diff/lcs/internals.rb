@@ -9,8 +9,8 @@ class << Diff::LCS::Internals
   # that
   #
   #     result = Diff::LCS::Internals.lcs(a, b)
-  #     result.each_with_index do |e, ii|
-  #       assert_equal(a[ii], b[e]) unless e.nil?
+  #     result.each_with_index do |e, i|
+  #       assert_equal(a[i], b[e]) unless e.nil?
   #     end
   def lcs(a, b)
     a_start = b_start = 0
@@ -37,22 +37,22 @@ class << Diff::LCS::Internals
     end
 
     # Now, compute the equivalence classes of positions of elements.
-    b_matches = position_hash(b, b_start .. b_finish)
+    b_matches = position_hash(b, b_start..b_finish)
 
     thresh = []
     links = []
 
-    (a_start .. a_finish).each do |ii|
-      ai = a.kind_of?(String) ? a[ii, 1] : a[ii]
+    (a_start .. a_finish).each do |i|
+      ai = a.kind_of?(String) ? a[i, 1] : a[i]
       bm = b_matches[ai]
-      kk = nil
-      bm.reverse_each do |jj|
-        if kk and (thresh[kk] > jj) and (thresh[kk - 1] < jj)
-          thresh[kk] = jj
+      k = nil
+      bm.reverse_each do |j|
+        if k and (thresh[k] > j) and (thresh[k - 1] < j)
+          thresh[k] = j
         else
-          kk = replace_next_larger(thresh, jj, kk)
+          k = replace_next_larger(thresh, j, k)
         end
-        links[kk] = [ (kk > 0) ? links[kk - 1] : nil, ii, jj ] unless kk.nil?
+        links[k] = [ (k > 0) ? links[k - 1] : nil, i, j ] unless k.nil?
       end
     end
 
@@ -259,16 +259,16 @@ class << Diff::LCS::Internals
     last_index ||= enum.size
     first_index = 0
     while (first_index <= last_index)
-      ii = (first_index + last_index) >> 1
+      i = (first_index + last_index) >> 1
 
-      found = enum[ii]
+      found = enum[i]
 
       if value == found
         return nil
       elsif value > found
-        first_index = ii + 1
+        first_index = i + 1
       else
-        last_index = ii - 1
+        last_index = i - 1
       end
     end
 
@@ -284,8 +284,8 @@ class << Diff::LCS::Internals
   # onto the collection. (Currently unused.)
   def inverse_vector(a, vector)
     inverse = a.dup
-    (0...vector.size).each do |ii|
-      inverse[vector[ii]] = ii unless vector[ii].nil?
+    (0...vector.size).each do |i|
+      inverse[vector[i]] = i unless vector[i].nil?
     end
     inverse
   end
@@ -294,11 +294,11 @@ class << Diff::LCS::Internals
   # Returns a hash mapping each element of an Enumerable to the set of
   # positions it occupies in the Enumerable, optionally restricted to the
   # elements specified in the range of indexes specified by +interval+.
-  def position_hash(enum, interval = 0 .. -1)
-    hash = Hash.new { |hh, kk| hh[kk] = [] }
-    interval.each do |ii|
-      kk = enum.kind_of?(String) ? enum[ii, 1] : enum[ii]
-      hash[kk] << ii
+  def position_hash(enum, interval)
+    hash = Hash.new { |h, k| h[k] = [] }
+    interval.each do |i|
+      k = enum.kind_of?(String) ? enum[i, 1] : enum[i]
+      hash[k] << i
     end
     hash
   end
