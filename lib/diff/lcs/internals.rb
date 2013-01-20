@@ -133,7 +133,9 @@ class << Diff::LCS::Internals
     end
 
     def inspect
-        "#{count}: L#{left_match}:#{left_miss} R#{right_match}:#{right_miss}"
+      l = "L#{left_match}:#{left_miss} (#{(left_match == 0) && left_miss > 0})"
+      r = "R#{right_match}:#{right_miss} (#{(right_match == 0) && right_miss > 0})"
+      "#{l} #{r}"
     end
   end
 
@@ -147,48 +149,48 @@ class << Diff::LCS::Internals
   #
   # Note: This will be deprecated as a public function in a future release.
   def diff_direction(src, patchset, limit = nil)
-    ddc = DiffDirectionCounter.new
-    right_match = right_miss = 0
+    fwd_ddc = DiffDirectionCounter.new
+
     string = src.kind_of?(String)
+    count = 0
 
     patchset.each do |change|
-      ddc.count!
+      count += 1
 
       case change
       when Diff::LCS::ContextChange
+        le = string ? src[change.old_position, 1] : src[change.old_position]
+        re = string ? src[change.new_position, 1] : src[change.new_position]
+
         case change.action
         when '-' # Remove details from the old string
-          element = string ? src[change.old_position, 1] : src[change.old_position]
-
-          if element == change.old_element
-            ddc.left_match!
+          if le == change.old_element
+            fwd_ddc.left_match!
           else
-            ddc.left_miss!
+            fwd_ddc.left_miss!
+          end
+
+          if re == change.old_element
+          else
           end
         when '+'
-          element = string ? src[change.new_position, 1] : src[change.new_position]
-          if element == change.new_element
-            ddc.right_match!
+          if re == change.new_element
+            fwd_ddc.right_match!
           else
-            ddc.right_miss!
+            fwd_ddc.right_miss!
           end
         when '='
-          le = string ? src[change.old_position, 1] : src[change.old_position]
-          re = string ? src[change.new_position, 1] : src[change.new_position]
-
-          ddc.left_miss! if le != change.old_element
-          ddc.right_miss! if re != change.new_element
+          fwd_ddc.left_miss! if le != change.old_element
+          fwd_ddc.right_miss! if re != change.new_element
         when '!'
-          element = string ? src[change.old_position, 1] : src[change.old_position]
-          if element == change.old_element
-            ddc.left_match!
+          if le == change.old_element
+            fwd_ddc.left_match!
           else
-            element = string ? src[change.new_position, 1] : src[change.new_position]
-            if element == change.new_element
-              ddc.right_match!
+            if re == change.new_element
+              fwd_ddc.right_match!
             else
-              ddc.left_miss!
-              ddc.right_miss!
+              fwd_ddc.left_miss!
+              fwd_ddc.right_miss!
             end
           end
         end
@@ -201,42 +203,44 @@ class << Diff::LCS::Internals
         case change.action
         when '-'
           if element == change.element
-            ddc.left_match!
+            fwd_ddc.left_match!
           else
-            ddc.left_miss!
+            fwd_ddc.left_miss!
           end
         when '+'
           if element == change.element
-            ddc.right_match!
+            fwd_ddc.right_match!
           else
-            ddc.right_miss!
+            fwd_ddc.right_miss!
           end
         when '='
           if element != change.element
-            ddc.left_miss!
-            ddc.right_miss!
+            fwd_ddc.left_miss!
+            fwd_ddc.right_miss!
           end
         end
       end
 
-      break if (not limit.nil?) && (ddc.count > limit)
+      break if (not limit.nil?) && (count > limit)
     end
 
-    if ddc.left_match.zero?
-    end
+    fwd_no_left = (fwd_ddc.left_match == 0) && (fwd_ddc.left_miss > 0)
+    fwd_no_right = (fwd_ddc.right_match == 0) && (fwd_ddc.right_miss > 0)
 
-    no_left = (ddc.left_match.zero?) && (ddc.left_miss >= 0)
-    no_right = (ddc.right_match.zero?) && (ddc.right_miss >= 0)
-
-    p ddc, no_left, no_right
-
-    case [no_left, no_right]
+    case [fwd_no_left, fwd_no_right]
     when [false, true]
       :patch
     when [true, false]
       :unpatch
     else
-      raise "The provided patchset does not appear to apply to the provided value as either source or destination value."
+      case fwd_ddc.left_match <=> fwd_ddc.right_match
+      when 1
+        :patch
+      when -1
+        :unpatch
+      else
+        raise "The provided patchset does not appear to apply to the provided value as either source or destination value."
+      end
     end
   end
 

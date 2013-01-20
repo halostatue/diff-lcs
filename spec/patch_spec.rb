@@ -189,13 +189,13 @@ describe "Diff::LCS.patch" do
         @patch_set_s2_s1 = Diff::LCS.diff(@s2, @s1)
       end
 
-      it "should autodiscover s1 to s2 patches", :broken => true do
+      it "should autodiscover s1 to s2 patches" do
         expect do
           Diff::LCS.patch(@s1, @patch_set_s1_s2).should == @s2
         end.to_not raise_error(RuntimeError, /provided patchset/)
       end
 
-      it "should autodiscover s2 to s1 patches", :broken => true do
+      it "should autodiscover s2 to s1 patches" do
         expect do
           Diff::LCS.patch(@s1, @patch_set_s2_s1).should == @s2
         end.to_not raise_error(RuntimeError, /provided patchset/)
@@ -227,13 +227,13 @@ describe "Diff::LCS.patch" do
         @patch_set_s2_s1 = Diff::LCS.diff(@s2, @s1, Diff::LCS::ContextDiffCallbacks)
       end
 
-      it "should autodiscover s1 to s2 patches", :broken => true do
+      it "should autodiscover s1 to s2 patches" do
         expect do
           Diff::LCS.patch(@s1, @patch_set_s1_s2).should == @s2
         end.to_not raise_error(RuntimeError, /provided patchset/)
       end
 
-      it "should autodiscover s2 to s1 patches", :broken => true do
+      it "should autodiscover s2 to s1 patches" do
         expect do
           Diff::LCS.patch(@s1, @patch_set_s2_s1).should == @s2
         end.to_not raise_error(RuntimeError, /provided patchset/)
@@ -265,13 +265,13 @@ describe "Diff::LCS.patch" do
         @patch_set_s2_s1 = Diff::LCS.diff(@s2, @s1, Diff::LCS::SDiffCallbacks)
       end
 
-      it "should autodiscover s1 to s2 patches", :broken => true do
+      it "should autodiscover s1 to s2 patches" do
         expect do
           Diff::LCS.patch(@s1, @patch_set_s1_s2).should == @s2
         end.to_not raise_error(RuntimeError, /provided patchset/)
       end
 
-      it "should autodiscover s2 to s1 patches", :broken => true do
+      it "should autodiscover s2 to s1 patches" do
         expect do
           Diff::LCS.patch(@s1, @patch_set_s2_s1).should == @s2
         end.to_not raise_error(RuntimeError, /provided patchset/)
@@ -303,13 +303,13 @@ describe "Diff::LCS.patch" do
         @patch_set_s2_s1 = Diff::LCS.sdiff(@s2, @s1)
       end
 
-      it "should autodiscover s1 to s2 patches", :broken => true do
+      it "should autodiscover s1 to s2 patches" do
         expect do
           Diff::LCS.patch(@s1, @patch_set_s1_s2).should == @s2
         end.to_not raise_error(RuntimeError, /provided patchset/)
       end
 
-      it "should autodiscover s2 to s1 patches", :broken => true do
+      it "should autodiscover s2 to s1 patches" do
         expect do
           Diff::LCS.patch(@s1, @patch_set_s2_s1).should == @s2
         end.to_not raise_error(RuntimeError, /provided patchset/)
@@ -341,13 +341,13 @@ describe "Diff::LCS.patch" do
         @patch_set_s2_s1 = Diff::LCS.sdiff(@s2, @s1, Diff::LCS::ContextDiffCallbacks)
       end
 
-      it "should autodiscover s1 to s2 patches", :broken => true do
+      it "should autodiscover s1 to s2 patches" do
         expect do
           Diff::LCS.patch(@s1, @patch_set_s1_s2).should == @s2
         end.to_not raise_error(RuntimeError, /provided patchset/)
       end
 
-      it "should autodiscover s2 to s1 patches", :broken => true do
+      it "should autodiscover s2 to s1 patches" do
         expect do
           Diff::LCS.patch(@s1, @patch_set_s2_s1).should == @s2
         end.to_not raise_error(RuntimeError, /provided patchset/)
@@ -379,13 +379,14 @@ describe "Diff::LCS.patch" do
         @patch_set_s2_s1 = Diff::LCS.sdiff(@s2, @s1, Diff::LCS::DiffCallbacks)
       end
 
-      it "should autodiscover s1 to s2 patches", :broken => true do
+      it "should autodiscover s1 to s2 patches" do
         expect do
           Diff::LCS.patch(@s1, @patch_set_s1_s2).should == @s2
         end.to_not raise_error(RuntimeError, /provided patchset/)
       end
 
-      it "should autodiscover s2 to s1 patches", :broken => true do
+      it "should autodiscover s2 to s1 patches" do
+p @s2, @s1, @patch_set_s2_s1
         expect do
           Diff::LCS.patch(@s1, @patch_set_s2_s1).should == @s2
         end.to_not raise_error(RuntimeError, /provided patchset/)
