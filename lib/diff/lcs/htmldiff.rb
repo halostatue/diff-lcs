@@ -147,5 +147,3 @@ h1 { margin-left: 2em; }
     OUTPUT
   end
 end
-
-# vim: ft=ruby

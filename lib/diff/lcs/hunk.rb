@@ -1,13 +1,15 @@
+# -*- ruby encoding: utf-8 -*-
+
 require 'diff/lcs/block'
 
-  # A Hunk is a group of Blocks which overlap because of the context
-  # surrounding each block. (So if we're not using context, every hunk will
-  # contain one block.) Used in the diff program (bin/diff).
+# A Hunk is a group of Blocks which overlap because of the context
+# surrounding each block. (So if we're not using context, every hunk will
+# contain one block.) Used in the diff program (bin/diff).
 class Diff::LCS::Hunk
-    # Create a hunk using references to both the old and new data, as well as
-    # the piece of data
-  def initialize(data_old, data_new, piece, context, file_length_difference)
-      # At first, a hunk will have just one Block in it
+  # Create a hunk using references to both the old and new data, as well as
+  # the piece of data.
+  def initialize(data_old, data_new, piece, flag_context, file_length_difference)
+    # At first, a hunk will have just one Block in it
     @blocks = [ Diff::LCS::Block.new(piece) ]
     @data_old = data_old
     @data_new = data_new
@@ -16,10 +18,10 @@ class Diff::LCS::Hunk
     after += @blocks[0].diff_size
     @file_length_difference = after # The caller must get this manually
 
-      # Save the start & end of each array. If the array doesn't exist
-      # (e.g., we're only adding items in this block), then figure out the
-      # line number based on the line number of the other file and the
-      # current difference in file lengths.
+    # Save the start & end of each array. If the array doesn't exist (e.g.,
+    # we're only adding items in this block), then figure out the line
+    # number based on the line number of the other file and the current
+    # difference in file lengths.
     if @blocks[0].remove.empty?
       a1 = a2 = nil
     else
@@ -39,7 +41,7 @@ class Diff::LCS::Hunk
     @end_old   = a2 || (b2 - after)
     @end_new   = b2 || (a2 + after)
 
-    self.flag_context = context
+    self.flag_context = flag_context
   end
 
   attr_reader :blocks
@@ -47,10 +49,10 @@ class Diff::LCS::Hunk
   attr_reader :end_old, :end_new
   attr_reader :file_length_difference
 
-    # Change the "start" and "end" fields to note that context should be added
-    # to this hunk
+  # Change the "start" and "end" fields to note that context should be added
+  # to this hunk.
   attr_accessor :flag_context
-  undef :flag_context=
+  undef :flag_context=;
   def flag_context=(context) #:nodoc:
     return if context.nil? or context.zero?
 
@@ -67,22 +69,28 @@ class Diff::LCS::Hunk
     @end_new += add_end
   end
 
-  def unshift(hunk)
-    @start_old = hunk.start_old
-    @start_new = hunk.start_new
-    blocks.unshift(*hunk.blocks)
+  # Merges this hunk and the provided hunk together if they overlap. Returns
+  # a truthy value so that if there is no overlap, you can know the merge
+  # was skipped.
+  def merge(hunk)
+    if overlaps?(hunk)
+      @start_old = hunk.start_old
+      @start_new = hunk.start_new
+      blocks.unshift(*hunk.blocks)
+    else
+      nil
+    end
   end
 
-    # Is there an overlap between hunk arg0 and old hunk arg1? Note: if end
-    # of old hunk is one less than beginning of second, they overlap
-  def overlaps?(hunk = nil)
-    return nil if hunk.nil?
-
-    a = (@start_old - hunk.end_old) <= 1
-    b = (@start_new - hunk.end_new) <= 1
-    return (a or b)
+  # Determines whether there is an overlap between this hunk and the
+  # provided hunk. This will be true if the difference between the two hunks
+  # start or end positions is within one position of each other.
+  def overlaps?(hunk)
+    hunk and (((@start_old - hunk.end_old) <= 1) or
+              ((@start_new - hunk.end_new) <= 1))
   end
 
+  # Returns a diff string based on a format.
   def diff(format)
     case format
     when :old
@@ -100,44 +108,40 @@ class Diff::LCS::Hunk
     end
   end
 
-  def each_old(block)
-    @data_old[@start_old .. @end_old].each { |e| yield e }
-  end
-
-  private
-    # Note that an old diff can't have any context. Therefore, we know that
-    # there's only one block in the hunk.
+  # Note that an old diff can't have any context. Therefore, we know that
+  # there's only one block in the hunk.
   def old_diff
     warn "Expecting only one block in an old diff hunk!" if @blocks.size > 1
     op_act = { "+" => 'a', "-" => 'd', "!" => "c" }
 
     block = @blocks[0]
 
-      # Calculate item number range. Old diff range is just like a context
-      # diff range, except the ranges are on one line with the action between
-      # them.
+    # Calculate item number range. Old diff range is just like a context
+    # diff range, except the ranges are on one line with the action between
+    # them.
     s = "#{context_range(:old)}#{op_act[block.op]}#{context_range(:new)}\n"
-      # If removing anything, just print out all the remove lines in the hunk
-      # which is just all the remove lines in the block.
+    # If removing anything, just print out all the remove lines in the hunk
+    # which is just all the remove lines in the block.
     @data_old[@start_old .. @end_old].each { |e| s << "< #{e}\n" } unless block.remove.empty?
     s << "---\n" if block.op == "!"
     @data_new[@start_new .. @end_new].each { |e| s << "> #{e}\n" } unless block.insert.empty?
     s
   end
+  private :old_diff
 
   def unified_diff
-      # Calculate item number range.
+    # Calculate item number range.
     s = "@@ -#{unified_range(:old)} +#{unified_range(:new)} @@\n"
 
-      # Outlist starts containing the hunk of the old file. Removing an item
-      # just means putting a '-' in front of it. Inserting an item requires
-      # getting it from the new file and splicing it in. We splice in
-      # +num_added+ items. Remove blocks use +num_added+ because splicing
-      # changed the length of outlist.
-      #
-      # We remove +num_removed+ items. Insert blocks use +num_removed+
-      # because their item numbers -- corresponding to positions in the NEW
-      # file -- don't take removed items into account.
+    # Outlist starts containing the hunk of the old file. Removing an item
+    # just means putting a '-' in front of it. Inserting an item requires
+    # getting it from the new file and splicing it in. We splice in
+    # +num_added+ items. Remove blocks use +num_added+ because splicing
+    # changed the length of outlist.
+    #
+    # We remove +num_removed+ items. Insert blocks use +num_removed+
+    # because their item numbers -- corresponding to positions in the NEW
+    # file -- don't take removed items into account.
     lo, hi, num_added, num_removed = @start_old, @end_old, 0, 0
 
     outlist = @data_old[lo .. hi].collect { |e| e.gsub(/^/, ' ') }
@@ -159,14 +163,15 @@ class Diff::LCS::Hunk
 
     s << outlist.join("\n")
   end
+  private :unified_diff
 
   def context_diff
     s = "***************\n"
     s << "*** #{context_range(:old)} ****\n"
     r = context_range(:new)
 
-      # Print out file 1 part for each block in context diff format if there
-      # are any blocks that remove items
+    # Print out file 1 part for each block in context diff format if there
+    # are any blocks that remove items
     lo, hi = @start_old, @end_old
     removes = @blocks.select { |e| not e.remove.empty? }
     if removes
@@ -193,6 +198,7 @@ class Diff::LCS::Hunk
     end
     s
   end
+  private :context_diff
 
   def ed_diff(format)
     op_act = { "+" => 'a', "-" => 'd', "!" => "c" }
@@ -210,9 +216,10 @@ class Diff::LCS::Hunk
     end
     s
   end
+  private :ed_diff
 
-    # Generate a range of item numbers to print. Only print 1 number if the
-    # range has only one item in it. Otherwise, it's 'start,end'
+  # Generate a range of item numbers to print. Only print 1 number if the
+  # range has only one item in it. Otherwise, it's 'start,end'
   def context_range(mode)
     case mode
     when :old
@@ -223,10 +230,11 @@ class Diff::LCS::Hunk
 
     (s < e) ? "#{s},#{e}" : "#{e}"
   end
+  private :context_range
 
-    # Generate a range of item numbers to print for unified diff. Print
-    # number where block starts, followed by number of lines in the block
-    # (don't print number of lines if it's 1)
+  # Generate a range of item numbers to print for unified diff. Print number
+  # where block starts, followed by number of lines in the block
+  # (don't print number of lines if it's 1)
   def unified_range(mode)
     case mode
     when :old
@@ -239,4 +247,5 @@ class Diff::LCS::Hunk
     first = (length < 2) ? e : s # "strange, but correct"
     (length == 1) ? "#{first}" : "#{first},#{length}"
   end
+  private :unified_range
 end

@@ -1,5 +1,4 @@
 # -*- ruby encoding: utf-8 -*-
-# Provides Diff::LCS::Change and Diff::LCS::ContextChange.
 
 # Represents a simplistic (non-contextual) change. Represents the removal or
 # addition of an element from either the old or the new sequenced
@@ -33,7 +32,7 @@ class Diff::LCS::Change
   end
 
   def inspect
-    %Q(#<#{self.class.name}:#{__id__.to_s(16)} @action=#{action} position=#{position} element=#{element.inspect})
+    to_a.inspect
   end
 
   def to_a
@@ -131,7 +130,7 @@ class Diff::LCS::ContextChange < Diff::LCS::Change
   end
 
   def inspect(*args)
-    %Q(#<#{self.class.name}:#{__id__} @action=#{action} positions=#{old_position},#{new_position} elements=#{old_element.inspect},#{new_element.inspect}>)
+    to_a.inspect
   end
 
   def self.from_a(arr)
