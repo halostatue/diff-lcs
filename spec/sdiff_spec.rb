@@ -200,5 +200,3 @@ describe "Diff::LCS.sdiff" do
     it_has_behavior "compare sequences correctly"
   end
 end
-
-# vim: ft=ruby

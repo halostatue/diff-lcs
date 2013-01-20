@@ -63,5 +63,3 @@ describe Diff::LCS::Change do
     it { should     be_finished_b }
   end
 end
-
-# vim: ft=ruby

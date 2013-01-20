@@ -137,5 +137,3 @@ describe "Diff::LCS.traverse_sequences" do
     end
   end
 end
-
-# vim: ft=ruby

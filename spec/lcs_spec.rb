@@ -52,5 +52,3 @@ describe "Diff::LCS.LCS" do
     Diff::LCS.LCS(hello_ary, hello_ary).should == hello_ary
   end
 end
-
-# vim: ft=ruby

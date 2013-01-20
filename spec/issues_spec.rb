@@ -19,5 +19,3 @@ describe "Diff::LCS Issues" do
     end.to_not raise_error(RuntimeError, /provided patchset/)
   end
 end
-
-# vim: ft=ruby

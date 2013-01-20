@@ -287,8 +287,4 @@ RSpec.configure do |conf|
   conf.include Diff::LCS::SpecHelper
   conf.alias_it_should_behave_like_to :it_has_behavior, 'has behavior:'
   conf.filter_run_excluding :broken => true
-# conf.filter_run_including :broken => true
-# conf.filter_run_including :only => true
 end
-
-# vim: ft=ruby

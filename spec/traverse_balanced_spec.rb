@@ -308,5 +308,3 @@ describe "Diff::LCS.traverse_balanced" do
     it_has_behavior "without a #change callback", s1, s2, result
   end
 end
-
-# vim: ft=ruby

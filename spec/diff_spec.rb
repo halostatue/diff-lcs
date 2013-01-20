@@ -39,5 +39,3 @@ describe "Diff::LCS.diff" do
     Diff::LCS.diff(hello_ary, hello_ary).should == []
   end
 end
-
-# vim: ft=ruby

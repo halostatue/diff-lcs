@@ -412,5 +412,3 @@ describe "Diff::LCS.patch" do
     end
   end
 end
-
-# vim: ft=ruby
