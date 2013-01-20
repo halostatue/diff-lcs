@@ -386,7 +386,6 @@ describe "Diff::LCS.patch" do
       end
 
       it "should autodiscover s2 to s1 patches" do
-p @s2, @s1, @patch_set_s2_s1
         expect do
           Diff::LCS.patch(@s1, @patch_set_s2_s1).should == @s2
         end.to_not raise_error(RuntimeError, /provided patchset/)
