@@ -171,28 +171,49 @@ module Diff::LCS
                       Diff::LCS.YieldingCallbacks, &block)
   end
 
-  # Attempts to patch a copy of +self+ with the provided +patchset+. See
-  # Diff::LCS#patch.
+  # Attempts to patch +self+ with the provided +patchset+. A new sequence
+  # based on +self+ and the +patchset+ will be created. See Diff::LCS#patch.
+  # Attempts to autodiscover the direction of the patch.
   def patch(patchset)
-    Diff::LCS.patch(self.dup, patchset)
+    Diff::LCS.patch(self, patchset)
   end
+  alias_method :unpatch, :patch
 
-  # Attempts to unpatch a copy of +self+ with the provided +patchset+. See
-  # Diff::LCS#patch.
-  def unpatch(patchset)
-    Diff::LCS.unpatch(self.dup, patchset)
-  end
-
-  # Attempts to patch +self+ with the provided +patchset+. See
-  # Diff::LCS#patch!. Does no autodiscovery.
+  # Attempts to patch +self+ with the provided +patchset+. A new sequence
+  # based on +self+ and the +patchset+ will be created. See Diff::LCS#patch.
+  # Does no patch direction autodiscovery.
   def patch!(patchset)
     Diff::LCS.patch!(self, patchset)
   end
 
-  # Attempts to unpatch +self+ with the provided +patchset+. See
-  # Diff::LCS#unpatch. Does no autodiscovery.
+  # Attempts to unpatch +self+ with the provided +patchset+. A new sequence
+  # based on +self+ and the +patchset+ will be created. See Diff::LCS#unpatch.
+  # Does no patch direction autodiscovery.
   def unpatch!(patchset)
     Diff::LCS.unpatch!(self, patchset)
+  end
+
+  # Attempts to patch +self+ with the provided +patchset+, using #patch!. If
+  # the sequence this is used on supports #replace, the value of +self+ will
+  # be replaced. See Diff::LCS#patch. Does no patch direction autodiscovery.
+  def patch_me(patchset)
+    if respond_to? :replace
+      replace(patch!(patchset))
+    else
+      patch!(patchset)
+    end
+  end
+
+  # Attempts to unpatch +self+ with the provided +patchset+, using
+  # #unpatch!. If the sequence this is used on supports #replace, the value
+  # of +self+ will be replaced. See Diff::LCS#unpatch. Does no patch direction
+  # autodiscovery.
+  def unpatch_me(patchset)
+    if respond_to? :replace
+      replace(unpatch!(patchset))
+    else
+      unpatch!(patchset)
+    end
   end
 end
 
@@ -662,7 +683,7 @@ class << Diff::LCS
   }
 
   # Applies a +patchset+ to the sequence +src+ according to the +direction+
-  # (<tt>:patch</tt> or <tt>:unpatch</tt>).
+  # (<tt>:patch</tt> or <tt>:unpatch</tt>), producing a new sequence.
   #
   # If the +direction+ is not specified, Diff::LCS::patch will attempt to
   # discover the direction of the +patchset+.
@@ -685,6 +706,7 @@ class << Diff::LCS
   #       patchset.flatten.all? { |change| change.unchanged? }
   #
   # === Patchsets
+  #
   # A +patchset+ is always an enumerable sequence of changes, hunks of
   # changes, or a mix of the two. A hunk of changes is an enumerable
   # sequence of changes:
