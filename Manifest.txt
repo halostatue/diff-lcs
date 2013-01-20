@@ -1,8 +1,11 @@
+.autotest
+.rspec
 History.rdoc
 License.rdoc
 Manifest.txt
 README.rdoc
 Rakefile
+autotest/discover.rb
 bin/htmldiff
 bin/ldiff
 diff-lcs.gemspec
@@ -16,9 +19,12 @@ lib/diff/lcs/callbacks.rb
 lib/diff/lcs/change.rb
 lib/diff/lcs/htmldiff.rb
 lib/diff/lcs/hunk.rb
+lib/diff/lcs/internals.rb
 lib/diff/lcs/ldiff.rb
 lib/diff/lcs/string.rb
+spec/change_spec.rb
 spec/diff_spec.rb
+spec/issues_spec.rb
 spec/lcs_spec.rb
 spec/patch_spec.rb
 spec/sdiff_spec.rb
