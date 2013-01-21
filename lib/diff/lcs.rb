@@ -221,7 +221,7 @@ class << Diff::LCS
   def lcs(seq1, seq2, &block) #:yields seq1[i] for each matched:
     matches = Diff::LCS::Internals.lcs(seq1, seq2)
     ret = []
-    string = seq.kind_of? String
+    string = seq1.kind_of? String
     matches.each_with_index do |e, i|
       unless matches[i].nil?
         v = string ? seq1[i, 1] : seq1[i]
