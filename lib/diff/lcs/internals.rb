@@ -1,5 +1,31 @@
 # -*- ruby encoding: utf-8 -*-
 
+class << Diff::LCS
+  def diff_traversal(method, seq1, seq2, callbacks, &block)
+    callbacks = callbacks_for(callbacks)
+    case method
+    when :diff
+      traverse_sequences(seq1, seq2, callbacks)
+    when :sdiff
+      traverse_balanced(seq1, seq2, callbacks)
+    end
+    callbacks.finish if callbacks.respond_to? :finish
+
+    if block
+      callbacks.diffs.map do |hunk|
+        if hunk.kind_of? Array
+          hunk.map { |hunk_block| block[hunk_block] }
+        else
+          block[hunk]
+        end
+      end
+    else
+      callbacks.diffs
+    end
+  end
+  private :diff_traversal
+end
+
 module Diff::LCS::Internals # :nodoc:
 end
 
@@ -117,7 +143,7 @@ class << Diff::LCS::Internals
   # of one of the above.
   #
   # Note: This will be deprecated as a public function in a future release.
-  def diff_direction(src, patchset, limit = nil)
+  def intuit_diff_direction(src, patchset, limit = nil)
     string = src.kind_of?(String)
     count = left_match = left_miss = right_match = right_miss = 0
 

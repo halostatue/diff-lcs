@@ -244,26 +244,8 @@ class << Diff::LCS
   # initialise it. If the +callbacks+ object (possibly initialised) responds
   # to #finish, it will be called.
   def diff(seq1, seq2, callbacks = nil, &block) # :yields diff changes:
-    callbacks ||= Diff::LCS::DiffCallbacks
-    if callbacks.kind_of?(Class)
-      cb = callbacks.new rescue callbacks
-      callbacks = cb
-    end
-    traverse_sequences(seq1, seq2, callbacks)
-    callbacks.finish if callbacks.respond_to?(:finish)
-
-    if block_given?
-      res = callbacks.diffs.map do |hunk|
-        if hunk.kind_of?(Array)
-          hunk = hunk.map { |hunk_block| yield hunk_block }
-        else
-          yield hunk
-        end
-      end
-      res
-    else
-      callbacks.diffs
-    end
+    diff_traversal(:diff, seq1, seq2, callbacks || Diff::LCS::DiffCallbacks,
+                   &block)
   end
 
   # #sdiff computes all necessary components to show two sequences and their
@@ -281,26 +263,8 @@ class << Diff::LCS
   # initialise it. If the +callbacks+ object (possibly initialised) responds
   # to #finish, it will be called.
   def sdiff(seq1, seq2, callbacks = nil, &block) #:yields diff changes:
-    callbacks ||= Diff::LCS::SDiffCallbacks
-    if callbacks.kind_of?(Class)
-      cb = callbacks.new rescue callbacks
-      callbacks = cb
-    end
-    traverse_balanced(seq1, seq2, callbacks)
-    callbacks.finish if callbacks.respond_to?(:finish)
-
-    if block_given?
-      res = callbacks.diffs.map do |hunk|
-        if hunk.kind_of?(Array)
-          hunk = hunk.map { |hunk_block| yield hunk_block }
-        else
-          yield hunk
-        end
-      end
-      res
-    else
-      callbacks.diffs
-    end
+    diff_traversal(:sdiff, seq1, seq2, callbacks || Diff::LCS::SDiffCallbacks,
+                   &block)
   end
 
   # #traverse_sequences is the most general facility provided by this
@@ -385,6 +349,7 @@ class << Diff::LCS
   # sequence is reached, if +a+ has not yet reached the end of +A+ or +b+
   # has not yet reached the end of +B+.
   def traverse_sequences(seq1, seq2, callbacks = Diff::LCS::SequenceCallbacks, &block) #:yields change events:
+    callbacks ||= Diff::LCS::SequenceCallbacks
     matches = Diff::LCS::Internals.lcs(seq1, seq2)
 
     run_finished_a = run_finished_b = false
@@ -735,7 +700,7 @@ class << Diff::LCS
     # Start with a new empty type of the source's class
     res = src.class.new
 
-    direction ||= Diff::LCS::Internals.diff_direction(src, patchset)
+    direction ||= Diff::LCS::Internals.intuit_diff_direction(src, patchset)
 
     ai = bj = 0
 

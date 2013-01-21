@@ -45,6 +45,10 @@ module Diff::LCS
   #
   #     Diff::LCS.LCS(seq1, seq2, Diff::LCS::BalancedCallbacks)
   BalancedCallbacks = DefaultCallbacks
+
+  def self.callbacks_for(callbacks)
+    callbacks.new rescue callbacks
+  end
 end
 
 # This will produce a compound array of simple diff change objects. Each
