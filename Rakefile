@@ -5,7 +5,6 @@ require 'rspec'
 require 'hoe'
 
 Hoe.plugin :bundler
-Hoe.plugin :deveiate
 Hoe.plugin :doofus
 Hoe.plugin :gemspec
 Hoe.plugin :git
