@@ -1,5 +1,7 @@
 .autotest
 .rspec
+.travis.yml
+Gemfile
 History.rdoc
 License.rdoc
 Manifest.txt

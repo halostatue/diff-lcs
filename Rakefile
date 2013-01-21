@@ -22,4 +22,8 @@ Hoe.spec 'diff-lcs' do
   self.extra_dev_deps << ['rake', '~> 10.0']
 end
 
+unless Rake::Task.task_defined? :test
+  task :test => :spec
+end
+
 # vim: syntax=ruby
