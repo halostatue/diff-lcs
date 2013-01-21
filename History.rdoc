@@ -1,8 +1,9 @@
-== 1.2.0 / 2013-01-20
+== 1.2.0 / 2013-01-21
 * Minor Enhancements:
   * Added special case handling for Diff::LCS.patch so that it handles patches
     that are empty or contain no changes.
-  * Added two new methods (#patch_me and #unpatch_me) to the includable module.
+  * Added two new methods (#patch\_me and #unpatch\_me) to the includable
+    module.
 * Bugs Fixed:
   * Fixed issue #1 patch direction detection.
     https://github.com/halostatue/diff-lcs/issues/1
@@ -18,9 +19,9 @@
     #unpatch! where they implied that they would replace the original value.
     Given that Diff::LCS.patch always returns a copy, the documentation was
     incorrect and has been corrected. To provide the behaviour that was
-    originally documented, two new methods (#patch_me and #unpatch_me) were
-    added to provide this behaviour. Found by scooter-dangle in issue #12.
-    Thanks! https://github.com/halostatue/diff-lcs/issues/12
+    originally documented, two new methods were added to provide this
+    behaviour. Found by scooter-dangle in issue #12. Thanks!
+    https://github.com/halostatue/diff-lcs/issues/12
 * Code Style Changes:
   * Removed trailing spaces.
   * Calling class methods using '.' instead of '::'.
@@ -71,7 +72,7 @@
   exist already. Removed the existing batch files as they didn't work.
 
 == 1.0.3 / -
-* Fixed a problem with #traverse_sequences where the first difference from the
+* Fixed a problem with #traverse\_sequences where the first difference from the
   left sequence might not be appropriately captured.
 
 == 1.0.2 / -

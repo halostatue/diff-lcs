@@ -110,7 +110,7 @@ module Diff; end unless defined? Diff
 # Mark-Jason Dominus.
 #
 # == Licence
-# Copyright &copy; 2004&ndash;2102 Austin Ziegler
+# Copyright &copy; 2004&ndash;2013 Austin Ziegler
 # This program is free software; you can redistribute it and/or modify it
 # under the same terms as Ruby, or alternatively under the Perl Artistic
 # licence.
