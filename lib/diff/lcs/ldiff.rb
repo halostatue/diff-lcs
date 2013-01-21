@@ -123,19 +123,19 @@ class << Diff::LCS::Ldiff
 
       # Test binary status
       if @binary.nil?
-        old_txt = data_old[0...4096].grep(/\0/).empty?
-        new_txt = data_new[0...4096].grep(/\0/).empty?
+        old_txt = data_old[0...4096].scan(/\0/).empty?
+        new_txt = data_new[0...4096].scan(/\0/).empty?
         @binary = (not old_txt) or (not new_txt)
         old_txt = new_txt = nil
       end
 
       unless @binary
-        data_old = data_old.split(/\n/).map! { |e| e.chomp }
-        data_new = data_new.split(/\n/).map! { |e| e.chomp }
+        data_old = data_old.split($/).map { |e| e.chomp }
+        data_new = data_new.split($/).map { |e| e.chomp }
       end
     else
-      data_old = IO::readlines(file_old).map! { |e| e.chomp }
-      data_new = IO::readlines(file_new).map! { |e| e.chomp }
+      data_old = IO::readlines(file_old).map { |e| e.chomp }
+      data_new = IO::readlines(file_new).map { |e| e.chomp }
     end
 
     # diff yields lots of pieces, each of which is basically a Block object
@@ -154,9 +154,9 @@ class << Diff::LCS::Ldiff
     end
 
     if (@format == :unified) or (@format == :context)
-      ft = File.stat(file_old).mtime.localtime.strftime('%Y-%m-%d %H:%M:%S %z')
+      ft = File.stat(file_old).mtime.localtime.strftime('%Y-%m-%d %H:%M:%S.%N %z')
       puts "#{char_old} #{file_old}\t#{ft}"
-      ft = File.stat(file_new).mtime.localtime.strftime('%Y-%m-%d %H:%M:%S %z')
+      ft = File.stat(file_new).mtime.localtime.strftime('%Y-%m-%d %H:%M:%S.%N %z')
       puts "#{char_new} #{file_new}\t#{ft}"
     end
 
@@ -178,15 +178,13 @@ class << Diff::LCS::Ldiff
         next unless oldhunk
         next if (@lines > 0) and hunk.merge(oldhunk)
 
-        output << oldhunk.diff(@format)
+        output << oldhunk.diff(@format) << "\n"
       ensure
         oldhunk = hunk
-        output << "\n"
       end
     end
 
-    output << oldhunk.diff(@format)
-    output << "\n"
+    output << oldhunk.diff(@format) << "\n"
 
     if @format == :ed
       output.reverse_each { |e| real_output << e.diff(:ed_finish) }
