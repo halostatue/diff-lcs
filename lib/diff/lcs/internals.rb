@@ -19,18 +19,16 @@ class << Diff::LCS::Internals
     vector = []
 
     # Prune off any common elements at the beginning...
-    while (a_start <= a_finish) and
-      (b_start <= b_finish) and
-      (a[a_start] == b[b_start])
+    while ((a_start <= a_finish) and (b_start <= b_finish) and
+           (a[a_start] == b[b_start]))
       vector[a_start] = b_start
       a_start += 1
-      b_start += 1
     end
+    b_start = a_start
 
     # Now the end...
-    while (a_start <= a_finish) and
-      (b_start <= b_finish) and
-      (a[a_finish] == b[b_finish])
+    while ((a_start <= a_finish) and (b_start <= b_finish) and
+           (a[a_finish] == b[b_finish]))
       vector[a_finish] = b_finish
       a_finish -= 1
       b_finish -= 1
@@ -40,10 +38,11 @@ class << Diff::LCS::Internals
     b_matches = position_hash(b, b_start..b_finish)
 
     thresh = []
-    links = []
+    links  = []
+    string = a.kind_of?(String)
 
     (a_start .. a_finish).each do |i|
-      ai = a.kind_of?(String) ? a[i, 1] : a[i]
+      ai = string ? a[i, 1] : a[i]
       bm = b_matches[ai]
       k = nil
       bm.reverse_each do |j|
@@ -109,36 +108,6 @@ class << Diff::LCS::Internals
     [ has_changes, patchset.flatten(1) ]
   end
 
-  class DiffDirectionCounter
-    attr_reader :count, :left_match, :left_miss, :right_match, :right_miss
-
-    def initialize
-      @count = @left_match = @left_miss = @right_match = @right_miss = 0
-    end
-
-    def count!
-      @count += 1
-    end
-    def left_match!
-      @left_match += 1
-    end
-    def left_miss!
-      @left_miss += 1
-    end
-    def right_match!
-      @right_match += 1
-    end
-    def right_miss!
-      @right_miss += 1
-    end
-
-    def inspect
-      l = "L#{left_match}:#{left_miss} (#{(left_match == 0) && left_miss > 0})"
-      r = "R#{right_match}:#{right_miss} (#{(right_match == 0) && right_miss > 0})"
-      "#{l} #{r}"
-    end
-  end
-
   # Examine the patchset and the source to see in which direction the
   # patch should be applied.
   #
@@ -149,10 +118,8 @@ class << Diff::LCS::Internals
   #
   # Note: This will be deprecated as a public function in a future release.
   def diff_direction(src, patchset, limit = nil)
-    fwd_ddc = DiffDirectionCounter.new
-
     string = src.kind_of?(String)
-    count = 0
+    count = left_match = left_miss = right_match = right_miss = 0
 
     patchset.each do |change|
       count += 1
@@ -165,32 +132,28 @@ class << Diff::LCS::Internals
         case change.action
         when '-' # Remove details from the old string
           if le == change.old_element
-            fwd_ddc.left_match!
+            left_match += 1
           else
-            fwd_ddc.left_miss!
-          end
-
-          if re == change.old_element
-          else
+            left_miss += 1
           end
         when '+'
           if re == change.new_element
-            fwd_ddc.right_match!
+            right_match += 1
           else
-            fwd_ddc.right_miss!
+            right_miss += 1
           end
         when '='
-          fwd_ddc.left_miss! if le != change.old_element
-          fwd_ddc.right_miss! if re != change.new_element
+          left_miss += 1 if le != change.old_element
+          right_miss += 1 if re != change.new_element
         when '!'
           if le == change.old_element
-            fwd_ddc.left_match!
+            left_match += 1
           else
             if re == change.new_element
-              fwd_ddc.right_match!
+              right_match += 1
             else
-              fwd_ddc.left_miss!
-              fwd_ddc.right_miss!
+              left_miss += 1
+              right_miss += 1
             end
           end
         end
@@ -203,20 +166,20 @@ class << Diff::LCS::Internals
         case change.action
         when '-'
           if element == change.element
-            fwd_ddc.left_match!
+            left_match += 1
           else
-            fwd_ddc.left_miss!
+            left_miss += 1
           end
         when '+'
           if element == change.element
-            fwd_ddc.right_match!
+            right_match += 1
           else
-            fwd_ddc.right_miss!
+            right_miss += 1
           end
         when '='
           if element != change.element
-            fwd_ddc.left_miss!
-            fwd_ddc.right_miss!
+            left_miss += 1
+            right_miss += 1
           end
         end
       end
@@ -224,16 +187,16 @@ class << Diff::LCS::Internals
       break if (not limit.nil?) && (count > limit)
     end
 
-    fwd_no_left = (fwd_ddc.left_match == 0) && (fwd_ddc.left_miss > 0)
-    fwd_no_right = (fwd_ddc.right_match == 0) && (fwd_ddc.right_miss > 0)
+    no_left = (left_match == 0) && (left_miss > 0)
+    no_right = (right_match == 0) && (right_miss > 0)
 
-    case [fwd_no_left, fwd_no_right]
+    case [no_left, no_right]
     when [false, true]
       :patch
     when [true, false]
       :unpatch
     else
-      case fwd_ddc.left_match <=> fwd_ddc.right_match
+      case left_match <=> right_match
       when 1
         :patch
       when -1
@@ -299,9 +262,10 @@ class << Diff::LCS::Internals
   # positions it occupies in the Enumerable, optionally restricted to the
   # elements specified in the range of indexes specified by +interval+.
   def position_hash(enum, interval)
+    string = enum.kind_of?(String)
     hash = Hash.new { |h, k| h[k] = [] }
     interval.each do |i|
-      k = enum.kind_of?(String) ? enum[i, 1] : enum[i]
+      k = string ? enum[i, 1] : enum[i]
       hash[k] << i
     end
     hash
