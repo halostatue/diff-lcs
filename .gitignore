@@ -13,3 +13,4 @@ coverage.info
 .DS_Store
 website/index.html
 research/
+.source_index

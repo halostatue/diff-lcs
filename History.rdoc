@@ -1,6 +1,4 @@
 == 1.2.0 / 2013-01-20
-* This is being released as version 1.2 because of the feature changes and
-  internal migration.
 * Minor Enhancements:
   * Added special case handling for Diff::LCS.patch so that it handles patches
     that are empty or contain no changes.
@@ -14,7 +12,7 @@
     and added specs in pull request #8. Thanks!
     https://github.com/halostatue/diff-lcs/issues/8
   * Made the code auto-testable.
-  * Vit Ondruch (voxik) provided the latest version of the GPL2 license file in
+  * Vít Ondruch (voxik) provided the latest version of the GPL2 license file in
     pull request #10. Thanks! https://github.com/halostatue/diff-lcs/issues/10
   * Fixed a documentation issue with the includable versions of #patch! and
     #unpatch! where they implied that they would replace the original value.
@@ -26,13 +24,14 @@
 * Code Style Changes:
   * Removed trailing spaces.
   * Calling class methods using '.' instead of '::'.
-  * Vit Ondruch (voxik) removed unnecessary shebangs in pull request #9.
+  * Vít Ondruch (voxik) removed unnecessary shebangs in pull request #9.
     Thanks! https://github.com/halostatue/diff-lcs/issues/9
   * Kenichi Kamiya (kachick) removed some warnings of an unused variable in
     lucky pull request #13. https://github.com/halostatue/diff-lcs/issues/13
     Thanks!
   * Embarked on a major refactoring to make the files a little more manageable
     and understand the code on a deeper level.
+  * Adding to http://travis-ci.org.
 
 == 1.1.3 / 2011-08-27
 * Converted to 'hoe' for release.

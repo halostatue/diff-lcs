@@ -1,29 +1,18 @@
-= diff-lcs
+= Diff::LCS
+
+home  :: http://diff-lcs.rubyforge.org/
+code  :: https://github.com/halostatue/diff-lcs
+bugs  :: https://github.com/halostatue/diff-lcs/issues
+rdoc  :: http://rubydoc.info/github/halostatue/diff-lcs
 
 == Description
-Diff::LCS is a port of Perl's Algorithm::Diff that uses the McIlroy-Hunt
-longest common subsequence (LCS) algorithm to compute intelligent differences
-between two sequenced enumerable containers. The implementation is based on
-Mario I. Wolczko's {Smalltalk version 1.2}[ftp://st.cs.uiuc.edu/pub/Smalltalk/MANCHESTER/manchester/4.0/diff.st]
-(1993) and Ned Konz's Perl version
-{Algorithm::Diff 1.15}[http://search.cpan.org/~nedkonz/Algorithm-Diff-1.15/].
 
-This is release 1.1.3, fixing several small bugs found over the years. Version
-1.1.0 added new features, including the ability to #patch and #unpatch changes
-as well as a new contextual diff callback, Diff::LCS::ContextDiffCallbacks,
-that should improve the context sensitivity of patching.
+Diff::LCS computes the difference between two Enumerable sequences using the
+McIlroy-Hunt longest common subsequence (LCS) algorithm. It includes utilities
+to create a simple HTML diff output format and a standard diff-like tool.
 
-This library is called Diff::LCS because of an early version of Algorithm::Diff
-which was restrictively licensed. This version has seen a minor license change:
-instead of being under Ruby's license as an option, the third optional license
-is the MIT license.
-
-== Where
-
-* {GitHub}[https://github.com/halostatue/diff-lcs]
-
-This is the new home of Diff::LCS (diff-lcs). The Ruwiki page still refers to
-it, but development is not happening there any longer.
+This is release 1.2. Everyone is strongly encouraged to upgrade to this version
+as it fixes all known outstanding issues.
 
 == Synopsis
 
@@ -64,9 +53,45 @@ extended for use this way.
 
 Note that Diff::LCS requires a sequenced enumerable container, which means that
 the order of enumeration is both predictable and consistent for the same set of
-data. While it is theoretically possible to generate a diff for unordereded
+data. While it is theoretically possible to generate a diff for an unordered
 hash, it will only be meaningful if the enumeration of the hashes is
 consistent. In general, this will mean that containers that behave like String
 or Array will perform best.
+
+== History
+
+Diff::LCS is a port of Perl's Algorithm::Diff that uses the McIlroy-Hunt
+longest common subsequence (LCS) algorithm to compute intelligent differences
+between two sequenced enumerable containers. The implementation is based on
+Mario I. Wolczko's {Smalltalk version 1.2}[ftp://st.cs.uiuc.edu/pub/Smalltalk/MANCHESTER/manchester/4.0/diff.st]
+(1993) and Ned Konz's Perl version
+{Algorithm::Diff 1.15}[http://search.cpan.org/~nedkonz/Algorithm-Diff-1.15/].
+
+This library is called Diff::LCS because of an early version of Algorithm::Diff
+which was restrictively licensed.
+
+== Continuous Integration Status
+
+{<img src="https://travis-ci.org/halostatue/diff-lcs.png" />}[https://travis-ci.org/halostatue/diff-lcs]
+
+== Contributing
+
+If you'd like to hack on Diff::LCS, start by forking the repo on GitHub:
+
+https://github.com/halostatue/diff-lcs
+
+The best way to get your changes merged back into core is as follows:
+
+1. Clone down your fork.
+2. Create a thoughtfully named topic branch to contain your change.
+3. Hack away.
+4. Add tests and make sure everything still passes by running rake.
+5. If you are adding new functionality, document it in the README.
+6. Do not change the version number, we will do that on our end.
+7. If necessary, rebase your commits into logical chunks, without errors.
+8. Push the branch up to GitHub.
+9. Send a pull request for your branch
+
+:include: Contributing.rdoc
 
 :include: License.rdoc

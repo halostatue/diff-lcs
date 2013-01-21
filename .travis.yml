@@ -6,8 +6,7 @@ before_script:
 - rake travis:before -t
 language: ruby
 notifications:
-  email:
-  - austin@rubyforge.org
+  email: false
 rvm:
   - 1.9.3
   - 1.9.2

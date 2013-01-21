@@ -1,6 +1,7 @@
 .autotest
 .rspec
 .travis.yml
+Contributing.rdoc
 Gemfile
 History.rdoc
 License.rdoc
@@ -12,7 +13,7 @@ bin/htmldiff
 bin/ldiff
 diff-lcs.gemspec
 docs/COPYING.txt
-docs/artistic.html
+docs/artistic.txt
 lib/diff-lcs.rb
 lib/diff/lcs.rb
 lib/diff/lcs/array.rb
