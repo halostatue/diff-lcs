@@ -1,3 +1,4 @@
+Gemfile.lock
 spec/ldap.yml
 .rvmrc
 pkg/

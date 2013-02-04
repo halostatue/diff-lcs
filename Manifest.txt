@@ -1,4 +1,5 @@
 .autotest
+.gemtest
 .rspec
 .travis.yml
 Contributing.rdoc

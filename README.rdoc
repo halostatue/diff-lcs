@@ -74,24 +74,6 @@ which was restrictively licensed.
 
 {<img src="https://travis-ci.org/halostatue/diff-lcs.png" />}[https://travis-ci.org/halostatue/diff-lcs]
 
-== Contributing
-
-If you'd like to hack on Diff::LCS, start by forking the repo on GitHub:
-
-https://github.com/halostatue/diff-lcs
-
-The best way to get your changes merged back into core is as follows:
-
-1. Clone down your fork.
-2. Create a thoughtfully named topic branch to contain your change.
-3. Hack away.
-4. Add tests and make sure everything still passes by running rake.
-5. If you are adding new functionality, document it in the README.
-6. Do not change the version number, we will do that on our end.
-7. If necessary, rebase your commits into logical chunks, without errors.
-8. Push the branch up to GitHub.
-9. Send a pull request for your branch
-
 :include: Contributing.rdoc
 
 :include: License.rdoc
