@@ -2,12 +2,12 @@
 
 Gem::Specification.new do |s|
   s.name = "diff-lcs"
-  s.version = "1.2.0"
+  s.version = "1.2.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Austin Ziegler"]
-  s.date = "2013-02-04"
-  s.description = "Diff::LCS computes the difference between two Enumerable sequences using the\nMcIlroy-Hunt longest common subsequence (LCS) algorithm. It includes utilities\nto create a simple HTML diff output format and a standard diff-like tool.\n\nThis is release 1.2. Everyone is strongly encouraged to upgrade to this version\nas it fixes all known outstanding issues."
+  s.date = "2013-02-09"
+  s.description = "Diff::LCS computes the difference between two Enumerable sequences using the\nMcIlroy-Hunt longest common subsequence (LCS) algorithm. It includes utilities\nto create a simple HTML diff output format and a standard diff-like tool.\n\nThis is release 1.2.1, restoring the public API to what existed in Diff::LCS\n1.1.x. Everyone is strongly encouraged to upgrade to this version as it fixes\nall known outstanding issues."
   s.email = ["austin@rubyforge.org"]
   s.executables = ["htmldiff", "ldiff"]
   s.extra_rdoc_files = ["Contributing.rdoc", "History.rdoc", "License.rdoc", "Manifest.txt", "README.rdoc", "docs/COPYING.txt", "docs/artistic.txt", "Contributing.rdoc", "History.rdoc", "License.rdoc", "README.rdoc"]
