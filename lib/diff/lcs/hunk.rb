@@ -81,6 +81,7 @@ class Diff::LCS::Hunk
       nil
     end
   end
+  alias_method :unshift, :merge
 
   # Determines whether there is an overlap between this hunk and the
   # provided hunk. This will be true if the difference between the two hunks
