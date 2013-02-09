@@ -1,3 +1,16 @@
+== 1.2.1 / 2013-02-09
+
+* Bugs Fixed:
+  * As seen in https://github.com/rspec/rspec-expectations/pull/200, the
+    release of Diff::LCS 1.2 introduced an unnecessary public API change to
+    Diff::LCS::Hunk (see the change at
+    https://github.com/rspec/rspec-expectations/commit/3d6fc82c for details).
+    The new method name (and behaviour) is more correct, but I should not have
+    renamed the function or should have at least provided an alias. This
+    release restores Diff::LCS::Hunk#unshift as an alias to
+    #merge. Note that the old #unshift behaviour was incorrect and will not be
+    restored.
+
 == 1.2.0 / 2013-01-21
 * Minor Enhancements:
   * Added special case handling for Diff::LCS.patch so that it handles patches
