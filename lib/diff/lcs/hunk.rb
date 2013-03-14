@@ -120,19 +120,19 @@ class Diff::LCS::Hunk
     # Calculate item number range. Old diff range is just like a context
     # diff range, except the ranges are on one line with the action between
     # them.
-    s = "#{context_range(:old)}#{op_act[block.op]}#{context_range(:new)}\n"
+    s = encode("#{context_range(:old)}#{op_act[block.op]}#{context_range(:new)}\n")
     # If removing anything, just print out all the remove lines in the hunk
     # which is just all the remove lines in the block.
-    @data_old[@start_old .. @end_old].each { |e| s << "< #{e}\n" } unless block.remove.empty?
-    s << "---\n" if block.op == "!"
-    @data_new[@start_new .. @end_new].each { |e| s << "> #{e}\n" } unless block.insert.empty?
+    @data_old[@start_old .. @end_old].each { |e| s << encode("< ")+e+encode("\n") } unless block.remove.empty?
+    s << encode("---\n") if block.op == "!"
+    @data_new[@start_new .. @end_new].each { |e| s << encode("> ")+e+encode("\n") } unless block.insert.empty?
     s
   end
   private :old_diff
 
   def unified_diff
     # Calculate item number range.
-    s = "@@ -#{unified_range(:old)} +#{unified_range(:new)} @@\n"
+    s = encode("@@ -#{unified_range(:old)} +#{unified_range(:new)} @@\n")
 
     # Outlist starts containing the hunk of the old file. Removing an item
     # just means putting a '-' in front of it. Inserting an item requires
@@ -145,30 +145,30 @@ class Diff::LCS::Hunk
     # file -- don't take removed items into account.
     lo, hi, num_added, num_removed = @start_old, @end_old, 0, 0
 
-    outlist = @data_old[lo .. hi].collect { |e| e.gsub(/^/, ' ') }
+    outlist = @data_old[lo .. hi].collect { |e| match_encoding_gsub(e,'^', ' ') }
 
     @blocks.each do |block|
       block.remove.each do |item|
         op = item.action.to_s # -
         offset = item.position - lo + num_added
-        outlist[offset].gsub!(/^ /, op.to_s)
+        match_encoding_gsub!(outlist[offset],'^ ', op.to_s)
         num_removed += 1
       end
       block.insert.each do |item|
         op = item.action.to_s # +
         offset = item.position - @start_new + num_removed
-        outlist[offset, 0] = "#{op}#{@data_new[item.position]}"
+        outlist[offset, 0] = encode(op)+@data_new[item.position]
         num_added += 1
       end
     end
 
-    s << outlist.join("\n")
+    s << outlist.join(encode("\n"))
   end
   private :unified_diff
 
   def context_diff
-    s = "***************\n"
-    s << "*** #{context_range(:old)} ****\n"
+    s = encode("***************\n")
+    s << encode("*** #{context_range(:old)} ****\n")
     r = context_range(:new)
 
     # Print out file 1 part for each block in context diff format if there
@@ -176,23 +176,23 @@ class Diff::LCS::Hunk
     lo, hi = @start_old, @end_old
     removes = @blocks.select { |e| not e.remove.empty? }
     if removes
-      outlist = @data_old[lo .. hi].collect { |e| e.gsub(/^/, '  ') }
+      outlist = @data_old[lo .. hi].collect { |e| match_encoding_gsub(e,'^', ' ') }
       removes.each do |block|
         block.remove.each do |item|
-          outlist[item.position - lo].gsub!(/^ /) { block.op } # - or !
+          match_encoding_gsub!( outlist[item.position - lo], '^ ') { block.op } # - or !
         end
       end
       s << outlist.join("\n")
     end
 
-    s << "\n--- #{r} ----\n"
+    s << encode("\n--- #{r} ----\n")
     lo, hi = @start_new, @end_new
     inserts = @blocks.select { |e| not e.insert.empty? }
     if inserts
-      outlist = @data_new[lo .. hi].collect { |e| e.gsub(/^/, '  ') }
+      outlist = @data_new[lo .. hi].collect { |e| match_encoding_gsub(e,'^', '  ') }
       inserts.each do |block|
         block.insert.each do |item|
-          outlist[item.position - lo].gsub!(/^ /) { block.op } # + or !
+          match_encoding_gsub!( outlist[item.position - lo], '^ ') { block.op } # + or !
         end
       end
       s << outlist.join("\n")
@@ -206,14 +206,14 @@ class Diff::LCS::Hunk
     warn "Expecting only one block in an old diff hunk!" if @blocks.size > 1
 
     if format == :reverse_ed
-      s = "#{op_act[@blocks[0].op]}#{context_range(:old)}\n"
+      s = encode("#{op_act[@blocks[0].op]}#{context_range(:old)}\n")
     else
-      s = "#{context_range(:old).gsub(/,/, ' ')}#{op_act[@blocks[0].op]}\n"
+      s = encode("#{match_encoding_gsub(context_range(:old), ',', ' ')}#{op_act[@blocks[0].op]}\n")
     end
 
     unless @blocks[0].insert.empty?
-      @data_new[@start_new .. @end_new].each { |e| s << "#{e}\n" }
-      s << ".\n"
+      @data_new[@start_new .. @end_new].each { |e| s << e+encode("\n") }
+      s << encode(".\n")
     end
     s
   end
@@ -249,4 +249,23 @@ class Diff::LCS::Hunk
     (length == 1) ? "#{first}" : "#{first},#{length}"
   end
   private :unified_range
+
+  def encode(literal)
+    literal.encode @data_old[0].encoding
+  end
+  def encode_to(string, args)
+    args.map { |arg| arg.encode(string.encoding) }
+  end
+  private :encode_to
+
+  def match_encoding_gsub(string, *args, &block)
+    string.gsub( *encode_to(string,args), &block )
+  end
+  private :match_encoding_gsub
+
+  def match_encoding_gsub!(string, *args, &block)
+    string.gsub!( *encode_to(string,args), &block )
+  end
+  private :match_encoding_gsub!
+
 end
