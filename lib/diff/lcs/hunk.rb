@@ -11,6 +11,7 @@ class Diff::LCS::Hunk
   def initialize(data_old, data_new, piece, flag_context, file_length_difference)
     # At first, a hunk will have just one Block in it
     @blocks = [ Diff::LCS::Block.new(piece) ]
+    @preferred_data_encoding = data_old[0].encoding if String.method_defined?(:encoding)
     @data_old = data_old
     @data_new = data_new
 
@@ -252,7 +253,7 @@ class Diff::LCS::Hunk
 
   if String.method_defined?(:encoding)
     def encode(literal)
-      literal.encode @data_old[0].encoding
+      literal.encode @preferred_data_encoding
     end
 
     def encode_to(string, args)
