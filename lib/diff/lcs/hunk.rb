@@ -123,9 +123,9 @@ class Diff::LCS::Hunk
     s = encode("#{context_range(:old)}#{op_act[block.op]}#{context_range(:new)}\n")
     # If removing anything, just print out all the remove lines in the hunk
     # which is just all the remove lines in the block.
-    @data_old[@start_old .. @end_old].each { |e| s << encode("< ")+e+encode("\n") } unless block.remove.empty?
+    @data_old[@start_old .. @end_old].each { |e| s << encode("< ") + e + encode("\n") } unless block.remove.empty?
     s << encode("---\n") if block.op == "!"
-    @data_new[@start_new .. @end_new].each { |e| s << encode("> ")+e+encode("\n") } unless block.insert.empty?
+    @data_new[@start_new .. @end_new].each { |e| s << encode("> ") + e + encode("\n") } unless block.insert.empty?
     s
   end
   private :old_diff
@@ -157,7 +157,7 @@ class Diff::LCS::Hunk
       block.insert.each do |item|
         op = item.action.to_s # +
         offset = item.position - @start_new + num_removed
-        outlist[offset, 0] = encode(op)+@data_new[item.position]
+        outlist[offset, 0] = encode(op) + @data_new[item.position]
         num_added += 1
       end
     end
@@ -212,7 +212,7 @@ class Diff::LCS::Hunk
     end
 
     unless @blocks[0].insert.empty?
-      @data_new[@start_new .. @end_new].each { |e| s << e+encode("\n") }
+      @data_new[@start_new .. @end_new].each { |e| s << e + encode("\n") }
       s << encode(".\n")
     end
     s
@@ -253,18 +253,20 @@ class Diff::LCS::Hunk
   def encode(literal)
     literal.encode @data_old[0].encoding
   end
+  private :encode
+
   def encode_to(string, args)
     args.map { |arg| arg.encode(string.encoding) }
   end
   private :encode_to
 
   def match_encoding_gsub(string, *args, &block)
-    string.gsub( *encode_to(string,args), &block )
+    string.gsub(*encode_to(string,args), &block)
   end
   private :match_encoding_gsub
 
   def match_encoding_gsub!(string, *args, &block)
-    string.gsub!( *encode_to(string,args), &block )
+    string.gsub!(*encode_to(string,args), &block)
   end
   private :match_encoding_gsub!
 
