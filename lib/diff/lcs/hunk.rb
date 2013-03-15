@@ -250,14 +250,24 @@ class Diff::LCS::Hunk
   end
   private :unified_range
 
-  def encode(literal)
-    literal.encode @data_old[0].encoding
-  end
-  private :encode
+  if String.method_defined?(:encoding)
+    def encode(literal)
+      literal.encode @data_old[0].encoding
+    end
 
-  def encode_to(string, args)
-    args.map { |arg| arg.encode(string.encoding) }
+    def encode_to(string, args)
+      args.map { |arg| arg.encode(string.encoding) }
+    end
+  else
+    def encode(literal)
+      literal
+    end
+    def encode_to(string, args)
+      args
+    end
   end
+
+  private :encode
   private :encode_to
 
   def match_encoding_gsub(string, *args, &block)
