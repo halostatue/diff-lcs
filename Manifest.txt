@@ -29,6 +29,7 @@ lib/diff/lcs/ldiff.rb
 lib/diff/lcs/string.rb
 spec/change_spec.rb
 spec/diff_spec.rb
+spec/hunk_spec.rb
 spec/issues_spec.rb
 spec/lcs_spec.rb
 spec/patch_spec.rb
