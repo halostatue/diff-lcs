@@ -11,7 +11,9 @@ class Diff::LCS::Hunk
   def initialize(data_old, data_new, piece, flag_context, file_length_difference)
     # At first, a hunk will have just one Block in it
     @blocks = [ Diff::LCS::Block.new(piece) ]
-    @preferred_data_encoding = data_old[0].encoding if String.method_defined?(:encoding)
+    if String.method_defined?(:encoding)
+      @preferred_data_encoding = data_old[0].encoding
+    end
     @data_old = data_old
     @data_new = data_new
 
@@ -146,17 +148,17 @@ class Diff::LCS::Hunk
     # file -- don't take removed items into account.
     lo, hi, num_added, num_removed = @start_old, @end_old, 0, 0
 
-    outlist = @data_old[lo .. hi].collect { |e| match_encoding_gsub(e,'^', ' ') }
+    outlist = @data_old[lo .. hi].map { |e| e.insert(0, encode(' ')) }
 
     @blocks.each do |block|
       block.remove.each do |item|
-        op = item.action.to_s # -
+        op     = item.action.to_s # -
         offset = item.position - lo + num_added
-        match_encoding_gsub!(outlist[offset],'^ ', op.to_s)
+        outlist[offset][0, 1] = encode(op)
         num_removed += 1
       end
       block.insert.each do |item|
-        op = item.action.to_s # +
+        op     = item.action.to_s # +
         offset = item.position - @start_new + num_removed
         outlist[offset, 0] = encode(op) + @data_new[item.position]
         num_added += 1
@@ -177,10 +179,11 @@ class Diff::LCS::Hunk
     lo, hi = @start_old, @end_old
     removes = @blocks.select { |e| not e.remove.empty? }
     if removes
-      outlist = @data_old[lo .. hi].collect { |e| match_encoding_gsub(e,'^', ' ') }
+      outlist = @data_old[lo .. hi].map { |e| e.insert(0, encode(' ')) }
+
       removes.each do |block|
         block.remove.each do |item|
-          match_encoding_gsub!( outlist[item.position - lo], '^ ') { block.op } # - or !
+          outlist[item.position - lo][0, 1] = encode(block.op) # - or !
         end
       end
       s << outlist.join("\n")
@@ -190,10 +193,10 @@ class Diff::LCS::Hunk
     lo, hi = @start_new, @end_new
     inserts = @blocks.select { |e| not e.insert.empty? }
     if inserts
-      outlist = @data_new[lo .. hi].collect { |e| match_encoding_gsub(e,'^', '  ') }
+      outlist = @data_new[lo .. hi].collect { |e| e.insert(0, encode(' ')) }
       inserts.each do |block|
         block.insert.each do |item|
-          match_encoding_gsub!( outlist[item.position - lo], '^ ') { block.op } # + or !
+          outlist[item.position - lo][0, 1] = encode(block.op) # + or !
         end
       end
       s << outlist.join("\n")
@@ -209,7 +212,7 @@ class Diff::LCS::Hunk
     if format == :reverse_ed
       s = encode("#{op_act[@blocks[0].op]}#{context_range(:old)}\n")
     else
-      s = encode("#{match_encoding_gsub(context_range(:old), ',', ' ')}#{op_act[@blocks[0].op]}\n")
+      s = encode("#{context_range(:old, ' ')}#{op_act[@blocks[0].op]}\n")
     end
 
     unless @blocks[0].insert.empty?
@@ -222,7 +225,7 @@ class Diff::LCS::Hunk
 
   # Generate a range of item numbers to print. Only print 1 number if the
   # range has only one item in it. Otherwise, it's 'start,end'
-  def context_range(mode)
+  def context_range(mode, op = ',')
     case mode
     when :old
       s, e = (@start_old + 1), (@end_old + 1)
@@ -230,7 +233,7 @@ class Diff::LCS::Hunk
       s, e = (@start_new + 1), (@end_new + 1)
     end
 
-    (s < e) ? "#{s},#{e}" : "#{e}"
+    (s < e) ? "#{s}#{op}#{e}" : "#{e}"
   end
   private :context_range
 
@@ -252,33 +255,22 @@ class Diff::LCS::Hunk
   private :unified_range
 
   if String.method_defined?(:encoding)
-    def encode(literal)
-      literal.encode @preferred_data_encoding
+    def encode(literal, target_encoding = @preferred_data_encoding)
+      literal.encode target_encoding
     end
 
-    def encode_to(string, args)
+    def encode_as(string, *args)
       args.map { |arg| arg.encode(string.encoding) }
     end
   else
-    def encode(literal)
+    def encode(literal, target_encoding = nil)
       literal
     end
-    def encode_to(string, args)
+    def encode_as(string, *args)
       args
     end
   end
 
   private :encode
-  private :encode_to
-
-  def match_encoding_gsub(string, *args, &block)
-    string.gsub(*encode_to(string,args), &block)
-  end
-  private :match_encoding_gsub
-
-  def match_encoding_gsub!(string, *args, &block)
-    string.gsub!(*encode_to(string,args), &block)
-  end
-  private :match_encoding_gsub!
-
+  private :encode_as
 end

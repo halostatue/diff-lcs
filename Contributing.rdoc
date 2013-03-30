@@ -61,3 +61,4 @@ Thanks to everyone else who has contributed to Diff::LCS:
 * Kenichi Kamiya
 * Michael Granger
 * Vít Ondruch
+* Jon Rowe
