@@ -59,5 +59,19 @@ Tu avec carte {count} item has
 EOD
       expect(hunk.diff(:reverse_ed).to_s == expected).to eql true
     end
+
+    context 'with empty first data set' do
+      let(:old_data) { [] }
+
+      it 'should be able to produce a unified diff' do
+        expected =
+(<<-EOD.encode('UTF-16LE').chomp)
+@@ -1 +1,2 @@
++Tu avec carte {count} item has
+EOD
+        expect(hunk.diff(:unified).to_s == expected).to eql true
+      end
+    end
+
   end
 end
