@@ -12,7 +12,7 @@ class Diff::LCS::Hunk
     # At first, a hunk will have just one Block in it
     @blocks = [ Diff::LCS::Block.new(piece) ]
     if String.method_defined?(:encoding)
-      @preferred_data_encoding = data_old[0].encoding
+      @preferred_data_encoding = data_old.fetch(0, data_new.fetch(0,'') ).encoding
     end
     @data_old = data_old
     @data_new = data_new
