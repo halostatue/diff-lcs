@@ -1,3 +1,21 @@
+== 1.2.3 / 2013-04-11
+
+* Bugs Fixed:
+  * The new encoding detection for diff output generation (added in 1.2.2)
+    introduced a bug if the left side of the comparison was the empty set.
+    Originally found in rspec/rspec-expectations#238 and
+    rspec/rspec-expectations#239. Jon Rowe developed a reasonable heuristic
+    (left side, right side, empty string literal) to avoid this bug.
+    https://github.com/rspec/rspec-expectations/pull/238
+    https://github.com/rspec/rspec-expectations/pull/239
+* There is a known issue with Rubinius in 1.9 mode reported in
+  rubinius/rubinius#2268 and demonstrated in the Travis CI builds. For all
+  other tested platforms, diff-lcs is considered stable. As soon as a suitably
+  small test-case can be created for the Rubinius team to examine, this will be
+  added to the Rubinius issue around this.
+  https://github.com/rubinius/rubinius/issues/2268
+  https://travis-ci.org/halostatue/diff-lcs/jobs/6241195
+
 == 1.2.2 / 2013-03-30
 
 * Bugs Fixed:

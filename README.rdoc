@@ -11,9 +11,16 @@ Diff::LCS computes the difference between two Enumerable sequences using the
 McIlroy-Hunt longest common subsequence (LCS) algorithm. It includes utilities
 to create a simple HTML diff output format and a standard diff-like tool.
 
-This is release 1.2.2, fixing a bug that prevented comparison of values that
-are not US-ASCII-compatible. Thanks to Jon Rowe for finding and providing most
-of the work behind this issue. This is a recommended release.
+This is release 1.2.3, fixing a bug in value comparison where the left side of
+the comparison was the empty set, preventing the detection of encoding. Thanks
+to Jon Rowe for fixing this issue. This is a strongly recommended release.
+
+*Note*: There is a known issue with Rubinius in 1.9 mode reported in
+{rubinius/rubinius#2268}[https://github.com/rubinius/rubinius/issues/2268] and
+demonstrated in the Travis CI builds. For all other tested platforms, diff-lcs
+is considered stable. As soon as a suitably small test-case can be created for
+the Rubinius team to examine, this will be added to the Rubinius issue around
+this.
 
 == Synopsis
 
