@@ -31,6 +31,12 @@ describe "Diff::LCS.diff" do
     change_diff(correct_diff).should == diff
   end
 
+  it "should correctly diff 'xx' and 'xaxb'" do
+    left = 'xx'
+    right = 'xaxb'
+    Diff::LCS.patch(left, Diff::LCS.diff(left, right)).should == right
+  end
+
   it "should return an empty diff with (hello, hello)" do
     Diff::LCS.diff(hello, hello).should == []
   end
