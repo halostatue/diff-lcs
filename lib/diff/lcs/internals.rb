@@ -49,6 +49,7 @@ class << Diff::LCS::Internals
            (a[a_start] == b[b_start]))
       vector[a_start] = b_start
       a_start += 1
+      b_start += 1
     end
     b_start = a_start
 
