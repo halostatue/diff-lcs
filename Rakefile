@@ -7,7 +7,7 @@ require 'hoe'
 Hoe.plugin :bundler
 Hoe.plugin :doofus
 Hoe.plugin :email
-Hoe.plugin :gemspec
+Hoe.plugin :gemspec2
 Hoe.plugin :git
 Hoe.plugin :rubyforge
 Hoe.plugin :travis
@@ -24,7 +24,7 @@ Hoe.spec 'diff-lcs' do
 
   self.extra_dev_deps << ['hoe-bundler', '~> 1.2']
   self.extra_dev_deps << ['hoe-doofus', '~> 1.0']
-  self.extra_dev_deps << ['hoe-gemspec', '~> 1.0']
+  self.extra_dev_deps << ['hoe-gemspec2', '~> 1.1']
   self.extra_dev_deps << ['hoe-git', '~> 1.5']
   self.extra_dev_deps << ['hoe-rubygems', '~> 1.0']
   self.extra_dev_deps << ['hoe-travis', '~> 1.2']
