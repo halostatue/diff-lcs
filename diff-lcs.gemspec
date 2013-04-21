@@ -2,13 +2,13 @@
 
 Gem::Specification.new do |s|
   s.name = "diff-lcs"
-  s.version = "1.2.3"
+  s.version = "1.2.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Austin Ziegler"]
   s.cert_chain = ["/Users/AZiegler/.gem/gem-public_cert.pem"]
-  s.date = "2013-04-20"
-  s.description = "Diff::LCS computes the difference between two Enumerable sequences using the\nMcIlroy-Hunt longest common subsequence (LCS) algorithm. It includes utilities\nto create a simple HTML diff output format and a standard diff-like tool.\n\nThis is release 1.2.3, fixing a bug in value comparison where the left side of\nthe comparison was the empty set, preventing the detection of encoding. Thanks\nto Jon Rowe for fixing this issue. This is a strongly recommended release.\n\n*Note*: There is a known issue with Rubinius in 1.9 mode reported in\n{rubinius/rubinius#2268}[https://github.com/rubinius/rubinius/issues/2268] and\ndemonstrated in the Travis CI builds. For all other tested platforms, diff-lcs\nis considered stable. As soon as a suitably small test-case can be created for\nthe Rubinius team to examine, this will be added to the Rubinius issue around\nthis."
+  s.date = "2013-04-21"
+  s.description = "Diff::LCS computes the difference between two Enumerable sequences using the\nMcIlroy-Hunt longest common subsequence (LCS) algorithm. It includes utilities\nto create a simple HTML diff output format and a standard diff-like tool.\n\nThis is release 1.2.4, fixing a bug introduced after diff-lcs 1.1.3 that did\nnot properly prune common sequences at the beginning of a comparison set.\nThanks to Paul Kunysch for fixing this issue.\n\nCoincident with the release of diff-lcs 1.2.3, we reported an issue with\nRubinius in 1.9 mode\n({rubinius/rubinius#2268}[https://github.com/rubinius/rubinius/issues/2268]).\nWe are happy to report that this issue has been resolved."
   s.email = ["austin@rubyforge.org"]
   s.executables = ["htmldiff", "ldiff"]
   s.extra_rdoc_files = ["Contributing.rdoc", "History.rdoc", "License.rdoc", "Manifest.txt", "README.rdoc", "docs/COPYING.txt", "docs/artistic.txt", "Contributing.rdoc", "History.rdoc", "License.rdoc", "README.rdoc"]

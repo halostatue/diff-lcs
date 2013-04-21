@@ -1,3 +1,14 @@
+=== 1.2.4 / 2013-04-20
+
+* Bugs fixed:
+  * A bug was introduced after 1.1.3 when pruning common sequences at the start
+    of comparison. Paul Kunysch (@pck) fixed this in pull request 18. Thanks!
+    https://github.com/halostatue/diff-lcs/pull/18
+* The Rubinius (1.9 mode) bug in rubinius/rubinius#2268 has been fixed by the
+  Rubinius team two days after it was filed. Thanks for fixing this so quickly!
+  https://github.com/rubinius/rubinius/issues/2268
+* Switching to Raggi's hoe-gemspec2 for gemspec generation.
+
 == 1.2.3 / 2013-04-11
 
 * Bugs Fixed:
