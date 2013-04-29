@@ -148,7 +148,7 @@ class << Diff::LCS::Ldiff
 
     return 0 unless diffs
 
-    if (@format == :report) and diffs
+    if @format == :report
       output << "Files #{file_old} and #{file_new} differ\n"
       return 1
     end
