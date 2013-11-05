@@ -40,7 +40,7 @@ class Diff::LCS::Change
   end
 
   def self.from_a(arr)
-    arr = arr.flatten
+    arr = arr.flatten(1)
     case arr.size
     when 5
       Diff::LCS::ContextChange.new(*(arr[0...5]))
