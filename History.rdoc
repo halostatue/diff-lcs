@@ -1,3 +1,9 @@
+== 1.2.5 / 2013-11-07
+
+* Bugs fixed:
+  * Comparing arrays flattened them too far, especially with Diff::LCS.sdiff.
+    https://github.com/halostatue/diff-lcs/pull/23
+
 == 1.2.4 / 2013-04-20
 
 * Bugs fixed:

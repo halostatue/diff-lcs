@@ -199,4 +199,16 @@ describe "Diff::LCS.sdiff" do
 
     it_has_behavior "compare sequences correctly"
   end
+
+  describe "using [[1,2]] & []" do
+    let(:s1) { [ [ 1, 2 ] ] }
+    let(:s2) { [] }
+    let(:result) {
+      [
+        [ '-', [ 0, [ 1, 2 ] ], [ 0, nil ] ]
+      ]
+    }
+
+    it_has_behavior "compare sequences correctly"
+  end
 end
