@@ -22,6 +22,8 @@ Hoe.spec 'diff-lcs' do
   self.readme_file = 'README.rdoc'
   self.extra_rdoc_files = FileList["*.rdoc"].to_a
 
+  %w(MIT Perl\ Artistic\ v2 GNU\ GPL\ v2).each { |l| self.license l }
+
   self.extra_dev_deps << ['hoe-bundler', '~> 1.2']
   self.extra_dev_deps << ['hoe-doofus', '~> 1.0']
   self.extra_dev_deps << ['hoe-gemspec2', '~> 1.1']
