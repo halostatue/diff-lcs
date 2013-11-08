@@ -15,6 +15,6 @@ gem "hoe-rubygems", "~>1.0", :group => [:development, :test]
 gem "hoe-travis", "~>1.2", :group => [:development, :test]
 gem "rake", "~>10.0", :group => [:development, :test]
 gem "rspec", "~>2.0", :group => [:development, :test]
-gem "hoe", "~>3.6", :group => [:development, :test]
+gem "hoe", "~>3.7", :group => [:development, :test]
 
 # vim: syntax=ruby

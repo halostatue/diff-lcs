@@ -1,4 +1,4 @@
-== 1.2.5 / 2013-11-07
+== 1.2.5 / 2013-11-08
 
 * Bugs fixed:
   * Comparing arrays flattened them too far, especially with Diff::LCS.sdiff.
