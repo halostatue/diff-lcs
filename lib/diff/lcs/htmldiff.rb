@@ -115,8 +115,8 @@ h1 { margin-left: 2em; }
       formatter = Text::Format.new
       formatter.tabstop = @options[:expand_tabs]
 
-      @left = left.map { |line| formatter.expand(line.chomp) }
-      @right = right.map { |line| formatter.expand(line.chomp) }
+      @left.map! { |line| formatter.expand(line.chomp) }
+      @right.map! { |line| formatter.expand(line.chomp) }
     end
 
     @left.map! { |line| CGI.escapeHTML(line.chomp) }
