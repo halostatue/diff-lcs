@@ -11,6 +11,7 @@ pkg/
 .source_index
 Gemfile.lock
 coverage.info
+coverage.vim
 coverage/
 doc/
 html/

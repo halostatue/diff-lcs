@@ -2,6 +2,43 @@
 
 require 'rubygems'
 require 'pathname'
+require 'psych'
+
+if ENV['COVERAGE']
+  require 'simplecov'
+
+  if ENV['COVERALLS']
+    require 'coveralls'
+    formatters = Coveralls::SimpleCov::Formatter
+  else
+    def try_require(resource, &block)
+      require resource
+      block.call
+    rescue LoadError
+      nil
+    end
+
+    formatters = [ SimpleCov::Formatter::HTMLFormatter ]
+
+    try_require('simplecov-rcov') { formatters << SimpleCov::Formatter::RcovFormatter }
+    try_require('simplecov-vim/formatter') {
+      formatters << SimpleCov::Formatter::VimFormatter
+    }
+    try_require('simplecov-sublime-ruby-coverage') {
+      formatters << SimpleCov::Formatter::SublimeRubyCoverageFormatter
+    }
+
+    formatters = if formatters.size == 1
+                   formatters.first
+                 else
+                   SimpleCov::Formatter::MultiFormatter[*formatters]
+                 end
+  end
+
+  SimpleCov.start do
+    formatter formatters
+  end
+end
 
 file   = Pathname.new(__FILE__).expand_path
 path   = file.parent
