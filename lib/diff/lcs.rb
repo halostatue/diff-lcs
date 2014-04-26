@@ -1,8 +1,6 @@
 # -*- ruby encoding: utf-8 -*-
 
 module Diff; end unless defined? Diff
-# = Diff::LCS 1.2.5
-#
 # Computes "intelligent" differences between two sequenced Enumerables. This
 # is an implementation of the McIlroy-Hunt "diff" algorithm for Enumerable
 # objects that include Diffable.
@@ -129,7 +127,7 @@ module Diff; end unless defined? Diff
 # Common Subsequences</em>, CACM, vol.20, no.5, pp.350-353, May
 # 1977, with a few minor improvements to improve the speed."
 module Diff::LCS
-  VERSION = '1.2.5'
+  VERSION = '1.3'
 end
 
 require 'diff/lcs/callbacks'
