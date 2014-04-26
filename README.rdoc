@@ -1,6 +1,6 @@
 = Diff::LCS
 
-home :: http://diff-lcs.rubyforge.org/
+home :: https://github.com/halostatue/diff-lcs
 code :: https://github.com/halostatue/diff-lcs
 bugs :: https://github.com/halostatue/diff-lcs/issues
 rdoc :: http://rubydoc.info/github/halostatue/diff-lcs
