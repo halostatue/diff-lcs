@@ -1,22 +1,35 @@
 ---
-after_script:
-- rake travis:after -t
-before_script:
-- gem install hoe-travis --no-rdoc --no-ri
-- rake travis:before -t
 language: ruby
-notifications:
-  email: true
 rvm:
+  - 2.1.0
   - 2.0.0
   - 1.9.3
   - 1.9.2
   - ruby-head
-  - 1.8.7
   - jruby-19mode
   - jruby-head
+  - rbx
+  - 1.8.7
   - jruby-18mode
-  - rbx-19mode
-  - rbx-18mode
   - ree
+matrix:
+  allow_failures:
+    - rvm: rbx
+gemfile:
+  - Gemfile
+before_script:
+  - |
+    case "${TRAVIS_RUBY_VERSION}" in
+      rbx*)
+        gem install psych
+        gem install -v '~> 2.0' rubysl
+        ;;
+    esac
+  - rake travis:before -t
 script: rake travis
+after_script:
+  - rake travis:after -t
+notifications:
+  email:
+    on_success: change
+    on_failure: always
