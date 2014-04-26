@@ -85,7 +85,7 @@ class << Diff::LCS::Ldiff
         return 0
       end
       o.on_tail('--version', 'Shows the version of Diff::LCS.') do
-        error << BANNER
+        error << Diff::LCS::Ldiff::BANNER
         return 0
       end
       o.on_tail ""
