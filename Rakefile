@@ -39,6 +39,7 @@ end
 
 unless Rake::Task.task_defined? :test
   task :test => :spec
+  Rake::Task['travis'].prerequisites.replace(%w(spec))
 end
 
 if RUBY_VERSION >= '1.9'
@@ -55,7 +56,7 @@ if RUBY_VERSION >= '1.9'
     end
   end
 
-  Rake::Task['travis'].prerequisites.replace(%w(test:coveralls))
+  Rake::Task['travis'].prerequisites.replace(%w(spec:coveralls))
 end
 
 # vim: syntax=ruby
