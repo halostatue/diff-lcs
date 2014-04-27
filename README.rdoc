@@ -4,6 +4,8 @@ home :: https://github.com/halostatue/diff-lcs
 code :: https://github.com/halostatue/diff-lcs
 bugs :: https://github.com/halostatue/diff-lcs/issues
 rdoc :: http://rubydoc.info/github/halostatue/diff-lcs
+continuous integration :: {<img src="https://travis-ci.org/halostatue/diff-lcs.png" />}[https://travis-ci.org/halostatue/diff-lcs]
+test coverage :: {<img src="https://coveralls.io/repos/halostatue/diff-lcs/badge.png" alt="Coverage Status" />}[https://coveralls.io/r/halostatue/diff-lcs]
 
 == Description
 
@@ -75,10 +77,6 @@ Mario I. Wolczko's {Smalltalk version 1.2}[ftp://st.cs.uiuc.edu/pub/Smalltalk/MA
 
 This library is called Diff::LCS because of an early version of Algorithm::Diff
 which was restrictively licensed.
-
-== Continuous Integration Status
-
-{<img src="https://travis-ci.org/halostatue/diff-lcs.png" />}[https://travis-ci.org/halostatue/diff-lcs]
 
 :include: Contributing.rdoc
 
