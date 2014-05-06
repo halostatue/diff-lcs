@@ -296,14 +296,14 @@ module Diff::LCS::SpecHelper
 
     matcher :be_nil_or_match_values do |ii, s1, s2|
       match do |ee|
-        ee.should satisfy { |vee| vee.nil? || s1[ii] == s2[ee] }
+        expect(ee).to(satisfy { |vee| vee.nil? || s1[ii] == s2[ee] })
       end
     end
 
     matcher :correctly_map_sequence do |s1|
       match do |actual|
         actual.each_with_index { |ee, ii|
-          ee.should be_nil_or_match_values(ii, s1, @s2)
+          expect(ee).to be_nil_or_match_values(ii, s1, @s2)
         }
       end
 

@@ -4,6 +4,8 @@
 # addition of an element from either the old or the new sequenced
 # enumerable.
 class Diff::LCS::Change
+  IntClass = 1.class # Fixnum is deprecated in Ruby 2.4
+
   # The only actions valid for changes are '+' (add), '-' (delete), '='
   # (no change), '!' (changed), '<' (tail changes from first sequence), or
   # '>' (tail changes from second sequence). The last two ('<>') are only
@@ -28,7 +30,7 @@ class Diff::LCS::Change
     unless Diff::LCS::Change.valid_action?(@action)
       raise "Invalid Change Action '#{@action}'"
     end
-    raise "Invalid Position Type" unless @position.kind_of? Fixnum
+    raise "Invalid Position Type" unless @position.kind_of? IntClass
   end
 
   def inspect
@@ -115,10 +117,10 @@ class Diff::LCS::ContextChange < Diff::LCS::Change
     unless Diff::LCS::Change.valid_action?(@action)
       raise "Invalid Change Action '#{@action}'"
     end
-    unless @old_position.nil? or @old_position.kind_of? Fixnum
+    unless @old_position.nil? or @old_position.kind_of? IntClass
       raise "Invalid (Old) Position Type"
     end
-    unless @new_position.nil? or @new_position.kind_of? Fixnum
+    unless @new_position.nil? or @new_position.kind_of? IntClass
       raise "Invalid (New) Position Type"
     end
   end

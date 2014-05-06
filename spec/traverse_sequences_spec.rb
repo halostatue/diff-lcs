@@ -13,31 +13,31 @@ describe "Diff::LCS.traverse_sequences" do
         Diff::LCS.traverse_sequences(seq2, seq1, @callback_s2_s1)
       end
 
-      it "should have the correct LCS result on left-matches" do
-        @callback_s1_s2.matched_a.should == correct_lcs
-        @callback_s2_s1.matched_a.should == correct_lcs
+      it "has the correct LCS result on left-matches" do
+        expect(@callback_s1_s2.matched_a).to eq(correct_lcs)
+        expect(@callback_s2_s1.matched_a).to eq(correct_lcs)
       end
 
-      it "should have the correct LCS result on right-matches" do
-        @callback_s1_s2.matched_b.should == correct_lcs
-        @callback_s2_s1.matched_b.should == correct_lcs
+      it "has the correct LCS result on right-matches" do
+        expect(@callback_s1_s2.matched_b).to eq(correct_lcs)
+        expect(@callback_s2_s1.matched_b).to eq(correct_lcs)
       end
 
-      it "should have the correct skipped sequences with the left sequence" do
-        @callback_s1_s2.discards_a.should == skipped_seq1
-        @callback_s2_s1.discards_a.should == skipped_seq2
+      it "has the correct skipped sequences with the left sequence" do
+        expect(@callback_s1_s2.discards_a).to eq(skipped_seq1)
+        expect(@callback_s2_s1.discards_a).to eq(skipped_seq2)
       end
 
-      it "should have the correct skipped sequences with the right sequence" do
-        @callback_s1_s2.discards_b.should == skipped_seq2
-        @callback_s2_s1.discards_b.should == skipped_seq1
+      it "has the correct skipped sequences with the right sequence" do
+        expect(@callback_s1_s2.discards_b).to eq(skipped_seq2)
+        expect(@callback_s2_s1.discards_b).to eq(skipped_seq1)
       end
 
-      it "should not have anything done markers from the left or right sequences" do
-        @callback_s1_s2.done_a.should be_empty
-        @callback_s1_s2.done_b.should be_empty
-        @callback_s2_s1.done_a.should be_empty
-        @callback_s2_s1.done_b.should be_empty
+      it "does not have anything done markers from the left or right sequences" do
+        expect(@callback_s1_s2.done_a).to be_empty
+        expect(@callback_s1_s2.done_b).to be_empty
+        expect(@callback_s2_s1.done_a).to be_empty
+        expect(@callback_s2_s1.done_b).to be_empty
       end
     end
 
@@ -47,25 +47,25 @@ describe "Diff::LCS.traverse_sequences" do
         Diff::LCS.traverse_sequences(hello, hello, @callback)
       end
 
-      it "should have the correct LCS result on left-matches" do
-        @callback.matched_a.should == hello.split(//)
+      it "has the correct LCS result on left-matches" do
+        expect(@callback.matched_a).to eq(hello.split(//))
       end
 
-      it "should have the correct LCS result on right-matches" do
-        @callback.matched_b.should == hello.split(//)
+      it "has the correct LCS result on right-matches" do
+        expect(@callback.matched_b).to eq(hello.split(//))
       end
 
-      it "should have the correct skipped sequences with the left sequence", :only => true do
-        @callback.discards_a.should be_empty
+      it "has the correct skipped sequences with the left sequence", :only => true do
+        expect(@callback.discards_a).to be_empty
       end
 
-      it "should have the correct skipped sequences with the right sequence" do
-        @callback.discards_b.should be_empty
+      it "has the correct skipped sequences with the right sequence" do
+        expect(@callback.discards_b).to be_empty
       end
 
-      it "should not have anything done markers from the left or right sequences" do
-        @callback.done_a.should be_empty
-        @callback.done_b.should be_empty
+      it "does not have anything done markers from the left or right sequences" do
+        expect(@callback.done_a).to be_empty
+        expect(@callback.done_b).to be_empty
       end
     end
 
@@ -75,25 +75,25 @@ describe "Diff::LCS.traverse_sequences" do
         Diff::LCS.traverse_sequences(hello_ary, hello_ary, @callback)
       end
 
-      it "should have the correct LCS result on left-matches" do
-        @callback.matched_a.should == hello_ary
+      it "has the correct LCS result on left-matches" do
+        expect(@callback.matched_a).to eq(hello_ary)
       end
 
-      it "should have the correct LCS result on right-matches" do
-        @callback.matched_b.should == hello_ary
+      it "has the correct LCS result on right-matches" do
+        expect(@callback.matched_b).to eq(hello_ary)
       end
 
-      it "should have the correct skipped sequences with the left sequence" do
-        @callback.discards_a.should be_empty
+      it "has the correct skipped sequences with the left sequence" do
+        expect(@callback.discards_a).to be_empty
       end
 
-      it "should have the correct skipped sequences with the right sequence" do
-        @callback.discards_b.should be_empty
+      it "has the correct skipped sequences with the right sequence" do
+        expect(@callback.discards_b).to be_empty
       end
 
-      it "should not have anything done markers from the left or right sequences" do
-        @callback.done_a.should be_empty
-        @callback.done_b.should be_empty
+      it "does not have anything done markers from the left or right sequences" do
+        expect(@callback.done_a).to be_empty
+        expect(@callback.done_b).to be_empty
       end
     end
   end
@@ -106,34 +106,34 @@ describe "Diff::LCS.traverse_sequences" do
       Diff::LCS.traverse_sequences(seq2, seq1, @callback_s2_s1)
     end
 
-    it "should have the correct LCS result on left-matches" do
-      @callback_s1_s2.matched_a.should == correct_lcs
-      @callback_s2_s1.matched_a.should == correct_lcs
+    it "has the correct LCS result on left-matches" do
+      expect(@callback_s1_s2.matched_a).to eq(correct_lcs)
+      expect(@callback_s2_s1.matched_a).to eq(correct_lcs)
     end
 
-    it "should have the correct LCS result on right-matches" do
-      @callback_s1_s2.matched_b.should == correct_lcs
-      @callback_s2_s1.matched_b.should == correct_lcs
+    it "has the correct LCS result on right-matches" do
+      expect(@callback_s1_s2.matched_b).to eq(correct_lcs)
+      expect(@callback_s2_s1.matched_b).to eq(correct_lcs)
     end
 
-    it "should have the correct skipped sequences for the left sequence" do
-      @callback_s1_s2.discards_a.should == skipped_seq1
-      @callback_s2_s1.discards_a.should == skipped_seq2
+    it "has the correct skipped sequences for the left sequence" do
+      expect(@callback_s1_s2.discards_a).to eq(skipped_seq1)
+      expect(@callback_s2_s1.discards_a).to eq(skipped_seq2)
     end
 
-    it "should have the correct skipped sequences for the right sequence" do
-      @callback_s1_s2.discards_b.should == skipped_seq2
-      @callback_s2_s1.discards_b.should == skipped_seq1
+    it "has the correct skipped sequences for the right sequence" do
+      expect(@callback_s1_s2.discards_b).to eq(skipped_seq2)
+      expect(@callback_s2_s1.discards_b).to eq(skipped_seq1)
     end
 
-    it "should have done markers differently-sized sequences" do
-      @callback_s1_s2.done_a.should == [[ "p", 9, "s", 10 ]]
-      @callback_s1_s2.done_b.should be_empty
+    it "has done markers differently-sized sequences" do
+      expect(@callback_s1_s2.done_a).to eq([[ "p", 9, "s", 10 ]])
+      expect(@callback_s1_s2.done_b).to be_empty
 
       # 20110731 I don't yet understand why this particular behaviour
       # isn't transitive.
-      @callback_s2_s1.done_a.should be_empty
-      @callback_s2_s1.done_b.should be_empty
+      expect(@callback_s2_s1.done_a).to be_empty
+      expect(@callback_s2_s1.done_b).to be_empty
     end
   end
 end

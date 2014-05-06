@@ -6,12 +6,12 @@ describe "Diff::LCS.sdiff" do
   include Diff::LCS::SpecHelper::Matchers
 
   shared_examples "compare sequences correctly" do
-    it "should compare s1 -> s2 correctly" do
-      Diff::LCS.sdiff(s1, s2).should == context_diff(result)
+    it "compares s1 -> s2 correctly" do
+      expect(Diff::LCS.sdiff(s1, s2)).to eq(context_diff(result))
     end
 
-    it "should compare s2 -> s1 correctly" do
-      Diff::LCS.sdiff(s2, s1).should == context_diff(reverse_sdiff(result))
+    it "compares s2 -> s1 correctly" do
+      expect(Diff::LCS.sdiff(s2, s1)).to eq(context_diff(reverse_sdiff(result)))
     end
   end
 

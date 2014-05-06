@@ -142,8 +142,6 @@ class << Diff::LCS::Internals
   # some time. This also works better with Diff::LCS::ContextChange or
   # Diff::LCS::Change as its source, as an array will cause the creation
   # of one of the above.
-  #
-  # Note: This will be deprecated as a public function in a future release.
   def intuit_diff_direction(src, patchset, limit = nil)
     string = src.kind_of?(String)
     count = left_match = left_miss = right_match = right_miss = 0
@@ -217,19 +215,27 @@ class << Diff::LCS::Internals
     no_left = (left_match == 0) && (left_miss > 0)
     no_right = (right_match == 0) && (right_miss > 0)
 
-    case [no_left, no_right]
-    when [false, true]
+    case [ no_left, no_right ]
+    when [ false, true ]
       :patch
-    when [true, false]
+    when [ true, false ]
       :unpatch
     else
       case left_match <=> right_match
       when 1
-        :patch
+        if left_miss.zero?
+          :patch
+        else
+          :unpatch
+        end
       when -1
-        :unpatch
+        if right_miss.zero?
+          :unpatch
+        else
+          :patch
+        end
       else
-        raise "The provided patchset does not appear to apply to the provided value as either source or destination value."
+        raise "The provided patchset does not appear to apply to the provided enumerable as either source or destination value."
       end
     end
   end

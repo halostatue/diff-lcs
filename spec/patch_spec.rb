@@ -6,33 +6,35 @@ describe "Diff::LCS.patch" do
   include Diff::LCS::SpecHelper::Matchers
 
   shared_examples "patch sequences correctly" do
-    it "should correctly patch left-to-right (patch autodiscovery)" do
-      Diff::LCS.patch(s1, patch_set).should == s2
+    it "correctly patches left-to-right (patch autodiscovery)" do
+      expect(Diff::LCS.patch(s1, patch_set)).to eq(s2)
     end
 
-    it "should correctly patch left-to-right (explicit patch)" do
-      Diff::LCS.patch(s1, patch_set, :patch).should == s2
-      Diff::LCS.patch!(s1, patch_set).should == s2
+    it "correctly patches left-to-right (explicit patch)" do
+      expect(Diff::LCS.patch(s1, patch_set, :patch)).to eq(s2)
+      expect(Diff::LCS.patch!(s1, patch_set)).to eq(s2)
     end
 
-    it "should correctly patch right-to-left (unpatch autodiscovery)" do
-      Diff::LCS.patch(s2, patch_set).should == s1
+    it "correctly patches right-to-left (unpatch autodiscovery)" do
+      expect(Diff::LCS.patch(s2, patch_set)).to eq(s1)
     end
 
-    it "should correctly patch right-to-left (explicit unpatch)" do
-      Diff::LCS.patch(s2, patch_set, :unpatch).should == s1
-      Diff::LCS.unpatch!(s2, patch_set).should == s1
+    it "correctly patches right-to-left (explicit unpatch)" do
+      expect(Diff::LCS.patch(s2, patch_set, :unpatch)).to eq(s1)
+      expect(Diff::LCS.unpatch!(s2, patch_set)).to eq(s1)
     end
   end
 
   describe "using a Diff::LCS.diff patchset" do
     describe "an empty patchset returns the source" do
       it "works on a string (hello)" do
-        Diff::LCS::patch(hello, Diff::LCS.diff(hello, hello)).should == hello
+        diff = Diff::LCS.diff(hello, hello)
+        expect(Diff::LCS::patch(hello, diff)).to eq(hello)
       end
 
       it "works on an array %W(h e l l o)" do
-        Diff::LCS::patch(hello_ary, Diff::LCS.diff(hello_ary, hello_ary)).should == hello_ary
+        diff = Diff::LCS.diff(hello_ary, hello_ary)
+        expect(Diff::LCS::patch(hello_ary, diff)).to eq(hello_ary)
       end
     end
 
@@ -102,11 +104,11 @@ describe "Diff::LCS.patch" do
   describe "using a Diff::LCS.sdiff patchset" do
     describe "an empty patchset returns the source" do
       it "works on a string (hello)" do
-        Diff::LCS::patch(hello, Diff::LCS.sdiff(hello, hello)).should == hello
+        expect(Diff::LCS::patch(hello, Diff::LCS.sdiff(hello, hello))).to eq(hello)
       end
 
       it "works on an array %W(h e l l o)" do
-        Diff::LCS::patch(hello_ary, Diff::LCS.sdiff(hello_ary, hello_ary)).should == hello_ary
+        expect(Diff::LCS::patch(hello_ary, Diff::LCS.sdiff(hello_ary, hello_ary))).to eq(hello_ary)
       end
     end
 
@@ -178,122 +180,126 @@ describe "Diff::LCS.patch" do
   # set. Once the bug in autodiscovery is fixed, this can be converted as
   # above.
   describe "fix bug 891: patchsets do not contain the last equal part" do
-    before(:each) do
+    before :each do
       @s1 = %w(a b c d   e f g h i j k)
       @s2 = %w(a b c d D e f g h i j k)
     end
 
     describe "using Diff::LCS.diff with default diff callbacks" do
-      before(:each) do
+      before :each do
         @patch_set_s1_s2 = Diff::LCS.diff(@s1, @s2)
         @patch_set_s2_s1 = Diff::LCS.diff(@s2, @s1)
       end
 
-      it "should autodiscover s1 to s2 patches" do
+      it "autodiscovers s1 to s2 patches" do
         expect do
-          Diff::LCS.patch(@s1, @patch_set_s1_s2).should == @s2
-        end.to_not raise_error(RuntimeError, /provided patchset/)
+          expect(Diff::LCS.patch(@s1, @patch_set_s1_s2)).to eq(@s2)
+        end.to_not raise_error
       end
 
-      it "should autodiscover s2 to s1 patches" do
+      it "autodiscovers s2 to s1 patches" do
         expect do
-          Diff::LCS.patch(@s1, @patch_set_s2_s1).should == @s2
-        end.to_not raise_error(RuntimeError, /provided patchset/)
+          expect(Diff::LCS.patch(@s1, @patch_set_s2_s1)).to eq(@s2)
+        end.to_not raise_error
       end
 
-      it "should autodiscover s2 to s1 the left-to-right patches" do
-        Diff::LCS.patch(@s2, @patch_set_s2_s1).should == @s1
-        Diff::LCS.patch(@s2, @patch_set_s1_s2).should == @s1
+      it "autodiscovers s2 to s1 the left-to-right patches" do
+        expect(Diff::LCS.patch(@s2, @patch_set_s2_s1)).to eq(@s1)
+        expect(Diff::LCS.patch(@s2, @patch_set_s1_s2)).to eq(@s1)
       end
 
-      it "should correctly patch left-to-right (explicit patch)" do
-        Diff::LCS.patch(@s1, @patch_set_s1_s2, :patch).should == @s2
-        Diff::LCS.patch(@s2, @patch_set_s2_s1, :patch).should == @s1
-        Diff::LCS.patch!(@s1, @patch_set_s1_s2).should == @s2
-        Diff::LCS.patch!(@s2, @patch_set_s2_s1).should == @s1
+      it "correctly patches left-to-right (explicit patch)" do
+        expect(Diff::LCS.patch(@s1, @patch_set_s1_s2, :patch)).to eq(@s2)
+        expect(Diff::LCS.patch(@s2, @patch_set_s2_s1, :patch)).to eq(@s1)
+        expect(Diff::LCS.patch!(@s1, @patch_set_s1_s2)).to eq(@s2)
+        expect(Diff::LCS.patch!(@s2, @patch_set_s2_s1)).to eq(@s1)
       end
 
-      it "should correctly patch right-to-left (explicit unpatch)" do
-        Diff::LCS.patch(@s2, @patch_set_s1_s2, :unpatch).should == @s1
-        Diff::LCS.patch(@s1, @patch_set_s2_s1, :unpatch).should == @s2
-        Diff::LCS.unpatch!(@s2, @patch_set_s1_s2).should == @s1
-        Diff::LCS.unpatch!(@s1, @patch_set_s2_s1).should == @s2
+      it "correctly patches right-to-left (explicit unpatch)" do
+        expect(Diff::LCS.patch(@s2, @patch_set_s1_s2, :unpatch)).to eq(@s1)
+        expect(Diff::LCS.patch(@s1, @patch_set_s2_s1, :unpatch)).to eq(@s2)
+        expect(Diff::LCS.unpatch!(@s2, @patch_set_s1_s2)).to eq(@s1)
+        expect(Diff::LCS.unpatch!(@s1, @patch_set_s2_s1)).to eq(@s2)
       end
     end
 
     describe "using Diff::LCS.diff with context diff callbacks" do
-      before(:each) do
-        @patch_set_s1_s2 = Diff::LCS.diff(@s1, @s2, Diff::LCS::ContextDiffCallbacks)
-        @patch_set_s2_s1 = Diff::LCS.diff(@s2, @s1, Diff::LCS::ContextDiffCallbacks)
+      before :each do
+        @patch_set_s1_s2 = Diff::LCS.diff(@s1, @s2,
+                                          Diff::LCS::ContextDiffCallbacks)
+        @patch_set_s2_s1 = Diff::LCS.diff(@s2, @s1,
+                                          Diff::LCS::ContextDiffCallbacks)
       end
 
-      it "should autodiscover s1 to s2 patches" do
+      it "autodiscovers s1 to s2 patches" do
         expect do
-          Diff::LCS.patch(@s1, @patch_set_s1_s2).should == @s2
-        end.to_not raise_error(RuntimeError, /provided patchset/)
+          expect(Diff::LCS.patch(@s1, @patch_set_s1_s2)).to eq(@s2)
+        end.to_not raise_error
       end
 
-      it "should autodiscover s2 to s1 patches" do
+      it "autodiscovers s2 to s1 patches" do
         expect do
-          Diff::LCS.patch(@s1, @patch_set_s2_s1).should == @s2
-        end.to_not raise_error(RuntimeError, /provided patchset/)
+          expect(Diff::LCS.patch(@s1, @patch_set_s2_s1)).to eq(@s2)
+        end.to_not raise_error
       end
 
-      it "should autodiscover s2 to s1 the left-to-right patches" do
-        Diff::LCS.patch(@s2, @patch_set_s2_s1).should == @s1
-        Diff::LCS.patch(@s2, @patch_set_s1_s2).should == @s1
+      it "autodiscovers s2 to s1 the left-to-right patches" do
+        expect(Diff::LCS.patch(@s2, @patch_set_s2_s1)).to eq(@s1)
+        expect(Diff::LCS.patch(@s2, @patch_set_s1_s2)).to eq(@s1)
       end
 
-      it "should correctly patch left-to-right (explicit patch)" do
-        Diff::LCS.patch(@s1, @patch_set_s1_s2, :patch).should == @s2
-        Diff::LCS.patch(@s2, @patch_set_s2_s1, :patch).should == @s1
-        Diff::LCS.patch!(@s1, @patch_set_s1_s2).should == @s2
-        Diff::LCS.patch!(@s2, @patch_set_s2_s1).should == @s1
+      it "correctly patches left-to-right (explicit patch)" do
+        expect(Diff::LCS.patch(@s1, @patch_set_s1_s2, :patch)).to eq(@s2)
+        expect(Diff::LCS.patch(@s2, @patch_set_s2_s1, :patch)).to eq(@s1)
+        expect(Diff::LCS.patch!(@s1, @patch_set_s1_s2)).to eq(@s2)
+        expect(Diff::LCS.patch!(@s2, @patch_set_s2_s1)).to eq(@s1)
       end
 
-      it "should correctly patch right-to-left (explicit unpatch)" do
-        Diff::LCS.patch(@s2, @patch_set_s1_s2, :unpatch).should == @s1
-        Diff::LCS.patch(@s1, @patch_set_s2_s1, :unpatch).should == @s2
-        Diff::LCS.unpatch!(@s2, @patch_set_s1_s2).should == @s1
-        Diff::LCS.unpatch!(@s1, @patch_set_s2_s1).should == @s2
+      it "correctly patches right-to-left (explicit unpatch)" do
+        expect(Diff::LCS.patch(@s2, @patch_set_s1_s2, :unpatch)).to eq(@s1)
+        expect(Diff::LCS.patch(@s1, @patch_set_s2_s1, :unpatch)).to eq(@s2)
+        expect(Diff::LCS.unpatch!(@s2, @patch_set_s1_s2)).to eq(@s1)
+        expect(Diff::LCS.unpatch!(@s1, @patch_set_s2_s1)).to eq(@s2)
       end
     end
 
     describe "using Diff::LCS.diff with sdiff callbacks" do
       before(:each) do
-        @patch_set_s1_s2 = Diff::LCS.diff(@s1, @s2, Diff::LCS::SDiffCallbacks)
-        @patch_set_s2_s1 = Diff::LCS.diff(@s2, @s1, Diff::LCS::SDiffCallbacks)
+        @patch_set_s1_s2 = Diff::LCS.diff(@s1, @s2,
+                                          Diff::LCS::SDiffCallbacks)
+        @patch_set_s2_s1 = Diff::LCS.diff(@s2, @s1,
+                                          Diff::LCS::SDiffCallbacks)
       end
 
-      it "should autodiscover s1 to s2 patches" do
+      it "autodiscovers s1 to s2 patches" do
         expect do
-          Diff::LCS.patch(@s1, @patch_set_s1_s2).should == @s2
-        end.to_not raise_error(RuntimeError, /provided patchset/)
+          expect(Diff::LCS.patch(@s1, @patch_set_s1_s2)).to eq(@s2)
+        end.to_not raise_error
       end
 
-      it "should autodiscover s2 to s1 patches" do
+      it "autodiscovers s2 to s1 patches" do
         expect do
-          Diff::LCS.patch(@s1, @patch_set_s2_s1).should == @s2
-        end.to_not raise_error(RuntimeError, /provided patchset/)
+          expect(Diff::LCS.patch(@s1, @patch_set_s2_s1)).to eq(@s2)
+        end.to_not raise_error
       end
 
-      it "should autodiscover s2 to s1 the left-to-right patches" do
-        Diff::LCS.patch(@s2, @patch_set_s2_s1).should == @s1
-        Diff::LCS.patch(@s2, @patch_set_s1_s2).should == @s1
+      it "autodiscovers s2 to s1 the left-to-right patches" do
+        expect(Diff::LCS.patch(@s2, @patch_set_s2_s1)).to eq(@s1)
+        expect(Diff::LCS.patch(@s2, @patch_set_s1_s2)).to eq(@s1)
       end
 
-      it "should correctly patch left-to-right (explicit patch)" do
-        Diff::LCS.patch(@s1, @patch_set_s1_s2, :patch).should == @s2
-        Diff::LCS.patch(@s2, @patch_set_s2_s1, :patch).should == @s1
-        Diff::LCS.patch!(@s1, @patch_set_s1_s2).should == @s2
-        Diff::LCS.patch!(@s2, @patch_set_s2_s1).should == @s1
+      it "correctly patches left-to-right (explicit patch)" do
+        expect(Diff::LCS.patch(@s1, @patch_set_s1_s2, :patch)).to eq(@s2)
+        expect(Diff::LCS.patch(@s2, @patch_set_s2_s1, :patch)).to eq(@s1)
+        expect(Diff::LCS.patch!(@s1, @patch_set_s1_s2)).to eq(@s2)
+        expect(Diff::LCS.patch!(@s2, @patch_set_s2_s1)).to eq(@s1)
       end
 
-      it "should correctly patch right-to-left (explicit unpatch)" do
-        Diff::LCS.patch(@s2, @patch_set_s1_s2, :unpatch).should == @s1
-        Diff::LCS.patch(@s1, @patch_set_s2_s1, :unpatch).should == @s2
-        Diff::LCS.unpatch!(@s2, @patch_set_s1_s2).should == @s1
-        Diff::LCS.unpatch!(@s1, @patch_set_s2_s1).should == @s2
+      it "correctly patches right-to-left (explicit unpatch)" do
+        expect(Diff::LCS.patch(@s2, @patch_set_s1_s2, :unpatch)).to eq(@s1)
+        expect(Diff::LCS.patch(@s1, @patch_set_s2_s1, :unpatch)).to eq(@s2)
+        expect(Diff::LCS.unpatch!(@s2, @patch_set_s1_s2)).to eq(@s1)
+        expect(Diff::LCS.unpatch!(@s1, @patch_set_s2_s1)).to eq(@s2)
       end
     end
 
@@ -303,73 +309,75 @@ describe "Diff::LCS.patch" do
         @patch_set_s2_s1 = Diff::LCS.sdiff(@s2, @s1)
       end
 
-      it "should autodiscover s1 to s2 patches" do
+      it "autodiscovers s1 to s2 patches" do
         expect do
-          Diff::LCS.patch(@s1, @patch_set_s1_s2).should == @s2
-        end.to_not raise_error(RuntimeError, /provided patchset/)
+          expect(Diff::LCS.patch(@s1, @patch_set_s1_s2)).to eq(@s2)
+        end.to_not raise_error
       end
 
-      it "should autodiscover s2 to s1 patches" do
+      it "autodiscovers s2 to s1 patches" do
         expect do
-          Diff::LCS.patch(@s1, @patch_set_s2_s1).should == @s2
-        end.to_not raise_error(RuntimeError, /provided patchset/)
+          expect(Diff::LCS.patch(@s1, @patch_set_s2_s1)).to eq(@s2)
+        end.to_not raise_error
       end
 
-      it "should autodiscover s2 to s1 the left-to-right patches" do
-        Diff::LCS.patch(@s2, @patch_set_s2_s1).should == @s1
-        Diff::LCS.patch(@s2, @patch_set_s1_s2).should == @s1
+      it "autodiscovers s2 to s1 the left-to-right patches" do
+        expect(Diff::LCS.patch(@s2, @patch_set_s2_s1)).to eq(@s1)
+        expect(Diff::LCS.patch(@s2, @patch_set_s1_s2)).to eq(@s1)
       end
 
-      it "should correctly patch left-to-right (explicit patch)", :only => true do
-        Diff::LCS.patch(@s1, @patch_set_s1_s2, :patch).should == @s2
-        Diff::LCS.patch(@s2, @patch_set_s2_s1, :patch).should == @s1
-        Diff::LCS.patch!(@s1, @patch_set_s1_s2).should == @s2
-        Diff::LCS.patch!(@s2, @patch_set_s2_s1).should == @s1
+      it "correctly patches left-to-right (explicit patch)" do
+        expect(Diff::LCS.patch(@s1, @patch_set_s1_s2, :patch)).to eq(@s2)
+        expect(Diff::LCS.patch(@s2, @patch_set_s2_s1, :patch)).to eq(@s1)
+        expect(Diff::LCS.patch!(@s1, @patch_set_s1_s2)).to eq(@s2)
+        expect(Diff::LCS.patch!(@s2, @patch_set_s2_s1)).to eq(@s1)
       end
 
-      it "should correctly patch right-to-left (explicit unpatch)" do
-        Diff::LCS.patch(@s2, @patch_set_s1_s2, :unpatch).should == @s1
-        Diff::LCS.patch(@s1, @patch_set_s2_s1, :unpatch).should == @s2
-        Diff::LCS.unpatch!(@s2, @patch_set_s1_s2).should == @s1
-        Diff::LCS.unpatch!(@s1, @patch_set_s2_s1).should == @s2
+      it "correctly patches right-to-left (explicit unpatch)" do
+        expect(Diff::LCS.patch(@s2, @patch_set_s1_s2, :unpatch)).to eq(@s1)
+        expect(Diff::LCS.patch(@s1, @patch_set_s2_s1, :unpatch)).to eq(@s2)
+        expect(Diff::LCS.unpatch!(@s2, @patch_set_s1_s2)).to eq(@s1)
+        expect(Diff::LCS.unpatch!(@s1, @patch_set_s2_s1)).to eq(@s2)
       end
     end
 
     describe "using Diff::LCS.sdiff with context diff callbacks" do
       before(:each) do
-        @patch_set_s1_s2 = Diff::LCS.sdiff(@s1, @s2, Diff::LCS::ContextDiffCallbacks)
-        @patch_set_s2_s1 = Diff::LCS.sdiff(@s2, @s1, Diff::LCS::ContextDiffCallbacks)
+        @patch_set_s1_s2 = Diff::LCS.sdiff(@s1, @s2,
+                                           Diff::LCS::ContextDiffCallbacks)
+        @patch_set_s2_s1 = Diff::LCS.sdiff(@s2, @s1,
+                                           Diff::LCS::ContextDiffCallbacks)
       end
 
-      it "should autodiscover s1 to s2 patches" do
+      it "autodiscovers s1 to s2 patches" do
         expect do
-          Diff::LCS.patch(@s1, @patch_set_s1_s2).should == @s2
-        end.to_not raise_error(RuntimeError, /provided patchset/)
+          expect(Diff::LCS.patch(@s1, @patch_set_s1_s2)).to eq(@s2)
+        end.to_not raise_error
       end
 
-      it "should autodiscover s2 to s1 patches" do
+      it "autodiscovers s2 to s1 patches" do
         expect do
-          Diff::LCS.patch(@s1, @patch_set_s2_s1).should == @s2
-        end.to_not raise_error(RuntimeError, /provided patchset/)
+          expect(Diff::LCS.patch(@s1, @patch_set_s2_s1)).to eq(@s2)
+        end.to_not raise_error
       end
 
-      it "should autodiscover s2 to s1 the left-to-right patches" do
-        Diff::LCS.patch(@s2, @patch_set_s2_s1).should == @s1
-        Diff::LCS.patch(@s2, @patch_set_s1_s2).should == @s1
+      it "autodiscovers s2 to s1 the left-to-right patches" do
+        expect(Diff::LCS.patch(@s2, @patch_set_s2_s1)).to eq(@s1)
+        expect(Diff::LCS.patch(@s2, @patch_set_s1_s2)).to eq(@s1)
       end
 
-      it "should correctly patch left-to-right (explicit patch)" do
-        Diff::LCS.patch(@s1, @patch_set_s1_s2, :patch).should == @s2
-        Diff::LCS.patch(@s2, @patch_set_s2_s1, :patch).should == @s1
-        Diff::LCS.patch!(@s1, @patch_set_s1_s2).should == @s2
-        Diff::LCS.patch!(@s2, @patch_set_s2_s1).should == @s1
+      it "correctly patches left-to-right (explicit patch)" do
+        expect(Diff::LCS.patch(@s1, @patch_set_s1_s2, :patch)).to eq(@s2)
+        expect(Diff::LCS.patch(@s2, @patch_set_s2_s1, :patch)).to eq(@s1)
+        expect(Diff::LCS.patch!(@s1, @patch_set_s1_s2)).to eq(@s2)
+        expect(Diff::LCS.patch!(@s2, @patch_set_s2_s1)).to eq(@s1)
       end
 
-      it "should correctly patch right-to-left (explicit unpatch)" do
-        Diff::LCS.patch(@s2, @patch_set_s1_s2, :unpatch).should == @s1
-        Diff::LCS.patch(@s1, @patch_set_s2_s1, :unpatch).should == @s2
-        Diff::LCS.unpatch!(@s2, @patch_set_s1_s2).should == @s1
-        Diff::LCS.unpatch!(@s1, @patch_set_s2_s1).should == @s2
+      it "correctly patches right-to-left (explicit unpatch)" do
+        expect(Diff::LCS.patch(@s2, @patch_set_s1_s2, :unpatch)).to eq(@s1)
+        expect(Diff::LCS.patch(@s1, @patch_set_s2_s1, :unpatch)).to eq(@s2)
+        expect(Diff::LCS.unpatch!(@s2, @patch_set_s1_s2)).to eq(@s1)
+        expect(Diff::LCS.unpatch!(@s1, @patch_set_s2_s1)).to eq(@s2)
       end
     end
 
@@ -379,35 +387,35 @@ describe "Diff::LCS.patch" do
         @patch_set_s2_s1 = Diff::LCS.sdiff(@s2, @s1, Diff::LCS::DiffCallbacks)
       end
 
-      it "should autodiscover s1 to s2 patches" do
+      it "autodiscovers s1 to s2 patches" do
         expect do
-          Diff::LCS.patch(@s1, @patch_set_s1_s2).should == @s2
-        end.to_not raise_error(RuntimeError, /provided patchset/)
+          expect(Diff::LCS.patch(@s1, @patch_set_s1_s2)).to eq(@s2)
+        end.to_not raise_error
       end
 
-      it "should autodiscover s2 to s1 patches" do
+      it "autodiscovers s2 to s1 patches" do
         expect do
-          Diff::LCS.patch(@s1, @patch_set_s2_s1).should == @s2
-        end.to_not raise_error(RuntimeError, /provided patchset/)
+          expect(Diff::LCS.patch(@s1, @patch_set_s2_s1)).to eq(@s2)
+        end.to_not raise_error
       end
 
-      it "should autodiscover s2 to s1 the left-to-right patches" do
-        Diff::LCS.patch(@s2, @patch_set_s2_s1).should == @s1
-        Diff::LCS.patch(@s2, @patch_set_s1_s2).should == @s1
+      it "autodiscovers s2 to s1 the left-to-right patches" do
+        expect(Diff::LCS.patch(@s2, @patch_set_s2_s1)).to eq(@s1)
+        expect(Diff::LCS.patch(@s2, @patch_set_s1_s2)).to eq(@s1)
       end
 
-      it "should correctly patch left-to-right (explicit patch)" do
-        Diff::LCS.patch(@s1, @patch_set_s1_s2, :patch).should == @s2
-        Diff::LCS.patch(@s2, @patch_set_s2_s1, :patch).should == @s1
-        Diff::LCS.patch!(@s1, @patch_set_s1_s2).should == @s2
-        Diff::LCS.patch!(@s2, @patch_set_s2_s1).should == @s1
+      it "correctly patches left-to-right (explicit patch)" do
+        expect(Diff::LCS.patch(@s1, @patch_set_s1_s2, :patch)).to eq(@s2)
+        expect(Diff::LCS.patch(@s2, @patch_set_s2_s1, :patch)).to eq(@s1)
+        expect(Diff::LCS.patch!(@s1, @patch_set_s1_s2)).to eq(@s2)
+        expect(Diff::LCS.patch!(@s2, @patch_set_s2_s1)).to eq(@s1)
       end
 
-      it "should correctly patch right-to-left (explicit unpatch)" do
-        Diff::LCS.patch(@s2, @patch_set_s1_s2, :unpatch).should == @s1
-        Diff::LCS.patch(@s1, @patch_set_s2_s1, :unpatch).should == @s2
-        Diff::LCS.unpatch!(@s2, @patch_set_s1_s2).should == @s1
-        Diff::LCS.unpatch!(@s1, @patch_set_s2_s1).should == @s2
+      it "correctly patches right-to-left (explicit unpatch)" do
+        expect(Diff::LCS.patch(@s2, @patch_set_s1_s2, :unpatch)).to eq(@s1)
+        expect(Diff::LCS.patch(@s1, @patch_set_s2_s1, :unpatch)).to eq(@s2)
+        expect(Diff::LCS.unpatch!(@s2, @patch_set_s1_s2)).to eq(@s1)
+        expect(Diff::LCS.unpatch!(@s1, @patch_set_s2_s1)).to eq(@s2)
       end
     end
   end

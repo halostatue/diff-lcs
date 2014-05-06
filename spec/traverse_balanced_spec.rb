@@ -6,26 +6,26 @@ describe "Diff::LCS.traverse_balanced" do
   include Diff::LCS::SpecHelper::Matchers
 
   shared_examples "with a #change callback" do |s1, s2, result|
-    it "should traverse s1 -> s2 correctly" do
+    it "traverses s1 -> s2 correctly" do
       traversal = balanced_traversal(s1, s2, :balanced_callback)
-      traversal.result.should == result
+      expect(traversal.result).to eq(result)
     end
 
-    it "should traverse s2 -> s1 correctly" do
+    it "traverses s2 -> s1 correctly" do
       traversal = balanced_traversal(s2, s1, :balanced_callback)
-      traversal.result.should == balanced_reverse(result)
+      expect(traversal.result).to eq(balanced_reverse(result))
     end
   end
 
   shared_examples "without a #change callback" do |s1, s2, result|
-    it "should traverse s1 -> s2 correctly" do
+    it "traverses s1 -> s2 correctly" do
       traversal = balanced_traversal(s1, s2, :balanced_callback_no_change)
-      traversal.result.should == map_to_no_change(result)
+      expect(traversal.result).to eq(map_to_no_change(result))
     end
 
-    it "should traverse s2 -> s1 correctly" do
+    it "traverses s2 -> s1 correctly" do
       traversal = balanced_traversal(s2, s1, :balanced_callback_no_change)
-      traversal.result.should == map_to_no_change(balanced_reverse(result))
+      expect(traversal.result).to eq(map_to_no_change(balanced_reverse(result)))
     end
   end
 
