@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.executables = ["htmldiff", "ldiff"]
   s.extra_rdoc_files = ["Contributing.rdoc", "History.rdoc", "License.rdoc", "Manifest.txt", "README.rdoc", "docs/COPYING.txt", "docs/artistic.txt", "Contributing.rdoc", "History.rdoc", "License.rdoc", "README.rdoc"]
   s.files = [".autotest", ".gemtest", ".hoerc", ".rspec", ".travis.yml", "Contributing.rdoc", "Gemfile", "History.rdoc", "License.rdoc", "Manifest.txt", "README.rdoc", "Rakefile", "autotest/discover.rb", "bin/htmldiff", "bin/ldiff", "docs/COPYING.txt", "docs/artistic.txt", "lib/diff-lcs.rb", "lib/diff/lcs.rb", "lib/diff/lcs/array.rb", "lib/diff/lcs/block.rb", "lib/diff/lcs/callbacks.rb", "lib/diff/lcs/change.rb", "lib/diff/lcs/htmldiff.rb", "lib/diff/lcs/hunk.rb", "lib/diff/lcs/internals.rb", "lib/diff/lcs/ldiff.rb", "lib/diff/lcs/string.rb", "spec/change_spec.rb", "spec/diff_spec.rb", "spec/hunk_spec.rb", "spec/issues_spec.rb", "spec/lcs_spec.rb", "spec/patch_spec.rb", "spec/sdiff_spec.rb", "spec/spec_helper.rb", "spec/traverse_balanced_spec.rb", "spec/traverse_sequences_spec.rb"]
-  s.homepage = "http://diff-lcs.rubyforge.org/"
+  s.homepage = "http://halostatue.github.io/diff-lcs/"
   s.licenses = ["MIT", "Perl Artistic v2", "GNU GPL v2"]
   s.rdoc_options = ["--main", "README.rdoc"]
   s.rubygems_version = "2.2.1"
