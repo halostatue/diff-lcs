@@ -16,9 +16,9 @@ describe "Diff::LCS Issues" do
     change_diff(correct_forward_diff).should == diff_s1_s2
     expect do
       Diff::LCS.patch(s1, diff_s1_s2).should == s2
-    end.to_not raise_error(RuntimeError, /provided patchset/)
+    end.to_not raise_error
     expect do
       Diff::LCS.patch(s2, diff_s1_s2).should == s1
-    end.to_not raise_error(RuntimeError, /provided patchset/)
+    end.to_not raise_error
   end
 end

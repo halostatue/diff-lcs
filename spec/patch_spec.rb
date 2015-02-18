@@ -192,13 +192,13 @@ describe "Diff::LCS.patch" do
       it "should autodiscover s1 to s2 patches" do
         expect do
           Diff::LCS.patch(@s1, @patch_set_s1_s2).should == @s2
-        end.to_not raise_error(RuntimeError, /provided patchset/)
+        end.to_not raise_error
       end
 
       it "should autodiscover s2 to s1 patches" do
         expect do
           Diff::LCS.patch(@s1, @patch_set_s2_s1).should == @s2
-        end.to_not raise_error(RuntimeError, /provided patchset/)
+        end.to_not raise_error
       end
 
       it "should autodiscover s2 to s1 the left-to-right patches" do
@@ -230,13 +230,13 @@ describe "Diff::LCS.patch" do
       it "should autodiscover s1 to s2 patches" do
         expect do
           Diff::LCS.patch(@s1, @patch_set_s1_s2).should == @s2
-        end.to_not raise_error(RuntimeError, /provided patchset/)
+        end.to_not raise_error
       end
 
       it "should autodiscover s2 to s1 patches" do
         expect do
           Diff::LCS.patch(@s1, @patch_set_s2_s1).should == @s2
-        end.to_not raise_error(RuntimeError, /provided patchset/)
+        end.to_not raise_error
       end
 
       it "should autodiscover s2 to s1 the left-to-right patches" do
@@ -268,13 +268,13 @@ describe "Diff::LCS.patch" do
       it "should autodiscover s1 to s2 patches" do
         expect do
           Diff::LCS.patch(@s1, @patch_set_s1_s2).should == @s2
-        end.to_not raise_error(RuntimeError, /provided patchset/)
+        end.to_not raise_error
       end
 
       it "should autodiscover s2 to s1 patches" do
         expect do
           Diff::LCS.patch(@s1, @patch_set_s2_s1).should == @s2
-        end.to_not raise_error(RuntimeError, /provided patchset/)
+        end.to_not raise_error
       end
 
       it "should autodiscover s2 to s1 the left-to-right patches" do
@@ -306,13 +306,13 @@ describe "Diff::LCS.patch" do
       it "should autodiscover s1 to s2 patches" do
         expect do
           Diff::LCS.patch(@s1, @patch_set_s1_s2).should == @s2
-        end.to_not raise_error(RuntimeError, /provided patchset/)
+        end.to_not raise_error
       end
 
       it "should autodiscover s2 to s1 patches" do
         expect do
           Diff::LCS.patch(@s1, @patch_set_s2_s1).should == @s2
-        end.to_not raise_error(RuntimeError, /provided patchset/)
+        end.to_not raise_error
       end
 
       it "should autodiscover s2 to s1 the left-to-right patches" do
@@ -344,13 +344,13 @@ describe "Diff::LCS.patch" do
       it "should autodiscover s1 to s2 patches" do
         expect do
           Diff::LCS.patch(@s1, @patch_set_s1_s2).should == @s2
-        end.to_not raise_error(RuntimeError, /provided patchset/)
+        end.to_not raise_error
       end
 
       it "should autodiscover s2 to s1 patches" do
         expect do
           Diff::LCS.patch(@s1, @patch_set_s2_s1).should == @s2
-        end.to_not raise_error(RuntimeError, /provided patchset/)
+        end.to_not raise_error
       end
 
       it "should autodiscover s2 to s1 the left-to-right patches" do
@@ -382,13 +382,13 @@ describe "Diff::LCS.patch" do
       it "should autodiscover s1 to s2 patches" do
         expect do
           Diff::LCS.patch(@s1, @patch_set_s1_s2).should == @s2
-        end.to_not raise_error(RuntimeError, /provided patchset/)
+        end.to_not raise_error
       end
 
       it "should autodiscover s2 to s1 patches" do
         expect do
           Diff::LCS.patch(@s1, @patch_set_s2_s1).should == @s2
-        end.to_not raise_error(RuntimeError, /provided patchset/)
+        end.to_not raise_error
       end
 
       it "should autodiscover s2 to s1 the left-to-right patches" do
