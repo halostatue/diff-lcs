@@ -1,6 +1,7 @@
 # -*- ruby encoding: utf-8 -*-
 
 require 'spec_helper'
+require 'diff/lcs/hunk'
 
 def h(v)
   v.to_s.bytes.to_a.map { |e| "%02x" % e }.join
