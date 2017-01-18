@@ -1,35 +1,32 @@
 ---
 language: ruby
 rvm:
-  - 2.1.0
+  - 2.4.0
+  - 2.3.3
+  - 2.2.6
+  - 2.1.9
   - 2.0.0
   - 1.9.3
-  - 1.9.2
+  - 1.8.7
+  - ree
   - ruby-head
   - jruby-19mode
-  - jruby-head
-  - rbx
-  - 1.8.7
-  - jruby-18mode
-  - ree
 matrix:
   allow_failures:
-    - rvm: rbx
+    - rvm: ruby-head
+    - rvm: 1.8.7
+    - rvm: ree
 gemfile:
   - Gemfile
 before_script:
-  - |
-    case "${TRAVIS_RUBY_VERSION}" in
-      rbx*)
-        gem install psych
-        gem install -v '~> 2.0' rubysl
-        ;;
-    esac
-  - rake travis:before -t
-script: rake travis
+  - bundle exec rake travis:before -t
+script: bundle exec rake travis
 after_script:
-  - rake travis:after -t
+  - bundle exec rake travis:after -t
 notifications:
   email:
+    recipients:
+      - austin@rubyforge.org
     on_success: change
     on_failure: always
+sudo: false

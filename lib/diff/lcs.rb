@@ -1,57 +1,7 @@
 # -*- ruby encoding: utf-8 -*-
 
 module Diff; end unless defined? Diff
-# Computes "intelligent" differences between two sequenced Enumerables. This
-# is an implementation of the McIlroy-Hunt "diff" algorithm for Enumerable
-# objects that include Diffable.
-#
-# Based on Mario I. Wolczko's Smalltalk version (1.2, 1993) and Ned Konz's
-# Perl version (Algorithm::Diff 1.15).
-#
-# == Synopsis
-#   require 'diff/lcs'
-#
-#   seq1 = %w(a b c e h j l m n p)
-#   seq2 = %w(b c d e f j k l m r s t)
-#
-#   lcs = Diff::LCS.lcs(seq1, seq2)
-#   diffs = Diff::LCS.diff(seq1, seq2)
-#   sdiff = Diff::LCS.sdiff(seq1, seq2)
-#   seq = Diff::LCS.traverse_sequences(seq1, seq2, callback_obj)
-#   bal = Diff::LCS.traverse_balanced(seq1, seq2, callback_obj)
-#   seq2 == Diff::LCS.patch(seq1, diffs)
-#   seq2 == Diff::LCS.patch!(seq1, diffs)
-#   seq1 == Diff::LCS.unpatch(seq2, diffs)
-#   seq1 == Diff::LCS.unpatch!(seq2, diffs)
-#   seq2 == Diff::LCS.patch(seq1, sdiff)
-#   seq2 == Diff::LCS.patch!(seq1, sdiff)
-#   seq1 == Diff::LCS.unpatch(seq2, sdiff)
-#   seq1 == Diff::LCS.unpatch!(seq2, sdiff)
-#
-# Alternatively, objects can be extended with Diff::LCS:
-#
-#   seq1.extend(Diff::LCS)
-#   lcs = seq1.lcs(seq2)
-#   diffs = seq1.diff(seq2)
-#   sdiff = seq1.sdiff(seq2)
-#   seq = seq1.traverse_sequences(seq2, callback_obj)
-#   bal = seq1.traverse_balanced(seq2, callback_obj)
-#   seq2 == seq1.patch(diffs)
-#   seq2 == seq1.patch!(diffs)
-#   seq1 == seq2.unpatch(diffs)
-#   seq1 == seq2.unpatch!(diffs)
-#   seq2 == seq1.patch(sdiff)
-#   seq2 == seq1.patch!(sdiff)
-#   seq1 == seq2.unpatch(sdiff)
-#   seq1 == seq2.unpatch!(sdiff)
-#
-# Default extensions are provided for Array and String objects through the
-# use of 'diff/lcs/array' and 'diff/lcs/string'.
-#
-# == Introduction (by Mark-Jason Dominus)
-#
-# <em>The following text is from the Perl documentation. The only changes
-# have been to make the text appear better in Rdoc</em>.
+# == How Diff Works (by Mark-Jason Dominus)
 #
 # I once read an article written by the authors of +diff+; they said that
 # they hard worked very hard on the algorithm until they found the right
@@ -98,34 +48,6 @@ module Diff; end unless defined? Diff
 #
 #          a x b y c z p d q
 #    a b c a x b y c z
-#
-# == Author
-# This version is by Austin Ziegler <austin@rubyforge.org>.
-#
-# It is based on the Perl Algorithm::Diff (1.15) by Ned Konz , copyright
-# &copy; 2000&ndash;2002 and the Smalltalk diff version by Mario I.
-# Wolczko, copyright &copy; 1993. Documentation includes work by
-# Mark-Jason Dominus.
-#
-# == Licence
-# Copyright &copy; 2004&ndash;2013 Austin Ziegler
-# This program is free software; you can redistribute it and/or modify it
-# under the same terms as Ruby, or alternatively under the Perl Artistic
-# licence.
-#
-# == Credits
-# Much of the documentation is taken directly from the Perl Algorithm::Diff
-# implementation and was written originally by Mark-Jason Dominus and later
-# by Ned Konz. The basic Ruby implementation was re-ported from the
-# Smalltalk implementation, available at
-# ftp://st.cs.uiuc.edu/pub/Smalltalk/MANCHESTER/manchester/4.0/diff.st
-#
-# #sdiff and #traverse_balanced were written for the Perl version by Mike
-# Schilli <m@perlmeister.com>.
-#
-# "The algorithm is described in <em>A Fast Algorithm for Computing Longest
-# Common Subsequences</em>, CACM, vol.20, no.5, pp.350-353, May
-# 1977, with a few minor improvements to improve the speed."
 module Diff::LCS
   VERSION = '1.3'
 end
@@ -765,7 +687,7 @@ class << Diff::LCS
             ai += 1
             bj += 1
           end
-        ai += 1
+          ai += 1
         when '+'
           while bj < change.position
             res << (string ? src[ai, 1] : src[ai])
@@ -773,9 +695,9 @@ class << Diff::LCS
             bj += 1
           end
 
-        bj += 1
+          bj += 1
 
-        res << change.element
+          res << change.element
         end
       end
     end

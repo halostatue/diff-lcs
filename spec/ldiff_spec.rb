@@ -2,20 +2,20 @@
 
 require 'spec_helper'
 
-describe Diff::LCS, ".diff" do
+describe "Diff::LCS.diff" do
   include Diff::LCS::SpecHelper::Matchers
 
-  it "correctly diffs seq1 to seq2" do
+  it 'correctly diffs seq1 to seq2' do
     diff_s1_s2 = Diff::LCS.diff(seq1, seq2)
     expect(change_diff(correct_forward_diff)).to eq(diff_s1_s2)
   end
 
-  it "correctly diffs seq2 to seq1" do
+  it 'correctly diffs seq2 to seq1' do
     diff_s2_s1 = Diff::LCS.diff(seq2, seq1)
     expect(change_diff(correct_backward_diff)).to eq(diff_s2_s1)
   end
 
-  it "correctly diffs against an empty sequence" do
+  it 'correctly diffs against an empty sequence' do
     diff = Diff::LCS.diff(word_sequence, [])
     correct_diff = [
       [ [ '-', 0, 'abcd'           ],
@@ -38,10 +38,10 @@ describe Diff::LCS, ".diff" do
   end
 
   it "returns an empty diff with (hello, hello)" do
-    expect(Diff::LCS.diff(hello, hello)).to be_empty
+    expect(Diff::LCS.diff(hello, hello)).to eq([])
   end
 
   it "returns an empty diff with (hello_ary, hello_ary)" do
-    expect(Diff::LCS.diff(hello_ary, hello_ary)).to be_empty
+    expect(Diff::LCS.diff(hello_ary, hello_ary)).to eq([])
   end
 end

@@ -1,13 +1,10 @@
-Gemfile.lock
-spec/ldap.yml
-.rvmrc
-pkg/
 *.pyc
 *.rbc
 *.swp
 *~
 .DS_Store
 .rake_tasks~
+.rvmrc
 .source_index
 Gemfile.lock
 coverage.info
@@ -15,8 +12,9 @@ coverage.vim
 coverage/
 doc/
 html/
-publish/
-research/
-website/index.html
 pkg/
 publish/
+research/
+spec/ldap.yml
+website/index.html
+.byebug_history

@@ -4,46 +4,18 @@ require 'optparse'
 require 'ostruct'
 require 'diff/lcs/hunk'
 
-# == ldiff Usage
-#   ldiff [options] oldfile newfile
-#
-# -c::                            Displays a context diff with 3 lines of context.
-# -C [LINES], --context [LINES]:: Displays a context diff with LINES lines of context. Default 3 lines.
-# -u::                            Displays a unified diff with 3 lines of context.
-# -U [LINES], --unified [LINES]:: Displays a unified diff with LINES lines of context. Default 3 lines.
-# -e::                            Creates an 'ed' script to change oldfile to newfile.
-# -f::                            Creates an 'ed' script to change oldfile to newfile in reverse order.
-# -a, --text::                    Treats the files as text and compares them line-by-line, even if they do not seem to be text.
-# --binary::                      Treats the files as binary.
-# -q, --brief::                   Reports only whether or not the files differ, not the details.
-# --help::                        Shows the command-line help.
-# --version::                     Shows the version of Diff::LCS.
-#
-# By default, runs produces an "old-style" diff, with output like UNIX diff.
-#
-# == Copyright
-# Copyright &copy; 2004 Austin Ziegler
-#
-#   Part of Diff::LCS <http://rubyforge.org/projects/ruwiki/>
-#   Austin Ziegler <diff-lcs@halostatue.ca>
-#
-# This program is free software. It may be redistributed and/or modified under
-# the terms of the GPL version 2 (or later), the Perl Artistic licence, or the
-# Ruby licence.
-module Diff::LCS::Ldiff
+module Diff::LCS::Ldiff #:nodoc:
   BANNER = <<-COPYRIGHT
 ldiff #{Diff::LCS::VERSION}
-  Copyright 2004-2013 Austin Ziegler
+  Copyright 2004-2014 Austin Ziegler
 
   Part of Diff::LCS.
-  http://rubyforge.org/projects/ruwiki/
-
-  Austin Ziegler <diff-lcs@halostatue.ca>
+  https://github.com/halostatue/diff-lcs
 
   This program is free software. It may be redistributed and/or modified under
   the terms of the GPL version 2 (or later), the Perl Artistic licence, or the
   MIT licence.
-              COPYRIGHT
+COPYRIGHT
 end
 
 class << Diff::LCS::Ldiff
@@ -118,13 +90,13 @@ class << Diff::LCS::Ldiff
     file_length_difference = 0
 
     if @binary.nil? or @binary
-      data_old = IO::read(file_old)
-      data_new = IO::read(file_new)
+      data_old = IO.read(file_old)
+      data_new = IO.read(file_new)
 
       # Test binary status
       if @binary.nil?
-        old_txt = data_old[0...4096].scan(/\0/).empty?
-        new_txt = data_new[0...4096].scan(/\0/).empty?
+        old_txt = data_old[0, 4096].scan(/\0/).empty?
+        new_txt = data_new[0, 4096].scan(/\0/).empty?
         @binary = (not old_txt) or (not new_txt)
         old_txt = new_txt = nil
       end
@@ -134,8 +106,8 @@ class << Diff::LCS::Ldiff
         data_new = data_new.split($/).map { |e| e.chomp }
       end
     else
-      data_old = IO::readlines(file_old).map { |e| e.chomp }
-      data_new = IO::readlines(file_new).map { |e| e.chomp }
+      data_old = IO.readlines(file_old).map { |e| e.chomp }
+      data_new = IO.readlines(file_new).map { |e| e.chomp }
     end
 
     # diff yields lots of pieces, each of which is basically a Block object
@@ -155,9 +127,9 @@ class << Diff::LCS::Ldiff
 
     if (@format == :unified) or (@format == :context)
       ft = File.stat(file_old).mtime.localtime.strftime('%Y-%m-%d %H:%M:%S.%N %z')
-      puts "#{char_old} #{file_old}\t#{ft}"
+      output << "#{char_old} #{file_old}\t#{ft}\n"
       ft = File.stat(file_new).mtime.localtime.strftime('%Y-%m-%d %H:%M:%S.%N %z')
-      puts "#{char_new} #{file_new}\t#{ft}"
+      output << "#{char_new} #{file_new}\t#{ft}\n"
     end
 
     # Loop over hunks. If a hunk overlaps with the last hunk, join them.
