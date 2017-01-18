@@ -18,7 +18,7 @@ spec = Hoe.spec 'diff-lcs' do
 
   self.history_file = 'History.md'
   self.readme_file = 'README.rdoc'
-  self.licenses = [ 'MIT', 'Perl Artistic v2', 'GNU GPL v2' ]
+  self.licenses = [ 'MIT', 'Artistic-2.0', 'GPL-2.0+' ]
 
   extra_dev_deps << ['hoe-doofus', '~> 1.0']
   extra_dev_deps << ['hoe-gemspec2', '~> 1.1']

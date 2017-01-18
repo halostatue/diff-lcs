@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = ["Code-of-Conduct.md", "Contributing.md", "History.md", "License.md", "Manifest.txt", "README.rdoc", "docs/COPYING.txt", "docs/artistic.txt"]
   s.files = [".rspec", "Code-of-Conduct.md", "Contributing.md", "History.md", "License.md", "Manifest.txt", "README.rdoc", "Rakefile", "autotest/discover.rb", "bin/htmldiff", "bin/ldiff", "docs/COPYING.txt", "docs/artistic.txt", "lib/diff-lcs.rb", "lib/diff/lcs.rb", "lib/diff/lcs/array.rb", "lib/diff/lcs/block.rb", "lib/diff/lcs/callbacks.rb", "lib/diff/lcs/change.rb", "lib/diff/lcs/htmldiff.rb", "lib/diff/lcs/hunk.rb", "lib/diff/lcs/internals.rb", "lib/diff/lcs/ldiff.rb", "lib/diff/lcs/string.rb", "spec/change_spec.rb", "spec/diff_spec.rb", "spec/fixtures/ds1.csv", "spec/fixtures/ds2.csv", "spec/hunk_spec.rb", "spec/issues_spec.rb", "spec/lcs_spec.rb", "spec/ldiff_spec.rb", "spec/patch_spec.rb", "spec/sdiff_spec.rb", "spec/spec_helper.rb", "spec/traverse_balanced_spec.rb", "spec/traverse_sequences_spec.rb"]
   s.homepage = "https://github.com/halostatue/diff-lcs"
-  s.licenses = ["MIT", "Perl Artistic v2", "GNU GPL v2"]
+  s.licenses = ["MIT", "Artistic-2.0", "GPL-2.0+"]
   s.rdoc_options = ["--main", "README.rdoc"]
   s.required_ruby_version = Gem::Requirement.new(">= 1.8")
   s.rubygems_version = "2.5.1"
