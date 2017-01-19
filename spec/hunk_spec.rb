@@ -1,6 +1,7 @@
 # -*- ruby encoding: utf-8 -*-
 
 require 'spec_helper'
+require 'diff/lcs/hunk'
 
 if String.method_defined?(:encoding)
   require 'diff/lcs/hunk'
