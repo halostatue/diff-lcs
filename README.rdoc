@@ -78,7 +78,3 @@ The algorithm is described in <em>A Fast Algorithm for Computing Longest Common
 Subsequences</em>, CACM, vol.20, no.5, pp.350-353, May 1977, with a few minor
 improvements to improve the speed. A simplified description of the algorithm,
 originally written for the Perl version, was written by Mark-Jason Dominus.
-
-:include: Contributing.rdoc
-
-:include: License.rdoc
