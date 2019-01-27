@@ -41,8 +41,6 @@ class Diff::LCS::Change
     [ @action, @position, @element ]
   end
 
-  alias to_ary to_a
-
   def self.from_a(arr)
     arr = arr.flatten(1)
     case arr.size
@@ -133,8 +131,6 @@ class Diff::LCS::ContextChange < Diff::LCS::Change
       [ @new_position, @new_element ]
     ]
   end
-
-  alias to_ary to_a
 
   def inspect(*args)
     to_a.inspect
