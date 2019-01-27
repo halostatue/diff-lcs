@@ -1,4 +1,4 @@
-# -*- ruby encoding: utf-8 -*-
+# frozen_string_literal: true
 
 require 'rubygems'
 require 'rspec'
@@ -11,14 +11,14 @@ Hoe.plugin :gemspec2
 Hoe.plugin :git
 Hoe.plugin :travis
 
-spec = Hoe.spec 'diff-lcs' do
+_spec = Hoe.spec 'diff-lcs' do
   developer('Austin Ziegler', 'halostatue@gmail.com')
 
   require_ruby_version '>= 1.8'
 
   self.history_file = 'History.md'
   self.readme_file = 'README.rdoc'
-  self.licenses = [ 'MIT', 'Artistic-2.0', 'GPL-2.0+' ]
+  self.licenses = ['MIT', 'Artistic-2.0', 'GPL-2.0+']
 
   extra_dev_deps << ['hoe-doofus', '~> 1.0']
   extra_dev_deps << ['hoe-gemspec2', '~> 1.1']

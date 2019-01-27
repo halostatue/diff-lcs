@@ -1,14 +1,15 @@
-# -*- ruby encoding: utf-8 -*-
+# frozen_string_literal: true
 
 require 'cgi'
 
+# Produce a simple HTML diff view.
 class Diff::LCS::HTMLDiff
   class << self
     attr_accessor :can_expand_tabs #:nodoc:
   end
   self.can_expand_tabs = true
 
-  class Callbacks
+  class Callbacks #:nodoc:
     attr_accessor :output
     attr_accessor :match_class
     attr_accessor :only_a_class
@@ -18,14 +19,14 @@ class Diff::LCS::HTMLDiff
       @output = output
       options ||= {}
 
-      @match_class = options[:match_class] || "match"
-      @only_a_class = options[:only_a_class] || "only_a"
-      @only_b_class = options[:only_b_class] || "only_b"
+      @match_class = options[:match_class] || 'match'
+      @only_a_class = options[:only_a_class] || 'only_a'
+      @only_b_class = options[:only_b_class] || 'only_b'
     end
 
     def htmlize(element, css_class)
-      element = "&nbsp;" if element.empty?
-      %Q|<pre class="#{__send__(css_class)}">#{element}</pre>\n|
+      element = '&nbsp;' if element.empty?
+      %Q(<pre class="#{__send__(css_class)}">#{element}</pre>\n)
     end
     private :htmlize
 
@@ -49,8 +50,8 @@ class Diff::LCS::HTMLDiff
     :expand_tabs => nil,
     :output => nil,
     :css => nil,
-    :title => nil,
-  }
+    :title => nil
+  }.freeze
 
   DEFAULT_CSS = <<-CSS
 body { margin: 0; }
@@ -96,13 +97,13 @@ h1 { margin-left: 2em; }
 
   def verify_options
     @options[:expand_tabs] ||= 4
-    @options[:expand_tabs] = 4 if @options[:expand_tabs] < 0
+    @options[:expand_tabs] = 4 if @options[:expand_tabs].negative?
 
     @options[:output] ||= $stdout
 
     @options[:css] ||= DEFAULT_CSS.dup
 
-    @options[:title] ||= "diff"
+    @options[:title] ||= 'diff'
   end
   private :verify_options
 
@@ -111,16 +112,16 @@ h1 { margin-left: 2em; }
   def run
     verify_options
 
-    if @options[:expand_tabs] > 0 && self.class.can_expand_tabs
+    if @options[:expand_tabs].positive? && self.class.can_expand_tabs
       formatter = Text::Format.new
       formatter.tabstop = @options[:expand_tabs]
 
-      @left.map! { |line| formatter.expand(line.chomp) }
-      @right.map! { |line| formatter.expand(line.chomp) }
+      @left.map! do |line| formatter.expand(line.chomp) end
+      @right.map! do |line| formatter.expand(line.chomp) end
     end
 
-    @left.map! { |line| CGI.escapeHTML(line.chomp) }
-    @right.map! { |line| CGI.escapeHTML(line.chomp) }
+    @left.map! do |line| CGI.escapeHTML(line.chomp) end
+    @right.map! do |line| CGI.escapeHTML(line.chomp) end
 
     @options[:output] << <<-OUTPUT
 <html>

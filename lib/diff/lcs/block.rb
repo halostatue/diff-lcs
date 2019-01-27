@@ -1,4 +1,4 @@
-# -*- ruby encoding: utf-8 -*-
+# frozen_string_literal: true
 
 # A block is an operation removing, adding, or changing a group of items.
 # Basically, this is just a list of changes, where each change adds or

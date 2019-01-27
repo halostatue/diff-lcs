@@ -1,8 +1,8 @@
-# -*- ruby encoding: utf-8 -*-
+# frozen_string_literal: true
 
 require 'diff/lcs/change'
 
-module Diff::LCS
+module Diff::LCS # rubocop:disable Style/Documentation
   # This callback object implements the default set of callback events,
   # which only returns the event itself. Note that #finished_a and
   # #finished_b are not implemented -- I haven't yet figured out where they
@@ -17,14 +17,17 @@ module Diff::LCS
       def match(event)
         event
       end
+
       # Called when the old value is discarded in favour of the new value.
       def discard_a(event)
         event
       end
+
       # Called when the new value is discarded in favour of the old value.
       def discard_b(event)
         event
       end
+
       # Called when both the old and new values have changed.
       def change(event)
         event
@@ -108,12 +111,12 @@ class Diff::LCS::DiffCallbacks
     @hunk = []
     @diffs = []
 
-    if block_given?
-      begin
-        yield self
-      ensure
-        self.finish
-      end
+    return unless block_given?
+
+    begin
+      yield self
+    ensure
+      finish
     end
   end
 
@@ -123,7 +126,7 @@ class Diff::LCS::DiffCallbacks
     finish_hunk
   end
 
-  def match(event)
+  def match(_event)
     finish_hunk
   end
 
@@ -241,7 +244,7 @@ end
 # will compute and display the necessary components to show two sequences
 # and their minimized differences side by side, just like the Unix utility
 # +sdiff+.
-# 
+#
 #     same             same
 #     before     |     after
 #     old        <     -

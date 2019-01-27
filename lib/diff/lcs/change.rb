@@ -1,16 +1,16 @@
-# -*- ruby encoding: utf-8 -*-
+# frozen_string_literal: true
 
 # Represents a simplistic (non-contextual) change. Represents the removal or
 # addition of an element from either the old or the new sequenced
 # enumerable.
 class Diff::LCS::Change
-  IntClass = 1.class # Fixnum is deprecated in Ruby 2.4
+  IntClass = 1.class # Fixnum is deprecated in Ruby 2.4 # rubocop:disable Naming/ConstantName
 
   # The only actions valid for changes are '+' (add), '-' (delete), '='
   # (no change), '!' (changed), '<' (tail changes from first sequence), or
   # '>' (tail changes from second sequence). The last two ('<>') are only
   # found with Diff::LCS::diff and Diff::LCS::sdiff.
-  VALID_ACTIONS = %W(+ - = ! > <)
+  VALID_ACTIONS = %w(+ - = ! > <).freeze
 
   def self.valid_action?(action)
     VALID_ACTIONS.include? action
@@ -27,18 +27,16 @@ class Diff::LCS::Change
   def initialize(*args)
     @action, @position, @element = *args
 
-    unless Diff::LCS::Change.valid_action?(@action)
-      raise "Invalid Change Action '#{@action}'"
-    end
-    raise "Invalid Position Type" unless @position.kind_of? IntClass
+    fail "Invalid Change Action '#{@action}'" unless Diff::LCS::Change.valid_action?(@action)
+    fail 'Invalid Position Type' unless @position.kind_of? IntClass
   end
 
-  def inspect
-    to_a.inspect
+  def inspect(*_args)
+    "#<#{self.class}: #{to_a.inspect}>"
   end
 
   def to_a
-    [ @action, @position, @element ]
+    [@action, @position, @element]
   end
 
   def self.from_a(arr)
@@ -49,7 +47,7 @@ class Diff::LCS::Change
     when 3
       Diff::LCS::Change.new(*(arr[0...3]))
     else
-      raise "Invalid change array format provided."
+      fail 'Invalid change array format provided.'
     end
   end
 
@@ -57,15 +55,15 @@ class Diff::LCS::Change
 
   def ==(other)
     (self.class == other.class) and
-    (self.action == other.action) and
-    (self.position == other.position) and
-    (self.element == other.element)
+      (action == other.action) and
+      (position == other.position) and
+      (element == other.element)
   end
 
   def <=>(other)
-    r = self.action <=> other.action
-    r = self.position <=> other.position if r.zero?
-    r = self.element <=> other.element if r.zero?
+    r = action <=> other.action
+    r = position <=> other.position if r.zero?
+    r = element <=> other.element if r.zero?
     r
   end
 
@@ -114,26 +112,17 @@ class Diff::LCS::ContextChange < Diff::LCS::Change
   def initialize(*args)
     @action, @old_position, @old_element, @new_position, @new_element = *args
 
-    unless Diff::LCS::Change.valid_action?(@action)
-      raise "Invalid Change Action '#{@action}'"
-    end
-    unless @old_position.nil? or @old_position.kind_of? IntClass
-      raise "Invalid (Old) Position Type"
-    end
-    unless @new_position.nil? or @new_position.kind_of? IntClass
-      raise "Invalid (New) Position Type"
-    end
+    fail "Invalid Change Action '#{@action}'" unless Diff::LCS::Change.valid_action?(@action)
+    fail 'Invalid (Old) Position Type' unless @old_position.nil? or @old_position.kind_of? IntClass
+    fail 'Invalid (New) Position Type' unless @new_position.nil? or @new_position.kind_of? IntClass
   end
 
   def to_a
-    [ @action,
-      [ @old_position, @old_element ],
-      [ @new_position, @new_element ]
+    [
+      @action,
+      [@old_position, @old_element],
+      [@new_position, @new_element]
     ]
-  end
-
-  def inspect(*args)
-    to_a.inspect
   end
 
   def self.from_a(arr)
@@ -163,11 +152,11 @@ class Diff::LCS::ContextChange < Diff::LCS::Change
 
   def ==(other)
     (self.class == other.class) and
-    (@action == other.action) and
-    (@old_position == other.old_position) and
-    (@new_position == other.new_position) and
-    (@old_element == other.old_element) and
-    (@new_element == other.new_element)
+      (@action == other.action) and
+      (@old_position == other.old_position) and
+      (@new_position == other.new_position) and
+      (@old_element == other.old_element) and
+      (@new_element == other.new_element)
   end
 
   def <=>(other)

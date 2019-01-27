@@ -1,8 +1,8 @@
-# -*- ruby encoding: utf-8 -*-
+# frozen_string_literal: true
 
 require 'spec_helper'
 
-describe "Diff::LCS Issues" do
+describe 'Diff::LCS Issues' do
   include Diff::LCS::SpecHelper::Matchers
 
   describe 'issue #1' do
@@ -26,23 +26,31 @@ describe "Diff::LCS Issues" do
 
     describe 'string' do
       it_has_behavior 'handles simple diffs', 'aX', 'bXaX', [
-        [ [ '+', 0, 'b' ],
-          [ '+', 1, 'X' ] ],
+        [
+          ['+', 0, 'b'],
+          ['+', 1, 'X']
+        ]
       ]
       it_has_behavior 'handles simple diffs', 'bXaX', 'aX', [
-        [ [ '-', 0, 'b' ],
-          [ '-', 1, 'X' ] ],
+        [
+          ['-', 0, 'b'],
+          ['-', 1, 'X']
+        ]
       ]
     end
 
     describe 'array' do
       it_has_behavior 'handles simple diffs', %w(a X), %w(b X a X), [
-        [ [ '+', 0, 'b' ],
-          [ '+', 1, 'X' ] ],
+        [
+          ['+', 0, 'b'],
+          ['+', 1, 'X']
+        ]
       ]
       it_has_behavior 'handles simple diffs', %w(b X a X), %w(a X), [
-        [ [ '-', 0, 'b' ],
-          [ '-', 1, 'X' ] ],
+        [
+          ['-', 0, 'b'],
+          ['-', 1, 'X']
+        ]
       ]
     end
   end

@@ -1,9 +1,9 @@
-# -*- ruby encoding: utf-8 -*-
+# frozen_string_literal: true
 
 require 'spec_helper'
 
 describe Diff::LCS::Change do
-  describe "an add" do
+  describe 'an add' do
     subject { described_class.new('+', 0, 'element') }
     it { should_not be_deleting   }
     it { should     be_adding     }
@@ -13,7 +13,7 @@ describe Diff::LCS::Change do
     it { should_not be_finished_b }
   end
 
-  describe "a delete" do
+  describe 'a delete' do
     subject { described_class.new('-', 0, 'element') }
     it { should     be_deleting   }
     it { should_not be_adding     }
@@ -23,7 +23,7 @@ describe Diff::LCS::Change do
     it { should_not be_finished_b }
   end
 
-  describe "an unchanged" do
+  describe 'an unchanged' do
     subject { described_class.new('=', 0, 'element') }
     it { should_not be_deleting   }
     it { should_not be_adding     }
@@ -33,7 +33,7 @@ describe Diff::LCS::Change do
     it { should_not be_finished_b }
   end
 
-  describe "a changed" do
+  describe 'a changed' do
     subject { described_class.new('!', 0, 'element') }
     it { should_not be_deleting   }
     it { should_not be_adding     }
@@ -43,7 +43,7 @@ describe Diff::LCS::Change do
     it { should_not be_finished_b }
   end
 
-  describe "a finished_a" do
+  describe 'a finished_a' do
     subject { described_class.new('>', 0, 'element') }
     it { should_not be_deleting   }
     it { should_not be_adding     }
@@ -53,7 +53,7 @@ describe Diff::LCS::Change do
     it { should_not be_finished_b }
   end
 
-  describe "a finished_b" do
+  describe 'a finished_b' do
     subject { described_class.new('<', 0, 'element') }
     it { should_not be_deleting   }
     it { should_not be_adding     }

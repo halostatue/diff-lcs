@@ -1,8 +1,8 @@
-# -*- ruby encoding: utf-8 -*-
+# frozen_string_literal: true
 
 require 'spec_helper'
 
-describe "Diff::LCS.diff" do
+describe 'Diff::LCS.diff' do
   include Diff::LCS::SpecHelper::Matchers
 
   it 'correctly diffs seq1 to seq2' do
@@ -18,16 +18,20 @@ describe "Diff::LCS.diff" do
   it 'correctly diffs against an empty sequence' do
     diff = Diff::LCS.diff(word_sequence, [])
     correct_diff = [
-      [ [ '-', 0, 'abcd'           ],
-        [ '-', 1, 'efgh'           ],
-        [ '-', 2, 'ijkl'           ],
-        [ '-', 3, 'mnopqrstuvwxyz' ] ]
+      [
+        ['-', 0, 'abcd'],
+        ['-', 1, 'efgh'],
+        ['-', 2, 'ijkl'],
+        ['-', 3, 'mnopqrstuvwxyz']
+      ]
     ]
 
     expect(change_diff(correct_diff)).to eq(diff)
 
     diff = Diff::LCS.diff([], word_sequence)
-    correct_diff.each { |hunk| hunk.each { |change| change[0] = '+' } }
+    correct_diff.each do |hunk|
+      hunk.each do |change| change[0] = '+' end
+    end
     expect(change_diff(correct_diff)).to eq(diff)
   end
 
@@ -37,11 +41,11 @@ describe "Diff::LCS.diff" do
     expect(Diff::LCS.patch(left, Diff::LCS.diff(left, right))).to eq(right)
   end
 
-  it "returns an empty diff with (hello, hello)" do
+  it 'returns an empty diff with (hello, hello)' do
     expect(Diff::LCS.diff(hello, hello)).to eq([])
   end
 
-  it "returns an empty diff with (hello_ary, hello_ary)" do
+  it 'returns an empty diff with (hello_ary, hello_ary)' do
     expect(Diff::LCS.diff(hello_ary, hello_ary)).to eq([])
   end
 end

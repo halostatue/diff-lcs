@@ -1,3 +1,8 @@
+## 1.NEXT / 2019-MM-DD
+
+*   Ruby versions lower than 2.3 are soft-deprecated and will not be run as part
+    of the CI process any longer.
+
 ## 1.3 / 2017-01-18
 
 *   Bugs fixed:
