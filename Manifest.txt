@@ -14,6 +14,7 @@ docs/artistic.txt
 lib/diff-lcs.rb
 lib/diff/lcs.rb
 lib/diff/lcs/array.rb
+lib/diff/lcs/backports.rb
 lib/diff/lcs/block.rb
 lib/diff/lcs/callbacks.rb
 lib/diff/lcs/change.rb

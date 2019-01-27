@@ -1,22 +1,20 @@
 ---
 language: ruby
 rvm:
-  - 2.5.0
-  - 2.4.3
-  - 2.3.6
-  - 2.2.9
-  - 2.1.10
-  - 2.0.0
-  - 1.9.3
-  - 1.8.7
-  - ree
+  - 2.6.0
+  - 2.5.3
+  - 2.4.5
+  - 2.3.8
+  - jruby-9.2.5.0
+  - jruby-9.1.17.0
+  - jruby-9.0.5.0
+  - jruby-head
   - ruby-head
-  - jruby-19mode
 matrix:
   allow_failures:
+    - rvm: jruby-head
     - rvm: ruby-head
-    - rvm: 1.8.7
-    - rvm: ree
+  fast_finish: true
 gemfile:
   - Gemfile
 before_script:
@@ -24,10 +22,4 @@ before_script:
 script: bundle exec rake travis
 after_script:
   - bundle exec rake travis:after -t
-notifications:
-  email:
-    recipients:
-      - austin@rubyforge.org
-    on_success: change
-    on_failure: always
 sudo: false

@@ -1,0 +1,120 @@
+---
+AllCops:
+  DisplayCopNames: true
+  DisplayStyleGuide: true
+  ExtraDetails: true
+  Exclude:
+    - diff-lcs.gemspec
+    - research/**/*
+
+Layout/AlignParameters:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/DotPosition:
+  EnforcedStyle: trailing
+
+Layout/ExtraSpacing:
+  Exclude:
+   - spec/**/*
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Metrics/LineLength:
+  Max: 110
+
+Naming/FileName:
+  Exclude:
+    - lib/diff-lcs.rb
+
+Naming/MemoizedInstanceVariableName:
+  Exclude: []
+
+Naming/UncommunicativeMethodParamName:
+  Exclude:
+    - lib/diff/lcs/internals.rb
+    - spec/spec_helper.rb
+
+Naming/VariableNumber:
+  Exclude: []
+
+Performance/Caller:
+  Exclude: []
+
+Security/MarshalLoad:
+  Exclude: []
+
+Security/YAMLLoad:
+  Exclude: []
+
+Style/BlockDelimiters:
+  EnforcedStyle: semantic
+  ProceduralMethods:
+    - trace
+    - assert_raises
+    - spec
+  FunctionalMethods:
+    - let
+    - subject
+    - add_discovery
+    - require_do
+    - it
+  IgnoredMethods:
+    - expect
+
+Style/Documentation:
+  Exclude:
+    - lib/diff/lcs/array.rb
+    - lib/diff/lcs/string.rb
+    - spec/spec_helper.rb
+
+# Until there is a hard drop of Ruby 1.8
+Style/HashSyntax:
+  Enabled: false
+
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    default: ()
+    '%i': '()'
+    '%I': '()'
+    '%r': '{}'
+    '%w': '()'
+    '%W': '()'
+
+Style/RescueModifier:
+  Enabled: false
+
+Style/RescueStandardError:
+  EnforcedStyle: implicit
+
+Style/SignalException:
+  EnforcedStyle: semantic
+
+Layout/IndentHeredoc: { Enabled: false }
+Metrics/AbcSize: { Enabled: false }
+Metrics/BlockLength: { Enabled: false }
+Metrics/BlockNesting: { Enabled: false }
+Metrics/ClassLength: { Enabled: false }
+Metrics/CyclomaticComplexity: { Enabled: false }
+Metrics/MethodLength: { Enabled: false}
+Metrics/ModuleLength: { Enabled: false}
+Metrics/PerceivedComplexity: { Enabled: false }
+Style/AccessModifierDeclarations: { Enabled: false }
+Style/AndOr: { Enabled: false }
+Style/AsciiComments: { Enabled: false }
+Style/BarePercentLiterals: { Enabled: false }
+Style/ClassAndModuleChildren: { Enabled: false }
+Style/ClassCheck: { Enabled: false }
+Style/CommentedKeyword: { Enabled: false }
+Style/DoubleNegation: { Enabled: false }
+Style/EmptyMethod: { Enabled: false }
+Style/ExpandPathArguments: { Enabled: false }
+Style/FormatString: { Enabled: false }
+Style/FormatStringToken: { Enabled: false }
+Style/MultilineBlockChain: { Enabled: false }
+Style/ParallelAssignment: { Enabled: false }
+Style/SafeNavigation: { Enabled: false }
+Style/SpecialGlobalVars: { Enabled: false }
+Style/SymbolArray: { Enabled: false }
+Style/SymbolProc: { Enabled: false }
+Style/WordArray: { Enabled: false }

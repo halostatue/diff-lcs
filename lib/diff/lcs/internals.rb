@@ -1,4 +1,4 @@
-# -*- ruby encoding: utf-8 -*-
+# frozen_string_literal: true
 
 class << Diff::LCS
   def diff_traversal(method, seq1, seq2, callbacks, &block)
@@ -45,8 +45,7 @@ class << Diff::LCS::Internals
     vector = []
 
     # Prune off any common elements at the beginning...
-    while ((a_start <= a_finish) and (b_start <= b_finish) and
-           (a[a_start] == b[b_start]))
+    while (a_start <= a_finish) and (b_start <= b_finish) and (a[a_start] == b[b_start])
       vector[a_start] = b_start
       a_start += 1
       b_start += 1
@@ -54,8 +53,7 @@ class << Diff::LCS::Internals
     b_start = a_start
 
     # Now the end...
-    while ((a_start <= a_finish) and (b_start <= b_finish) and
-           (a[a_finish] == b[b_finish]))
+    while (a_start <= a_finish) and (b_start <= b_finish) and (a[a_finish] == b[b_finish])
       vector[a_finish] = b_finish
       a_finish -= 1
       b_finish -= 1
@@ -68,7 +66,7 @@ class << Diff::LCS::Internals
     links  = []
     string = a.kind_of?(String)
 
-    (a_start .. a_finish).each do |i|
+    (a_start..a_finish).each do |i|
       ai = string ? a[i, 1] : a[i]
       bm = b_matches[ai]
       k = nil
@@ -78,13 +76,13 @@ class << Diff::LCS::Internals
         else
           k = replace_next_larger(thresh, j, k)
         end
-        links[k] = [ (k > 0) ? links[k - 1] : nil, i, j ] unless k.nil?
+        links[k] = [k.positive? ? links[k - 1] : nil, i, j] unless k.nil?
       end
     end
 
     unless thresh.empty?
       link = links[thresh.size - 1]
-      while not link.nil?
+      until link.nil?
         vector[link[1]] = link[2]
         link = link[0]
       end
@@ -98,7 +96,7 @@ class << Diff::LCS::Internals
   # Diff::LCS::Change objects to the object form of same) and detection of
   # whether the patchset represents changes to be made.
   def analyze_patchset(patchset, depth = 0)
-    raise "Patchset too complex" if depth > 1
+    fail 'Patchset too complex' if depth > 1
 
     has_changes = false
 
@@ -110,7 +108,7 @@ class << Diff::LCS::Internals
     #   ]
     # ]
 
-    patchset = patchset.map do |hunk|
+    patchset = patchset.map { |hunk|
       case hunk
       when Diff::LCS::Change
         has_changes ||= !hunk.unchanged?
@@ -128,11 +126,11 @@ class << Diff::LCS::Internals
           hunk.flatten
         end
       else
-        raise ArgumentError, "Cannot normalise a hunk of class #{hunk.class}."
+        fail ArgumentError, "Cannot normalise a hunk of class #{hunk.class}."
       end
-    end
+    }
 
-    [ has_changes, patchset.flatten(1) ]
+    [has_changes, patchset.flatten(1)]
   end
 
   # Examine the patchset and the source to see in which direction the
@@ -173,13 +171,11 @@ class << Diff::LCS::Internals
         when '!'
           if le == change.old_element
             left_match += 1
+          elsif re == change.new_element
+            right_match += 1
           else
-            if re == change.new_element
-              right_match += 1
-            else
-              left_miss += 1
-              right_miss += 1
-            end
+            left_miss += 1
+            right_miss += 1
           end
         end
       when Diff::LCS::Change
@@ -209,16 +205,16 @@ class << Diff::LCS::Internals
         end
       end
 
-      break if (not limit.nil?) && (count > limit)
+      break if !limit.nil? && (count > limit)
     end
 
-    no_left = (left_match == 0) && (left_miss > 0)
-    no_right = (right_match == 0) && (right_miss > 0)
+    no_left = left_match.zero? && left_miss.positive?
+    no_right = right_match.zero? && right_miss.positive?
 
-    case [ no_left, no_right ]
-    when [ false, true ]
+    case [no_left, no_right]
+    when [false, true]
       :patch
-    when [ true, false ]
+    when [true, false]
       :unpatch
     else
       case left_match <=> right_match
@@ -235,7 +231,8 @@ class << Diff::LCS::Internals
           :patch
         end
       else
-        raise "The provided patchset does not appear to apply to the provided enumerable as either source or destination value."
+        fail "The provided patchset does not appear to apply to the provided \
+enumerable as either source or destination value."
       end
     end
   end
@@ -258,14 +255,14 @@ class << Diff::LCS::Internals
     # Binary search for the insertion point
     last_index ||= enum.size
     first_index = 0
-    while (first_index <= last_index)
+    while first_index <= last_index
       i = (first_index + last_index) >> 1
 
       found = enum[i]
 
-      if value == found
-        return nil
-      elsif value > found
+      return nil if value == found
+
+      if value > found
         first_index = i + 1
       else
         last_index = i - 1
@@ -275,7 +272,7 @@ class << Diff::LCS::Internals
     # The insertion point is in first_index; overwrite the next larger
     # value.
     enum[first_index] = value
-    return first_index
+    first_index
   end
   private :replace_next_larger
 

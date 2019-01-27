@@ -1,4 +1,4 @@
-# -*- ruby encoding: utf-8 -*-
+# frozen_string_literal: true
 
 require 'rubygems'
 require 'pathname'
@@ -10,14 +10,14 @@ if ENV['COVERALLS']
 elsif ENV['COVERAGE']
   require 'simplecov'
 
-  def require_do(resource, &block)
+  def require_do(resource)
     require resource
-    block.call
+    yield if block_given?
   rescue LoadError
     nil
   end
 
-  formatters = [ SimpleCov::Formatter::HTMLFormatter ]
+  formatters = [SimpleCov::Formatter::HTMLFormatter]
 
   require_do('simplecov-rcov') {
     formatters << SimpleCov::Formatter::RcovFormatter
@@ -44,11 +44,11 @@ require 'diff-lcs'
 
 module Diff::LCS::SpecHelper
   def hello
-    "hello"
+    'hello'
   end
 
   def hello_ary
-    %W(h e l l o)
+    %w(h e l l o)
   end
 
   def seq1
@@ -77,50 +77,69 @@ module Diff::LCS::SpecHelper
 
   def correct_forward_diff
     [
-      [ [ '-',  0, 'a' ] ],
-      [ [ '+',  2, 'd' ] ],
-      [ [ '-',  4, 'h' ],
-        [ '+',  4, 'f' ] ],
-      [ [ '+',  6, 'k' ] ],
-      [ [ '-',  8, 'n' ],
-        [ '-',  9, 'p' ],
-        [ '+',  9, 'r' ],
-        [ '+', 10, 's' ],
-        [ '+', 11, 't' ] ]
+      [
+        ['-',  0, 'a']
+      ],
+      [
+        ['+',  2, 'd']
+      ],
+      [
+        ['-',  4, 'h'],
+        ['+',  4, 'f']
+      ],
+      [
+        ['+',  6, 'k']
+      ],
+      [
+        ['-',  8, 'n'],
+        ['-',  9, 'p'],
+        ['+',  9, 'r'],
+        ['+', 10, 's'],
+        ['+', 11, 't']
+      ]
     ]
   end
 
   def correct_backward_diff
     [
-      [ [ '+',  0, 'a' ] ],
-      [ [ '-',  2, 'd' ] ],
-      [ [ '-',  4, 'f' ],
-        [ '+',  4, 'h' ] ],
-      [ [ '-',  6, 'k' ] ],
       [
-        [ '-',  9, 'r' ],
-        [ '-', 10, 's' ],
-        [ '+',  8, 'n' ],
-        [ '-', 11, 't' ],
-        [ '+',  9, 'p' ] ]
+        ['+',  0, 'a']
+      ],
+      [
+        ['-',  2, 'd']
+      ],
+      [
+        ['-',  4, 'f'],
+        ['+',  4, 'h']
+      ],
+      [
+        ['-',  6, 'k']
+      ],
+      [
+        ['-',  9, 'r'],
+        ['-', 10, 's'],
+        ['+',  8, 'n'],
+        ['-', 11, 't'],
+        ['+',  9, 'p']
+      ]
     ]
   end
 
   def correct_forward_sdiff
     [
-      [ '-', [  0, 'a' ], [  0, nil ] ],
-      [ '=', [  1, 'b' ], [  0, 'b' ] ],
-      [ '=', [  2, 'c' ], [  1, 'c' ] ],
-      [ '+', [  3, nil ], [  2, 'd' ] ],
-      [ '=', [  3, 'e' ], [  3, 'e' ] ],
-      [ '!', [  4, 'h' ], [  4, 'f' ] ],
-      [ '=', [  5, 'j' ], [  5, 'j' ] ],
-      [ '+', [  6, nil ], [  6, 'k' ] ],
-      [ '=', [  6, 'l' ], [  7, 'l' ] ],
-      [ '=', [  7, 'm' ], [  8, 'm' ] ],
-      [ '!', [  8, 'n' ], [  9, 'r' ] ],
-      [ '!', [  9, 'p' ], [ 10, 's' ] ],
-      [ '+', [ 10, nil ], [ 11, 't' ] ]
+      ['-', [0, 'a'], [0, nil]],
+      ['=', [1, 'b'], [0, 'b']],
+      ['=', [2, 'c'], [1, 'c']],
+      ['+', [3, nil], [2, 'd']],
+      ['=', [3, 'e'], [3, 'e']],
+      ['!', [4, 'h'], [4, 'f']],
+      ['=', [5, 'j'], [5, 'j']],
+      ['+', [6, nil], [6, 'k']],
+      ['=', [6, 'l'], [7, 'l']],
+      ['=', [7, 'm'], [8, 'm']],
+      ['!', [8, 'n'], [9, 'r']],
+      ['!', [9, 'p'], [10, 's']],
+      ['+', [10, nil], [11, 't']]
     ]
   end
 
@@ -144,13 +163,13 @@ module Diff::LCS::SpecHelper
   end
 
   def format_diffs(diffs)
-    diffs.map do |e|
+    diffs.map { |e|
       if e.kind_of?(Array)
-        e.map { |f| f.to_a.join }.join(", ")
+        e.map { |f| f.to_a.join }.join(', ')
       else
         e.to_a.join
       end
-    end.join("\n")
+    }.join("\n")
   end
 
   def map_diffs(diffs, klass = Diff::LCS::ContextChange)
@@ -171,8 +190,8 @@ module Diff::LCS::SpecHelper
 
   def balanced_reverse(change_result)
     new_result = []
-    change_result.each { |line|
-      line = [ line[0], line[2], line[1] ]
+    change_result.each do |line|
+      line = [line[0], line[2], line[1]]
       case line[0]
       when '<'
         line[0] = '>'
@@ -180,21 +199,21 @@ module Diff::LCS::SpecHelper
         line[0] = '<'
       end
       new_result << line
-    }
-    new_result.sort_by { |line| [ line[1], line[2] ] }
+    end
+    new_result.sort_by { |line| [line[1], line[2]] }
   end
 
   def map_to_no_change(change_result)
     new_result = []
-    change_result.each { |line|
+    change_result.each do |line|
       case line[0]
       when '!'
-        new_result << [ '<', line[1], line[2] ]
-        new_result << [ '>', line[1] + 1, line[2] ]
+        new_result << ['<', line[1], line[2]]
+        new_result << ['>', line[1] + 1, line[2]]
       else
         new_result << line
       end
-    }
+    end
     new_result
   end
 
@@ -231,14 +250,18 @@ module Diff::LCS::SpecHelper
       end
 
       def finished_a(event)
-        @done_a << [event.old_element, event.old_position,
-          event.new_element, event.new_position]
+        @done_a << [
+          event.old_element, event.old_position,
+          event.new_element, event.new_position
+        ]
       end
 
       def finished_b(event)
-        p "called #finished_b"
-        @done_b << [event.old_element, event.old_position,
-          event.new_element, event.new_position]
+        p 'called #finished_b'
+        @done_b << [
+          event.old_element, event.old_position,
+          event.new_element, event.new_position
+        ]
       end
     end
     callbacks.reset
@@ -264,19 +287,19 @@ module Diff::LCS::SpecHelper
       end
 
       def match(event)
-        @result << [ "=", event.old_position, event.new_position ]
+        @result << ['=', event.old_position, event.new_position]
       end
 
       def discard_a(event)
-        @result << [ "<", event.old_position, event.new_position ]
+        @result << ['<', event.old_position, event.new_position]
       end
 
       def discard_b(event)
-        @result << [ ">", event.old_position, event.new_position ]
+        @result << ['>', event.old_position, event.new_position]
       end
 
       def change(event)
-        @result << [ "!", event.old_position, event.new_position ]
+        @result << ['!', event.old_position, event.new_position]
       end
     end
     cb.reset
