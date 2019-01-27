@@ -30,10 +30,7 @@ spec = Hoe.spec 'diff-lcs' do
   extra_dev_deps << ['rdoc', '>= 0']
 end
 
-unless Rake::Task.task_defined? :test
-  task :test => :spec
-  Rake::Task['travis'].prerequisites.replace(%w(spec))
-end
+task :test => :spec
 
 if RUBY_VERSION >= '2.0' && RUBY_ENGINE == 'ruby'
   namespace :spec do
