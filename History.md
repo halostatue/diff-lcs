@@ -1,23 +1,27 @@
 ## 1.NEXT / 2019-MM-DD
 
-*   Ruby versions lower than 2.3 are soft-deprecated and will not be run as part
-    of the CI process any longer.
+*   Ruby versions lower than 2.3 are soft-deprecated and will not be run as
+    part of the CI process any longer.
+*   Akinora MUSHA (knu) added the ability for Diff::LCS::Change objects to be
+    implicitly treated arrays. Originally provided as pull request [#47][],
+    but it introduced a number of test failures as documented in [#48][], and
+    remediation of Diff::LCS itself was introduced in [#49][].
 
 ## 1.3 / 2017-01-18
 
 *   Bugs fixed:
 
-    *   Fixed an error for bin/ldiff --version. Fixes [issue #21][].
+    *   Fixed an error for bin/ldiff --version. Fixes issue [#21][].
     *   Force Diff::LCS::Change and Diff::LCS::ContextChange to only perform
         equality comparisons against themselves. Provided by Kevin Mook in
-        [pull request #29][].
+        pull request [#29][].
     *   Fix tab expansion in htmldiff, provided by Mark Friedgan in
-        [pull request #25][].
-    *   Silence Ruby 2.4 Fixnum deprecation warnings. Fixxues [issue #38][] and
+        pull request [#25][].
+    *   Silence Ruby 2.4 Fixnum deprecation warnings. Fixxues issue [#38][] and
         [pull request#36][].
-    *   Ensure that test dependencies are loaded properly. Fixes [issue #33][]
-        and [pull request #34][].
-    *   Fix [issue #1][] with incorrect intuition of patch direction. Tentative
+    *   Ensure that test dependencies are loaded properly. Fixes issue [#33][]
+        and pull request [#34][].
+    *   Fix issue [#1][] with incorrect intuition of patch direction. Tentative
         fix, but the previous failure cases pass now.
 
 *   Tooling changes:
@@ -36,7 +40,7 @@
 *   Bugs fixed:
 
     *   Comparing arrays flattened them too far, especially with
-        Diff::LCS.sdiff. Fixed by Josh Bronson in [pull request #23][].
+        Diff::LCS.sdiff. Fixed by Josh Bronson in pull request [#23][].
 
 ## 1.2.4 / 2013-04-20
 
@@ -44,7 +48,7 @@
 
     *   A bug was introduced after 1.1.3 when pruning common sequences at the
         start of comparison. Paul Kunysch (@pck) fixed this in
-        [pull request #18][]. Thanks!
+        pull request [#18][]. Thanks!
 
     *   The Rubinius (1.9 mode) bug in [rubinius/rubinius#2268][] has been
         fixed by the Rubinius team two days after it was filed. Thanks for
@@ -76,7 +80,7 @@
         sets that are not US-ASCII-compatible because of the use of literal
         regular expressions and strings. Jon Rowe found this in
         [rspec/rspec-expectations#219][] and provided a first pass
-        implementation in [pull request #15][]. I've reworked it because of
+        implementation in pull request [#15][]. I've reworked it because of
         test failures in Rubinius when running in Ruby 1.9 mode. This coerces
         the added values to the encoding of the old dataset (as determined by
         the first piece of the old dataset).
@@ -106,30 +110,30 @@
 
 *   Bugs Fixed:
 
-    *   Fixed [issue #1][] patch direction detection.
-    *   Resolved [issue #2][] by handling `string[string.size, 1]` properly (it
+    *   Fixed issue [#1][] patch direction detection.
+    *   Resolved issue [#2][] by handling `string[string.size, 1]` properly (it
         returns `""` not `nil`).
     *   Michael Granger (ged) fixed an implementation error in
-        Diff::LCS::Change and added specs in [pull request #8][]. Thanks!
+        Diff::LCS::Change and added specs in pull request [#8][]. Thanks!
     *   Made the code auto-testable.
     *   Vít Ondruch (voxik) provided the latest version of the GPL2 license
-        file in [pull request #10][]. Thanks!
+        file in pull request [#10][]. Thanks!
     *   Fixed a documentation issue with the includable versions of #patch! and
         #unpatch! where they implied that they would replace the original
         value. Given that Diff::LCS.patch always returns a copy, the
         documentation was incorrect and has been corrected. To provide the
         behaviour that was originally documented, two new methods were added to
-        provide this behaviour. Found by scooter-dangle in [issue #12][].
+        provide this behaviour. Found by scooter-dangle in issue [#12][].
         Thanks!
 
 *   Code Style Changes:
 
     *   Removed trailing spaces.
     *   Calling class methods using `.` instead of `::`.
-    *   Vít Ondruch (voxik) removed unnecessary shebangs in [pull request #9][].
+    *   Vít Ondruch (voxik) removed unnecessary shebangs in pull request [#9][].
         Thanks!
     *   Kenichi Kamiya (kachick) removed some warnings of an unused variable in
-        lucky [pull request #13][]. Thanks!
+        lucky pull request [#13][]. Thanks!
     *   Embarked on a major refactoring to make the files a little more
         manageable and understand the code on a deeper level.
     *   Adding to http://travis-ci.org.
@@ -144,8 +148,8 @@
 *   Bugs fixed:
 
     *   Eliminated the explicit use of RubyGems in both bin/htmldiff and
-        bin/ldiff. Resolves [issue #4][].
-    *   Eliminated Ruby warnings. Resolves [issue #3][].
+        bin/ldiff. Resolves issue [#4][].
+    *   Eliminated Ruby warnings. Resolves issue [#3][].
 
 ## 1.1.2 / 2004-10-20
 
@@ -204,22 +208,25 @@
 [rspec/rspec-expectations#219]: https://github.com/rspec/rspec-expectations/issues/219
 [rspec/rspec-expectations@3d6fc82c]: https://github.com/rspec/rspec-expectations/commit/3d6fc82c
 [rspec/rspec-expectations#200]: https://github.com/rspec/rspec-expectations/pull/200
-[pull request #36]: https://github.com/halostatue/diff-lcs/pull/36
-[pull request #34]: https://github.com/halostatue/diff-lcs/pull/34
-[pull request #29]: https://github.com/halostatue/diff-lcs/pull/29
-[pull request #25]: https://github.com/halostatue/diff-lcs/pull/25
-[pull request #23]: https://github.com/halostatue/diff-lcs/pull/23
-[pull request #18]: https://github.com/halostatue/diff-lcs/pull/18
-[pull request #15]: https://github.com/halostatue/diff-lcs/pull/15
-[pull request #13]: https://github.com/halostatue/diff-lcs/pull/13
-[pull request #10]: https://github.com/halostatue/diff-lcs/pull/10
-[pull request #9]: https://github.com/halostatue/diff-lcs/pull/9
-[pull request #8]: https://github.com/halostatue/diff-lcs/pull/8
-[issue #38]: https://github.com/halostatue/diff-lcs/issues/38
-[issue #33]: https://github.com/halostatue/diff-lcs/issues/33
-[issue #21]: https://github.com/halostatue/diff-lcs/issues/21
-[issue #12]: https://github.com/halostatue/diff-lcs/issues/12
-[issue #4]: https://github.com/halostatue/diff-lcs/issues/4
-[issue #3]: https://github.com/halostatue/diff-lcs/issues/3
-[issue #2]: https://github.com/halostatue/diff-lcs/issues/2
-[issue #1]: https://github.com/halostatue/diff-lcs/issues/1
+[#1]: https://github.com/halostatue/diff-lcs/issues/1
+[#2]: https://github.com/halostatue/diff-lcs/issues/2
+[#3]: https://github.com/halostatue/diff-lcs/issues/3
+[#4]: https://github.com/halostatue/diff-lcs/issues/4
+[#8]: https://github.com/halostatue/diff-lcs/pull/8
+[#9]: https://github.com/halostatue/diff-lcs/pull/9
+[#10]: https://github.com/halostatue/diff-lcs/pull/10
+[#12]: https://github.com/halostatue/diff-lcs/issues/12
+[#13]: https://github.com/halostatue/diff-lcs/pull/13
+[#15]: https://github.com/halostatue/diff-lcs/pull/15
+[#18]: https://github.com/halostatue/diff-lcs/pull/18
+[#21]: https://github.com/halostatue/diff-lcs/issues/21
+[#23]: https://github.com/halostatue/diff-lcs/pull/23
+[#25]: https://github.com/halostatue/diff-lcs/pull/25
+[#29]: https://github.com/halostatue/diff-lcs/pull/29
+[#33]: https://github.com/halostatue/diff-lcs/issues/33
+[#34]: https://github.com/halostatue/diff-lcs/pull/34
+[#36]: https://github.com/halostatue/diff-lcs/pull/36
+[#38]: https://github.com/halostatue/diff-lcs/issues/38
+[#47]: https://github.com/halostatue/diff-lcs/pull/47
+[#48]: https://github.com/halostatue/diff-lcs/issues/48
+[#49]: https://github.com/halostatue/diff-lcs/pull/49

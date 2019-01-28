@@ -50,7 +50,7 @@ module Diff; end unless defined? Diff # rubocop:disable Style/Documentation
 #          a x b y c z p d q
 #    a b c a x b y c z
 module Diff::LCS
-  VERSION = '1.3'
+  VERSION = '1.4'
 end
 
 require 'diff/lcs/callbacks'
@@ -181,6 +181,20 @@ class << Diff::LCS
   # Class argument is provided for +callbacks+, #diff will attempt to
   # initialise it. If the +callbacks+ object (possibly initialised) responds
   # to #finish, it will be called.
+  #
+  # Each element of a returned array is a Diff::LCS::ContextChange object,
+  # which can be implicitly converted to an array.
+  #
+  #   Diff::LCS.sdiff(a, b).each do |action, (old_pos, old_element), (new_pos, new_element)|
+  #     case action
+  #     when '!'
+  #       # replace
+  #     when '-'
+  #       # delete
+  #     when '+'
+  #       # insert
+  #     end
+  #   end
   def sdiff(seq1, seq2, callbacks = nil, &block) #:yields diff changes:
     diff_traversal(:sdiff, seq1, seq2, callbacks || Diff::LCS::SDiffCallbacks, &block)
   end
@@ -623,7 +637,7 @@ class << Diff::LCS
 
     patch_map = PATCH_MAP[direction]
 
-    patchset.flatten.each do |change|
+    patchset.each do |change|
       # Both Change and ContextChange support #action
       action = patch_map[change.action]
 

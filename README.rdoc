@@ -13,10 +13,14 @@ Diff::LCS computes the difference between two Enumerable sequences using the
 McIlroy-Hunt longest common subsequence (LCS) algorithm. It includes utilities
 to create a simple HTML diff output format and a standard diff-like tool.
 
-This is release 1.3, providing a tentative fix to a long-standing issue related
-to incorrect detection of a patch direction. Also modernizes the gem
-infrastructure, testing infrastructure, and provides a warning-free experience
-to Ruby 2.4 users.
+This is release 1.4, providing a simple extension that allows for
+Diff::LCS::Change objects to be treated implicitly as arrays. Ruby versions
+below 2.3 are soft-deprecated.
+
+This means that older versions are no longer part of the CI test suite. If any
+changes have been introduced that break those versions, bug reports and patches
+will be accepted, but it will be up to the reporter to verify any fixes prior
+to release. A future release will completely break compatibility.
 
 == Synopsis
 
