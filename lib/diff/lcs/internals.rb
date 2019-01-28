@@ -91,14 +91,15 @@ class << Diff::LCS::Internals
     vector
   end
 
-  # This method will analyze the provided patchset to provide a
-  # single-pass normalization (conversion of the array form of
-  # Diff::LCS::Change objects to the object form of same) and detection of
-  # whether the patchset represents changes to be made.
+  # This method will analyze the provided patchset to provide a single-pass
+  # normalization (conversion of the array form of Diff::LCS::Change objects to
+  # the object form of same) and detection of whether the patchset represents
+  # changes to be made.
   def analyze_patchset(patchset, depth = 0)
     fail 'Patchset too complex' if depth > 1
 
     has_changes = false
+    new_patchset = []
 
     # Format:
     # [ # patchset
@@ -108,29 +109,28 @@ class << Diff::LCS::Internals
     #   ]
     # ]
 
-    patchset = patchset.map { |hunk|
+    patchset.each do |hunk|
       case hunk
       when Diff::LCS::Change
         has_changes ||= !hunk.unchanged?
-        hunk
+        new_patchset << hunk
       when Array
-        # Detect if the 'hunk' is actually an array-format
-        # Change object.
+        # Detect if the 'hunk' is actually an array-format change object.
         if Diff::LCS::Change.valid_action? hunk[0]
           hunk = Diff::LCS::Change.from_a(hunk)
           has_changes ||= !hunk.unchanged?
-          hunk
+          new_patchset << hunk
         else
           with_changes, hunk = analyze_patchset(hunk, depth + 1)
           has_changes ||= with_changes
-          hunk.flatten
+          new_patchset.concat(hunk)
         end
       else
         fail ArgumentError, "Cannot normalise a hunk of class #{hunk.class}."
       end
-    }
+    end
 
-    [has_changes, patchset.flatten(1)]
+    [has_changes, new_patchset]
   end
 
   # Examine the patchset and the source to see in which direction the

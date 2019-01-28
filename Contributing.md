@@ -77,6 +77,7 @@ Thanks to everyone else who has contributed to Diff::LCS:
 *   Josef Strzibny
 *   Josh Bronson
 *   Mark Friedgan
+*   Akinori MUSHA
 
 [Rspec]: http://rspec.info/documentation/
 [quality commit messages]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
