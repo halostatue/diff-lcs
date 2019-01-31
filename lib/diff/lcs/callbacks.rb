@@ -193,7 +193,7 @@ end
 # Diff::LCS::SDiffCallbacks. They may be compared as:
 #
 #     s = Diff::LCS.sdiff(seq1, seq2).reject { |e| e.action == "=" }
-#     c = Diff::LCS.sdiff(seq1, seq2, Diff::LCS::ContextDiffCallbacks).flatten
+#     c = Diff::LCS.sdiff(seq1, seq2, Diff::LCS::ContextDiffCallbacks).flatten(1)
 #
 #     s == c # -> true
 #
@@ -273,7 +273,7 @@ end
 # Diff::LCS::ContextDiffCallbacks. They may be compared as:
 #
 #     s = Diff::LCS.sdiff(seq1, seq2).reject { |e| e.action == "=" }
-#     c = Diff::LCS.sdiff(seq1, seq2, Diff::LCS::ContextDiffCallbacks).flatten
+#     c = Diff::LCS.sdiff(seq1, seq2, Diff::LCS::ContextDiffCallbacks).flatten(1)
 #
 #     s == c # -> true
 #
