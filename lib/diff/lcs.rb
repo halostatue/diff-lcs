@@ -602,7 +602,7 @@ class << Diff::LCS
   # having no changes if the following predicate returns true:
   #
   #     patchset.empty? or
-  #       patchset.flatten.all? { |change| change.unchanged? }
+  #       patchset.flatten(1).all? { |change| change.unchanged? }
   #
   # === Patchsets
   #
