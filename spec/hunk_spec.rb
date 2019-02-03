@@ -13,7 +13,7 @@ if String.method_defined?(:encoding)
 
     it 'produces a unified diff from the two pieces' do
       expected = <<-EXPECTED.gsub(/^\s+/, '').encode('UTF-16LE').chomp
-        @@ -1,2 +1,2 @@
+        @@ -1 +1 @@
         -Tu avec carté {count} itém has
         +Tu avec carte {count} item has
       EXPECTED
@@ -24,10 +24,10 @@ if String.method_defined?(:encoding)
     it 'produces a context diff from the two pieces' do
       expected = <<-EXPECTED.gsub(/^\s+/, '').encode('UTF-16LE').chomp
         ***************
-        *** 1,2 ****
-        !Tu avec carté {count} itém has
-        --- 1,2 ----
-        !Tu avec carte {count} item has
+        *** 1 ****
+        ! Tu avec carté {count} itém has
+        --- 1 ----
+        ! Tu avec carte {count} item has
       EXPECTED
 
       expect(hunk.diff(:context)).to eq(expected)
@@ -35,7 +35,7 @@ if String.method_defined?(:encoding)
 
     it 'produces an old diff from the two pieces' do
       expected = <<-EXPECTED.gsub(/^ +/, '').encode('UTF-16LE').chomp
-        1,2c1,2
+        1c1
         < Tu avec carté {count} itém has
         ---
         > Tu avec carte {count} item has
@@ -47,7 +47,7 @@ if String.method_defined?(:encoding)
 
     it 'produces a reverse ed diff from the two pieces' do
       expected = <<-EXPECTED.gsub(/^ +/, '').encode('UTF-16LE').chomp
-        c1,2
+        c1
         Tu avec carte {count} item has
         .
 

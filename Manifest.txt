@@ -25,8 +25,15 @@ lib/diff/lcs/ldiff.rb
 lib/diff/lcs/string.rb
 spec/change_spec.rb
 spec/diff_spec.rb
+spec/fixtures/aX
+spec/fixtures/bXaX
 spec/fixtures/ds1.csv
 spec/fixtures/ds2.csv
+spec/fixtures/ldiff/output.diff
+spec/fixtures/ldiff/output.diff-c
+spec/fixtures/ldiff/output.diff-e
+spec/fixtures/ldiff/output.diff-f
+spec/fixtures/ldiff/output.diff-u
 spec/hunk_spec.rb
 spec/issues_spec.rb
 spec/lcs_spec.rb

@@ -2,50 +2,71 @@
 
 require 'spec_helper'
 
-describe 'Diff::LCS.diff' do
-  include Diff::LCS::SpecHelper::Matchers
+RSpec.describe 'bin/ldiff' do
+  include CaptureSubprocessIO
 
-  it 'correctly diffs seq1 to seq2' do
-    diff_s1_s2 = Diff::LCS.diff(seq1, seq2)
-    expect(change_diff(correct_forward_diff)).to eq(diff_s1_s2)
+  let(:output_diff) { read_fixture }
+  let(:output_diff_c) { read_fixture('-c') }
+  let(:output_diff_e) { read_fixture('-e') }
+  let(:output_diff_f) { read_fixture('-f') }
+  let(:output_diff_u) { read_fixture('-u') }
+
+  specify do
+    expect(run_ldiff).to eq(output_diff)
   end
 
-  it 'correctly diffs seq2 to seq1' do
-    diff_s2_s1 = Diff::LCS.diff(seq2, seq1)
-    expect(change_diff(correct_backward_diff)).to eq(diff_s2_s1)
+  specify do
+    expect(run_ldiff('-c')).to eq(output_diff_c)
   end
 
-  it 'correctly diffs against an empty sequence' do
-    diff = Diff::LCS.diff(word_sequence, [])
-    correct_diff = [
-      [
-        ['-', 0, 'abcd'],
-        ['-', 1, 'efgh'],
-        ['-', 2, 'ijkl'],
-        ['-', 3, 'mnopqrstuvwxyz']
-      ]
-    ]
+  specify do
+    expect(run_ldiff('-e')).to eq(output_diff_e)
+  end
 
-    expect(change_diff(correct_diff)).to eq(diff)
+  specify do
+    expect(run_ldiff('-f')).to eq(output_diff_f)
+  end
 
-    diff = Diff::LCS.diff([], word_sequence)
-    correct_diff.each do |hunk|
-      hunk.each do |change| change[0] = '+' end
+  specify do
+    expect(run_ldiff('-u')).to eq(output_diff_u)
+  end
+
+  def read_fixture(flag = nil)
+    clean_data(IO.binread("spec/fixtures/ldiff/output.diff#{flag}"), flag)
+  end
+
+  def clean_data(data, flag)
+    case flag
+    when '-c', '-u'
+      clean_output_timestamp(data)
+    else
+      data
     end
-    expect(change_diff(correct_diff)).to eq(diff)
   end
 
-  it "correctly diffs 'xx' and 'xaxb'" do
-    left = 'xx'
-    right = 'xaxb'
-    expect(Diff::LCS.patch(left, Diff::LCS.diff(left, right))).to eq(right)
+  def clean_output_timestamp(data)
+    data.gsub(
+      %r{
+        [-*+]{3}
+        \s
+        spec/fixtures/(\w+)
+        \s
+        \d{4}-\d\d-\d\d
+        \s
+        \d\d:\d\d:\d\d(?:\.\d+)
+        \s
+        (?:[-+]\d{4}|Z)
+      }x,
+      '*** spec/fixtures/\1	0000-00-00 00:00:00.000000000 -0000'
+    )
   end
 
-  it 'returns an empty diff with (hello, hello)' do
-    expect(Diff::LCS.diff(hello, hello)).to eq([])
-  end
-
-  it 'returns an empty diff with (hello_ary, hello_ary)' do
-    expect(Diff::LCS.diff(hello_ary, hello_ary)).to eq([])
+  def run_ldiff(flag = nil, left: 'aX', right: 'bXaX')
+    stdout, stderr = capture_subprocess_io do
+      system("ruby -Ilib bin/ldiff #{flag} spec/fixtures/#{left} spec/fixtures/#{right}")
+    end
+    expect(stderr).to be_empty
+    expect(stdout).not_to be_empty
+    clean_data(stdout, flag)
   end
 end
