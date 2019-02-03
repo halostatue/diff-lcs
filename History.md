@@ -1,4 +1,4 @@
-## 1.NEXT / 2019-MM-DD
+## 1.4 / 2019-MM-DD
 
 *   Ruby versions lower than 2.3 are soft-deprecated and will not be run as
     part of the CI process any longer.
@@ -6,6 +6,13 @@
     implicitly treated arrays. Originally provided as pull request [#47][],
     but it introduced a number of test failures as documented in [#48][], and
     remediation of Diff::LCS itself was introduced in [#49][].
+*   Resolved [#5][] with some tests comparing output from `system` calls to
+    `bin/ldiff` with some pre-generated output. Resolved [#6][] with these
+    tests.
+*   Resolved a previously undetected `bin/ldiff` issue with `--context` output
+    not matching `diff --context` output.
+*   Resolved an issue with later versions of Ruby not working with an `OptParse`
+    specification of `Numeric`; this has been changed to `Integer`.
 
 ## 1.3 / 2017-01-18
 
@@ -212,6 +219,8 @@
 [#2]: https://github.com/halostatue/diff-lcs/issues/2
 [#3]: https://github.com/halostatue/diff-lcs/issues/3
 [#4]: https://github.com/halostatue/diff-lcs/issues/4
+[#5]: https://github.com/halostatue/diff-lcs/issues/5
+[#6]: https://github.com/halostatue/diff-lcs/issues/6
 [#8]: https://github.com/halostatue/diff-lcs/pull/8
 [#9]: https://github.com/halostatue/diff-lcs/pull/9
 [#10]: https://github.com/halostatue/diff-lcs/pull/10

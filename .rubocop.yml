@@ -53,6 +53,7 @@ Style/BlockDelimiters:
     - trace
     - assert_raises
     - spec
+    - capture_subprocess_io
   FunctionalMethods:
     - let
     - subject

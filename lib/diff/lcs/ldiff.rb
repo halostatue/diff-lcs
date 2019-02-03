@@ -30,14 +30,14 @@ class << Diff::LCS::Ldiff
       o.banner = "Usage: #{File.basename($0)} [options] oldfile newfile"
       o.separator ''
       o.on(
-        '-c', '-C', '--context [LINES]', Numeric,
+        '-c', '-C', '--context [LINES]', Integer,
         'Displays a context diff with LINES lines', 'of context. Default 3 lines.'
       ) do |ctx|
         @format = :context
         @lines  = ctx || 3
       end
       o.on(
-        '-u', '-U', '--unified [LINES]', Numeric,
+        '-u', '-U', '--unified [LINES]', Integer,
         'Displays a unified diff with LINES lines', 'of context. Default 3 lines.'
       ) do |ctx|
         @format = :unified
@@ -134,9 +134,9 @@ class << Diff::LCS::Ldiff
     end
 
     if (@format == :unified) or (@format == :context)
-      ft = File.stat(file_old).mtime.localtime.strftime('%Y-%m-%d %H:%M:%S.%N %z')
+      ft = File.stat(file_old).mtime.localtime.strftime('%Y-%m-%d %H:%M:%S.000000000 %z')
       output << "#{char_old} #{file_old}\t#{ft}\n"
-      ft = File.stat(file_new).mtime.localtime.strftime('%Y-%m-%d %H:%M:%S.%N %z')
+      ft = File.stat(file_new).mtime.localtime.strftime('%Y-%m-%d %H:%M:%S.000000000 %z')
       output << "#{char_new} #{file_new}\t#{ft}\n"
     end
 
@@ -155,7 +155,7 @@ class << Diff::LCS::Ldiff
         file_length_difference = hunk.file_length_difference
 
         next unless oldhunk
-        next if @lines.postive? and hunk.merge(oldhunk)
+        next if @lines.positive? and hunk.merge(oldhunk)
 
         output << oldhunk.diff(@format) << "\n"
       ensure
@@ -163,7 +163,10 @@ class << Diff::LCS::Ldiff
       end
     end
 
-    output << oldhunk.diff(@format) << "\n"
+    last = oldhunk.diff(@format)
+    last << "\n" if last.respond_to?(:end_with?) && !last.end_with?("\n")
+
+    output << last
 
     output.reverse_each { |e| real_output << e.diff(:ed_finish) } if @format == :ed
 

@@ -20,6 +20,7 @@ class Diff::LCS::Hunk
     before = after = file_length_difference
     after += @blocks[0].diff_size
     @file_length_difference = after # The caller must get this manually
+    @max_diff_size = @blocks.lazy.map { |e| e.diff_size }.max
 
     # Save the start & end of each array. If the array doesn't exist (e.g.,
     # we're only adding items in this block), then figure out the line
@@ -69,6 +70,8 @@ class Diff::LCS::Hunk
       else
         context
       end
+
+    add_end = @max_diff_size if add_end > @max_diff_size
 
     @end_old += add_end
     @end_new += add_end
@@ -190,7 +193,7 @@ class Diff::LCS::Hunk
 
       removes.each do |block|
         block.remove.each do |item|
-          outlist[item.position - lo][0, 1] = encode(block.op) # - or !
+          outlist[item.position - lo].insert(0, encode(block.op)) # - or !
         end
       end
       s << outlist.join("\n")
@@ -203,7 +206,7 @@ class Diff::LCS::Hunk
       outlist = @data_new[lo..hi].collect { |e| e.insert(0, encode(' ')) }
       inserts.each do |block|
         block.insert.each do |item|
-          outlist[item.position - lo][0, 1] = encode(block.op) # + or !
+          outlist[item.position - lo].insert(0, encode(block.op)) # - or !
         end
       end
       s << outlist.join("\n")
