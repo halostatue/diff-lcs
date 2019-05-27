@@ -4,22 +4,21 @@ module Diff; end unless defined? Diff # rubocop:disable Style/Documentation
 
 # == How Diff Works (by Mark-Jason Dominus)
 #
-# I once read an article written by the authors of +diff+; they said that
-# they hard worked very hard on the algorithm until they found the right
-# one.
+# I once read an article written by the authors of +diff+; they said that they
+# hard worked very hard on the algorithm until they found the right one.
 #
-# I think what they ended up using (and I hope someone will correct me,
-# because I am not very confident about this) was the `longest common
-# subsequence' method. In the LCS problem, you have two sequences of items:
+# I think what they ended up using (and I hope someone will correct me, because
+# I am not very confident about this) was the `longest common subsequence'
+# method. In the LCS problem, you have two sequences of items:
 #
 #    a b c d f g h j q z
 #    a b c d e f g i j k r x y z
 #
 # and you want to find the longest sequence of items that is present in both
 # original sequences in the same order. That is, you want to find a new
-# sequence *S* which can be obtained from the first sequence by deleting
-# some items, and from the second sequence by deleting other items. You also
-# want *S* to be as long as possible. In this case *S* is:
+# sequence *S* which can be obtained from the first sequence by deleting some
+# items, and from the second sequence by deleting other items. You also want
+# *S* to be as long as possible. In this case *S* is:
 #
 #    a b c d f g j z
 #
@@ -31,9 +30,9 @@ module Diff; end unless defined? Diff # rubocop:disable Style/Documentation
 # This module solves the LCS problem. It also includes a canned function to
 # generate +diff+-like output.
 #
-# It might seem from the example above that the LCS of two sequences is
-# always pretty obvious, but that's not always the case, especially when the
-# two sequences have many repeated elements. For example, consider
+# It might seem from the example above that the LCS of two sequences is always
+# pretty obvious, but that's not always the case, especially when the two
+# sequences have many repeated elements. For example, consider
 #
 #    a x b y c z p d q
 #    a b c a x b y c z
@@ -44,8 +43,8 @@ module Diff; end unless defined? Diff # rubocop:disable Style/Documentation
 #    a x b y c         z p d q
 #    a   b   c a b y c z
 #
-# This finds the common subsequence +a b c z+. But actually, the LCS is +a x
-# b y c z+:
+# This finds the common subsequence +a b c z+. But actually, the LCS is +a x b
+# y c z+:
 #
 #          a x b y c z p d q
 #    a b c a x b y c z
@@ -58,15 +57,14 @@ require 'diff/lcs/internals'
 
 module Diff::LCS # rubocop:disable Style/Documentation
   # Returns an Array containing the longest common subsequence(s) between
-  # +self+ and +other+. See Diff::LCS#LCS.
+  # +self+ and +other+. See Diff::LCS#lcs.
   #
   #   lcs = seq1.lcs(seq2)
   def lcs(other, &block) #:yields self[i] if there are matched subsequences:
     Diff::LCS.lcs(self, other, &block)
   end
 
-  # Returns the difference set between +self+ and +other+. See
-  # Diff::LCS#diff.
+  # Returns the difference set between +self+ and +other+. See Diff::LCS#diff.
   def diff(other, callbacks = nil, &block)
     Diff::LCS.diff(self, other, callbacks, &block)
   end
@@ -80,29 +78,27 @@ module Diff::LCS # rubocop:disable Style/Documentation
   # Traverses the discovered longest common subsequences between +self+ and
   # +other+. See Diff::LCS#traverse_sequences.
   def traverse_sequences(other, callbacks = nil, &block)
-    traverse_sequences(self, other, callbacks ||
-                       Diff::LCS.YieldingCallbacks, &block)
+    traverse_sequences(self, other, callbacks || Diff::LCS::SequenceCallbacks, &block)
   end
 
   # Traverses the discovered longest common subsequences between +self+ and
   # +other+ using the alternate, balanced algorithm. See
   # Diff::LCS#traverse_balanced.
   def traverse_balanced(other, callbacks = nil, &block)
-    traverse_balanced(self, other, callbacks ||
-                      Diff::LCS.YieldingCallbacks, &block)
+    traverse_balanced(self, other, callbacks || Diff::LCS::BalancedCallbacks, &block)
   end
 
-  # Attempts to patch +self+ with the provided +patchset+. A new sequence
-  # based on +self+ and the +patchset+ will be created. See Diff::LCS#patch.
-  # Attempts to autodiscover the direction of the patch.
+  # Attempts to patch +self+ with the provided +patchset+. A new sequence based
+  # on +self+ and the +patchset+ will be created. See Diff::LCS#patch. Attempts
+  # to autodiscover the direction of the patch.
   def patch(patchset)
     Diff::LCS.patch(self, patchset)
   end
   alias unpatch patch
 
-  # Attempts to patch +self+ with the provided +patchset+. A new sequence
-  # based on +self+ and the +patchset+ will be created. See Diff::LCS#patch.
-  # Does no patch direction autodiscovery.
+  # Attempts to patch +self+ with the provided +patchset+. A new sequence based
+  # on +self+ and the +patchset+ will be created. See Diff::LCS#patch. Does no
+  # patch direction autodiscovery.
   def patch!(patchset)
     Diff::LCS.patch!(self, patchset)
   end
@@ -115,8 +111,8 @@ module Diff::LCS # rubocop:disable Style/Documentation
   end
 
   # Attempts to patch +self+ with the provided +patchset+, using #patch!. If
-  # the sequence this is used on supports #replace, the value of +self+ will
-  # be replaced. See Diff::LCS#patch. Does no patch direction autodiscovery.
+  # the sequence this is used on supports #replace, the value of +self+ will be
+  # replaced. See Diff::LCS#patch. Does no patch direction autodiscovery.
   def patch_me(patchset)
     if respond_to? :replace
       replace(patch!(patchset))
@@ -125,10 +121,9 @@ module Diff::LCS # rubocop:disable Style/Documentation
     end
   end
 
-  # Attempts to unpatch +self+ with the provided +patchset+, using
-  # #unpatch!. If the sequence this is used on supports #replace, the value
-  # of +self+ will be replaced. See Diff::LCS#unpatch. Does no patch direction
-  # autodiscovery.
+  # Attempts to unpatch +self+ with the provided +patchset+, using #unpatch!.
+  # If the sequence this is used on supports #replace, the value of +self+ will
+  # be replaced. See Diff::LCS#unpatch. Does no patch direction autodiscovery.
   def unpatch_me(patchset)
     if respond_to? :replace
       replace(unpatch!(patchset))
@@ -155,14 +150,14 @@ class << Diff::LCS
   alias LCS lcs
 
   # #diff computes the smallest set of additions and deletions necessary to
-  # turn the first sequence into the second, and returns a description of
-  # these changes.
+  # turn the first sequence into the second, and returns a description of these
+  # changes.
   #
   # See Diff::LCS::DiffCallbacks for the default behaviour. An alternate
   # behaviour may be implemented with Diff::LCS::ContextDiffCallbacks. If a
   # Class argument is provided for +callbacks+, #diff will attempt to
-  # initialise it. If the +callbacks+ object (possibly initialised) responds
-  # to #finish, it will be called.
+  # initialise it. If the +callbacks+ object (possibly initialised) responds to
+  # #finish, it will be called.
   def diff(seq1, seq2, callbacks = nil, &block) # :yields diff changes:
     diff_traversal(:diff, seq1, seq2, callbacks || Diff::LCS::DiffCallbacks, &block)
   end
@@ -179,8 +174,8 @@ class << Diff::LCS
   # See Diff::LCS::SDiffCallbacks for the default behaviour. An alternate
   # behaviour may be implemented with Diff::LCS::ContextDiffCallbacks. If a
   # Class argument is provided for +callbacks+, #diff will attempt to
-  # initialise it. If the +callbacks+ object (possibly initialised) responds
-  # to #finish, it will be called.
+  # initialise it. If the +callbacks+ object (possibly initialised) responds to
+  # #finish, it will be called.
   #
   # Each element of a returned array is a Diff::LCS::ContextChange object,
   # which can be implicitly converted to an array.
@@ -199,11 +194,11 @@ class << Diff::LCS
     diff_traversal(:sdiff, seq1, seq2, callbacks || Diff::LCS::SDiffCallbacks, &block)
   end
 
-  # #traverse_sequences is the most general facility provided by this
-  # module; #diff and #lcs are implemented as calls to it.
+  # #traverse_sequences is the most general facility provided by this module;
+  # #diff and #lcs are implemented as calls to it.
   #
-  # The arguments to #traverse_sequences are the two sequences to traverse,
-  # and a callback object, like this:
+  # The arguments to #traverse_sequences are the two sequences to traverse, and
+  # a callback object, like this:
   #
   #   traverse_sequences(seq1, seq2, Diff::LCS::ContextDiffCallbacks.new)
   #
@@ -231,55 +226,54 @@ class << Diff::LCS
   #           ^
   #       b---+
   #
-  # If there are two arrows (+a+ and +b+) pointing to elements of sequences
-  # +A+ and +B+, the arrows will initially point to the first elements of
-  # their respective sequences. #traverse_sequences will advance the arrows
-  # through the sequences one element at a time, calling a method on the
-  # user-specified callback object before each advance. It will advance the
-  # arrows in such a way that if there are elements <tt>A[i]</tt> and
-  # <tt>B[j]</tt> which are both equal and part of the longest common
-  # subsequence, there will be some moment during the execution of
-  # #traverse_sequences when arrow +a+ is pointing to <tt>A[i]</tt> and
-  # arrow +b+ is pointing to <tt>B[j]</tt>. When this happens,
-  # #traverse_sequences will call <tt>callbacks#match</tt> and then it will
-  # advance both arrows.
+  # If there are two arrows (+a+ and +b+) pointing to elements of sequences +A+
+  # and +B+, the arrows will initially point to the first elements of their
+  # respective sequences. #traverse_sequences will advance the arrows through
+  # the sequences one element at a time, calling a method on the user-specified
+  # callback object before each advance. It will advance the arrows in such a
+  # way that if there are elements <tt>A[i]</tt> and <tt>B[j]</tt> which are
+  # both equal and part of the longest common subsequence, there will be some
+  # moment during the execution of #traverse_sequences when arrow +a+ is
+  # pointing to <tt>A[i]</tt> and arrow +b+ is pointing to <tt>B[j]</tt>. When
+  # this happens, #traverse_sequences will call <tt>callbacks#match</tt> and
+  # then it will advance both arrows.
   #
-  # Otherwise, one of the arrows is pointing to an element of its sequence
-  # that is not part of the longest common subsequence. #traverse_sequences
-  # will advance that arrow and will call <tt>callbacks#discard_a</tt> or
-  # <tt>callbacks#discard_b</tt>, depending on which arrow it advanced. If
-  # both arrows point to elements that are not part of the longest common
-  # subsequence, then #traverse_sequences will advance one of them and call
-  # the appropriate callback, but it is not specified which it will call.
+  # Otherwise, one of the arrows is pointing to an element of its sequence that
+  # is not part of the longest common subsequence. #traverse_sequences will
+  # advance that arrow and will call <tt>callbacks#discard_a</tt> or
+  # <tt>callbacks#discard_b</tt>, depending on which arrow it advanced. If both
+  # arrows point to elements that are not part of the longest common
+  # subsequence, then #traverse_sequences will advance one of them and call the
+  # appropriate callback, but it is not specified which it will call.
   #
-  # The methods for <tt>callbacks#match</tt>, <tt>callbacks#discard_a</tt>,
-  # and <tt>callbacks#discard_b</tt> are invoked with an event comprising
-  # the action ("=", "+", or "-", respectively), the indicies +i+ and +j+,
-  # and the elements <tt>A[i]</tt> and <tt>B[j]</tt>. Return values are
-  # discarded by #traverse_sequences.
+  # The methods for <tt>callbacks#match</tt>, <tt>callbacks#discard_a</tt>, and
+  # <tt>callbacks#discard_b</tt> are invoked with an event comprising the
+  # action ("=", "+", or "-", respectively), the indicies +i+ and +j+, and the
+  # elements <tt>A[i]</tt> and <tt>B[j]</tt>. Return values are discarded by
+  # #traverse_sequences.
   #
   # === End of Sequences
   #
   # If arrow +a+ reaches the end of its sequence before arrow +b+ does,
-  # #traverse_sequence will try to call <tt>callbacks#finished_a</tt> with
-  # the last index and element of +A+ (<tt>A[-1]</tt>) and the current index
-  # and element of +B+ (<tt>B[j]</tt>). If <tt>callbacks#finished_a</tt>
-  # does not exist, then <tt>callbacks#discard_b</tt> will be called on each
-  # element of +B+ until the end of the sequence is reached (the call will
-  # be done with <tt>A[-1]</tt> and <tt>B[j]</tt> for each element).
+  # #traverse_sequence will try to call <tt>callbacks#finished_a</tt> with the
+  # last index and element of +A+ (<tt>A[-1]</tt>) and the current index and
+  # element of +B+ (<tt>B[j]</tt>). If <tt>callbacks#finished_a</tt> does not
+  # exist, then <tt>callbacks#discard_b</tt> will be called on each element of
+  # +B+ until the end of the sequence is reached (the call will be done with
+  # <tt>A[-1]</tt> and <tt>B[j]</tt> for each element).
   #
   # If +b+ reaches the end of +B+ before +a+ reaches the end of +A+,
   # <tt>callbacks#finished_b</tt> will be called with the current index and
   # element of +A+ (<tt>A[i]</tt>) and the last index and element of +B+
-  # (<tt>A[-1]</tt>). Again, if <tt>callbacks#finished_b</tt> does not exist
-  # on the callback object, then <tt>callbacks#discard_a</tt> will be called
-  # on each element of +A+ until the end of the sequence is reached
-  # (<tt>A[i]</tt> and <tt>B[-1]</tt>).
+  # (<tt>A[-1]</tt>). Again, if <tt>callbacks#finished_b</tt> does not exist on
+  # the callback object, then <tt>callbacks#discard_a</tt> will be called on
+  # each element of +A+ until the end of the sequence is reached (<tt>A[i]</tt>
+  # and <tt>B[-1]</tt>).
   #
   # There is a chance that one additional <tt>callbacks#discard_a</tt> or
-  # <tt>callbacks#discard_b</tt> will be called after the end of the
-  # sequence is reached, if +a+ has not yet reached the end of +A+ or +b+
-  # has not yet reached the end of +B+.
+  # <tt>callbacks#discard_b</tt> will be called after the end of the sequence
+  # is reached, if +a+ has not yet reached the end of +A+ or +b+ has not yet
+  # reached the end of +B+.
   def traverse_sequences(seq1, seq2, callbacks = Diff::LCS::SequenceCallbacks) #:yields change events:
     callbacks ||= Diff::LCS::SequenceCallbacks
     matches = Diff::LCS::Internals.lcs(seq1, seq2)
@@ -323,8 +317,8 @@ class << Diff::LCS
     end
     ai += 1
 
-    # The last entry (if any) processed was a match. +ai+ and +bj+ point
-    # just past the last matching lines in their sequences.
+    # The last entry (if any) processed was a match. +ai+ and +bj+ point just
+    # past the last matching lines in their sequences.
     while (ai < a_size) or (bj < b_size)
       # last A?
       if ai == a_size and bj < b_size
@@ -391,13 +385,13 @@ class << Diff::LCS
   end
 
   # #traverse_balanced is an alternative to #traverse_sequences. It uses a
-  # different algorithm to iterate through the entries in the computed
-  # longest common subsequence. Instead of viewing the changes as insertions
-  # or deletions from one of the sequences, #traverse_balanced will report
+  # different algorithm to iterate through the entries in the computed longest
+  # common subsequence. Instead of viewing the changes as insertions or
+  # deletions from one of the sequences, #traverse_balanced will report
   # <em>changes</em> between the sequences.
   #
-  # The arguments to #traverse_balanced are the two sequences to traverse
-  # and a callback object, like this:
+  # The arguments to #traverse_balanced are the two sequences to traverse and a
+  # callback object, like this:
   #
   #   traverse_balanced(seq1, seq2, Diff::LCS::ContextDiffCallbacks.new)
   #
@@ -433,24 +427,23 @@ class << Diff::LCS
   #
   # === Matches
   #
-  # If there are two arrows (+a+ and +b+) pointing to elements of sequences
-  # +A+ and +B+, the arrows will initially point to the first elements of
-  # their respective sequences. #traverse_sequences will advance the arrows
-  # through the sequences one element at a time, calling a method on the
-  # user-specified callback object before each advance. It will advance the
-  # arrows in such a way that if there are elements <tt>A[i]</tt> and
-  # <tt>B[j]</tt> which are both equal and part of the longest common
-  # subsequence, there will be some moment during the execution of
-  # #traverse_sequences when arrow +a+ is pointing to <tt>A[i]</tt> and
-  # arrow +b+ is pointing to <tt>B[j]</tt>. When this happens,
-  # #traverse_sequences will call <tt>callbacks#match</tt> and then it will
-  # advance both arrows.
+  # If there are two arrows (+a+ and +b+) pointing to elements of sequences +A+
+  # and +B+, the arrows will initially point to the first elements of their
+  # respective sequences. #traverse_sequences will advance the arrows through
+  # the sequences one element at a time, calling a method on the user-specified
+  # callback object before each advance. It will advance the arrows in such a
+  # way that if there are elements <tt>A[i]</tt> and <tt>B[j]</tt> which are
+  # both equal and part of the longest common subsequence, there will be some
+  # moment during the execution of #traverse_sequences when arrow +a+ is
+  # pointing to <tt>A[i]</tt> and arrow +b+ is pointing to <tt>B[j]</tt>. When
+  # this happens, #traverse_sequences will call <tt>callbacks#match</tt> and
+  # then it will advance both arrows.
   #
   # === Discards
   #
-  # Otherwise, one of the arrows is pointing to an element of its sequence
-  # that is not part of the longest common subsequence. #traverse_sequences
-  # will advance that arrow and will call <tt>callbacks#discard_a</tt> or
+  # Otherwise, one of the arrows is pointing to an element of its sequence that
+  # is not part of the longest common subsequence. #traverse_sequences will
+  # advance that arrow and will call <tt>callbacks#discard_a</tt> or
   # <tt>callbacks#discard_b</tt>, depending on which arrow it advanced.
   #
   # === Changes
@@ -464,14 +457,14 @@ class << Diff::LCS
   #
   # The methods for <tt>callbacks#match</tt>, <tt>callbacks#discard_a</tt>,
   # <tt>callbacks#discard_b</tt>, and <tt>callbacks#change</tt> are invoked
-  # with an event comprising the action ("=", "+", "-", or "!",
-  # respectively), the indicies +i+ and +j+, and the elements
-  # <tt>A[i]</tt> and <tt>B[j]</tt>. Return values are discarded by
-  # #traverse_balanced.
+  # with an event comprising the action ("=", "+", "-", or "!", respectively),
+  # the indicies +i+ and +j+, and the elements <tt>A[i]</tt> and <tt>B[j]</tt>.
+  # Return values are discarded by #traverse_balanced.
   #
   # === Context
-  # Note that +i+ and +j+ may not be the same index position, even if +a+
-  # and +b+ are considered to be pointing to matching or changed elements.
+  #
+  # Note that +i+ and +j+ may not be the same index position, even if +a+ and
+  # +b+ are considered to be pointing to matching or changed elements.
   def traverse_balanced(seq1, seq2, callbacks = Diff::LCS::BalancedCallbacks)
     matches = Diff::LCS::Internals.lcs(seq1, seq2)
     a_size = seq1.size
@@ -592,23 +585,23 @@ class << Diff::LCS
   #
   #     patch(s1, diff(s1, s2)) -> s2
   #
-  # A +patchset+ can be considered to apply backward (<tt>:unpatch</tt>) if
-  # the following expression is true:
+  # A +patchset+ can be considered to apply backward (<tt>:unpatch</tt>) if the
+  # following expression is true:
   #
   #     patch(s2, diff(s1, s2)) -> s1
   #
-  # If the +patchset+ contains no changes, the +src+ value will be returned
-  # as either <tt>src.dup</tt> or +src+. A +patchset+ can be deemed as
-  # having no changes if the following predicate returns true:
+  # If the +patchset+ contains no changes, the +src+ value will be returned as
+  # either <tt>src.dup</tt> or +src+. A +patchset+ can be deemed as having no
+  # changes if the following predicate returns true:
   #
   #     patchset.empty? or
   #       patchset.flatten(1).all? { |change| change.unchanged? }
   #
   # === Patchsets
   #
-  # A +patchset+ is always an enumerable sequence of changes, hunks of
-  # changes, or a mix of the two. A hunk of changes is an enumerable
-  # sequence of changes:
+  # A +patchset+ is always an enumerable sequence of changes, hunks of changes,
+  # or a mix of the two. A hunk of changes is an enumerable sequence of
+  # changes:
   #
   #     [ # patchset
   #       # change
@@ -617,9 +610,9 @@ class << Diff::LCS
   #       ]
   #     ]
   #
-  # The +patch+ method accepts <tt>patchset</tt>s that are enumerable
-  # sequences containing either Diff::LCS::Change objects (or a subclass) or
-  # the array representations of those objects. Prior to application, array
+  # The +patch+ method accepts <tt>patchset</tt>s that are enumerable sequences
+  # containing either Diff::LCS::Change objects (or a subclass) or the array
+  # representations of those objects. Prior to application, array
   # representations of Diff::LCS::Change objects will be reified.
   def patch(src, patchset, direction = nil)
     # Normalize the patchset.
@@ -723,14 +716,14 @@ class << Diff::LCS
     res
   end
 
-  # Given a set of patchset, convert the current version to the prior
-  # version. Does no auto-discovery.
+  # Given a set of patchset, convert the current version to the prior version.
+  # Does no auto-discovery.
   def unpatch!(src, patchset)
     patch(src, patchset, :unpatch)
   end
 
-  # Given a set of patchset, convert the current version to the next
-  # version. Does no auto-discovery.
+  # Given a set of patchset, convert the current version to the next version.
+  # Does no auto-discovery.
   def patch!(src, patchset)
     patch(src, patchset, :patch)
   end
