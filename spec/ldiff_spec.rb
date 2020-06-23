@@ -36,12 +36,14 @@ RSpec.describe 'bin/ldiff' do
   end
 
   def clean_data(data, flag)
-    case flag
-    when '-c', '-u'
-      clean_output_timestamp(data)
-    else
-      data
-    end
+    data =
+      case flag
+      when '-c', '-u'
+        clean_output_timestamp(data)
+      else
+        data
+      end
+    data.gsub(/\r\n?/, "\n")
   end
 
   def clean_output_timestamp(data)
