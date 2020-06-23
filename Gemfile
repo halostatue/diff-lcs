@@ -10,8 +10,7 @@ if RUBY_VERSION < '1.9'
   gem 'rdoc', '< 4'
 elsif RUBY_VERSION >= '2.0'
   if RUBY_ENGINE == 'ruby'
-    gem 'coveralls', '~> 0.7'
-    gem 'simplecov', '~> 0.7'
+    gem 'simplecov', '~> 0.18'
   end
 end
 
