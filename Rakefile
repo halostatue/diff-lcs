@@ -24,21 +24,10 @@ _spec = Hoe.spec 'diff-lcs' do
   extra_dev_deps << ['hoe-gemspec2', '~> 1.1']
   extra_dev_deps << ['hoe-git', '~> 1.6']
   extra_dev_deps << ['hoe-rubygems', '~> 1.0']
-  extra_dev_deps << ['hoe-travis', '~> 1.2']
   extra_dev_deps << ['rspec', '>= 2.0', '< 4']
   extra_dev_deps << ['rake', '>= 10.0', '< 14']
   extra_dev_deps << ['rdoc', '>= 0']
 end
-
-require "rspec/core/rake_task"
-
-desc "Run all specifications"
-RSpec::Core::RakeTask.new(:spec) do |t|
-  rspec_dirs = %w(spec lib)
-  t.rspec_opts = []
-  t.rspec_opts << "-I#{rspec_dirs.join(":")}" unless rspec_dirs.empty?
-end
-task :default => :spec
 
 if RUBY_VERSION >= '2.0' && RUBY_ENGINE == 'ruby'
   namespace :spec do

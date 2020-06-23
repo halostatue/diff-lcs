@@ -19,7 +19,7 @@ class Diff::LCS::Block
   end
 
   def diff_size
-    @insert.size - @remove.size
+    (@insert.size - @remove.size).abs
   end
 
   def op
