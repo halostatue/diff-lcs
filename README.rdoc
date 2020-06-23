@@ -4,8 +4,7 @@ home :: https://github.com/halostatue/diff-lcs
 code :: https://github.com/halostatue/diff-lcs
 bugs :: https://github.com/halostatue/diff-lcs/issues
 rdoc :: http://rubydoc.info/github/halostatue/diff-lcs
-continuous integration :: {<img src="https://travis-ci.org/halostatue/diff-lcs.svg" />}[https://travis-ci.org/halostatue/diff-lcs]
-test coverage :: {<img src="https://coveralls.io/repos/halostatue/diff-lcs/badge.svg" alt="Coverage Status" />}[https://coveralls.io/r/halostatue/diff-lcs]
+continuous integration :: {<img src="https://github.com/halostatue/diff-lcs/workflows/CI/badge.svg" />}[https://github.com/halostatue/diff-lcs/actions]
 
 == Description
 
@@ -15,7 +14,7 @@ to create a simple HTML diff output format and a standard diff-like tool.
 
 This is release 1.4, providing a simple extension that allows for
 Diff::LCS::Change objects to be treated implicitly as arrays. Ruby versions
-below 2.3 are soft-deprecated.
+below 2.5 are soft-deprecated.
 
 This means that older versions are no longer part of the CI test suite. If any
 changes have been introduced that break those versions, bug reports and patches
