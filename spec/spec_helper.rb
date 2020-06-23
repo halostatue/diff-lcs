@@ -4,10 +4,7 @@ require 'rubygems'
 require 'pathname'
 require 'psych'
 
-if ENV['COVERALLS']
-  require 'coveralls'
-  Coveralls.wear!
-elsif ENV['COVERAGE']
+if ENV['COVERAGE']
   require 'simplecov'
 
   def require_do(resource)

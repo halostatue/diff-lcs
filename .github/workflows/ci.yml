@@ -17,11 +17,11 @@ jobs:
   test:
     strategy:
       matrix:
-        os: 
+        os:
           - ubuntu
           - macos
           - windows
-        ruby: 
+        ruby:
           - 2.5
           - 2.6
           - 2.7
@@ -33,8 +33,23 @@ jobs:
           - jruby-head
           - truffleruby
           - truffleruby-head
+        exclude:
+          - os: macos
+            ruby: mingw
+          - os: macos
+            ruby: mswin
+          - os: ubuntu
+            ruby: mingw
+          - os: ubuntu
+            ruby: mswin
+          - os: windows
+            ruby: debug
+          - os: windows
+            ruby: truffleruby
+          - os: windows
+            ruby: truffleruby-head
     runs-on: ${{ matrix.os }}-latest
-    continue-on-error: ${{ endsWith(matrix.ruby, 'head') || matrix.ruby == 'debug' }}
+    continue-on-error: ${{ endsWith(matrix.ruby, 'head') || matrix.ruby == 'debug' || matrix.os == 'windows' }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up Ruby

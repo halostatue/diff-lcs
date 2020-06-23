@@ -48,6 +48,4 @@ if RUBY_VERSION >= '2.0' && RUBY_ENGINE == 'ruby'
       Rake::Task['spec'].execute
     end
   end
-
-  # Rake::Task['travis'].prerequisites.replace(%w(spec:coveralls))
 end
