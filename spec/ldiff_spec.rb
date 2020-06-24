@@ -10,6 +10,11 @@ RSpec.describe 'bin/ldiff' do
   let(:output_diff_e) { read_fixture('-e') }
   let(:output_diff_f) { read_fixture('-f') }
   let(:output_diff_u) { read_fixture('-u') }
+  let(:output_diff_chef) { read_fixture('-u', base: 'output.diff.chef') }
+
+  specify do
+    expect(run_ldiff('-u', left: 'old-chef', right: 'new-chef')).to eq(output_diff_chef)
+  end
 
   specify do
     expect(run_ldiff).to eq(output_diff)
@@ -31,8 +36,8 @@ RSpec.describe 'bin/ldiff' do
     expect(run_ldiff('-u')).to eq(output_diff_u)
   end
 
-  def read_fixture(flag = nil)
-    clean_data(IO.binread("spec/fixtures/ldiff/output.diff#{flag}"), flag)
+  def read_fixture(flag = nil, base: 'output.diff')
+    clean_data(IO.binread("spec/fixtures/ldiff/#{base}#{flag}"), flag)
   end
 
   def clean_data(data, flag)
@@ -49,14 +54,15 @@ RSpec.describe 'bin/ldiff' do
   def clean_output_timestamp(data)
     data.gsub(
       %r{
-        [-*+]{3}
-        \s
-        spec/fixtures/(\w+)
-        \s
+        ^
+        [-+*]{3}
+        \s*
+        spec/fixtures/(\S+)
+        \s*
         \d{4}-\d\d-\d\d
-        \s
+        \s*
         \d\d:\d\d:\d\d(?:\.\d+)
-        \s
+        \s*
         (?:[-+]\d{4}|Z)
       }x,
       '*** spec/fixtures/\1	0000-00-00 00:00:00.000000000 -0000'
