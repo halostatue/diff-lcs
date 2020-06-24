@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require 'diff/lcs/hunk'
 
 describe 'Diff::LCS Issues' do
   include Diff::LCS::SpecHelper::Matchers
@@ -62,6 +63,36 @@ describe 'Diff::LCS Issues' do
         expected = {:category=>"rack.middleware", :title=>"Anonymous Middleware"}
         expect(actual).to eq(expected)
       }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+    end
+  end
+
+  describe "issue #60" do
+    it 'should produce unified output with correct context' do
+      old_data = <<-DATA_OLD.strip.split("\n").map(&:chomp)
+{
+  "name": "x",
+  "description": "hi"
+}
+      DATA_OLD
+
+      new_data = <<-DATA_NEW.strip.split("\n").map(&:chomp)
+{
+  "name": "x",
+  "description": "lo"
+}
+      DATA_NEW
+
+      diff = ::Diff::LCS.diff(old_data, new_data)
+      hunk = ::Diff::LCS::Hunk.new(old_data, new_data, diff.first, 3, 0)
+
+      expect(hunk.diff(:unified)).to eq(<<-EXPECTED.chomp)
+@@ -1,5 +1,5 @@
+ {
+   "name": "x",
+-  "description": "hi"
++  "description": "lo"
+ }
+      EXPECTED
     end
   end
 end

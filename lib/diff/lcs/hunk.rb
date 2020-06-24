@@ -2,12 +2,12 @@
 
 require 'diff/lcs/block'
 
-# A Hunk is a group of Blocks which overlap because of the context
-# surrounding each block. (So if we're not using context, every hunk will
-# contain one block.) Used in the diff program (bin/diff).
+# A Hunk is a group of Blocks which overlap because of the context surrounding
+# each block. (So if we're not using context, every hunk will contain one
+# block.) Used in the diff program (bin/ldiff).
 class Diff::LCS::Hunk
-  # Create a hunk using references to both the old and new data, as well as
-  # the piece of data.
+  # Create a hunk using references to both the old and new data, as well as the
+  # piece of data.
   def initialize(data_old, data_new, piece, flag_context, file_length_difference)
     # At first, a hunk will have just one Block in it
     @blocks = [Diff::LCS::Block.new(piece)]
@@ -61,17 +61,20 @@ class Diff::LCS::Hunk
     return if context.nil? or context.zero?
 
     add_start = context > @start_old ? @start_old : context
+
     @start_old -= add_start
     @start_new -= add_start
 
+    old_size = @data_old.size
+
     add_end =
-      if (@end_old + context) > @data_old.size
-        @data_old.size - @end_old
+      if (@end_old + context) > old_size
+        old_size - @end_old
       else
         context
       end
 
-    add_end = @max_diff_size if add_end > @max_diff_size
+    add_end = @max_diff_size if add_end >= old_size
 
     @end_old += add_end
     @end_new += add_end

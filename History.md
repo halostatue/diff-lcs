@@ -1,5 +1,16 @@
 # History
 
+## 1.4.2 / 2020-06-23
+
+- Camille Drapier fixed a small issue with RuboCop configuration. [#59][]
+- Applied another fix (and unit test) to fix an issue for the Chef team.
+  [#60][], [#61][]
+
+## 1.4.1 / 2020-06-23
+
+- Fix an issue where diff sizes could be negative, and they should be. [#57][],
+  [#58][]
+
 ## 1.4 / 2020-06-23
 
 - Ruby versions lower than 2.4 are soft-deprecated and will not be run as
@@ -245,3 +256,8 @@
 [#49]: https://github.com/halostatue/diff-lcs/pull/49
 [#52]: https://github.com/halostatue/diff-lcs/pull/52
 [#53]: https://github.com/halostatue/diff-lcs/issues/53
+[#57]: https://github.com/halostatue/diff-lcs/issues/57
+[#58]: https://github.com/halostatue/diff-lcs/pull/58
+[#59]: https://github.com/halostatue/diff-lcs/pull/59
+[#60]: https://github.com/halostatue/diff-lcs/issues/60
+[#61]: https://github.com/halostatue/diff-lcs/pull/61
