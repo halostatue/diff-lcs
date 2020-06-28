@@ -10,10 +10,10 @@ RSpec.describe 'bin/ldiff' do
   let(:output_diff_e) { read_fixture('-e') }
   let(:output_diff_f) { read_fixture('-f') }
   let(:output_diff_u) { read_fixture('-u') }
-  let(:output_diff_chef) { read_fixture('-u', base: 'output.diff.chef') }
+  let(:output_diff_chef) { read_fixture('-u', :base => 'output.diff.chef') }
 
   specify do
-    expect(run_ldiff('-u', left: 'old-chef', right: 'new-chef')).to eq(output_diff_chef)
+    expect(run_ldiff('-u', :left => 'old-chef', :right => 'new-chef')).to eq(output_diff_chef)
   end
 
   specify do
@@ -36,8 +36,11 @@ RSpec.describe 'bin/ldiff' do
     expect(run_ldiff('-u')).to eq(output_diff_u)
   end
 
-  def read_fixture(flag = nil, base: 'output.diff')
-    clean_data(IO.binread("spec/fixtures/ldiff/#{base}#{flag}"), flag)
+  def read_fixture(flag = nil, options = {})
+    base = options.fetch(:base, 'output.diff')
+    name = "spec/fixtures/ldiff/#{base}#{flag}"
+    data = IO.__send__(IO.respond_to?(:binread) ? :binread : :read, name)
+    clean_data(data, flag)
   end
 
   def clean_data(data, flag)
@@ -69,11 +72,14 @@ RSpec.describe 'bin/ldiff' do
     )
   end
 
-  def run_ldiff(flag = nil, left: 'aX', right: 'bXaX')
+  def run_ldiff(flag = nil, options = {})
+    left = options.fetch(:left, 'aX')
+    right = options.fetch(:right, 'bXaX')
     stdout, stderr = capture_subprocess_io do
       system("ruby -Ilib bin/ldiff #{flag} spec/fixtures/#{left} spec/fixtures/#{right}")
     end
-    expect(stderr).to be_empty
+
+    expect(stderr).to be_empty if RUBY_VERSION >= '1.9'
     expect(stdout).not_to be_empty
     clean_data(stdout, flag)
   end

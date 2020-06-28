@@ -2,7 +2,9 @@
 
 require 'rubygems'
 require 'pathname'
-require 'psych'
+
+require 'psych' if RUBY_VERSION >= '1.9'
+
 
 if ENV['COVERAGE']
   require 'simplecov'

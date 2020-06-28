@@ -20,7 +20,7 @@ class Diff::LCS::Hunk
     before = after = file_length_difference
     after += @blocks[0].diff_size
     @file_length_difference = after # The caller must get this manually
-    @max_diff_size = @blocks.lazy.map { |e| e.diff_size }.max
+    @max_diff_size = @blocks.map { |e| e.diff_size }.max
 
     # Save the start & end of each array. If the array doesn't exist (e.g.,
     # we're only adding items in this block), then figure out the line
