@@ -49,7 +49,7 @@ module Diff; end unless defined? Diff # rubocop:disable Style/Documentation
 #          a x b y c z p d q
 #    a b c a x b y c z
 module Diff::LCS
-  VERSION = '1.4.2'
+  VERSION = '1.4.3'
 end
 
 require 'diff/lcs/callbacks'

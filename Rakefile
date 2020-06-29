@@ -6,10 +6,27 @@ require 'hoe'
 
 Hoe.plugin :bundler
 Hoe.plugin :doofus
-Hoe.plugin :email unless ENV['CI'] or ENV['TRAVIS']
 Hoe.plugin :gemspec2
 Hoe.plugin :git
-Hoe.plugin :travis
+
+if RUBY_VERSION < '1.9'
+  class Array
+    def to_h
+      Hash[*self.flatten(1)]
+    end
+  end
+
+  class Gem::Specification
+    def metadata=(*)
+    end
+  end
+
+  class Object
+    def caller_locations(*)
+      []
+    end
+  end
+end
 
 _spec = Hoe.spec 'diff-lcs' do
   developer('Austin Ziegler', 'halostatue@gmail.com')
