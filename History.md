@@ -1,5 +1,19 @@
 # History
 
+## 1.4.3 / 2020-06-29
+
+- Fixed several issues with the 1.4 on Rubies older than 2.0. Some of this was
+  providing useful shim functions to Hoe 3.x (which dropped these older
+  Rubies a while ago). Specifically:
+
+  - Removed Array#lazy from a method in Diff::LCS::Hunk.
+  - Changed some unit tests to use old-style Symbol-keyed hashes.
+  - Changed some unit test helper functions to no longer use keyword
+    parameters, but only a trailing options hash.
+  - Made the use of `psych` dependent on `RUBY_VERSION >= 1.9`.
+
+  Resolves [#63][].
+
 ## 1.4.2 / 2020-06-23
 
 - Camille Drapier fixed a small issue with RuboCop configuration. [#59][]
@@ -261,3 +275,4 @@
 [#59]: https://github.com/halostatue/diff-lcs/pull/59
 [#60]: https://github.com/halostatue/diff-lcs/issues/60
 [#61]: https://github.com/halostatue/diff-lcs/pull/61
+[#63]: https://github.com/halostatue/diff-lcs/issues/63
