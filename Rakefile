@@ -10,18 +10,19 @@ Hoe.plugin :gemspec2
 Hoe.plugin :git
 
 if RUBY_VERSION < '1.9'
-  class Array
+  class Array #:nodoc:
     def to_h
-      Hash[*self.flatten(1)]
+      Hash[*flatten(1)]
     end
   end
 
-  class Gem::Specification
-    def metadata=(*)
-    end
+  class Gem::Specification #:nodoc:
+    def metadata=(*); end
+
+    def default_value(*); end
   end
 
-  class Object
+  class Object #:nodoc:
     def caller_locations(*)
       []
     end
@@ -54,4 +55,20 @@ if RUBY_VERSION >= '2.0' && RUBY_ENGINE == 'ruby'
       Rake::Task['spec'].execute
     end
   end
+end
+
+task :ruby18 do
+  puts <<-MESSAGE
+You are starting a barebones Ruby 1.8 docker environment. You will need to
+do the following:
+
+- mv Gemfile.lock{,.v2}
+- gem install bundler --version 1.17.2 --no-ri --no-rdoc
+- ruby -S bundle
+- rake
+
+Don't forget to restore your Gemfile.lock after testing.
+
+  MESSAGE
+  sh "docker run -it --rm -v #{Dir.pwd}:/root/diff-lcs bellbind/docker-ruby18-rails2 bash -l"
 end

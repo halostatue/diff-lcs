@@ -5,7 +5,6 @@ require 'pathname'
 
 require 'psych' if RUBY_VERSION >= '1.9'
 
-
 if ENV['COVERAGE']
   require 'simplecov'
 
@@ -45,30 +44,31 @@ module CaptureSubprocessIO
   end
 
   def capture_subprocess_io
-    _synchronize do
-      begin
-        require 'tempfile'
-
-        captured_stdout, captured_stderr = Tempfile.new('out'), Tempfile.new('err')
-
-        orig_stdout, orig_stderr = $stdout.dup, $stderr.dup
-        $stdout.reopen captured_stdout
-        $stderr.reopen captured_stderr
-
-        yield
-
-        $stdout.rewind
-        $stderr.rewind
-
-        return captured_stdout.read, captured_stderr.read
-      ensure
-        captured_stdout.unlink
-        captured_stderr.unlink
-        $stdout.reopen orig_stdout
-        $stderr.reopen orig_stderr
-      end
-    end
+    _synchronize { _capture_subprocess_io { yield } }
   end
+
+  def _capture_subprocess_io
+    require 'tempfile'
+
+    captured_stdout, captured_stderr = Tempfile.new('out'), Tempfile.new('err')
+
+    orig_stdout, orig_stderr = $stdout.dup, $stderr.dup
+    $stdout.reopen captured_stdout
+    $stderr.reopen captured_stderr
+
+    yield
+
+    $stdout.rewind
+    $stderr.rewind
+
+    [captured_stdout.read, captured_stderr.read]
+  ensure
+    captured_stdout.unlink
+    captured_stderr.unlink
+    $stdout.reopen orig_stdout
+    $stderr.reopen orig_stderr
+  end
+  private :_capture_subprocess_io
 end
 
 require 'diff-lcs'

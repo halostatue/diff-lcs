@@ -1,5 +1,15 @@
 # History
 
+## 1.4.4 / 2020-07-01
+
+- Fixed an issue reported by Jun Aruga in the Diff::LCS::Ldiff binary text
+  detection. [#44][]
+- Fixed a theoretical issue reported by Jun Aruga in Diff::LCS::Hunk to raise
+  a more useful exception. [#43][]
+- Added documentation that should address custom object issues as reported in
+  [#35][].
+- Fixed more diff errors, in part reported in [#65][].
+
 ## 1.4.3 / 2020-06-29
 
 - Fixed several issues with the 1.4 on Rubies older than 2.0. Some of this was
@@ -263,8 +273,11 @@
 [#29]: https://github.com/halostatue/diff-lcs/pull/29
 [#33]: https://github.com/halostatue/diff-lcs/issues/33
 [#34]: https://github.com/halostatue/diff-lcs/pull/34
+[#35]: https://github.com/halostatue/diff-lcs/issues/35
 [#36]: https://github.com/halostatue/diff-lcs/pull/36
 [#38]: https://github.com/halostatue/diff-lcs/issues/38
+[#43]: https://github.com/halostatue/diff-lcs/issues/43
+[#44]: https://github.com/halostatue/diff-lcs/issues/44
 [#47]: https://github.com/halostatue/diff-lcs/pull/47
 [#48]: https://github.com/halostatue/diff-lcs/issues/48
 [#49]: https://github.com/halostatue/diff-lcs/pull/49
@@ -276,3 +289,4 @@
 [#60]: https://github.com/halostatue/diff-lcs/issues/60
 [#61]: https://github.com/halostatue/diff-lcs/pull/61
 [#63]: https://github.com/halostatue/diff-lcs/issues/63
+[#65]: https://github.com/halostatue/diff-lcs/issues/65

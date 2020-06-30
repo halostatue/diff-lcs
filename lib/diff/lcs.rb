@@ -49,7 +49,7 @@ module Diff; end unless defined? Diff # rubocop:disable Style/Documentation
 #          a x b y c z p d q
 #    a b c a x b y c z
 module Diff::LCS
-  VERSION = '1.4.3'
+  VERSION = '1.4.4'
 end
 
 require 'diff/lcs/callbacks'
@@ -60,6 +60,13 @@ module Diff::LCS # rubocop:disable Style/Documentation
   # +self+ and +other+. See Diff::LCS#lcs.
   #
   #   lcs = seq1.lcs(seq2)
+  #
+  # A note when using objects: Diff::LCS only works properly when each object
+  # can be used as a key in a Hash, which typically means that the objects must
+  # implement Object#eql? in a way that two identical values compare
+  # identically for key purposes. That is:
+  #
+  #   O.new('a').eql?(O.new('a')) == true
   def lcs(other, &block) #:yields self[i] if there are matched subsequences:
     Diff::LCS.lcs(self, other, &block)
   end
