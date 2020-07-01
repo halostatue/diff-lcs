@@ -7,7 +7,7 @@ AllCops:
     - diff-lcs.gemspec
     - research/**/*
 
-Layout/AlignParameters:
+Layout/ParameterAlignment:
   EnforcedStyle: with_fixed_indentation
 
 Layout/DotPosition:
@@ -20,7 +20,7 @@ Layout/ExtraSpacing:
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 110
 
 Naming/FileName:
@@ -30,15 +30,13 @@ Naming/FileName:
 Naming/MemoizedInstanceVariableName:
   Exclude: []
 
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   Exclude:
     - lib/diff/lcs/internals.rb
+    - lib/diff/lcs/hunk.rb
     - spec/spec_helper.rb
 
 Naming/VariableNumber:
-  Exclude: []
-
-Performance/Caller:
   Exclude: []
 
 Security/MarshalLoad:
@@ -91,7 +89,7 @@ Style/RescueStandardError:
 Style/SignalException:
   EnforcedStyle: semantic
 
-Layout/IndentHeredoc: { Enabled: false }
+Layout/HeredocIndentation: { Enabled: false }
 Metrics/AbcSize: { Enabled: false }
 Metrics/BlockLength: { Enabled: false }
 Metrics/BlockNesting: { Enabled: false }
@@ -119,3 +117,17 @@ Style/SpecialGlobalVars: { Enabled: false }
 Style/SymbolArray: { Enabled: false }
 Style/SymbolProc: { Enabled: false }
 Style/WordArray: { Enabled: false }
+
+Layout/EmptyLinesAroundAttributeAccessor: { Enabled: true }
+Layout/SpaceAroundMethodCallOperator: { Enabled: true }
+Lint/DeprecatedOpenSSLConstant: { Enabled: true }
+Lint/MixedRegexpCaptureTypes: { Enabled: true }
+Lint/RaiseException: { Enabled: true }
+Lint/StructNewOverride: { Enabled: true }
+Style/ExponentialNotation: { Enabled: true }
+Style/HashEachMethods: { Enabled: true }
+Style/HashTransformKeys: { Enabled: true }
+Style/HashTransformValues: { Enabled: true }
+Style/RedundantRegexpCharacterClass: { Enabled: true }
+Style/RedundantRegexpEscape: { Enabled: true }
+Style/SlicingWithRange: { Enabled: true }

@@ -98,24 +98,19 @@ class << Diff::LCS::Ldiff
     # items we've read from each file will differ by FLD (could be 0).
     file_length_difference = 0
 
-    if @binary.nil? or @binary
-      data_old = IO.read(file_old)
-      data_new = IO.read(file_new)
+    data_old = IO.read(file_old)
+    data_new = IO.read(file_new)
 
-      # Test binary status
-      if @binary.nil?
-        old_txt = data_old[0, 4096].scan(/\0/).empty?
-        new_txt = data_new[0, 4096].scan(/\0/).empty?
-        @binary = !old_txt or !new_txt
-      end
+    # Test binary status
+    if @binary.nil?
+      old_txt = data_old[0, 4096].scan(/\0/).empty?
+      new_txt = data_new[0, 4096].scan(/\0/).empty?
+      @binary = !old_txt || !new_txt
+    end
 
-      unless @binary
-        data_old = data_old.split($/).map { |e| e.chomp }
-        data_new = data_new.split($/).map { |e| e.chomp }
-      end
-    else
-      data_old = IO.readlines(file_old).map { |e| e.chomp }
-      data_new = IO.readlines(file_new).map { |e| e.chomp }
+    unless @binary
+      data_old = data_old.lines.to_a
+      data_new = data_new.lines.to_a
     end
 
     # diff yields lots of pieces, each of which is basically a Block object
@@ -150,20 +145,21 @@ class << Diff::LCS::Ldiff
     end
 
     diffs.each do |piece|
-      begin
+      begin # rubocop:disable Style/RedundantBegin
         hunk = Diff::LCS::Hunk.new(data_old, data_new, piece, @lines, file_length_difference)
         file_length_difference = hunk.file_length_difference
 
         next unless oldhunk
         next if @lines.positive? and hunk.merge(oldhunk)
 
-        output << oldhunk.diff(@format) << "\n"
+        output << oldhunk.diff(@format)
+        output << "\n" if @format == :unified
       ensure
         oldhunk = hunk
       end
     end
 
-    last = oldhunk.diff(@format)
+    last = oldhunk.diff(@format, true)
     last << "\n" if last.respond_to?(:end_with?) && !last.end_with?("\n")
 
     output << last

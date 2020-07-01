@@ -6,28 +6,39 @@ if String.method_defined?(:encoding)
   require 'diff/lcs/hunk'
 
   describe Diff::LCS::Hunk do
-    let(:old_data) { ['Tu avec carté {count} itém has'.encode('UTF-16LE')] }
-    let(:new_data) { ['Tu avec carte {count} item has'.encode('UTF-16LE')] }
+    let(:old_data) { ['Tu a un carté avec {count} itéms'.encode('UTF-16LE')] }
+    let(:new_data) { ['Tu a un carte avec {count} items'.encode('UTF-16LE')] }
     let(:pieces)   { Diff::LCS.diff old_data, new_data }
     let(:hunk)     { Diff::LCS::Hunk.new(old_data, new_data, pieces[0], 3, 0) }
 
     it 'produces a unified diff from the two pieces' do
       expected = <<-EXPECTED.gsub(/^\s+/, '').encode('UTF-16LE').chomp
         @@ -1 +1 @@
-        -Tu avec carté {count} itém has
-        +Tu avec carte {count} item has
+        -Tu a un carté avec {count} itéms
+        +Tu a un carte avec {count} items
       EXPECTED
 
       expect(hunk.diff(:unified)).to eq(expected)
+    end
+
+    it 'produces a unified diff from the two pieces (last entry)' do
+      expected = <<-EXPECTED.gsub(/^\s+/, '').encode('UTF-16LE').chomp
+        @@ -1 +1 @@
+        -Tu a un carté avec {count} itéms
+        +Tu a un carte avec {count} items
+        \\ No newline at end of file
+      EXPECTED
+
+      expect(hunk.diff(:unified, true)).to eq(expected)
     end
 
     it 'produces a context diff from the two pieces' do
       expected = <<-EXPECTED.gsub(/^\s+/, '').encode('UTF-16LE').chomp
         ***************
         *** 1 ****
-        ! Tu avec carté {count} itém has
+        ! Tu a un carté avec {count} itéms
         --- 1 ----
-        ! Tu avec carte {count} item has
+        ! Tu a un carte avec {count} items
       EXPECTED
 
       expect(hunk.diff(:context)).to eq(expected)
@@ -36,9 +47,9 @@ if String.method_defined?(:encoding)
     it 'produces an old diff from the two pieces' do
       expected = <<-EXPECTED.gsub(/^ +/, '').encode('UTF-16LE').chomp
         1c1
-        < Tu avec carté {count} itém has
+        < Tu a un carté avec {count} itéms
         ---
-        > Tu avec carte {count} item has
+        > Tu a un carte avec {count} items
 
       EXPECTED
 
@@ -48,7 +59,7 @@ if String.method_defined?(:encoding)
     it 'produces a reverse ed diff from the two pieces' do
       expected = <<-EXPECTED.gsub(/^ +/, '').encode('UTF-16LE').chomp
         c1
-        Tu avec carte {count} item has
+        Tu a un carte avec {count} items
         .
 
       EXPECTED
@@ -62,7 +73,7 @@ if String.method_defined?(:encoding)
       it 'produces a unified diff' do
         expected = <<-EXPECTED.gsub(/^\s+/, '').encode('UTF-16LE').chomp
           @@ -1 +1,2 @@
-          +Tu avec carte {count} item has
+          +Tu a un carte avec {count} items
         EXPECTED
 
         expect(hunk.diff(:unified)).to eq(expected)

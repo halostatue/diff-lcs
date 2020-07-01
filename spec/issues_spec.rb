@@ -56,17 +56,17 @@ describe 'Diff::LCS Issues' do
     end
   end
 
-  describe "issue #57" do
+  describe 'issue #57' do
     it 'should fail with a correct error' do
       expect {
-        actual = {:category=>"app.rack.request"}
-        expected = {:category=>"rack.middleware", :title=>"Anonymous Middleware"}
+        actual = { :category => 'app.rack.request' }
+        expected = { :category => 'rack.middleware', :title => 'Anonymous Middleware' }
         expect(actual).to eq(expected)
       }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
     end
   end
 
-  describe "issue #60" do
+  describe 'issue #60' do
     it 'should produce unified output with correct context' do
       old_data = <<-DATA_OLD.strip.split("\n").map(&:chomp)
 {
@@ -93,6 +93,62 @@ describe 'Diff::LCS Issues' do
 +  "description": "lo"
  }
       EXPECTED
+    end
+  end
+
+  describe 'issue #65' do
+    def diff_lines(old_lines, new_lines)
+      file_length_difference = 0
+      previous_hunk = nil
+      output = []
+
+      Diff::LCS.diff(old_lines, new_lines).each do |piece|
+        hunk = Diff::LCS::Hunk.new(old_lines, new_lines, piece, 3, file_length_difference)
+        file_length_difference = hunk.file_length_difference
+        maybe_contiguous_hunks = (previous_hunk.nil? || hunk.merge(previous_hunk))
+
+        output << "#{previous_hunk.diff(:unified)}\n" unless maybe_contiguous_hunks
+
+        previous_hunk = hunk
+      end
+      output << "#{previous_hunk.diff(:unified, true)}\n" unless previous_hunk.nil?
+      output.join
+    end
+
+    it 'should not misplace the new chunk' do
+      old_data = [
+        'recipe[a::default]', 'recipe[b::default]', 'recipe[c::default]',
+        'recipe[d::default]', 'recipe[e::default]', 'recipe[f::default]',
+        'recipe[g::default]', 'recipe[h::default]', 'recipe[i::default]',
+        'recipe[j::default]', 'recipe[k::default]', 'recipe[l::default]',
+        'recipe[m::default]', 'recipe[n::default]'
+      ]
+
+      new_data = [
+        'recipe[a::default]', 'recipe[c::default]', 'recipe[d::default]',
+        'recipe[e::default]', 'recipe[f::default]', 'recipe[g::default]',
+        'recipe[h::default]', 'recipe[i::default]', 'recipe[j::default]',
+        'recipe[k::default]', 'recipe[l::default]', 'recipe[m::default]',
+        'recipe[n::default]', 'recipe[o::new]', 'recipe[p::new]',
+        'recipe[q::new]', 'recipe[r::new]'
+      ]
+
+      expect(diff_lines(old_data, new_data)).to eq(<<-EODIFF)
+@@ -1,5 +1,4 @@
+ recipe[a::default]
+-recipe[b::default]
+ recipe[c::default]
+ recipe[d::default]
+ recipe[e::default]
+@@ -12,3 +11,7 @@
+ recipe[l::default]
+ recipe[m::default]
+ recipe[n::default]
++recipe[o::new]
++recipe[p::new]
++recipe[q::new]
++recipe[r::new]
+      EODIFF
     end
   end
 end

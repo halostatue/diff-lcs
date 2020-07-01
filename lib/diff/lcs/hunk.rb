@@ -6,26 +6,38 @@ require 'diff/lcs/block'
 # each block. (So if we're not using context, every hunk will contain one
 # block.) Used in the diff program (bin/ldiff).
 class Diff::LCS::Hunk
+  OLD_DIFF_OP_ACTION = { '+' => 'a', '-' => 'd', '!' => 'c' }.freeze #:nodoc:
+  ED_DIFF_OP_ACTION = { '+' => 'a', '-' => 'd', '!' => 'c' }.freeze #:nodoc:
+
+  private_constant :OLD_DIFF_OP_ACTION, :ED_DIFF_OP_ACTION if respond_to?(:private_constant)
+
   # Create a hunk using references to both the old and new data, as well as the
   # piece of data.
   def initialize(data_old, data_new, piece, flag_context, file_length_difference)
     # At first, a hunk will have just one Block in it
     @blocks = [Diff::LCS::Block.new(piece)]
+
+    if @blocks[0].remove.empty? && @blocks[0].insert.empty?
+      fail "Cannot build a hunk from #{piece.inspect}; has no add or remove actions"
+    end
+
     if String.method_defined?(:encoding)
       @preferred_data_encoding = data_old.fetch(0, data_new.fetch(0, '')).encoding
     end
+
     @data_old = data_old
     @data_new = data_new
 
     before = after = file_length_difference
     after += @blocks[0].diff_size
     @file_length_difference = after # The caller must get this manually
-    @max_diff_size = @blocks.map { |e| e.diff_size }.max
+    @max_diff_size = @blocks.map { |e| e.diff_size.abs }.max
+
 
     # Save the start & end of each array. If the array doesn't exist (e.g.,
-    # we're only adding items in this block), then figure out the line
-    # number based on the line number of the other file and the current
-    # difference in file lengths.
+    # we're only adding items in this block), then figure out the line number
+    # based on the line number of the other file and the current difference in
+    # file lengths.
     if @blocks[0].remove.empty?
       a1 = a2 = nil
     else
@@ -55,7 +67,7 @@ class Diff::LCS::Hunk
 
   # Change the "start" and "end" fields to note that context should be added
   # to this hunk.
-  attr_accessor :flag_context
+  attr_accessor :flag_context # rubocop:disable Layout/EmptyLinesAroundAttributeAccessor
   undef :flag_context=
   def flag_context=(context) #:nodoc: # rubocop:disable Lint/DuplicateMethods
     return if context.nil? or context.zero?
@@ -101,18 +113,18 @@ class Diff::LCS::Hunk
   end
 
   # Returns a diff string based on a format.
-  def diff(format)
+  def diff(format, last = false)
     case format
     when :old
-      old_diff
+      old_diff(last)
     when :unified
-      unified_diff
+      unified_diff(last)
     when :context
-      context_diff
+      context_diff(last)
     when :ed
       self
     when :reverse_ed, :ed_finish
-      ed_diff(format)
+      ed_diff(format, last)
     else
       fail "Unknown diff format #{format}."
     end
@@ -120,35 +132,34 @@ class Diff::LCS::Hunk
 
   # Note that an old diff can't have any context. Therefore, we know that
   # there's only one block in the hunk.
-  def old_diff
+  def old_diff(_last = false)
     warn 'Expecting only one block in an old diff hunk!' if @blocks.size > 1
-    op_act = { '+' => 'a', '-' => 'd', '!' => 'c' }
 
     block = @blocks[0]
 
     # Calculate item number range. Old diff range is just like a context
     # diff range, except the ranges are on one line with the action between
     # them.
-    s = encode("#{context_range(:old)}#{op_act[block.op]}#{context_range(:new)}\n")
+    s = encode("#{context_range(:old, ',')}#{OLD_DIFF_OP_ACTION[block.op]}#{context_range(:new, ',')}\n")
     # If removing anything, just print out all the remove lines in the hunk
     # which is just all the remove lines in the block.
     unless block.remove.empty?
-      @data_old[@start_old..@end_old].each { |e| s << encode('< ') + e + encode("\n") }
+      @data_old[@start_old..@end_old].each { |e| s << encode('< ') + e.chomp + encode("\n") }
     end
 
     s << encode("---\n") if block.op == '!'
 
     unless block.insert.empty?
-      @data_new[@start_new..@end_new].each { |e| s << encode('> ') + e + encode("\n") }
+      @data_new[@start_new..@end_new].each { |e| s << encode('> ') + e.chomp + encode("\n") }
     end
 
     s
   end
   private :old_diff
 
-  def unified_diff
+  def unified_diff(last = false)
     # Calculate item number range.
-    s = encode("@@ -#{unified_range(:old)} +#{unified_range(:new)} @@\n")
+    s = encode("@@ -#{unified_range(:old, last)} +#{unified_range(:new, last)} @@\n")
 
     # Outlist starts containing the hunk of the old file. Removing an item
     # just means putting a '-' in front of it. Inserting an item requires
@@ -161,7 +172,14 @@ class Diff::LCS::Hunk
     # file -- don't take removed items into account.
     lo, hi, num_added, num_removed = @start_old, @end_old, 0, 0
 
-    outlist = @data_old[lo..hi].map { |e| e.insert(0, encode(' ')) }
+    outlist = @data_old[lo..hi].map { |e| String.new("#{encode(' ')}#{e.chomp}") }
+
+    last_block = blocks[-1]
+
+    if last
+      old_missing_newline = missing_last_newline?(@data_old)
+      new_missing_newline = missing_last_newline?(@data_new)
+    end
 
     @blocks.each do |block|
       block.remove.each do |item|
@@ -170,67 +188,100 @@ class Diff::LCS::Hunk
         outlist[offset][0, 1] = encode(op)
         num_removed += 1
       end
+
+      if last && block == last_block && old_missing_newline && !new_missing_newline
+        outlist << encode('\\ No newline at end of file')
+        num_removed += 1
+      end
+
       block.insert.each do |item|
         op     = item.action.to_s # +
         offset = item.position - @start_new + num_removed
-        outlist[offset, 0] = encode(op) + @data_new[item.position]
+        outlist[offset, 0] = encode(op) + @data_new[item.position].chomp
         num_added += 1
       end
     end
 
+    outlist << encode('\\ No newline at end of file') if last && new_missing_newline
+
     s << outlist.join(encode("\n"))
+
+    s
   end
   private :unified_diff
 
-  def context_diff
+  def context_diff(last = false)
     s = encode("***************\n")
-    s << encode("*** #{context_range(:old)} ****\n")
-    r = context_range(:new)
+    s << encode("*** #{context_range(:old, ',', last)} ****\n")
+    r = context_range(:new, ',', last)
+
+    if last
+      old_missing_newline = missing_last_newline?(@data_old)
+      new_missing_newline = missing_last_newline?(@data_new)
+    end
 
     # Print out file 1 part for each block in context diff format if there
     # are any blocks that remove items
     lo, hi = @start_old, @end_old
     removes = @blocks.reject { |e| e.remove.empty? }
-    if removes
-      outlist = @data_old[lo..hi].map { |e| e.insert(0, encode(' ')) }
+
+    unless removes.empty?
+      outlist = @data_old[lo..hi].map { |e| String.new("#{encode('  ')}#{e.chomp}") }
+
+      last_block = removes[-1]
 
       removes.each do |block|
         block.remove.each do |item|
-          outlist[item.position - lo].insert(0, encode(block.op)) # - or !
+          outlist[item.position - lo][0, 1] = encode(block.op) # - or !
+        end
+
+        if last && block == last_block && old_missing_newline
+          outlist << encode('\\ No newline at end of file')
         end
       end
-      s << outlist.join("\n")
+
+      s << outlist.join(encode("\n")) << encode("\n")
     end
 
-    s << encode("\n--- #{r} ----\n")
+    s << encode("--- #{r} ----\n")
     lo, hi = @start_new, @end_new
     inserts = @blocks.reject { |e| e.insert.empty? }
-    if inserts
-      outlist = @data_new[lo..hi].collect { |e| e.insert(0, encode(' ')) }
+
+    unless inserts.empty?
+      outlist = @data_new[lo..hi].map { |e| String.new("#{encode('  ')}#{e.chomp}") }
+
+      last_block = inserts[-1]
+
       inserts.each do |block|
         block.insert.each do |item|
-          outlist[item.position - lo].insert(0, encode(block.op)) # - or !
+          outlist[item.position - lo][0, 1] = encode(block.op) # + or !
+        end
+
+        if last && block == last_block && new_missing_newline
+          outlist << encode('\\ No newline at end of file')
         end
       end
-      s << outlist.join("\n")
+      s << outlist.join(encode("\n"))
     end
+
     s
   end
   private :context_diff
 
-  def ed_diff(format)
-    op_act = { '+' => 'a', '-' => 'd', '!' => 'c' }
+  def ed_diff(format, _last = false)
     warn 'Expecting only one block in an old diff hunk!' if @blocks.size > 1
 
     s =
       if format == :reverse_ed
-        encode("#{op_act[@blocks[0].op]}#{context_range(:old)}\n")
+        encode("#{ED_DIFF_OP_ACTION[@blocks[0].op]}#{context_range(:old, ',')}\n")
       else
-        encode("#{context_range(:old, ' ')}#{op_act[@blocks[0].op]}\n")
+        encode("#{context_range(:old, ' ')}#{ED_DIFF_OP_ACTION[@blocks[0].op]}\n")
       end
 
     unless @blocks[0].insert.empty?
-      @data_new[@start_new..@end_new].each do |e| s << e + encode("\n") end
+      @data_new[@start_new..@end_new].each do |e|
+        s << e.chomp + encode("\n")
+      end
       s << encode(".\n")
     end
     s
@@ -239,13 +290,16 @@ class Diff::LCS::Hunk
 
   # Generate a range of item numbers to print. Only print 1 number if the
   # range has only one item in it. Otherwise, it's 'start,end'
-  def context_range(mode, op = ',') # rubocop:disable Naming/UncommunicativeMethodParamName
+  def context_range(mode, op, last = false)
     case mode
     when :old
       s, e = (@start_old + 1), (@end_old + 1)
     when :new
       s, e = (@start_new + 1), (@end_new + 1)
     end
+
+    e -= 1 if last
+    e = 1 if e.zero?
 
     s < e ? "#{s}#{op}#{e}" : e.to_s
   end
@@ -254,7 +308,7 @@ class Diff::LCS::Hunk
   # Generate a range of item numbers to print for unified diff. Print number
   # where block starts, followed by number of lines in the block
   # (don't print number of lines if it's 1)
-  def unified_range(mode)
+  def unified_range(mode, last)
     case mode
     when :old
       s, e = (@start_old + 1), (@end_old + 1)
@@ -262,11 +316,24 @@ class Diff::LCS::Hunk
       s, e = (@start_new + 1), (@end_new + 1)
     end
 
-    length = e - s + 1
+    length = e - s + (last ? 0 : 1)
+
     first = length < 2 ? e : s # "strange, but correct"
-    length == 1 ? first.to_s : "#{first},#{length}"
+    length <= 1 ? first.to_s : "#{first},#{length}"
   end
   private :unified_range
+
+  def missing_last_newline?(data)
+    newline = encode("\n")
+
+    if data[-2]
+      data[-2].end_with?(newline) && !data[-1].end_with?(newline)
+    elsif data[-1]
+      !data[-1].end_with?(newline)
+    else
+      true
+    end
+  end
 
   if String.method_defined?(:encoding)
     def encode(literal, target_encoding = @preferred_data_encoding)
