@@ -8,7 +8,34 @@
   a more useful exception. [#43][]
 - Added documentation that should address custom object issues as reported in
   [#35][].
+
 - Fixed more diff errors, in part reported in [#65][].
+
+  - The use of `Numeric#abs` is incorrect in `Diff::LCS::Block#diff_size`.
+    The diff size _must_ be accurate for correct change placement.
+  - When selecting @max_diff_size in Diff::LCS::Hunk, choose it based on
+    `block.diff_size.abs`.
+  - Made a number of changes that will, unfortunately, increase allocations
+    at the cost of being safe with frozen strings.
+  - Add some knowledge that when `Diff::LCS::Hunk#diff` is called, that we
+    are processing the _last_ hunk, so some changes will be made to how the
+    output is generated.
+
+    - `old`, `ed`, and `reverse_ed` formats have no differences.
+    - `unified` format will report `\ No newline at end of file` given the
+      correct conditions, at most once. Unified range reporting also
+      differs for the last hunk such that the `length` of the range is
+      reduced by one.
+    - `context` format will report `\No newline at end of file` given the
+      correct conditions, up to once per "file". Context range reporting also
+      differs for the last hunk such that the `end` part of the range is
+      reduced by one to a minimum of one.
+
+- Added a bunch more tests for the cases above, and fixed `hunk_spec.rb` so
+  that the phrase being compared isn't nonsense French.
+
+- Updated formatting.
+- Added a Rake task to assist with manual testing on Ruby 1.8.
 
 ## 1.4.3 / 2020-06-29
 
