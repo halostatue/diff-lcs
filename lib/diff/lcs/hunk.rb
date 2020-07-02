@@ -33,7 +33,6 @@ class Diff::LCS::Hunk
     @file_length_difference = after # The caller must get this manually
     @max_diff_size = @blocks.map { |e| e.diff_size.abs }.max
 
-
     # Save the start & end of each array. If the array doesn't exist (e.g.,
     # we're only adding items in this block), then figure out the line number
     # based on the line number of the other file and the current difference in

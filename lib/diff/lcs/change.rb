@@ -4,7 +4,7 @@
 # addition of an element from either the old or the new sequenced
 # enumerable.
 class Diff::LCS::Change
-  IntClass = 1.class # Fixnum is deprecated in Ruby 2.4 # rubocop:disable Naming/ConstantName
+  INTEGER = 1.class # Fixnum is deprecated in Ruby 2.4
 
   # The only actions valid for changes are '+' (add), '-' (delete), '='
   # (no change), '!' (changed), '<' (tail changes from first sequence), or
@@ -18,7 +18,6 @@ class Diff::LCS::Change
 
   # Returns the action this Change represents.
   attr_reader :action
-
   # Returns the position of the Change.
   attr_reader :position
   # Returns the sequence element of the Change.
@@ -28,7 +27,7 @@ class Diff::LCS::Change
     @action, @position, @element = *args
 
     fail "Invalid Change Action '#{@action}'" unless Diff::LCS::Change.valid_action?(@action)
-    fail 'Invalid Position Type' unless @position.kind_of? IntClass
+    fail 'Invalid Position Type' unless @position.kind_of? INTEGER
   end
 
   def inspect(*_args)
@@ -51,6 +50,20 @@ class Diff::LCS::Change
     else
       fail 'Invalid change array format provided.'
     end
+  end
+
+  def to_change(action)
+    args =
+      case action
+      when '-'
+        [action, old_position, old_element]
+      when '+'
+        [action, new_position, new_element]
+      else
+        fail 'Invalid action for creating a change'
+      end
+
+    Diff::LCS::Change.new(*args)
   end
 
   include Comparable
@@ -115,8 +128,8 @@ class Diff::LCS::ContextChange < Diff::LCS::Change
     @action, @old_position, @old_element, @new_position, @new_element = *args
 
     fail "Invalid Change Action '#{@action}'" unless Diff::LCS::Change.valid_action?(@action)
-    fail 'Invalid (Old) Position Type' unless @old_position.nil? or @old_position.kind_of? IntClass
-    fail 'Invalid (New) Position Type' unless @new_position.nil? or @new_position.kind_of? IntClass
+    fail 'Invalid (Old) Position Type' unless @old_position.nil? or @old_position.kind_of? INTEGER
+    fail 'Invalid (New) Position Type' unless @new_position.nil? or @new_position.kind_of? INTEGER
   end
 
   def to_a
@@ -135,23 +148,24 @@ class Diff::LCS::ContextChange < Diff::LCS::Change
 
   # Simplifies a context change for use in some diff callbacks. '<' actions
   # are converted to '-' and '>' actions are converted to '+'.
+  def simplify
+    args =
+      case action
+      when '-', '<'
+        ['-', [old_position, old_element], [new_position, nil]]
+      when '+', '>'
+        ['+', [old_position, nil], [new_position, new_element]]
+      else
+        to_a
+      end
+
+    self.class.from_a(args)
+  end
+
+  # Simplifies a context change for use in some diff callbacks. '<' actions
+  # are converted to '-' and '>' actions are converted to '+'.
   def self.simplify(event)
-    ea = event.to_a
-
-    case ea[0]
-    when '-'
-      ea[2][1] = nil
-    when '<'
-      ea[0] = '-'
-      ea[2][1] = nil
-    when '+'
-      ea[1][1] = nil
-    when '>'
-      ea[0] = '+'
-      ea[1][1] = nil
-    end
-
-    Diff::LCS::ContextChange.from_a(ea)
+    event.simplify
   end
 
   def ==(other)

@@ -1,5 +1,11 @@
 # History
 
+## NEXT / YYYY-MM-DD
+
+- Deprecate extension of Array and String by requiring `diff/lcs/array` or
+  `diff/lcs/string`. These files will go away with the next major version.
+  As of this version, a warning will be emitted.
+
 ## 1.4.4 / 2020-07-01
 
 - Fixed an issue reported by Jun Aruga in the Diff::LCS::Ldiff binary text
