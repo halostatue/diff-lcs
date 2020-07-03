@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# typed: true
 
 require 'diff/lcs/block'
 
@@ -15,9 +16,10 @@ class Diff::LCS::Hunk
   # piece of data.
   def initialize(data_old, data_new, piece, flag_context, file_length_difference)
     # At first, a hunk will have just one Block in it
-    @blocks = [Diff::LCS::Block.new(piece)]
+    block = Diff::LCS::Block.new(piece)
+    @blocks = T.let([block], T::Array[Diff::LCS::Block])
 
-    if @blocks[0].remove.empty? && @blocks[0].insert.empty?
+    if block.remove.empty? && block.insert.empty?
       fail "Cannot build a hunk from #{piece.inspect}; has no add or remove actions"
     end
 
@@ -29,7 +31,7 @@ class Diff::LCS::Hunk
     @data_new = data_new
 
     before = after = file_length_difference
-    after += @blocks[0].diff_size
+    after += block.diff_size
     @file_length_difference = after # The caller must get this manually
     @max_diff_size = @blocks.map { |e| e.diff_size.abs }.max
 
@@ -37,24 +39,24 @@ class Diff::LCS::Hunk
     # we're only adding items in this block), then figure out the line number
     # based on the line number of the other file and the current difference in
     # file lengths.
-    if @blocks[0].remove.empty?
+    if block.remove.empty?
       a1 = a2 = nil
     else
-      a1 = @blocks[0].remove[0].position
-      a2 = @blocks[0].remove[-1].position
+      a1 = T.must(block.remove[0]).position
+      a2 = T.must(block.remove[-1]).position
     end
 
-    if @blocks[0].insert.empty?
+    if block.insert.empty?
       b1 = b2 = nil
     else
-      b1 = @blocks[0].insert[0].position
-      b2 = @blocks[0].insert[-1].position
+      b1 = T.must(block.insert[0]).position
+      b2 = T.must(block.insert[-1]).position
     end
 
-    @start_old = a1 || (b1 - before)
-    @start_new = b1 || (a1 + before)
-    @end_old   = a2 || (b2 - after)
-    @end_new   = b2 || (a2 + after)
+    @start_old = a1 || (T.must(b1) - before)
+    @start_new = b1 || (T.must(a1) + before)
+    @end_old   = a2 || (T.must(b2) - after)
+    @end_new   = b2 || (T.must(a2) + after)
 
     self.flag_context = flag_context
   end
@@ -134,7 +136,7 @@ class Diff::LCS::Hunk
   def old_diff(_last = false)
     warn 'Expecting only one block in an old diff hunk!' if @blocks.size > 1
 
-    block = @blocks[0]
+    block = T.must(@blocks[0])
 
     # Calculate item number range. Old diff range is just like a context
     # diff range, except the ranges are on one line with the action between
@@ -142,13 +144,13 @@ class Diff::LCS::Hunk
     s = encode("#{context_range(:old, ',')}#{OLD_DIFF_OP_ACTION[block.op]}#{context_range(:new, ',')}\n")
     # If removing anything, just print out all the remove lines in the hunk
     # which is just all the remove lines in the block.
-    unless block.remove.empty?
+    unless T.must(block).remove.empty?
       @data_old[@start_old..@end_old].each { |e| s << encode('< ') + e.chomp + encode("\n") }
     end
 
     s << encode("---\n") if block.op == '!'
 
-    unless block.insert.empty?
+    unless T.must(block).insert.empty?
       @data_new[@start_new..@end_new].each { |e| s << encode('> ') + e.chomp + encode("\n") }
     end
 
@@ -270,14 +272,16 @@ class Diff::LCS::Hunk
   def ed_diff(format, _last = false)
     warn 'Expecting only one block in an old diff hunk!' if @blocks.size > 1
 
+    block = T.must(@blocks[0])
+
     s =
       if format == :reverse_ed
-        encode("#{ED_DIFF_OP_ACTION[@blocks[0].op]}#{context_range(:old, ',')}\n")
+        encode("#{ED_DIFF_OP_ACTION[block.op]}#{context_range(:old, ',')}\n")
       else
-        encode("#{context_range(:old, ' ')}#{ED_DIFF_OP_ACTION[@blocks[0].op]}\n")
+        encode("#{context_range(:old, ' ')}#{ED_DIFF_OP_ACTION[block.op]}\n")
       end
 
-    unless @blocks[0].insert.empty?
+    unless block.insert.empty?
       @data_new[@start_new..@end_new].each do |e|
         s << e.chomp + encode("\n")
       end

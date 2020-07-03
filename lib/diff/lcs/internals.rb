@@ -1,7 +1,8 @@
 # frozen_string_literal: true
+# typed: true
 
-class << Diff::LCS
-  def diff_traversal(method, seq1, seq2, callbacks, &block)
+module Diff::LCS # rubocop:disable Style/Documentation
+  def self.diff_traversal(method, seq1, seq2, callbacks, &block)
     callbacks = callbacks_for(callbacks)
     case method
     when :diff
@@ -26,10 +27,7 @@ class << Diff::LCS
   private :diff_traversal
 end
 
-module Diff::LCS::Internals # :nodoc:
-end
-
-class << Diff::LCS::Internals
+module Diff::LCS::Internals # :nodoc: rubocop:disable Style/Documentation
   # Compute the longest common subsequence between the sequenced
   # Enumerables +a+ and +b+. The result is an array whose contents is such
   # that
@@ -38,7 +36,7 @@ class << Diff::LCS::Internals
   #     result.each_with_index do |e, i|
   #       assert_equal(a[i], b[e]) unless e.nil?
   #     end
-  def lcs(a, b)
+  def self.lcs(a, b)
     a_start = b_start = 0
     a_finish = a.size - 1
     b_finish = b.size - 1
@@ -69,7 +67,8 @@ class << Diff::LCS::Internals
     (a_start..a_finish).each do |i|
       ai = string ? a[i, 1] : a[i]
       bm = b_matches[ai]
-      k = nil
+      k = T.let(nil, T.nilable(Integer))
+
       bm.reverse_each do |j|
         if k and (thresh[k] > j) and (thresh[k - 1] < j)
           thresh[k] = j
@@ -95,10 +94,10 @@ class << Diff::LCS::Internals
   # normalization (conversion of the array form of Diff::LCS::Change objects to
   # the object form of same) and detection of whether the patchset represents
   # changes to be made.
-  def analyze_patchset(patchset, depth = 0)
+  def self.analyze_patchset(patchset, depth = 0)
     fail 'Patchset too complex' if depth > 1
 
-    has_changes = false
+    has_changes = T.let(false, T::Boolean)
     new_patchset = []
 
     # Format:
@@ -116,7 +115,7 @@ class << Diff::LCS::Internals
         new_patchset << hunk
       when Array
         # Detect if the 'hunk' is actually an array-format change object.
-        if Diff::LCS::Change.valid_action? hunk[0]
+        if Diff::LCS::Change.valid_action?(hunk[0])
           hunk = Diff::LCS::Change.from_a(hunk)
           has_changes ||= !hunk.unchanged?
           new_patchset << hunk
@@ -140,7 +139,7 @@ class << Diff::LCS::Internals
   # some time. This also works better with Diff::LCS::ContextChange or
   # Diff::LCS::Change as its source, as an array will cause the creation
   # of one of the above.
-  def intuit_diff_direction(src, patchset, limit = nil)
+  def self.intuit_diff_direction(src, patchset, limit = nil)
     string = src.kind_of?(String)
     count = left_match = left_miss = right_match = right_miss = 0
 
@@ -245,7 +244,7 @@ enumerable as either source or destination value."
   # are numeric.
   #
   # This operation preserves the sort order.
-  def replace_next_larger(enum, value, last_index = nil)
+  def self.replace_next_larger(enum, value, last_index = nil)
     # Off the end?
     if enum.empty? or (value > enum[-1])
       enum << value
@@ -279,7 +278,7 @@ enumerable as either source or destination value."
   # If +vector+ maps the matching elements of another collection onto this
   # Enumerable, compute the inverse of +vector+ that maps this Enumerable
   # onto the collection. (Currently unused.)
-  def inverse_vector(a, vector)
+  def self.inverse_vector(a, vector)
     inverse = a.dup
     (0...vector.size).each do |i|
       inverse[vector[i]] = i unless vector[i].nil?
@@ -291,7 +290,7 @@ enumerable as either source or destination value."
   # Returns a hash mapping each element of an Enumerable to the set of
   # positions it occupies in the Enumerable, optionally restricted to the
   # elements specified in the range of indexes specified by +interval+.
-  def position_hash(enum, interval)
+  def self.position_hash(enum, interval)
     string = enum.kind_of?(String)
     hash = Hash.new { |h, k| h[k] = [] }
     interval.each do |i|

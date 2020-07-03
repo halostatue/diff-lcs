@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# typed: false
 
 require 'cgi'
 
@@ -112,8 +113,8 @@ h1 { margin-left: 2em; }
   def run
     verify_options
 
-    if @options[:expand_tabs].positive? && self.class.can_expand_tabs
-      formatter = Text::Format.new
+    if @options[:expand_tabs].positive? && self.class.can_expand_tabs && defined? ::Text::Format
+      formatter = ::Text::Format.new
       formatter.tabstop = @options[:expand_tabs]
 
       @left.map! do |line| formatter.expand(line.chomp) end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# typed: true
 
 unless 0.respond_to?(:positive?)
   class Fixnum # rubocop:disable Lint/UnifiedInteger, Style/Documentation

@@ -38,6 +38,8 @@ _spec = Hoe.spec 'diff-lcs' do
   self.readme_file = 'README.rdoc'
   self.licenses = ['MIT', 'Artistic-2.0', 'GPL-2.0+']
 
+  extra_deps << ['sorbet-runtime', '~> 0.5']
+
   extra_dev_deps << ['hoe-doofus', '~> 1.0']
   extra_dev_deps << ['hoe-gemspec2', '~> 1.1']
   extra_dev_deps << ['hoe-git', '~> 1.6']
