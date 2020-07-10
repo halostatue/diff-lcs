@@ -1,3 +1,4 @@
+.github/workflows/ci.yml
 .rspec
 Code-of-Conduct.md
 Contributing.md
@@ -34,6 +35,21 @@ spec/fixtures/ldiff/output.diff-c
 spec/fixtures/ldiff/output.diff-e
 spec/fixtures/ldiff/output.diff-f
 spec/fixtures/ldiff/output.diff-u
+spec/fixtures/ldiff/output.diff.chef
+spec/fixtures/ldiff/output.diff.chef-c
+spec/fixtures/ldiff/output.diff.chef-e
+spec/fixtures/ldiff/output.diff.chef-f
+spec/fixtures/ldiff/output.diff.chef-u
+spec/fixtures/ldiff/output.diff.chef2
+spec/fixtures/ldiff/output.diff.chef2-c
+spec/fixtures/ldiff/output.diff.chef2-d
+spec/fixtures/ldiff/output.diff.chef2-e
+spec/fixtures/ldiff/output.diff.chef2-f
+spec/fixtures/ldiff/output.diff.chef2-u
+spec/fixtures/new-chef
+spec/fixtures/new-chef2
+spec/fixtures/old-chef
+spec/fixtures/old-chef2
 spec/hunk_spec.rb
 spec/issues_spec.rb
 spec/lcs_spec.rb
