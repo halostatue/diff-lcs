@@ -18,3 +18,4 @@ research/
 spec/ldap.yml
 website/index.html
 .byebug_history
+sorbet/rbi/hidden-definitions/errors.txt

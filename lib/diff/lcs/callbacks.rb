@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# typed: true
 
 require 'diff/lcs/change'
 
@@ -12,27 +13,27 @@ module Diff::LCS # rubocop:disable Style/Documentation
   #
   #     Diff::LCS.LCS(seq1, seq2, Diff::LCS::DefaultCallbacks)
   class DefaultCallbacks
+    # Called when two items match.
+    def self.match(event)
+      event
+    end
+
+    # Called when the old value is discarded in favour of the new value.
+    def self.discard_a(event)
+      event
+    end
+
+    # Called when the new value is discarded in favour of the old value.
+    def self.discard_b(event)
+      event
+    end
+
+    # Called when both the old and new values have changed.
+    def self.change(event)
+      event
+    end
+
     class << self
-      # Called when two items match.
-      def match(event)
-        event
-      end
-
-      # Called when the old value is discarded in favour of the new value.
-      def discard_a(event)
-        event
-      end
-
-      # Called when the new value is discarded in favour of the old value.
-      def discard_b(event)
-        event
-      end
-
-      # Called when both the old and new values have changed.
-      def change(event)
-        event
-      end
-
       private :new
     end
   end
@@ -131,18 +132,21 @@ class Diff::LCS::DiffCallbacks
   end
 
   def discard_a(event)
-    @hunk << Diff::LCS::Change.new('-', event.old_position, event.old_element)
+    hunk << event.to_change('-')
   end
 
   def discard_b(event)
-    @hunk << Diff::LCS::Change.new('+', event.new_position, event.new_element)
+    hunk << event.to_change('+')
   end
 
   def finish_hunk
-    @diffs << @hunk unless @hunk.empty?
+    diffs << hunk unless hunk.empty?
     @hunk = []
   end
   private :finish_hunk
+
+  attr_reader :hunk
+  protected :hunk
 end
 
 # This will produce a compound array of contextual diff change objects. Each
@@ -222,15 +226,15 @@ end
 #     pp diffs.map { |e| e.map { |f| f.to_a } }
 class Diff::LCS::ContextDiffCallbacks < Diff::LCS::DiffCallbacks
   def discard_a(event)
-    @hunk << Diff::LCS::ContextChange.simplify(event)
+    hunk << Diff::LCS::ContextChange.simplify(event)
   end
 
   def discard_b(event)
-    @hunk << Diff::LCS::ContextChange.simplify(event)
+    hunk << Diff::LCS::ContextChange.simplify(event)
   end
 
   def change(event)
-    @hunk << Diff::LCS::ContextChange.simplify(event)
+    hunk << Diff::LCS::ContextChange.simplify(event)
   end
 end
 

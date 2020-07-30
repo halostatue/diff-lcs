@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.metadata = { "bug_tracker_uri" => "https://github.com/halostatue/diff-lcs/issues", "homepage_uri" => "https://github.com/halostatue/diff-lcs", "source_code_uri" => "https://github.com/halostatue/diff-lcs" } if s.respond_to? :metadata=
   s.require_paths = ["lib".freeze]
   s.authors = ["Austin Ziegler".freeze]
-  s.date = "2020-07-01"
+  s.date = "2020-07-02"
   s.description = "Diff::LCS computes the difference between two Enumerable sequences using the\nMcIlroy-Hunt longest common subsequence (LCS) algorithm. It includes utilities\nto create a simple HTML diff output format and a standard diff-like tool.\n\nThis is release 1.4.3, providing a simple extension that allows for\nDiff::LCS::Change objects to be treated implicitly as arrays and fixes a\nnumber of formatting issues.\n\nRuby versions below 2.5 are soft-deprecated, which means that older versions\nare no longer part of the CI test suite. If any changes have been introduced\nthat break those versions, bug reports and patches will be accepted, but it\nwill be up to the reporter to verify any fixes prior to release. The next\nmajor release will completely break compatibility.".freeze
   s.email = ["halostatue@gmail.com".freeze]
   s.executables = ["htmldiff".freeze, "ldiff".freeze]
@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
     s.specification_version = 4
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<sorbet-runtime>.freeze, ["~> 0.5"])
       s.add_development_dependency(%q<hoe-doofus>.freeze, ["~> 1.0"])
       s.add_development_dependency(%q<hoe-gemspec2>.freeze, ["~> 1.1"])
       s.add_development_dependency(%q<hoe-git>.freeze, ["~> 1.6"])
@@ -35,6 +36,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<rdoc>.freeze, [">= 0"])
       s.add_development_dependency(%q<hoe>.freeze, ["~> 3.22"])
     else
+      s.add_dependency(%q<sorbet-runtime>.freeze, ["~> 0.5"])
       s.add_dependency(%q<hoe-doofus>.freeze, ["~> 1.0"])
       s.add_dependency(%q<hoe-gemspec2>.freeze, ["~> 1.1"])
       s.add_dependency(%q<hoe-git>.freeze, ["~> 1.6"])
@@ -45,6 +47,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<hoe>.freeze, ["~> 3.22"])
     end
   else
+    s.add_dependency(%q<sorbet-runtime>.freeze, ["~> 0.5"])
     s.add_dependency(%q<hoe-doofus>.freeze, ["~> 1.0"])
     s.add_dependency(%q<hoe-gemspec2>.freeze, ["~> 1.1"])
     s.add_dependency(%q<hoe-git>.freeze, ["~> 1.6"])

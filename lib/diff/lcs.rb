@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+# typed: true
+
+require 'sorbet-runtime'
 
 module Diff; end unless defined? Diff # rubocop:disable Style/Documentation
 
@@ -50,6 +53,9 @@ module Diff; end unless defined? Diff # rubocop:disable Style/Documentation
 #    a b c a x b y c z
 module Diff::LCS
   VERSION = '1.4.4'
+
+  SequenceT = T.type_alias { T.any(Diff::LCS, Enumerable, String) }
+  CallbacksT = T.type_alias { T.nilable(Module) }
 end
 
 require 'diff/lcs/callbacks'
@@ -85,14 +91,14 @@ module Diff::LCS # rubocop:disable Style/Documentation
   # Traverses the discovered longest common subsequences between +self+ and
   # +other+. See Diff::LCS#traverse_sequences.
   def traverse_sequences(other, callbacks = nil, &block)
-    traverse_sequences(self, other, callbacks || Diff::LCS::SequenceCallbacks, &block)
+    Diff::LCS.traverse_sequences(self, other, callbacks || Diff::LCS::SequenceCallbacks, &block)
   end
 
   # Traverses the discovered longest common subsequences between +self+ and
   # +other+ using the alternate, balanced algorithm. See
   # Diff::LCS#traverse_balanced.
   def traverse_balanced(other, callbacks = nil, &block)
-    traverse_balanced(self, other, callbacks || Diff::LCS::BalancedCallbacks, &block)
+    Diff::LCS.traverse_balanced(self, other, callbacks || Diff::LCS::BalancedCallbacks, &block)
   end
 
   # Attempts to patch +self+ with the provided +patchset+. A new sequence based
@@ -121,7 +127,7 @@ module Diff::LCS # rubocop:disable Style/Documentation
   # the sequence this is used on supports #replace, the value of +self+ will be
   # replaced. See Diff::LCS#patch. Does no patch direction autodiscovery.
   def patch_me(patchset)
-    if respond_to? :replace
+    if respond_to?(:replace)
       replace(patch!(patchset))
     else
       patch!(patchset)
@@ -132,7 +138,7 @@ module Diff::LCS # rubocop:disable Style/Documentation
   # If the sequence this is used on supports #replace, the value of +self+ will
   # be replaced. See Diff::LCS#unpatch. Does no patch direction autodiscovery.
   def unpatch_me(patchset)
-    if respond_to? :replace
+    if respond_to?(:replace)
       replace(unpatch!(patchset))
     else
       unpatch!(patchset)
@@ -140,8 +146,8 @@ module Diff::LCS # rubocop:disable Style/Documentation
   end
 end
 
-class << Diff::LCS
-  def lcs(seq1, seq2, &block) #:yields seq1[i] for each matched:
+module Diff::LCS # rubocop:disable Style/Documentation
+  def self.lcs(seq1, seq2, &block) #:yields seq1[i] for each matched:
     matches = Diff::LCS::Internals.lcs(seq1, seq2)
     ret = []
     string = seq1.kind_of? String
@@ -165,7 +171,7 @@ class << Diff::LCS
   # Class argument is provided for +callbacks+, #diff will attempt to
   # initialise it. If the +callbacks+ object (possibly initialised) responds to
   # #finish, it will be called.
-  def diff(seq1, seq2, callbacks = nil, &block) # :yields diff changes:
+  def self.diff(seq1, seq2, callbacks = nil, &block) # :yields diff changes:
     diff_traversal(:diff, seq1, seq2, callbacks || Diff::LCS::DiffCallbacks, &block)
   end
 
@@ -197,7 +203,7 @@ class << Diff::LCS
   #       # insert
   #     end
   #   end
-  def sdiff(seq1, seq2, callbacks = nil, &block) #:yields diff changes:
+  def self.sdiff(seq1, seq2, callbacks = nil, &block) #:yields diff changes:
     diff_traversal(:sdiff, seq1, seq2, callbacks || Diff::LCS::SDiffCallbacks, &block)
   end
 
@@ -281,16 +287,19 @@ class << Diff::LCS
   # <tt>callbacks#discard_b</tt> will be called after the end of the sequence
   # is reached, if +a+ has not yet reached the end of +A+ or +b+ has not yet
   # reached the end of +B+.
-  def traverse_sequences(seq1, seq2, callbacks = Diff::LCS::SequenceCallbacks) #:yields change events:
+  sig { params(seq1: SequenceT, seq2: SequenceT, callbacks: CallbacksT).returns(Array) }
+  def self.traverse_sequences(seq1, seq2, callbacks = nil) #:yields change events:
     callbacks ||= Diff::LCS::SequenceCallbacks
     matches = Diff::LCS::Internals.lcs(seq1, seq2)
 
     run_finished_a = run_finished_b = false
-    string = seq1.kind_of?(String)
+    string = String === seq1 # rubocop:disable Style/CaseEquality
 
-    a_size = seq1.size
-    b_size = seq2.size
+    a_size = seq1.count
+    b_size = seq2.count
     ai = bj = 0
+
+    event = T.let(nil, T.nilable(Diff::LCS::ContextChange))
 
     (0..matches.size).each do |i|
       b_line = matches[i]
@@ -299,7 +308,7 @@ class << Diff::LCS
       bx = string ? seq2[bj, 1] : seq2[bj]
 
       if b_line.nil?
-        unless ax.nil? or (string and ax.empty?)
+        unless ax.nil? or (string and T.must(ax).empty?)
           event = Diff::LCS::ContextChange.new('-', i, ax, bj, bx)
           event = yield event if block_given?
           callbacks.discard_a(event)
@@ -472,7 +481,7 @@ class << Diff::LCS
   #
   # Note that +i+ and +j+ may not be the same index position, even if +a+ and
   # +b+ are considered to be pointing to matching or changed elements.
-  def traverse_balanced(seq1, seq2, callbacks = Diff::LCS::BalancedCallbacks)
+  def self.traverse_balanced(seq1, seq2, callbacks = Diff::LCS::BalancedCallbacks)
     matches = Diff::LCS::Internals.lcs(seq1, seq2)
     a_size = seq1.size
     b_size = seq2.size
@@ -621,7 +630,7 @@ class << Diff::LCS
   # containing either Diff::LCS::Change objects (or a subclass) or the array
   # representations of those objects. Prior to application, array
   # representations of Diff::LCS::Change objects will be reified.
-  def patch(src, patchset, direction = nil)
+  def self.patch(src, patchset, direction = nil)
     # Normalize the patchset.
     has_changes, patchset = Diff::LCS::Internals.analyze_patchset(patchset)
 
@@ -725,13 +734,13 @@ class << Diff::LCS
 
   # Given a set of patchset, convert the current version to the prior version.
   # Does no auto-discovery.
-  def unpatch!(src, patchset)
+  def self.unpatch!(src, patchset)
     patch(src, patchset, :unpatch)
   end
 
   # Given a set of patchset, convert the current version to the next version.
   # Does no auto-discovery.
-  def patch!(src, patchset)
+  def self.patch!(src, patchset)
     patch(src, patchset, :patch)
   end
 end

@@ -16,6 +16,10 @@ elsif RUBY_VERSION >= '2.0'
     gem 'simplecov', '~> 0.18'
 
     gem 'byebug'
+
+    if RUBY_VERSION >= '2.6'
+      gem 'sorbet'
+    end
   end
 end
 
