@@ -1,4 +1,3 @@
-.github/workflows/ci.yml
 .rspec
 Code-of-Conduct.md
 Contributing.md
