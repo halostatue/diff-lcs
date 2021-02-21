@@ -28,7 +28,7 @@ if ENV['COVERAGE']
   }
 
   SimpleCov.start do
-    formatter SimpleCov::Formatter::MultiFormatter[*formatters]
+    formatter SimpleCov::Formatter::MultiFormatter.new(formatters)
   end
 end
 
