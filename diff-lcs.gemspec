@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.metadata = { "bug_tracker_uri" => "https://github.com/halostatue/diff-lcs/issues", "homepage_uri" => "https://github.com/halostatue/diff-lcs", "source_code_uri" => "https://github.com/halostatue/diff-lcs" } if s.respond_to? :metadata=
   s.require_paths = ["lib".freeze]
   s.authors = ["Austin Ziegler".freeze]
-  s.date = "2020-09-29"
+  s.date = "2021-12-14"
   s.description = "Diff::LCS computes the difference between two Enumerable sequences using the\nMcIlroy-Hunt longest common subsequence (LCS) algorithm. It includes utilities\nto create a simple HTML diff output format and a standard diff-like tool.\n\nThis is release 1.4.3, providing a simple extension that allows for\nDiff::LCS::Change objects to be treated implicitly as arrays and fixes a\nnumber of formatting issues.\n\nRuby versions below 2.5 are soft-deprecated, which means that older versions\nare no longer part of the CI test suite. If any changes have been introduced\nthat break those versions, bug reports and patches will be accepted, but it\nwill be up to the reporter to verify any fixes prior to release. The next\nmajor release will completely break compatibility.".freeze
   s.email = ["halostatue@gmail.com".freeze]
   s.executables = ["htmldiff".freeze, "ldiff".freeze]
@@ -19,31 +19,22 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT".freeze, "Artistic-2.0".freeze, "GPL-2.0+".freeze]
   s.rdoc_options = ["--main".freeze, "README.rdoc".freeze]
   s.required_ruby_version = Gem::Requirement.new(">= 1.8".freeze)
-  s.rubygems_version = "3.0.3".freeze
+  s.rubygems_version = "3.1.6".freeze
   s.summary = "Diff::LCS computes the difference between two Enumerable sequences using the McIlroy-Hunt longest common subsequence (LCS) algorithm".freeze
 
   if s.respond_to? :specification_version then
     s.specification_version = 4
+  end
 
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<hoe-doofus>.freeze, ["~> 1.0"])
-      s.add_development_dependency(%q<hoe-gemspec2>.freeze, ["~> 1.1"])
-      s.add_development_dependency(%q<hoe-git>.freeze, ["~> 1.6"])
-      s.add_development_dependency(%q<hoe-rubygems>.freeze, ["~> 1.0"])
-      s.add_development_dependency(%q<rspec>.freeze, [">= 2.0", "< 4"])
-      s.add_development_dependency(%q<rake>.freeze, [">= 10.0", "< 14"])
-      s.add_development_dependency(%q<rdoc>.freeze, [">= 0"])
-      s.add_development_dependency(%q<hoe>.freeze, ["~> 3.22"])
-    else
-      s.add_dependency(%q<hoe-doofus>.freeze, ["~> 1.0"])
-      s.add_dependency(%q<hoe-gemspec2>.freeze, ["~> 1.1"])
-      s.add_dependency(%q<hoe-git>.freeze, ["~> 1.6"])
-      s.add_dependency(%q<hoe-rubygems>.freeze, ["~> 1.0"])
-      s.add_dependency(%q<rspec>.freeze, [">= 2.0", "< 4"])
-      s.add_dependency(%q<rake>.freeze, [">= 10.0", "< 14"])
-      s.add_dependency(%q<rdoc>.freeze, [">= 0"])
-      s.add_dependency(%q<hoe>.freeze, ["~> 3.22"])
-    end
+  if s.respond_to? :add_runtime_dependency then
+    s.add_development_dependency(%q<hoe-doofus>.freeze, ["~> 1.0"])
+    s.add_development_dependency(%q<hoe-gemspec2>.freeze, ["~> 1.1"])
+    s.add_development_dependency(%q<hoe-git>.freeze, ["~> 1.6"])
+    s.add_development_dependency(%q<hoe-rubygems>.freeze, ["~> 1.0"])
+    s.add_development_dependency(%q<rspec>.freeze, [">= 2.0", "< 4"])
+    s.add_development_dependency(%q<rake>.freeze, [">= 10.0", "< 14"])
+    s.add_development_dependency(%q<rdoc>.freeze, [">= 6.3.1", "< 7"])
+    s.add_development_dependency(%q<hoe>.freeze, ["~> 3.23"])
   else
     s.add_dependency(%q<hoe-doofus>.freeze, ["~> 1.0"])
     s.add_dependency(%q<hoe-gemspec2>.freeze, ["~> 1.1"])
@@ -51,7 +42,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<hoe-rubygems>.freeze, ["~> 1.0"])
     s.add_dependency(%q<rspec>.freeze, [">= 2.0", "< 4"])
     s.add_dependency(%q<rake>.freeze, [">= 10.0", "< 14"])
-    s.add_dependency(%q<rdoc>.freeze, [">= 0"])
-    s.add_dependency(%q<hoe>.freeze, ["~> 3.22"])
+    s.add_dependency(%q<rdoc>.freeze, [">= 6.3.1", "< 7"])
+    s.add_dependency(%q<hoe>.freeze, ["~> 3.23"])
   end
 end

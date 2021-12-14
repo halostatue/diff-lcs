@@ -80,7 +80,7 @@ _spec = Hoe.spec 'diff-lcs' do
   extra_dev_deps << ['hoe-rubygems', '~> 1.0']
   extra_dev_deps << ['rspec', '>= 2.0', '< 4']
   extra_dev_deps << ['rake', '>= 10.0', '< 14']
-  extra_dev_deps << ['rdoc', '>= 0']
+  extra_dev_deps << ['rdoc', '>= 6.3.1', '< 7']
 end
 
 desc "Run all specifications"
