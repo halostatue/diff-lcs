@@ -253,7 +253,7 @@ enumerable as either source or destination value."
     end
 
     # Binary search for the insertion point
-    last_index ||= enum.size
+    last_index ||= enum.size - 1
     first_index = 0
     while first_index <= last_index
       i = (first_index + last_index) >> 1
