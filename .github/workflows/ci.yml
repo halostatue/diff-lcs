@@ -9,9 +9,9 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [master, main]
   pull_request:
-    branches: [ master ]
+    branches: [master, main]
 
 jobs:
   test:
@@ -22,9 +22,11 @@ jobs:
           - macos
           - windows
         ruby:
-          - 2.5
-          - 2.6
-          - 2.7
+          - '2.4'
+          - '2.5'
+          - '2.6'
+          - '2.7'
+          - '3.0'
           - head
           - debug
           - mingw
@@ -45,19 +47,25 @@ jobs:
           - os: windows
             ruby: debug
           - os: windows
+            ruby: jruby
+          - os: windows
+            ruby: jruby-head
+          - os: windows
             ruby: truffleruby
           - os: windows
             ruby: truffleruby-head
     runs-on: ${{ matrix.os }}-latest
-    continue-on-error: ${{ endsWith(matrix.ruby, 'head') || matrix.ruby == 'debug' || matrix.os == 'windows' }}
+    continue-on-error: ${{
+      endsWith(matrix.ruby, 'head') ||
+      matrix.ruby == 'debug' ||
+      (startsWith(matrix.ruby, 'jruby') && matrix.os == 'windows')
+      }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-          bundler-cache: true
-      - name: Install dependencies
-        run: bundle install
+          bundler-cache: true # 'bundle install' and cache
       - name: Run tests
-        run: bundle exec ruby -S rake
+        run: bundle exec ruby -S rake test --trace

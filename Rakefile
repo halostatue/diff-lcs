@@ -5,6 +5,41 @@ require 'rspec'
 require 'rspec/core/rake_task'
 require 'hoe'
 
+# This is required until https://github.com/seattlerb/hoe/issues/112 is fixed
+class Hoe
+  def with_config
+    config = Hoe::DEFAULT_CONFIG
+
+    rc = File.expand_path("~/.hoerc")
+    homeconfig = load_config(rc)
+    config = config.merge(homeconfig)
+
+    localconfig = load_config(File.expand_path(File.join(Dir.pwd, ".hoerc")))
+    config = config.merge(localconfig)
+
+    yield config, rc
+  end
+
+  def load_config(name)
+    File.exist?(name) ? safe_load_yaml(name) : {}
+  end
+
+  def safe_load_yaml(name)
+    return safe_load_yaml_file(name) if YAML.respond_to?(:safe_load_file)
+
+    data = IO.binread(name)
+    YAML.safe_load(data, permitted_classes: [Regexp])
+  rescue
+    YAML.safe_load(data, [Regexp])
+  end
+
+  def safe_load_yaml_file(name)
+    YAML.safe_load_file(name, permitted_classes: [Regexp])
+  rescue
+    YAML.safe_load_file(name, [Regexp])
+  end
+end
+
 Hoe.plugin :bundler
 Hoe.plugin :doofus
 Hoe.plugin :gemspec2
