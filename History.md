@@ -1,8 +1,12 @@
 # History
 
-## NEXT / 2021-12-14
+## NEXT / YYYY-MM-DD
 
 - Updated the CI configuration and monkey-patch Hoe.
+
+- Tien corrected an off-by-one error when calculating an index value. [#71]
+
+- Kenichi Kamiya fixed a test configuration deprecation in SimpleCov. [#69]
 
 ## 1.4.4 / 2020-07-01
 
@@ -321,3 +325,5 @@
 [#61]: https://github.com/halostatue/diff-lcs/pull/61
 [#63]: https://github.com/halostatue/diff-lcs/issues/63
 [#65]: https://github.com/halostatue/diff-lcs/issues/65
+[#69]: https://github.com/halostatue/diff-lcs/issues/69
+[#71]: https://github.com/halostatue/diff-lcs/issues/71

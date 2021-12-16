@@ -110,6 +110,7 @@ Thanks to everyone else who has contributed code or bug reports to Diff::LCS:
 - Ryan Lovelett
 - Scott Steele
 - Simon Courtois
+- Tien (@tiendo1011)
 - Tomas Jura
 - Vít Ondruch
 
