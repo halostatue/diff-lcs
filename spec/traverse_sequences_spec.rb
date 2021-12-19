@@ -127,13 +127,11 @@ describe 'Diff::LCS.traverse_sequences' do
     end
 
     it 'has done markers differently-sized sequences' do
-      expect(@callback_s1_s2.done_a).to eq([['p', 9, 's', 10]])
+      expect(@callback_s1_s2.done_a).to eq([['p', 9, 't', 11]])
       expect(@callback_s1_s2.done_b).to be_empty
 
-      # 20110731 I don't yet understand why this particular behaviour
-      # isn't transitive.
       expect(@callback_s2_s1.done_a).to be_empty
-      expect(@callback_s2_s1.done_b).to be_empty
+      expect(@callback_s2_s1.done_b).to eq([['t', 11, 'p', 9]])
     end
   end
 end
