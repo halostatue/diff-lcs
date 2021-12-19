@@ -85,14 +85,14 @@ module Diff::LCS # rubocop:disable Style/Documentation
   # Traverses the discovered longest common subsequences between +self+ and
   # +other+. See Diff::LCS#traverse_sequences.
   def traverse_sequences(other, callbacks = nil, &block)
-    traverse_sequences(self, other, callbacks || Diff::LCS::SequenceCallbacks, &block)
+    Diff::LCS.traverse_sequences(self, other, callbacks || Diff::LCS::SequenceCallbacks, &block)
   end
 
   # Traverses the discovered longest common subsequences between +self+ and
   # +other+ using the alternate, balanced algorithm. See
   # Diff::LCS#traverse_balanced.
   def traverse_balanced(other, callbacks = nil, &block)
-    traverse_balanced(self, other, callbacks || Diff::LCS::BalancedCallbacks, &block)
+    Diff::LCS.traverse_balanced(self, other, callbacks || Diff::LCS::BalancedCallbacks, &block)
   end
 
   # Attempts to patch +self+ with the provided +patchset+. A new sequence based
