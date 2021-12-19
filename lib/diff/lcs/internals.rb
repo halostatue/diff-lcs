@@ -44,13 +44,12 @@ class << Diff::LCS::Internals
     b_finish = b.size - 1
     vector = []
 
-    # Prune off any common elements at the beginning...
+    # Collect any common elements at the beginning...
     while (a_start <= a_finish) and (b_start <= b_finish) and (a[a_start] == b[b_start])
       vector[a_start] = b_start
       a_start += 1
       b_start += 1
     end
-    b_start = a_start
 
     # Now the end...
     while (a_start <= a_finish) and (b_start <= b_finish) and (a[a_finish] == b[b_finish])
@@ -60,6 +59,7 @@ class << Diff::LCS::Internals
     end
 
     # Now, compute the equivalence classes of positions of elements.
+    # An explanation for how this works: https://codeforces.com/topic/92191
     b_matches = position_hash(b, b_start..b_finish)
 
     thresh = []
@@ -71,11 +71,7 @@ class << Diff::LCS::Internals
       bm = b_matches[ai]
       k = nil
       bm.reverse_each do |j|
-        if k and (thresh[k] > j) and (thresh[k - 1] < j)
-          thresh[k] = j
-        else
-          k = replace_next_larger(thresh, j, k)
-        end
+        k = replace_next_larger(thresh, j)
         links[k] = [k.positive? ? links[k - 1] : nil, i, j] unless k.nil?
       end
     end
