@@ -1,12 +1,23 @@
 # History
 
-## NEXT / YYYY-MM-DD
+## 1.5.0 / YYYY-MM-DD
 
 - Updated the CI configuration and monkey-patch Hoe.
 
+- Kenichi Kamiya fixed a test configuration deprecation in SimpleCov. [#69]
+
 - Tien corrected an off-by-one error when calculating an index value. [#71]
 
-- Kenichi Kamiya fixed a test configuration deprecation in SimpleCov. [#69]
+- Tien corrected an infinite loop case in the case where Diff::LCS would be
+  included into an enumerable class. [#73]
+
+- Tien corrected a bug that has existed more or less from the beginning of this
+  project where an off-by-one error was introduced, preventing the properly
+  transitive behaviour of `#traverse_sequences`. [#75]
+
+- Pre-releases
+
+  - 1.5.0.pre.1 / 2021-12-20
 
 ## 1.4.4 / 2020-07-01
 
@@ -327,3 +338,5 @@
 [#65]: https://github.com/halostatue/diff-lcs/issues/65
 [#69]: https://github.com/halostatue/diff-lcs/issues/69
 [#71]: https://github.com/halostatue/diff-lcs/issues/71
+[#73]: https://github.com/halostatue/diff-lcs/issues/73
+[#75]: https://github.com/halostatue/diff-lcs/issues/75
