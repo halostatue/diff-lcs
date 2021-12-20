@@ -377,14 +377,14 @@ class << Diff::LCS
         ai += 1
       end
 
-      next unless bj < b_size
-
-      ax = string ? seq1[ai, 1] : seq1[ai]
-      bx = string ? seq2[bj, 1] : seq2[bj]
-      event = Diff::LCS::ContextChange.new('+', ai, ax, bj, bx)
-      event = yield event if block_given?
-      callbacks.discard_b(event)
-      bj += 1
+      if bj < b_size
+        ax = string ? seq1[ai, 1] : seq1[ai]
+        bx = string ? seq2[bj, 1] : seq2[bj]
+        event = Diff::LCS::ContextChange.new('+', ai, ax, bj, bx)
+        event = yield event if block_given?
+        callbacks.discard_b(event)
+        bj += 1
+      end
     end
   end
 
