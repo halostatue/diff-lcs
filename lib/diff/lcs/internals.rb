@@ -71,6 +71,9 @@ class << Diff::LCS::Internals
       bm = b_matches[ai]
       k = nil
       bm.reverse_each do |j|
+        # Previously, we would update `thresh[k] = j` if `k and (thresh[k] > j) and (thresh[k - 1] < j)`
+        # Otherwise, we would do this. The update appears not to be necessary, so we are trying to
+        # simplify to:
         k = replace_next_larger(thresh, j)
         links[k] = [k.positive? ? links[k - 1] : nil, i, j] unless k.nil?
       end
