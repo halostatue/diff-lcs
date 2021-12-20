@@ -292,37 +292,32 @@ class << Diff::LCS
     b_size = seq2.size
     ai = bj = 0
 
-    (0...matches.size).each do |i|
-      b_line = matches[i]
-
-      ax = string ? seq1[i, 1] : seq1[i]
+    matches.each do |b_line|
+      ax = string ? seq1[ai, 1] : seq1[ai]
       bx = string ? seq2[bj, 1] : seq2[bj]
 
       if b_line.nil?
-        unless ax.nil? or (string and ax.empty?)
-          event = Diff::LCS::ContextChange.new('-', i, ax, bj, bx)
-          event = yield event if block_given?
-          callbacks.discard_a(event)
-        end
+        event = Diff::LCS::ContextChange.new('-', ai, ax, bj, bx)
+        event = yield event if block_given?
+        callbacks.discard_a(event)
       else
         loop do
           break unless bj < b_line
 
           bx = string ? seq2[bj, 1] : seq2[bj]
-          event = Diff::LCS::ContextChange.new('+', i, ax, bj, bx)
+          event = Diff::LCS::ContextChange.new('+', ai, ax, bj, bx)
           event = yield event if block_given?
           callbacks.discard_b(event)
           bj += 1
         end
         bx = string ? seq2[bj, 1] : seq2[bj]
-        event = Diff::LCS::ContextChange.new('=', i, ax, bj, bx)
+        event = Diff::LCS::ContextChange.new('=', ai, ax, bj, bx)
         event = yield event if block_given?
         callbacks.match(event)
         bj += 1
       end
-      ai = i
+      ai += 1
     end
-    ai += 1
 
     # The last entry (if any) processed was a match. +ai+ and +bj+ point just
     # past the last matching lines in their sequences.
