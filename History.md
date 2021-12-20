@@ -8,6 +8,10 @@
 
 - Tien corrected an off-by-one error when calculating an index value. [#71]
 
+- Tien removed a possibly-unnecessary update of a threshold value. This change
+  is experimental (and the main reason for the pre-release version we are
+  building). [#72]
+
 - Tien corrected an infinite loop case in the case where Diff::LCS would be
   included into an enumerable class. [#73]
 
@@ -338,5 +342,6 @@
 [#65]: https://github.com/halostatue/diff-lcs/issues/65
 [#69]: https://github.com/halostatue/diff-lcs/issues/69
 [#71]: https://github.com/halostatue/diff-lcs/issues/71
+[#72]: https://github.com/halostatue/diff-lcs/issues/72
 [#73]: https://github.com/halostatue/diff-lcs/issues/73
 [#75]: https://github.com/halostatue/diff-lcs/issues/75
