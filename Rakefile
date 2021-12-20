@@ -85,11 +85,11 @@ end
 
 desc "Run all specifications"
 RSpec::Core::RakeTask.new(:spec) do |t|
-  rspec_dirs = %w(spec lib)
-  t.rspec_opts = []
-  t.rspec_opts << "-I#{rspec_dirs.join(":")}" unless rspec_dirs.empty?
+  rspec_dirs = %w(spec lib).join(":")
+  t.rspec_opts = ["-I#{rspec_dirs}"]
 end
 task :default => :spec
+task :test => :spec
 
 if RUBY_VERSION >= '2.0' && RUBY_ENGINE == 'ruby'
   namespace :spec do
