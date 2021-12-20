@@ -292,7 +292,7 @@ class << Diff::LCS
     b_size = seq2.size
     ai = bj = 0
 
-    (0..matches.size).each do |i|
+    (0...matches.size).each do |i|
       b_line = matches[i]
 
       ax = string ? seq1[i, 1] : seq1[i]
