@@ -293,16 +293,18 @@ class << Diff::LCS
     ai = bj = 0
 
     matches.each do |b_line|
-      ax = string ? seq1[ai, 1] : seq1[ai]
-      bx = string ? seq2[bj, 1] : seq2[bj]
-
       if b_line.nil?
-        unless ax.nil? or (string and ax.empty?)
+        unless seq1[ai].nil?
+          ax = string ? seq1[ai, 1] : seq1[ai]
+          bx = string ? seq2[bj, 1] : seq2[bj]
+
           event = Diff::LCS::ContextChange.new('-', ai, ax, bj, bx)
           event = yield event if block_given?
           callbacks.discard_a(event)
         end
       else
+        ax = string ? seq1[ai, 1] : seq1[ai]
+
         loop do
           break unless bj < b_line
 
