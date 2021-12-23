@@ -1,75 +1,92 @@
 # History
 
-## 1.5.0 / YYYY-MM-DD
+## 1.5.0 / 2021-12-23
 
 - Updated the CI configuration and monkey-patch Hoe.
 
 - Kenichi Kamiya fixed a test configuration deprecation in SimpleCov. [#69]
 
-- Tien corrected an off-by-one error when calculating an index value. [#71]
+- Tien introduced several corrections and code improvements:
 
-- Tien removed a possibly-unnecessary update of a threshold value. This change
-  is experimental (and the main reason for the pre-release version we are
-  building). [#72]
+  - Removed an off-by-one error when calculating an index value by embracing
+    Ruby iteration properly. This had a side-effect of fixing a long-standing
+    bug in `#traverse_sequences` where the traversal would not be transitive.
+    That is, `LCS(s2, s1)` should produce a sequence that is transitive with
+    `LCS(s1, s2)` on traversal, and applying the diff computed from those
+    results would result in equivalent changes that could be played forward or
+    backward as appropriate. [#71], [#75]
 
-- Tien corrected an infinite loop case in the case where Diff::LCS would be
-  included into an enumerable class. [#73]
+  - The above fix resulted in a changed order of the longest common subsequence
+    when callbacks were applied. After analysis, it was determined that the
+    computed subsequence was _equivalent_ to the prior version, so the test was
+    updated. This also resulted in the clarification of documentation when
+    traversing the subsequences. [#79]
 
-- Tien corrected a bug that has existed more or less from the beginning of this
-  project where an off-by-one error was introduced, preventing the properly
-  transitive behaviour of `#traverse_sequences`. [#75]
+  - An infinite loop case in the case where Diff::LCS would be included into an
+    enumerable class has been fixed. [#73]
 
-- Pre-releases
+  - Clarified the purpose of a threshold test in calculation of LCS. [#72],
+    [#80]
 
-  - 1.5.0.pre.1 / 2021-12-20
+- Removed autotest directory
 
 ## 1.4.4 / 2020-07-01
 
 - Fixed an issue reported by Jun Aruga in the Diff::LCS::Ldiff binary text
   detection. [#44]
+
 - Fixed a theoretical issue reported by Jun Aruga in Diff::LCS::Hunk to raise
   a more useful exception. [#43]
+
 - Added documentation that should address custom object issues as reported in
   [#35].
 
 - Fixed more diff errors, in part reported in [#65].
 
-  - The use of `Numeric#abs` is incorrect in `Diff::LCS::Block#diff_size`.
-    The diff size _must_ be accurate for correct change placement.
+  - The use of `Numeric#abs` is incorrect in `Diff::LCS::Block#diff_size`. The
+    diff size _must_ be accurate for correct change placement.
+
   - When selecting @max_diff_size in Diff::LCS::Hunk, choose it based on
     `block.diff_size.abs`.
-  - Made a number of changes that will, unfortunately, increase allocations
-    at the cost of being safe with frozen strings.
-  - Add some knowledge that when `Diff::LCS::Hunk#diff` is called, that we
-    are processing the _last_ hunk, so some changes will be made to how the
-    output is generated.
+
+  - Made a number of changes that will, unfortunately, increase allocations at
+    the cost of being safe with frozen strings.
+
+  - Add some knowledge that when `Diff::LCS::Hunk#diff` is called, that we are
+    processing the _last_ hunk, so some changes will be made to how the output
+    is generated.
 
     - `old`, `ed`, and `reverse_ed` formats have no differences.
+
     - `unified` format will report `\ No newline at end of file` given the
-      correct conditions, at most once. Unified range reporting also
-      differs for the last hunk such that the `length` of the range is
-      reduced by one.
+      correct conditions, at most once. Unified range reporting also differs for
+      the last hunk such that the `length` of the range is reduced by one.
+
     - `context` format will report `\No newline at end of file` given the
       correct conditions, up to once per "file". Context range reporting also
-      differs for the last hunk such that the `end` part of the range is
-      reduced by one to a minimum of one.
+      differs for the last hunk such that the `end` part of the range is reduced
+      by one to a minimum of one.
 
-- Added a bunch more tests for the cases above, and fixed `hunk_spec.rb` so
-  that the phrase being compared isn't nonsense French.
+- Added a bunch more tests for the cases above, and fixed `hunk_spec.rb` so that
+  the phrase being compared isn't nonsense French.
 
 - Updated formatting.
+
 - Added a Rake task to assist with manual testing on Ruby 1.8.
 
 ## 1.4.3 / 2020-06-29
 
 - Fixed several issues with the 1.4 on Rubies older than 2.0. Some of this was
-  providing useful shim functions to Hoe 3.x (which dropped these older
-  Rubies a while ago). Specifically:
+  providing useful shim functions to Hoe 3.x (which dropped these older Rubies
+  a while ago). Specifically:
 
   - Removed Array#lazy from a method in Diff::LCS::Hunk.
+
   - Changed some unit tests to use old-style Symbol-keyed hashes.
-  - Changed some unit test helper functions to no longer use keyword
-    parameters, but only a trailing options hash.
+
+  - Changed some unit test helper functions to no longer use keyword parameters,
+    but only a trailing options hash.
+
   - Made the use of `psych` dependent on `RUBY_VERSION >= 1.9`.
 
   Resolves [#63].
@@ -77,6 +94,7 @@
 ## 1.4.2 / 2020-06-23
 
 - Camille Drapier fixed a small issue with RuboCop configuration. [#59]
+
 - Applied another fix (and unit test) to fix an issue for the Chef team.
   [#60], [#61]
 
@@ -87,20 +105,25 @@
 
 ## 1.4 / 2020-06-23
 
-- Ruby versions lower than 2.4 are soft-deprecated and will not be run as
-  part of the CI process any longer.
+- Ruby versions lower than 2.4 are soft-deprecated and will not be run as part
+  of the CI process any longer.
+
 - Akinora MUSHA (knu) added the ability for Diff::LCS::Change objects to be
-  implicitly treated arrays. Originally provided as pull request [#47],
-  but it introduced a number of test failures as documented in [#48], and
-  remediation of Diff::LCS itself was introduced in [#49].
+  implicitly treated arrays. Originally provided as pull request [#47], but it
+  introduced a number of test failures as documented in [#48], and remediation
+  of Diff::LCS itself was introduced in [#49].
+
 - Resolved [#5] with some tests comparing output from `system` calls to
-  `bin/ldiff` with some pre-generated output. Resolved [#6] with these
-  tests.
-- Resolved a previously undetected `bin/ldiff` issue with `--context` output
-  not matching `diff --context` output.
+  `bin/ldiff` with some pre-generated output. Resolved [#6] with these tests.
+
+- Resolved a previously undetected `bin/ldiff` issue with `--context` output not
+  matching `diff --context` output.
+
 - Resolved an issue with later versions of Ruby not working with an `OptParse`
   specification of `Numeric`; this has been changed to `Integer`.
+
 - Brandon Fish added truffleruby in [#52].
+
 - Fixed two missing classes as reported in [#53].
 
 ## 1.3 / 2017-01-18
@@ -108,23 +131,31 @@
 - Bugs fixed:
 
   - Fixed an error for bin/ldiff --version. Fixes issue [#21].
+
   - Force Diff::LCS::Change and Diff::LCS::ContextChange to only perform
-    equality comparisons against themselves. Provided by Kevin Mook in
-    pull request [#29].
-  - Fix tab expansion in htmldiff, provided by Mark Friedgan in
-    pull request [#25].
-  - Silence Ruby 2.4 Fixnum deprecation warnings. Fixxues issue [#38] and
-    [pull request#36].
-  - Ensure that test dependencies are loaded properly. Fixes issue [#33]
-    and pull request [#34].
-  - Fix issue [#1] with incorrect intuition of patch direction. Tentative
-    fix, but the previous failure cases pass now.
+    equality comparisons against themselves. Provided by Kevin Mook in pull
+    request [#29].
+
+  - Fix tab expansion in htmldiff, provided by Mark Friedgan in pull request
+    [#25].
+
+  - Silence Ruby 2.4 Fixnum deprecation warnings. Fixes issue [#38] and pull
+    request [#36].
+
+  - Ensure that test dependencies are loaded properly. Fixes issue [#33] and
+    pull request [#34].
+
+  - Fix issue [#1] with incorrect intuition of patch direction. Tentative fix,
+    but the previous failure cases pass now.
 
 - Tooling changes:
 
   - Added SimpleCov and Coveralls support.
+
   - Change the homepage (temporarily) to the GitHub repo.
+
   - Updated testing and gem infrastructure.
+
   - Modernized the specs.
 
 - Cleaned up documentation.
@@ -135,20 +166,19 @@
 
 - Bugs fixed:
 
-  - Comparing arrays flattened them too far, especially with
-    Diff::LCS.sdiff. Fixed by Josh Bronson in pull request [#23].
+  - Comparing arrays flattened them too far, especially with Diff::LCS.sdiff.
+    Fixed by Josh Bronson in pull request [#23].
 
 ## 1.2.4 / 2013-04-20
 
 - Bugs fixed:
 
-  - A bug was introduced after 1.1.3 when pruning common sequences at the
-    start of comparison. Paul Kunysch (@pck) fixed this in
-    pull request [#18]. Thanks!
+  - A bug was introduced after 1.1.3 when pruning common sequences at the start
+    of comparison. Paul Kunysch (@pck) fixed this in pull request [#18]. Thanks!
 
-  - The Rubinius (1.9 mode) bug in [rubinius/rubinius#2268] has been
-    fixed by the Rubinius team two days after it was filed. Thanks for
-    fixing this so quickly!
+  - The Rubinius (1.9 mode) bug in [rubinius/rubinius#2268] has been fixed by
+    the Rubinius team two days after it was filed. Thanks for fixing this so
+    quickly!
 
 - Switching to Raggi's hoe-gemspec2 for gemspec generation.
 
@@ -159,92 +189,104 @@
   - The new encoding detection for diff output generation (added in 1.2.2)
     introduced a bug if the left side of the comparison was the empty set.
     Originally found in [rspec/rspec-expectations#238] and
-    [rspec/rspec-expectations#239]. Jon Rowe developed a reasonable
-    heuristic (left side, right side, empty string literal) to avoid this
-    bug.
+    [rspec/rspec-expectations#239]. Jon Rowe developed a reasonable heuristic
+    (left side, right side, empty string literal) to avoid this bug.
+
   - There is a known issue with Rubinius in 1.9 mode reported in
-    [rubinius/rubinius#2268] and demonstrated in the Travis CI builds.
-    For all other tested platforms, diff-lcs is considered stable. As soon
-    as a suitably small test-case can be created for the Rubinius team to
-    examine, this will be added to the Rubinius issue around this.
+    [rubinius/rubinius#2268] and demonstrated in the Travis CI builds. For all
+    other tested platforms, diff-lcs is considered stable. As soon as a suitably
+    small test-case can be created for the Rubinius team to examine, this will
+    be added to the Rubinius issue around this.
 
 ## 1.2.2 / 2013-03-30
 
 - Bugs Fixed:
 
-  - Diff::LCS::Hunk could not properly generate a difference for comparison
-    sets that are not US-ASCII-compatible because of the use of literal
-    regular expressions and strings. Jon Rowe found this in
-    [rspec/rspec-expectations#219] and provided a first pass
-    implementation in pull request [#15]. I've reworked it because of
-    test failures in Rubinius when running in Ruby 1.9 mode. This coerces
-    the added values to the encoding of the old dataset (as determined by
-    the first piece of the old dataset).
+  - Diff::LCS::Hunk could not properly generate a difference for comparison sets
+    that are not US-ASCII-compatible because of the use of literal regular
+    expressions and strings. Jon Rowe found this in
+    [rspec/rspec-expectations#219] and provided a first pass implementation in
+    pull request [#15]. I've reworked it because of test failures in Rubinius
+    when running in Ruby 1.9 mode. This coerces the added values to the encoding
+    of the old dataset (as determined by the first piece of the old dataset).
+
   - Adding Travis CI testing for Ruby 2.0.
 
 ## 1.2.1 / 2013-02-09
 
 - Bugs Fixed:
 
-  - As seen in [rspec/rspec-expectations#200], the release of
-    Diff::LCS 1.2 introduced an unnecessary public API change to
-    Diff::LCS::Hunk (see the change at
-    [rspec/rspec-expectations@3d6fc82c] for details). The new method name
-    (and behaviour) is more correct, but I should not have renamed the
-    function or should have at least provided an alias. This release
-    restores Diff::LCS::Hunk#unshift as an alias to #merge. Note that the
-    old #unshift behaviour was incorrect and will not be restored.
+  - As seen in [rspec/rspec-expectations#200], the release of Diff::LCS 1.2
+    introduced an unnecessary public API change to Diff::LCS::Hunk (see the
+    change at [rspec/rspec-expectations@3d6fc82c] for details). The new method
+    name (and behaviour) is more correct, but I should not have renamed the
+    function or should have at least provided an alias. This release restores
+    Diff::LCS::Hunk#unshift as an alias to #merge. Note that the old #unshift
+    behaviour was incorrect and will not be restored.
 
 ## 1.2.0 / 2013-01-21
 
 - Minor Enhancements:
 
-  - Added special case handling for Diff::LCS.patch so that it handles
-    patches that are empty or contain no changes.
-  - Added two new methods (#patch_me and #unpatch_me) to the includable
-    module.
+  - Added special case handling for Diff::LCS.patch so that it handles patches
+    that are empty or contain no changes.
+
+  - Added two new methods (#patch_me and #unpatch_me) to the includable module.
 
 - Bugs Fixed:
 
   - Fixed issue [#1] patch direction detection.
+
   - Resolved issue [#2] by handling `string[string.size, 1]` properly (it
     returns `""` not `nil`).
-  - Michael Granger (ged) fixed an implementation error in
-    Diff::LCS::Change and added specs in pull request [#8]. Thanks!
+
+  - Michael Granger (ged) fixed an implementation error in Diff::LCS::Change and
+    added specs in pull request [#8]. Thanks!
+
   - Made the code auto-testable.
-  - Vít Ondruch (voxik) provided the latest version of the GPL2 license
-    file in pull request [#10]. Thanks!
+
+  - Vít Ondruch (voxik) provided the latest version of the GPL2 license file in
+    pull request [#10]. Thanks!
+
   - Fixed a documentation issue with the includable versions of #patch! and
-    #unpatch! where they implied that they would replace the original
-    value. Given that Diff::LCS.patch always returns a copy, the
-    documentation was incorrect and has been corrected. To provide the
-    behaviour that was originally documented, two new methods were added to
-    provide this behaviour. Found by scooter-dangle in issue [#12].
-    Thanks!
+    #unpatch! where they implied that they would replace the original value.
+    Given that Diff::LCS.patch always returns a copy, the documentation was
+    incorrect and has been corrected. To provide the behaviour that was
+    originally documented, two new methods were added to provide this behaviour.
+    Found by scooter-dangle in issue [#12]. Thanks!
 
 - Code Style Changes:
 
   - Removed trailing spaces.
+
   - Calling class methods using `.` instead of `::`.
+
   - Vít Ondruch (voxik) removed unnecessary shebangs in pull request [#9].
     Thanks!
+
   - Kenichi Kamiya (kachick) removed some warnings of an unused variable in
     lucky pull request [#13]. Thanks!
-  - Embarked on a major refactoring to make the files a little more
-    manageable and understand the code on a deeper level.
+
+  - Embarked on a major refactoring to make the files a little more manageable
+    and understand the code on a deeper level.
+
   - Adding to http://travis-ci.org.
 
 ## 1.1.3 / 2011-08-27
 
 - Converted to 'hoe' for release.
+
 - Converted tests to RSpec 2.
-- Extracted the body of htmldiff into a class available from
-  diff/lcs/htmldiff.
+
+- Extracted the body of htmldiff into a class available from diff/lcs/htmldiff.
+
 - Migrated development and issue tracking to GitHub.
+
 - Bugs fixed:
 
-  - Eliminated the explicit use of RubyGems in both bin/htmldiff and
-    bin/ldiff. Resolves issue [#4].
+  - Eliminated the explicit use of RubyGems in both bin/htmldiff and bin/ldiff.
+    Resolves issue [#4].
+
   - Eliminated Ruby warnings. Resolves issue [#3].
 
 ## 1.1.2 / 2004-10-20
@@ -255,31 +297,38 @@
 
 - Fixed bug #891 (Set returned from patch command does not contain last equal
   part).
+
 - Fixed a problem with callback initialisation code (it assumed that all
-  callbacks passed as classes can be initialised; now, it rescues
-  NoMethodError in the event of private :new being called).
+  callbacks passed as classes can be initialised; now, it rescues NoMethodError
+  in the event of private :new being called).
+
 - Modified the non-initialisable callbacks to have a private #new method.
+
 - Moved ldiff core code to Diff::LCS::Ldiff (diff/lcs/ldiff.rb).
 
-## 1.1.0 / -
+## 1.1.0
 
 - Eliminated the need for Diff::LCS::Event and removed it.
+
 - Added a contextual diff callback, Diff::LCS::ContextDiffCallback.
-- Implemented patching/unpatching for standard Diff callback output formats
-  with both #diff and #sdiff.
+
+- Implemented patching/unpatching for standard Diff callback output formats with
+  both #diff and #sdiff.
+
 - Extensive documentation changes.
 
 ## 1.0.4
 
-- Fixed a problem with bin/ldiff output, especially for unified format.
-  Newlines that should have been present weren't.
-- Changed the .tar.gz installer to generate Windows batch files if ones do
-  not exist already. Removed the existing batch files as they didn't work.
+- Fixed a problem with bin/ldiff output, especially for unified format. Newlines
+  that should have been present weren't.
+
+- Changed the .tar.gz installer to generate Windows batch files if ones do not
+  exist already. Removed the existing batch files as they didn't work.
 
 ## 1.0.3
 
-- Fixed a problem with #traverse_sequences where the first difference from
-  the left sequence might not be appropriately captured.
+- Fixed a problem with #traverse_sequences where the first difference from the
+  left sequence might not be appropriately captured.
 
 ## 1.0.2
 
@@ -289,8 +338,10 @@
 ## 1.0.1
 
 - Minor modifications to the gemspec, the README.
-- Renamed the diff program to ldiff (as well as the companion batch file) so
-  as to not collide with the standard diff program.
+
+- Renamed the diff program to ldiff (as well as the companion batch file) so as
+  to not collide with the standard diff program.
+
 - Fixed issues with RubyGems. Requires RubyGems > 0.6.1 or >= 0.6.1 with the
   latest CVS version.
 
@@ -345,3 +396,5 @@
 [#72]: https://github.com/halostatue/diff-lcs/issues/72
 [#73]: https://github.com/halostatue/diff-lcs/issues/73
 [#75]: https://github.com/halostatue/diff-lcs/issues/75
+[#79]: https://github.com/halostatue/diff-lcs/issues/79
+[#80]: https://github.com/halostatue/diff-lcs/issues/80

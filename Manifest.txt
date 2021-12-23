@@ -6,7 +6,6 @@ License.md
 Manifest.txt
 README.rdoc
 Rakefile
-autotest/discover.rb
 bin/htmldiff
 bin/ldiff
 docs/COPYING.txt
