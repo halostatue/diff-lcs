@@ -120,12 +120,12 @@ h1 { margin-left: 2em; }
       formatter = Text::Format.new
       formatter.tabstop = @options[:expand_tabs]
 
-      @left.map! do |line| formatter.expand(line.chomp) end
-      @right.map! do |line| formatter.expand(line.chomp) end
+      @left.map! { |line| formatter.expand(line.chomp) }
+      @right.map! { |line| formatter.expand(line.chomp) }
     end
 
-    @left.map! do |line| CGI.escapeHTML(line.chomp) end
-    @right.map! do |line| CGI.escapeHTML(line.chomp) end
+    @left.map! { |line| CGI.escapeHTML(line.chomp) }
+    @right.map! { |line| CGI.escapeHTML(line.chomp) }
 
     # standard:disable Layout/HeredocIndentation
     @options[:output] << <<-OUTPUT
