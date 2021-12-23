@@ -5,6 +5,7 @@ require "ostruct"
 require "diff/lcs/hunk"
 
 module Diff::LCS::Ldiff #:nodoc:
+  # standard:disable Layout/HeredocIndentation
   BANNER = <<-COPYRIGHT
 ldiff #{Diff::LCS::VERSION}
   Copyright 2004-2019 Austin Ziegler
@@ -16,6 +17,7 @@ ldiff #{Diff::LCS::VERSION}
   the terms of the GPL version 2 (or later), the Perl Artistic licence, or the
   MIT licence.
   COPYRIGHT
+  # standard:enable Layout/HeredocIndentation
 end
 
 class << Diff::LCS::Ldiff

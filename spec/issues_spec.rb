@@ -68,6 +68,7 @@ describe "Diff::LCS Issues" do
 
   describe "issue #60" do
     it "should produce unified output with correct context" do
+      # standard:disable Layout/HeredocIndentation
       old_data = <<-DATA_OLD.strip.split("\n").map(&:chomp)
 {
   "name": "x",
@@ -93,6 +94,7 @@ describe "Diff::LCS Issues" do
 +  "description": "lo"
  }
       EXPECTED
+      # standard:enable Layout/HeredocIndentation
     end
   end
 
@@ -133,6 +135,7 @@ describe "Diff::LCS Issues" do
         "recipe[q::new]", "recipe[r::new]"
       ]
 
+      # standard:disable Layout/HeredocIndentation
       expect(diff_lines(old_data, new_data)).to eq(<<-EODIFF)
 @@ -1,5 +1,4 @@
  recipe[a::default]
@@ -149,6 +152,7 @@ describe "Diff::LCS Issues" do
 +recipe[q::new]
 +recipe[r::new]
       EODIFF
+      # standard:enable Layout/HeredocIndentation
     end
   end
 end

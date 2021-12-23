@@ -53,6 +53,7 @@ class Diff::LCS::HTMLDiff
     :title => nil
   }.freeze
 
+  # standard:disable Layout/HeredocIndentation
   DEFAULT_CSS = <<-CSS
 body { margin: 0; }
 .diff
@@ -86,6 +87,7 @@ pre
 }
 h1 { margin-left: 2em; }
   CSS
+  # standard:enable Layout/HeredocIndentation
 
   def initialize(left, right, options = nil)
     @left = left
@@ -123,6 +125,7 @@ h1 { margin-left: 2em; }
     @left.map! do |line| CGI.escapeHTML(line.chomp) end
     @right.map! do |line| CGI.escapeHTML(line.chomp) end
 
+    # standard:disable Layout/HeredocIndentation
     @options[:output] << <<-OUTPUT
 <html>
   <head>
@@ -137,14 +140,17 @@ h1 { margin-left: 2em; }
     <span class="only_b">Only in New</span></p>
     <div class="diff">
     OUTPUT
+    # standard:enable Layout/HeredocIndentation
 
     callbacks = Callbacks.new(@options[:output])
     Diff::LCS.traverse_sequences(@left, @right, callbacks)
 
+    # standard:disable Layout/HeredocIndentation
     @options[:output] << <<-OUTPUT
     </div>
   </body>
 </html>
     OUTPUT
+    # standard:enable Layout/HeredocIndentation
   end
 end

@@ -105,6 +105,7 @@ if RUBY_VERSION >= "2.0" && RUBY_ENGINE == "ruby"
 end
 
 task :ruby18 do
+  # standard:disable Layout/HeredocIndentation
   puts <<-MESSAGE
 You are starting a barebones Ruby 1.8 docker environment. You will need to
 do the following:
@@ -117,5 +118,6 @@ do the following:
 Don't forget to restore your Gemfile.lock after testing.
 
   MESSAGE
+  # standard:enable Layout/HeredocIndentation
   sh "docker run -it --rm -v #{Dir.pwd}:/root/diff-lcs bellbind/docker-ruby18-rails2 bash -l"
 end
