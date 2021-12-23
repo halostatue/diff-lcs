@@ -326,10 +326,10 @@ class << Diff::LCS
 
     # The last entry (if any) processed was a match. +ai+ and +bj+ point just
     # past the last matching lines in their sequences.
-    while (ai < a_size) or (bj < b_size)
+    while (ai < a_size) || (bj < b_size)
       # last A?
-      if ai == a_size and bj < b_size
-        if callbacks.respond_to?(:finished_a) and !run_finished_a
+      if ai == a_size && bj < b_size
+        if callbacks.respond_to?(:finished_a) && !run_finished_a
           ax = string ? seq1[-1, 1] : seq1[-1]
           bx = string ? seq2[bj, 1] : seq2[bj]
           event = Diff::LCS::ContextChange.new(">", (a_size - 1), ax, bj, bx)
@@ -350,8 +350,8 @@ class << Diff::LCS
       end
 
       # last B?
-      if bj == b_size and ai < a_size
-        if callbacks.respond_to?(:finished_b) and !run_finished_b
+      if bj == b_size && ai < a_size
+        if callbacks.respond_to?(:finished_b) && !run_finished_b
           ax = string ? seq1[ai, 1] : seq1[ai]
           bx = string ? seq2[-1, 1] : seq2[-1]
           event = Diff::LCS::ContextChange.new("<", ai, ax, (b_size - 1), bx)
@@ -485,7 +485,7 @@ class << Diff::LCS
       # Find next match indices +ma+ and +mb+
       loop do
         ma += 1
-        break unless ma < matches.size and matches[ma].nil?
+        break unless ma < matches.size && matches[ma].nil?
       end
 
       break if ma >= matches.size # end of matches?
@@ -493,7 +493,7 @@ class << Diff::LCS
       mb = matches[ma]
 
       # Change(seq2)
-      while (ai < ma) or (bj < mb)
+      while (ai < ma) || (bj < mb)
         ax = string ? seq1[ai, 1] : seq1[ai]
         bx = string ? seq2[bj, 1] : seq2[bj]
 
@@ -539,7 +539,7 @@ class << Diff::LCS
       bj += 1
     end
 
-    while (ai < a_size) or (bj < b_size)
+    while (ai < a_size) || (bj < b_size)
       ax = string ? seq1[ai, 1] : seq1[ai]
       bx = string ? seq2[bj, 1] : seq2[bj]
 

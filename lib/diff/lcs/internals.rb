@@ -45,14 +45,14 @@ class << Diff::LCS::Internals
     vector = []
 
     # Collect any common elements at the beginning...
-    while (a_start <= a_finish) and (b_start <= b_finish) and (a[a_start] == b[b_start])
+    while (a_start <= a_finish) && (b_start <= b_finish) && (a[a_start] == b[b_start])
       vector[a_start] = b_start
       a_start += 1
       b_start += 1
     end
 
     # Now the end...
-    while (a_start <= a_finish) and (b_start <= b_finish) and (a[a_finish] == b[b_finish])
+    while (a_start <= a_finish) && (b_start <= b_finish) && (a[a_finish] == b[b_finish])
       vector[a_finish] = b_finish
       a_finish -= 1
       b_finish -= 1
@@ -75,7 +75,7 @@ class << Diff::LCS::Internals
         # it may have an optimization purpose
         # An attempt to remove it: https://github.com/halostatue/diff-lcs/pull/72
         # Why it is reintroduced: https://github.com/halostatue/diff-lcs/issues/78
-        if k and (thresh[k] > j) and (thresh[k - 1] < j)
+        if k && (thresh[k] > j) && (thresh[k - 1] < j)
           thresh[k] = j
         else
           k = replace_next_larger(thresh, j, k)
@@ -251,7 +251,7 @@ enumerable as either source or destination value."
   # This operation preserves the sort order.
   def replace_next_larger(enum, value, last_index = nil)
     # Off the end?
-    if enum.empty? or (value > enum[-1])
+    if enum.empty? || (value > enum[-1])
       enum << value
       return enum.size - 1
     end

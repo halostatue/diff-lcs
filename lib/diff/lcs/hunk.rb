@@ -70,7 +70,7 @@ class Diff::LCS::Hunk
   attr_accessor :flag_context # rubocop:disable Layout/EmptyLinesAroundAttributeAccessor
   undef :flag_context=
   def flag_context=(context) #:nodoc: # rubocop:disable Lint/DuplicateMethods
-    return if context.nil? or context.zero?
+    return if context.nil? || context.zero?
 
     add_start = context > @start_old ? @start_old : context
 

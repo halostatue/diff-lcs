@@ -130,7 +130,7 @@ class << Diff::LCS::Ldiff
       return 1
     end
 
-    if (@format == :unified) or (@format == :context)
+    if (@format == :unified) || (@format == :context)
       ft = File.stat(file_old).mtime.localtime.strftime("%Y-%m-%d %H:%M:%S.000000000 %z")
       output << "#{char_old} #{file_old}\t#{ft}\n"
       ft = File.stat(file_new).mtime.localtime.strftime("%Y-%m-%d %H:%M:%S.000000000 %z")
@@ -152,7 +152,7 @@ class << Diff::LCS::Ldiff
         file_length_difference = hunk.file_length_difference
 
         next unless oldhunk
-        next if @lines.positive? and hunk.merge(oldhunk)
+        next if @lines.positive? && hunk.merge(oldhunk)
 
         output << oldhunk.diff(@format)
         output << "\n" if @format == :unified
