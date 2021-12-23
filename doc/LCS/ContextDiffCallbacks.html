@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class LCS::ContextDiffCallbacks - diff-lcs-1.5.0 Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
+</script>
+
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+<div class="nav-section">
+  <h3>Table of Contents</h3>
+
+  <ul class="link-list" role="directory">
+    <li><a href="#class-LCS::ContextDiffCallbacks-label-Use">Use</a>
+    <li><a href="#class-LCS::ContextDiffCallbacks-label-Simplified+Array+Format">Simplified Array Format</a>
+  </ul>
+</div>
+
+
+  <div id="class-metadata">
+    
+    
+<div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  <p class="link">Diff::LCS::DiffCallbacks
+</div>
+
+    
+    
+    
+<!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    <li ><a href="#method-i-change">#change</a>
+    <li ><a href="#method-i-discard_a">#discard_a</a>
+    <li ><a href="#method-i-discard_b">#discard_b</a>
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-LCS::ContextDiffCallbacks">
+  <h1 id="class-LCS::ContextDiffCallbacks" class="class">
+    class LCS::ContextDiffCallbacks
+  </h1>
+
+  <section class="description">
+    
+<p>This will produce a compound array of contextual diff change objects. Each element in the diffs array is a “hunk” array, where each element in each “hunk” array is a single change. Each change is a Diff::LCS::ContextChange that contains both the old index and new index values for the change. The “hunk” provides the full context for the changes. Both old and new objects will be presented for changed objects. <code>nil</code> will be substituted for a discarded object.</p>
+
+<pre class="ruby"><span class="ruby-identifier">seq1</span> = <span class="ruby-node">%w(a b c e h j l m n p)</span>
+<span class="ruby-identifier">seq2</span> = <span class="ruby-node">%w(b c d e f j k l m r s t)</span>
+
+<span class="ruby-identifier">diffs</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-identifier">diff</span>(<span class="ruby-identifier">seq1</span>, <span class="ruby-identifier">seq2</span>, <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextDiffCallbacks</span>)
+  <span class="ruby-comment"># This example shows a simplified array format.</span>
+  <span class="ruby-comment"># [ [ [ &#39;-&#39;, [  0, &#39;a&#39; ], [  0, nil ] ] ],   # 1</span>
+  <span class="ruby-comment">#   [ [ &#39;+&#39;, [  3, nil ], [  2, &#39;d&#39; ] ] ],   # 2</span>
+  <span class="ruby-comment">#   [ [ &#39;-&#39;, [  4, &#39;h&#39; ], [  4, nil ] ],     # 3</span>
+  <span class="ruby-comment">#     [ &#39;+&#39;, [  5, nil ], [  4, &#39;f&#39; ] ] ],</span>
+  <span class="ruby-comment">#   [ [ &#39;+&#39;, [  6, nil ], [  6, &#39;k&#39; ] ] ],   # 4</span>
+  <span class="ruby-comment">#   [ [ &#39;-&#39;, [  8, &#39;n&#39; ], [  9, nil ] ],     # 5</span>
+  <span class="ruby-comment">#     [ &#39;+&#39;, [  9, nil ], [  9, &#39;r&#39; ] ],</span>
+  <span class="ruby-comment">#     [ &#39;-&#39;, [  9, &#39;p&#39; ], [ 10, nil ] ],</span>
+  <span class="ruby-comment">#     [ &#39;+&#39;, [ 10, nil ], [ 10, &#39;s&#39; ] ],</span>
+  <span class="ruby-comment">#     [ &#39;+&#39;, [ 10, nil ], [ 11, &#39;t&#39; ] ] ] ]</span>
+</pre>
+
+<p>The five hunks shown are comprised of individual changes; if there is a related set of changes, they are still shown individually.</p>
+
+<p>This callback can also be used with <a href="../LCS.html#method-i-sdiff"><code>Diff::LCS#sdiff</code></a>, which will produce results like:</p>
+
+<pre class="ruby"><span class="ruby-identifier">diffs</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-identifier">sdiff</span>(<span class="ruby-identifier">seq1</span>, <span class="ruby-identifier">seq2</span>, <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextCallbacks</span>)
+  <span class="ruby-comment"># This example shows a simplified array format.</span>
+  <span class="ruby-comment"># [ [ [ &quot;-&quot;, [  0, &quot;a&quot; ], [  0, nil ] ] ],  # 1</span>
+  <span class="ruby-comment">#   [ [ &quot;+&quot;, [  3, nil ], [  2, &quot;d&quot; ] ] ],  # 2</span>
+  <span class="ruby-comment">#   [ [ &quot;!&quot;, [  4, &quot;h&quot; ], [  4, &quot;f&quot; ] ] ],  # 3</span>
+  <span class="ruby-comment">#   [ [ &quot;+&quot;, [  6, nil ], [  6, &quot;k&quot; ] ] ],  # 4</span>
+  <span class="ruby-comment">#   [ [ &quot;!&quot;, [  8, &quot;n&quot; ], [  9, &quot;r&quot; ] ],    # 5</span>
+  <span class="ruby-comment">#     [ &quot;!&quot;, [  9, &quot;p&quot; ], [ 10, &quot;s&quot; ] ],</span>
+  <span class="ruby-comment">#     [ &quot;+&quot;, [ 10, nil ], [ 11, &quot;t&quot; ] ] ] ]</span>
+</pre>
+
+<p>The five hunks are still present, but are significantly shorter in total presentation, because changed items are shown as changes (“!”) instead of potentially “mismatched” pairs of additions and deletions.</p>
+
+<p>The result of this operation is similar to that of Diff::LCS::SDiffCallbacks. They may be compared as:</p>
+
+<pre class="ruby"><span class="ruby-identifier">s</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-identifier">sdiff</span>(<span class="ruby-identifier">seq1</span>, <span class="ruby-identifier">seq2</span>).<span class="ruby-identifier">reject</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">action</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;=&quot;</span> }
+<span class="ruby-identifier">c</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-identifier">sdiff</span>(<span class="ruby-identifier">seq1</span>, <span class="ruby-identifier">seq2</span>, <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextDiffCallbacks</span>).<span class="ruby-identifier">flatten</span>(<span class="ruby-value">1</span>)
+
+<span class="ruby-identifier">s</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">c</span> <span class="ruby-comment"># -&gt; true</span>
+</pre>
+
+<h3 id="class-LCS::ContextDiffCallbacks-label-Use">Use<span><a href="#class-LCS::ContextDiffCallbacks-label-Use">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>This callback object must be initialised and can be used by the <a href="../LCS.html#method-i-diff"><code>Diff::LCS#diff</code></a> or <a href="../LCS.html#method-i-sdiff"><code>Diff::LCS#sdiff</code></a> methods.</p>
+
+<pre class="ruby"><span class="ruby-identifier">cbo</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextDiffCallbacks</span>.<span class="ruby-identifier">new</span>
+<span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-constant">LCS</span>(<span class="ruby-identifier">seq1</span>, <span class="ruby-identifier">seq2</span>, <span class="ruby-identifier">cbo</span>)
+<span class="ruby-identifier">cbo</span>.<span class="ruby-identifier">finish</span>
+</pre>
+
+<p>Note that the call to finish is absolutely necessary, or the last set of changes will not be visible. Alternatively, can be used as:</p>
+
+<pre class="ruby"><span class="ruby-identifier">cbo</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextDiffCallbacks</span>.<span class="ruby-identifier">new</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">tcbo</span><span class="ruby-operator">|</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-constant">LCS</span>(<span class="ruby-identifier">seq1</span>, <span class="ruby-identifier">seq2</span>, <span class="ruby-identifier">tcbo</span>) }
+</pre>
+
+<p>The necessary finish call will be made.</p>
+
+<h3 id="class-LCS::ContextDiffCallbacks-label-Simplified+Array+Format">Simplified <a href="../Array.html"><code>Array</code></a> Format<span><a href="#class-LCS::ContextDiffCallbacks-label-Simplified+Array+Format">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>The simplified array format used in the example above can be obtained with:</p>
+
+<pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;pp&#39;</span>
+<span class="ruby-identifier">pp</span> <span class="ruby-identifier">diffs</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span> <span class="ruby-identifier">f</span>.<span class="ruby-identifier">to_a</span> } }
+</pre>
+
+  </section>
+
+  <section id="5Buntitled-5D" class="documentation-section">
+
+
+
+
+
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+      <div id="method-i-change" class="method-detail ">
+        <div class="method-heading">
+          <span class="method-name">change</span><span
+            class="method-args">(event)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="change-source">
+            <pre><span class="ruby-comment"># File lib/diff/lcs/callbacks.rb, line 232</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">change</span>(<span class="ruby-identifier">event</span>)
+  <span class="ruby-ivar">@hunk</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">simplify</span>(<span class="ruby-identifier">event</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-discard_a" class="method-detail ">
+        <div class="method-heading">
+          <span class="method-name">discard_a</span><span
+            class="method-args">(event)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="discard_a-source">
+            <pre><span class="ruby-comment"># File lib/diff/lcs/callbacks.rb, line 224</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">discard_a</span>(<span class="ruby-identifier">event</span>)
+  <span class="ruby-ivar">@hunk</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">simplify</span>(<span class="ruby-identifier">event</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-discard_b" class="method-detail ">
+        <div class="method-heading">
+          <span class="method-name">discard_b</span><span
+            class="method-args">(event)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="discard_b-source">
+            <pre><span class="ruby-comment"># File lib/diff/lcs/callbacks.rb, line 228</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">discard_b</span>(<span class="ruby-identifier">event</span>)
+  <span class="ruby-ivar">@hunk</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">simplify</span>(<span class="ruby-identifier">event</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+    </section>
+
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.3.3.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

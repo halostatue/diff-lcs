@@ -1,0 +1,21 @@
+Thu, 23 Dec 2021 00:51:29 -0500
+lib/diff/lcs/ldiff.rb	Thu, 23 Dec 2021 00:51:24 -0500
+lib/diff/lcs/change.rb	Thu, 23 Dec 2021 00:51:24 -0500
+lib/diff/lcs/string.rb	Thu, 23 Dec 2021 00:51:24 -0500
+lib/diff/lcs/block.rb	Thu, 23 Dec 2021 00:51:24 -0500
+lib/diff/lcs/array.rb	Thu, 23 Dec 2021 00:51:24 -0500
+lib/diff/lcs/callbacks.rb	Thu, 23 Dec 2021 00:51:24 -0500
+lib/diff/lcs/backports.rb	Thu, 23 Dec 2021 00:51:24 -0500
+lib/diff/lcs/hunk.rb	Thu, 23 Dec 2021 00:51:24 -0500
+lib/diff/lcs/internals.rb	Thu, 23 Dec 2021 00:51:24 -0500
+lib/diff/lcs/htmldiff.rb	Thu, 23 Dec 2021 00:51:24 -0500
+lib/diff/lcs.rb	Thu, 23 Dec 2021 00:51:24 -0500
+lib/diff-lcs.rb	Thu, 23 Dec 2021 00:51:24 -0500
+Code-of-Conduct.md	Thu, 23 Dec 2021 00:51:24 -0500
+Contributing.md	Thu, 23 Dec 2021 00:51:24 -0500
+History.md	Thu, 23 Dec 2021 00:51:24 -0500
+License.md	Thu, 23 Dec 2021 00:51:24 -0500
+Manifest.txt	Thu, 23 Dec 2021 00:51:24 -0500
+README.rdoc	Thu, 23 Dec 2021 00:51:24 -0500
+docs/COPYING.txt	Thu, 23 Dec 2021 00:51:24 -0500
+docs/artistic.txt	Thu, 23 Dec 2021 00:51:24 -0500

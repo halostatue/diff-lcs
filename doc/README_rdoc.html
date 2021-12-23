@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>README - diff-lcs-1.5.0 Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+  var index_rel_prefix = "./";
+</script>
+
+<script src="./js/navigation.js" defer></script>
+<script src="./js/search.js" defer></script>
+<script src="./js/search_index.js" defer></script>
+<script src="./js/searcher.js" defer></script>
+<script src="./js/darkfish.js" defer></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+<body id="top" role="document" class="file">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+<div class="nav-section">
+  <h3>Table of Contents</h3>
+
+  <ul class="link-list" role="directory">
+    <li><a href="#label-Diff-3A-3ALCS">Diff::LCS</a>
+    <li><a href="#label-Description">Description</a>
+    <li><a href="#label-Synopsis">Synopsis</a>
+    <li><a href="#label-History">History</a>
+  </ul>
+</div>
+
+
+  <div id="project-metadata">
+    
+<div id="fileindex-section" class="nav-section">
+  <h3>Pages</h3>
+
+  <ul class="link-list">
+    <li><a href="./Code-of-Conduct_md.html">Code-of-Conduct</a>
+    <li><a href="./Contributing_md.html">Contributing</a>
+    <li><a href="./History_md.html">History</a>
+    <li><a href="./License_md.html">License</a>
+    <li><a href="./Manifest_txt.html">Manifest</a>
+    <li><a href="./README_rdoc.html">README</a>
+    <li><a href="./docs/COPYING_txt.html">COPYING</a>
+    <li><a href="./docs/artistic_txt.html">artistic</a>
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-label="Page README.rdoc">
+
+<h1 id="label-Diff-3A-3ALCS"><a href="LCS.html"><code>Diff::LCS</code></a><span><a href="#label-Diff-3A-3ALCS">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<dl class="rdoc-list note-list"><dt>home 
+<dd>
+<p><a href="https://github.com/halostatue/diff-lcs">github.com/halostatue/diff-lcs</a></p>
+</dd><dt>code 
+<dd>
+<p><a href="https://github.com/halostatue/diff-lcs">github.com/halostatue/diff-lcs</a></p>
+</dd><dt>bugs 
+<dd>
+<p><a href="https://github.com/halostatue/diff-lcs/issues">github.com/halostatue/diff-lcs/issues</a></p>
+</dd><dt>rdoc 
+<dd>
+<p><a href="http://rubydoc.info/github/halostatue/diff-lcs">rubydoc.info/github/halostatue/diff-lcs</a></p>
+</dd><dt>continuous integration 
+<dd>
+<p><a href="https://github.com/halostatue/diff-lcs/actions"><img src="https://github.com/halostatue/diff-lcs/workflows/CI/badge.svg" /></a></p>
+</dd></dl>
+
+<h2 id="label-Description">Description<span><a href="#label-Description">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p><a href="LCS.html"><code>Diff::LCS</code></a> computes the difference between two Enumerable sequences using the McIlroy-Hunt longest common subsequence (<a href="LCS.html"><code>LCS</code></a>) algorithm. It includes utilities to create a simple HTML diff output format and a standard diff-like tool.</p>
+
+<p>This is release 1.4.3, providing a simple extension that allows for Diff::LCS::Change objects to be treated implicitly as arrays and fixes a number of formatting issues.</p>
+
+<p>Ruby versions below 2.5 are soft-deprecated, which means that older versions are no longer part of the CI test suite. If any changes have been introduced that break those versions, bug reports and patches will be accepted, but it will be up to the reporter to verify any fixes prior to release. The next major release will completely break compatibility.</p>
+
+<h2 id="label-Synopsis">Synopsis<span><a href="#label-Synopsis">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Using this module is quite simple. By default, <a href="LCS.html"><code>Diff::LCS</code></a> does not extend objects with the <a href="LCS.html"><code>Diff::LCS</code></a> interface, but will be called as if it were a function:</p>
+
+<pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;diff/lcs&#39;</span>
+
+<span class="ruby-identifier">seq1</span> = <span class="ruby-node">%w(a b c e h j l m n p)</span>
+<span class="ruby-identifier">seq2</span> = <span class="ruby-node">%w(b c d e f j k l m r s t)</span>
+
+<span class="ruby-identifier">lcs</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-constant">LCS</span>(<span class="ruby-identifier">seq1</span>, <span class="ruby-identifier">seq2</span>)
+<span class="ruby-identifier">diffs</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-identifier">diff</span>(<span class="ruby-identifier">seq1</span>, <span class="ruby-identifier">seq2</span>)
+<span class="ruby-identifier">sdiff</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-identifier">sdiff</span>(<span class="ruby-identifier">seq1</span>, <span class="ruby-identifier">seq2</span>)
+<span class="ruby-identifier">seq</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-identifier">traverse_sequences</span>(<span class="ruby-identifier">seq1</span>, <span class="ruby-identifier">seq2</span>, <span class="ruby-identifier">callback_obj</span>)
+<span class="ruby-identifier">bal</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-identifier">traverse_balanced</span>(<span class="ruby-identifier">seq1</span>, <span class="ruby-identifier">seq2</span>, <span class="ruby-identifier">callback_obj</span>)
+<span class="ruby-identifier">seq2</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-identifier">patch!</span>(<span class="ruby-identifier">seq1</span>, <span class="ruby-identifier">diffs</span>)
+<span class="ruby-identifier">seq1</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-identifier">unpatch!</span>(<span class="ruby-identifier">seq2</span>, <span class="ruby-identifier">diffs</span>)
+<span class="ruby-identifier">seq2</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-identifier">patch!</span>(<span class="ruby-identifier">seq1</span>, <span class="ruby-identifier">sdiff</span>)
+<span class="ruby-identifier">seq1</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-identifier">unpatch!</span>(<span class="ruby-identifier">seq2</span>, <span class="ruby-identifier">sdiff</span>)
+</pre>
+
+<p>Objects can be extended with Diff::LCS:</p>
+
+<pre class="ruby"><span class="ruby-identifier">seq1</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>)
+<span class="ruby-identifier">lcs</span> = <span class="ruby-identifier">seq1</span>.<span class="ruby-identifier">lcs</span>(<span class="ruby-identifier">seq2</span>)
+<span class="ruby-identifier">diffs</span> = <span class="ruby-identifier">seq1</span>.<span class="ruby-identifier">diff</span>(<span class="ruby-identifier">seq2</span>)
+<span class="ruby-identifier">sdiff</span> = <span class="ruby-identifier">seq1</span>.<span class="ruby-identifier">sdiff</span>(<span class="ruby-identifier">seq2</span>)
+<span class="ruby-identifier">seq</span> = <span class="ruby-identifier">seq1</span>.<span class="ruby-identifier">traverse_sequences</span>(<span class="ruby-identifier">seq2</span>, <span class="ruby-identifier">callback_obj</span>)
+<span class="ruby-identifier">bal</span> = <span class="ruby-identifier">seq1</span>.<span class="ruby-identifier">traverse_balanced</span>(<span class="ruby-identifier">seq2</span>, <span class="ruby-identifier">callback_obj</span>)
+<span class="ruby-identifier">seq2</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">seq1</span>.<span class="ruby-identifier">patch!</span>(<span class="ruby-identifier">diffs</span>)
+<span class="ruby-identifier">seq1</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">seq2</span>.<span class="ruby-identifier">unpatch!</span>(<span class="ruby-identifier">diffs</span>)
+<span class="ruby-identifier">seq2</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">seq1</span>.<span class="ruby-identifier">patch!</span>(<span class="ruby-identifier">sdiff</span>)
+<span class="ruby-identifier">seq1</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">seq2</span>.<span class="ruby-identifier">unpatch!</span>(<span class="ruby-identifier">sdiff</span>)
+</pre>
+
+<p>By requiring &#39;diff/lcs/array&#39; or &#39;diff/lcs/string&#39;, <a href="Array.html"><code>Array</code></a> or <a href="String.html"><code>String</code></a> will be extended for use this way.</p>
+
+<p>Note that <a href="LCS.html"><code>Diff::LCS</code></a> requires a sequenced enumerable container, which means that the order of enumeration is both predictable and consistent for the same set of data. While it is theoretically possible to generate a diff for an unordered hash, it will only be meaningful if the enumeration of the hashes is consistent. In general, this will mean that containers that behave like <a href="String.html"><code>String</code></a> or <a href="Array.html"><code>Array</code></a> will perform best.</p>
+
+<h2 id="label-History"><a href="History_md.html">History</a><span><a href="#label-History">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p><a href="LCS.html"><code>Diff::LCS</code></a> is a port of Perl&#39;s Algorithm::Diff that uses the McIlroy-Hunt longest common subsequence (<a href="LCS.html"><code>LCS</code></a>) algorithm to compute intelligent differences between two sequenced enumerable containers. The implementation is based on Mario I. Wolczko&#39;s <a href="ftp://st.cs.uiuc.edu/pub/Smalltalk/MANCHESTER/manchester/4.0/diff.st">Smalltalk version 1.2</a> (1993) and Ned Konz&#39;s Perl version <a href="http://search.cpan.org/~nedkonz/Algorithm-Diff-1.15/">Algorithm::Diff 1.15</a>. <a href="LCS.html#method-i-sdiff"><code>Diff::LCS#sdiff</code></a> and <a href="LCS.html#method-i-traverse_balanced"><code>Diff::LCS#traverse_balanced</code></a> were originally written for the Perl version by Mike Schilli.</p>
+
+<p>The algorithm is described in <em>A Fast Algorithm for Computing Longest Common Subsequences</em>, CACM, vol.20, no.5, pp.350-353, May 1977, with a few minor improvements to improve the speed. A simplified description of the algorithm, originally written for the Perl version, was written by Mark-Jason Dominus.</p>
+
+</main>
+
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.3.3.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+
