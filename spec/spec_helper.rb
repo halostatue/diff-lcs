@@ -288,7 +288,6 @@ module Diff::LCS::SpecHelper
       end
 
       def finished_b(event)
-        p 'called #finished_b'
         @done_b << [
           event.old_element, event.old_position,
           event.new_element, event.new_position
