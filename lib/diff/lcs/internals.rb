@@ -100,7 +100,7 @@ class << Diff::LCS::Internals
   # the object form of same) and detection of whether the patchset represents
   # changes to be made.
   def analyze_patchset(patchset, depth = 0)
-    fail 'Patchset too complex' if depth > 1
+    fail "Patchset too complex" if depth > 1
 
     has_changes = false
     new_patchset = []
@@ -157,22 +157,22 @@ class << Diff::LCS::Internals
         re = string ? src[change.new_position, 1] : src[change.new_position]
 
         case change.action
-        when '-' # Remove details from the old string
+        when "-" # Remove details from the old string
           if le == change.old_element
             left_match += 1
           else
             left_miss += 1
           end
-        when '+'
+        when "+"
           if re == change.new_element
             right_match += 1
           else
             right_miss += 1
           end
-        when '='
+        when "="
           left_miss += 1 if le != change.old_element
           right_miss += 1 if re != change.new_element
-        when '!'
+        when "!"
           if le == change.old_element
             left_match += 1
           elsif re == change.new_element
@@ -189,19 +189,19 @@ class << Diff::LCS::Internals
         element = string ? src[change.position, 1] : src[change.position]
 
         case change.action
-        when '-'
+        when "-"
           if element == change.element
             left_match += 1
           else
             left_miss += 1
           end
-        when '+'
+        when "+"
           if element == change.element
             right_match += 1
           else
             right_miss += 1
           end
-        when '='
+        when "="
           if element != change.element
             left_miss += 1
             right_miss += 1

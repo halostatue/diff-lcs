@@ -1,73 +1,73 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-require 'diff/lcs/hunk'
+require "spec_helper"
+require "diff/lcs/hunk"
 
-describe 'Diff::LCS Issues' do
+describe "Diff::LCS Issues" do
   include Diff::LCS::SpecHelper::Matchers
 
-  describe 'issue #1' do
-    shared_examples 'handles simple diffs' do |s1, s2, forward_diff|
+  describe "issue #1" do
+    shared_examples "handles simple diffs" do |s1, s2, forward_diff|
       before do
         @diff_s1_s2 = Diff::LCS.diff(s1, s2)
       end
 
-      it 'creates the correct diff' do
+      it "creates the correct diff" do
         expect(change_diff(forward_diff)).to eq(@diff_s1_s2)
       end
 
-      it 'creates the correct patch s1->s2' do
+      it "creates the correct patch s1->s2" do
         expect(Diff::LCS.patch(s1, @diff_s1_s2)).to eq(s2)
       end
 
-      it 'creates the correct patch s2->s1' do
+      it "creates the correct patch s2->s1" do
         expect(Diff::LCS.patch(s2, @diff_s1_s2)).to eq(s1)
       end
     end
 
-    describe 'string' do
-      it_has_behavior 'handles simple diffs', 'aX', 'bXaX', [
+    describe "string" do
+      it_has_behavior "handles simple diffs", "aX", "bXaX", [
         [
-          ['+', 0, 'b'],
-          ['+', 1, 'X']
+          ["+", 0, "b"],
+          ["+", 1, "X"]
         ]
       ]
-      it_has_behavior 'handles simple diffs', 'bXaX', 'aX', [
+      it_has_behavior "handles simple diffs", "bXaX", "aX", [
         [
-          ['-', 0, 'b'],
-          ['-', 1, 'X']
+          ["-", 0, "b"],
+          ["-", 1, "X"]
         ]
       ]
     end
 
-    describe 'array' do
-      it_has_behavior 'handles simple diffs', %w(a X), %w(b X a X), [
+    describe "array" do
+      it_has_behavior "handles simple diffs", %w(a X), %w(b X a X), [
         [
-          ['+', 0, 'b'],
-          ['+', 1, 'X']
+          ["+", 0, "b"],
+          ["+", 1, "X"]
         ]
       ]
-      it_has_behavior 'handles simple diffs', %w(b X a X), %w(a X), [
+      it_has_behavior "handles simple diffs", %w(b X a X), %w(a X), [
         [
-          ['-', 0, 'b'],
-          ['-', 1, 'X']
+          ["-", 0, "b"],
+          ["-", 1, "X"]
         ]
       ]
     end
   end
 
-  describe 'issue #57' do
-    it 'should fail with a correct error' do
+  describe "issue #57" do
+    it "should fail with a correct error" do
       expect {
-        actual = { :category => 'app.rack.request' }
-        expected = { :category => 'rack.middleware', :title => 'Anonymous Middleware' }
+        actual = { :category => "app.rack.request" }
+        expected = { :category => "rack.middleware", :title => "Anonymous Middleware" }
         expect(actual).to eq(expected)
       }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
     end
   end
 
-  describe 'issue #60' do
-    it 'should produce unified output with correct context' do
+  describe "issue #60" do
+    it "should produce unified output with correct context" do
       old_data = <<-DATA_OLD.strip.split("\n").map(&:chomp)
 {
   "name": "x",
@@ -96,7 +96,7 @@ describe 'Diff::LCS Issues' do
     end
   end
 
-  describe 'issue #65' do
+  describe "issue #65" do
     def diff_lines(old_lines, new_lines)
       file_length_difference = 0
       previous_hunk = nil
@@ -115,22 +115,22 @@ describe 'Diff::LCS Issues' do
       output.join
     end
 
-    it 'should not misplace the new chunk' do
+    it "should not misplace the new chunk" do
       old_data = [
-        'recipe[a::default]', 'recipe[b::default]', 'recipe[c::default]',
-        'recipe[d::default]', 'recipe[e::default]', 'recipe[f::default]',
-        'recipe[g::default]', 'recipe[h::default]', 'recipe[i::default]',
-        'recipe[j::default]', 'recipe[k::default]', 'recipe[l::default]',
-        'recipe[m::default]', 'recipe[n::default]'
+        "recipe[a::default]", "recipe[b::default]", "recipe[c::default]",
+        "recipe[d::default]", "recipe[e::default]", "recipe[f::default]",
+        "recipe[g::default]", "recipe[h::default]", "recipe[i::default]",
+        "recipe[j::default]", "recipe[k::default]", "recipe[l::default]",
+        "recipe[m::default]", "recipe[n::default]"
       ]
 
       new_data = [
-        'recipe[a::default]', 'recipe[c::default]', 'recipe[d::default]',
-        'recipe[e::default]', 'recipe[f::default]', 'recipe[g::default]',
-        'recipe[h::default]', 'recipe[i::default]', 'recipe[j::default]',
-        'recipe[k::default]', 'recipe[l::default]', 'recipe[m::default]',
-        'recipe[n::default]', 'recipe[o::new]', 'recipe[p::new]',
-        'recipe[q::new]', 'recipe[r::new]'
+        "recipe[a::default]", "recipe[c::default]", "recipe[d::default]",
+        "recipe[e::default]", "recipe[f::default]", "recipe[g::default]",
+        "recipe[h::default]", "recipe[i::default]", "recipe[j::default]",
+        "recipe[k::default]", "recipe[l::default]", "recipe[m::default]",
+        "recipe[n::default]", "recipe[o::new]", "recipe[p::new]",
+        "recipe[q::new]", "recipe[r::new]"
       ]
 
       expect(diff_lines(old_data, new_data)).to eq(<<-EODIFF)

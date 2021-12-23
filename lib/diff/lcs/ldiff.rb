@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'optparse'
-require 'ostruct'
-require 'diff/lcs/hunk'
+require "optparse"
+require "ostruct"
+require "diff/lcs/hunk"
 
 module Diff::LCS::Ldiff #:nodoc:
   BANNER = <<-COPYRIGHT
@@ -28,48 +28,48 @@ class << Diff::LCS::Ldiff
 
     args.options do |o|
       o.banner = "Usage: #{File.basename($0)} [options] oldfile newfile"
-      o.separator ''
+      o.separator ""
       o.on(
-        '-c', '-C', '--context [LINES]', Integer,
-        'Displays a context diff with LINES lines', 'of context. Default 3 lines.'
+        "-c", "-C", "--context [LINES]", Integer,
+        "Displays a context diff with LINES lines", "of context. Default 3 lines."
       ) do |ctx|
         @format = :context
         @lines  = ctx || 3
       end
       o.on(
-        '-u', '-U', '--unified [LINES]', Integer,
-        'Displays a unified diff with LINES lines', 'of context. Default 3 lines.'
+        "-u", "-U", "--unified [LINES]", Integer,
+        "Displays a unified diff with LINES lines", "of context. Default 3 lines."
       ) do |ctx|
         @format = :unified
         @lines  = ctx || 3
       end
-      o.on('-e', 'Creates an \'ed\' script to change', 'oldfile to newfile.') do |_ctx|
+      o.on("-e", "Creates an 'ed' script to change", "oldfile to newfile.") do |_ctx|
         @format = :ed
       end
-      o.on('-f', 'Creates an \'ed\' script to change', 'oldfile to newfile in reverse order.') do |_ctx|
+      o.on("-f", "Creates an 'ed' script to change", "oldfile to newfile in reverse order.") do |_ctx|
         @format = :reverse_ed
       end
       o.on(
-        '-a', '--text',
-        'Treat the files as text and compare them', 'line-by-line, even if they do not seem', 'to be text.'
+        "-a", "--text",
+        "Treat the files as text and compare them", "line-by-line, even if they do not seem", "to be text."
       ) do |_txt|
         @binary = false
       end
-      o.on('--binary', 'Treats the files as binary.') do |_bin|
+      o.on("--binary", "Treats the files as binary.") do |_bin|
         @binary = true
       end
-      o.on('-q', '--brief', 'Report only whether or not the files', 'differ, not the details.') do |_ctx|
+      o.on("-q", "--brief", "Report only whether or not the files", "differ, not the details.") do |_ctx|
         @format = :report
       end
-      o.on_tail('--help', 'Shows this text.') do
+      o.on_tail("--help", "Shows this text.") do
         error << o
         return 0
       end
-      o.on_tail('--version', 'Shows the version of Diff::LCS.') do
+      o.on_tail("--version", "Shows the version of Diff::LCS.") do
         error << Diff::LCS::Ldiff::BANNER
         return 0
       end
-      o.on_tail ''
+      o.on_tail ""
       o.on_tail 'By default, runs produces an "old-style" diff, with output like UNIX diff.'
       o.parse!
     end
@@ -87,11 +87,11 @@ class << Diff::LCS::Ldiff
 
     case @format
     when :context
-      char_old = '*' * 3
-      char_new = '-' * 3
+      char_old = "*" * 3
+      char_new = "-" * 3
     when :unified
-      char_old = '-' * 3
-      char_new = '+' * 3
+      char_old = "-" * 3
+      char_new = "+" * 3
     end
 
     # After we've read up to a certain point in each file, the number of
@@ -129,9 +129,9 @@ class << Diff::LCS::Ldiff
     end
 
     if (@format == :unified) or (@format == :context)
-      ft = File.stat(file_old).mtime.localtime.strftime('%Y-%m-%d %H:%M:%S.000000000 %z')
+      ft = File.stat(file_old).mtime.localtime.strftime("%Y-%m-%d %H:%M:%S.000000000 %z")
       output << "#{char_old} #{file_old}\t#{ft}\n"
-      ft = File.stat(file_new).mtime.localtime.strftime('%Y-%m-%d %H:%M:%S.000000000 %z')
+      ft = File.stat(file_new).mtime.localtime.strftime("%Y-%m-%d %H:%M:%S.000000000 %z")
       output << "#{char_new} #{file_new}\t#{ft}\n"
     end
 

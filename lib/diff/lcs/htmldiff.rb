@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'cgi'
+require "cgi"
 
 # Produce a simple HTML diff view.
 class Diff::LCS::HTMLDiff
@@ -19,13 +19,13 @@ class Diff::LCS::HTMLDiff
       @output = output
       options ||= {}
 
-      @match_class = options[:match_class] || 'match'
-      @only_a_class = options[:only_a_class] || 'only_a'
-      @only_b_class = options[:only_b_class] || 'only_b'
+      @match_class = options[:match_class] || "match"
+      @only_a_class = options[:only_a_class] || "only_a"
+      @only_b_class = options[:only_b_class] || "only_b"
     end
 
     def htmlize(element, css_class)
-      element = '&nbsp;' if element.empty?
+      element = "&nbsp;" if element.empty?
       %Q(<pre class="#{__send__(css_class)}">#{element}</pre>\n)
     end
     private :htmlize
@@ -103,7 +103,7 @@ h1 { margin-left: 2em; }
 
     @options[:css] ||= DEFAULT_CSS.dup
 
-    @options[:title] ||= 'diff'
+    @options[:title] ||= "diff"
   end
   private :verify_options
 

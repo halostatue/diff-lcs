@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'diff/lcs/change'
+require "diff/lcs/change"
 
 module Diff::LCS # rubocop:disable Style/Documentation
   # This callback object implements the default set of callback events,
@@ -131,11 +131,11 @@ class Diff::LCS::DiffCallbacks
   end
 
   def discard_a(event)
-    @hunk << Diff::LCS::Change.new('-', event.old_position, event.old_element)
+    @hunk << Diff::LCS::Change.new("-", event.old_position, event.old_element)
   end
 
   def discard_b(event)
-    @hunk << Diff::LCS::Change.new('+', event.new_position, event.new_element)
+    @hunk << Diff::LCS::Change.new("+", event.new_position, event.new_element)
   end
 
   def finish_hunk

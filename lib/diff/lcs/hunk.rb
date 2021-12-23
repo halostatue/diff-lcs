@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'diff/lcs/block'
+require "diff/lcs/block"
 
 # A Hunk is a group of Blocks which overlap because of the context surrounding
 # each block. (So if we're not using context, every hunk will contain one
 # block.) Used in the diff program (bin/ldiff).
 class Diff::LCS::Hunk
-  OLD_DIFF_OP_ACTION = { '+' => 'a', '-' => 'd', '!' => 'c' }.freeze #:nodoc:
-  ED_DIFF_OP_ACTION = { '+' => 'a', '-' => 'd', '!' => 'c' }.freeze #:nodoc:
+  OLD_DIFF_OP_ACTION = { "+" => "a", "-" => "d", "!" => "c" }.freeze #:nodoc:
+  ED_DIFF_OP_ACTION = { "+" => "a", "-" => "d", "!" => "c" }.freeze #:nodoc:
 
   private_constant :OLD_DIFF_OP_ACTION, :ED_DIFF_OP_ACTION if respond_to?(:private_constant)
 
@@ -22,7 +22,7 @@ class Diff::LCS::Hunk
     end
 
     if String.method_defined?(:encoding)
-      @preferred_data_encoding = data_old.fetch(0) { data_new.fetch(0) { '' } }.encoding
+      @preferred_data_encoding = data_old.fetch(0) { data_new.fetch(0) { "" } }.encoding
     end
 
     @data_old = data_old
@@ -133,7 +133,7 @@ class Diff::LCS::Hunk
   # Note that an old diff can't have any context. Therefore, we know that
   # there's only one block in the hunk.
   def old_diff(_last = false)
-    warn 'Expecting only one block in an old diff hunk!' if @blocks.size > 1
+    warn "Expecting only one block in an old diff hunk!" if @blocks.size > 1
 
     block = @blocks[0]
 
@@ -144,13 +144,13 @@ class Diff::LCS::Hunk
     # If removing anything, just print out all the remove lines in the hunk
     # which is just all the remove lines in the block.
     unless block.remove.empty?
-      @data_old[@start_old..@end_old].each { |e| s << encode('< ') + e.chomp + encode("\n") }
+      @data_old[@start_old..@end_old].each { |e| s << encode("< ") + e.chomp + encode("\n") }
     end
 
-    s << encode("---\n") if block.op == '!'
+    s << encode("---\n") if block.op == "!"
 
     unless block.insert.empty?
-      @data_new[@start_new..@end_new].each { |e| s << encode('> ') + e.chomp + encode("\n") }
+      @data_new[@start_new..@end_new].each { |e| s << encode("> ") + e.chomp + encode("\n") }
     end
 
     s
@@ -213,7 +213,7 @@ class Diff::LCS::Hunk
   def context_diff(last = false)
     s = encode("***************\n")
     s << encode("*** #{context_range(:old, ',', last)} ****\n")
-    r = context_range(:new, ',', last)
+    r = context_range(:new, ",", last)
 
     if last
       old_missing_newline = missing_last_newline?(@data_old)
@@ -269,7 +269,7 @@ class Diff::LCS::Hunk
   private :context_diff
 
   def ed_diff(format, _last = false)
-    warn 'Expecting only one block in an old diff hunk!' if @blocks.size > 1
+    warn "Expecting only one block in an old diff hunk!" if @blocks.size > 1
 
     s =
       if format == :reverse_ed
