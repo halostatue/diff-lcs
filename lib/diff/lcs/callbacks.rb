@@ -50,7 +50,11 @@ module Diff::LCS
   BalancedCallbacks = DefaultCallbacks
 
   def self.callbacks_for(callbacks)
-    callbacks.new rescue callbacks
+    begin
+      callbacks.new
+    rescue
+      callbacks
+    end
   end
 end
 
