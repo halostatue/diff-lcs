@@ -355,9 +355,7 @@ module Diff::LCS::SpecHelper
 
     matcher :correctly_map_sequence do |s1|
       match do |actual|
-        actual.each_with_index { |ee, ii|
-          expect(ee).to be_nil_or_match_values(ii, s1, @s2)
-        }
+        actual.each_index { |ii| expect(actual[ii]).to be_nil_or_match_values(ii, s1, @s2) }
       end
 
       chain :to_other_sequence do |s2|

@@ -145,7 +145,7 @@ class << Diff::LCS
     matches = Diff::LCS::Internals.lcs(seq1, seq2)
     ret = []
     string = seq1.kind_of? String
-    matches.each_with_index do |_e, i|
+    matches.each_index do |i|
       next if matches[i].nil?
 
       v = string ? seq1[i, 1] : seq1[i]

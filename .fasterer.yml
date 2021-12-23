@@ -1,4 +1,3 @@
 exclude_paths:
-  - lib/diff/lcs.rb # sort_vs_sort_by on priority_compare
-  - Rakefile # each_with_index vs while
-  - spec/spec_helper.rb
+  - research/**/*
+  - pkg/**/*
