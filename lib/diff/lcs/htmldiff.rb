@@ -26,7 +26,7 @@ class Diff::LCS::HTMLDiff
 
     def htmlize(element, css_class)
       element = "&nbsp;" if element.empty?
-      %Q(<pre class="#{__send__(css_class)}">#{element}</pre>\n)
+      %(<pre class="#{__send__(css_class)}">#{element}</pre>\n)
     end
     private :htmlize
 
