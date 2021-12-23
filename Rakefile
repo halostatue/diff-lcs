@@ -53,9 +53,11 @@ if RUBY_VERSION < "1.9"
   end
 
   class Gem::Specification # :nodoc:
-    def metadata=(*); end
+    def metadata=(*)
+    end
 
-    def default_value(*); end
+    def default_value(*)
+    end
   end
 
   class Object # :nodoc:
