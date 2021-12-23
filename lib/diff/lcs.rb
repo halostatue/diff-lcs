@@ -578,8 +578,8 @@ class << Diff::LCS
 
   # standard:disable Style/HashSyntax
   PATCH_MAP = { # :nodoc:
-    :patch => { "+" => "+", "-" => "-", "!" => "!", "=" => "=" }.freeze,
-    :unpatch => { "+" => "-", "-" => "+", "!" => "!", "=" => "=" }.freeze
+    :patch => {"+" => "+", "-" => "-", "!" => "!", "=" => "="}.freeze,
+    :unpatch => {"+" => "-", "-" => "+", "!" => "!", "=" => "="}.freeze
   }.freeze
   # standard:enable Style/HashSyntax
 

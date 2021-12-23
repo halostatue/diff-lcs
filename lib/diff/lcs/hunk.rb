@@ -6,8 +6,8 @@ require "diff/lcs/block"
 # each block. (So if we're not using context, every hunk will contain one
 # block.) Used in the diff program (bin/ldiff).
 class Diff::LCS::Hunk
-  OLD_DIFF_OP_ACTION = { "+" => "a", "-" => "d", "!" => "c" }.freeze # :nodoc:
-  ED_DIFF_OP_ACTION = { "+" => "a", "-" => "d", "!" => "c" }.freeze # :nodoc:
+  OLD_DIFF_OP_ACTION = {"+" => "a", "-" => "d", "!" => "c"}.freeze # :nodoc:
+  ED_DIFF_OP_ACTION = {"+" => "a", "-" => "d", "!" => "c"}.freeze # :nodoc:
 
   private_constant :OLD_DIFF_OP_ACTION, :ED_DIFF_OP_ACTION if respond_to?(:private_constant)
 
