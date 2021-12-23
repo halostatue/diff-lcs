@@ -88,8 +88,11 @@ RSpec::Core::RakeTask.new(:spec) do |t|
   rspec_dirs = %w(spec lib).join(":")
   t.rspec_opts = ["-I#{rspec_dirs}"]
 end
-task :default => :spec
-task :test => :spec
+
+Rake::Task["spec"].actions.uniq! { |a| a.source_location }
+
+task :default => :spec unless Rake::Task["default"].prereqs.include?("spec")
+task :test => :spec unless Rake::Task["test"].prereqs.include?("spec")
 
 if RUBY_VERSION >= '2.0' && RUBY_ENGINE == 'ruby'
   namespace :spec do
