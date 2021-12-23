@@ -22,7 +22,7 @@ class Diff::LCS::Hunk
     end
 
     if String.method_defined?(:encoding)
-      @preferred_data_encoding = data_old.fetch(0) { data_new.fetch(0) { "" } }.encoding
+      @preferred_data_encoding = data_old.fetch(0) { data_new.fetch(0, "") }.encoding
     end
 
     @data_old = data_old
@@ -32,7 +32,6 @@ class Diff::LCS::Hunk
     after += @blocks[0].diff_size
     @file_length_difference = after # The caller must get this manually
     @max_diff_size = @blocks.map { |e| e.diff_size.abs }.max
-
 
     # Save the start & end of each array. If the array doesn't exist (e.g.,
     # we're only adding items in this block), then figure out the line number
@@ -140,7 +139,7 @@ class Diff::LCS::Hunk
     # Calculate item number range. Old diff range is just like a context
     # diff range, except the ranges are on one line with the action between
     # them.
-    s = encode("#{context_range(:old, ',')}#{OLD_DIFF_OP_ACTION[block.op]}#{context_range(:new, ',')}\n")
+    s = encode("#{context_range(:old, ",")}#{OLD_DIFF_OP_ACTION[block.op]}#{context_range(:new, ",")}\n")
     # If removing anything, just print out all the remove lines in the hunk
     # which is just all the remove lines in the block.
     unless block.remove.empty?
@@ -172,7 +171,7 @@ class Diff::LCS::Hunk
     # file -- don't take removed items into account.
     lo, hi, num_added, num_removed = @start_old, @end_old, 0, 0
 
-    outlist = @data_old[lo..hi].map { |e| String.new("#{encode(' ')}#{e.chomp}") }
+    outlist = @data_old[lo..hi].map { |e| String.new("#{encode(" ")}#{e.chomp}") }
 
     last_block = blocks[-1]
 
@@ -212,7 +211,7 @@ class Diff::LCS::Hunk
 
   def context_diff(last = false)
     s = encode("***************\n")
-    s << encode("*** #{context_range(:old, ',', last)} ****\n")
+    s << encode("*** #{context_range(:old, ",", last)} ****\n")
     r = context_range(:new, ",", last)
 
     if last
@@ -226,7 +225,7 @@ class Diff::LCS::Hunk
     removes = @blocks.reject { |e| e.remove.empty? }
 
     unless removes.empty?
-      outlist = @data_old[lo..hi].map { |e| String.new("#{encode('  ')}#{e.chomp}") }
+      outlist = @data_old[lo..hi].map { |e| String.new("#{encode("  ")}#{e.chomp}") }
 
       last_block = removes[-1]
 
@@ -248,7 +247,7 @@ class Diff::LCS::Hunk
     inserts = @blocks.reject { |e| e.insert.empty? }
 
     unless inserts.empty?
-      outlist = @data_new[lo..hi].map { |e| String.new("#{encode('  ')}#{e.chomp}") }
+      outlist = @data_new[lo..hi].map { |e| String.new("#{encode("  ")}#{e.chomp}") }
 
       last_block = inserts[-1]
 
@@ -273,9 +272,9 @@ class Diff::LCS::Hunk
 
     s =
       if format == :reverse_ed
-        encode("#{ED_DIFF_OP_ACTION[@blocks[0].op]}#{context_range(:old, ',')}\n")
+        encode("#{ED_DIFF_OP_ACTION[@blocks[0].op]}#{context_range(:old, ",")}\n")
       else
-        encode("#{context_range(:old, ' ')}#{ED_DIFF_OP_ACTION[@blocks[0].op]}\n")
+        encode("#{context_range(:old, " ")}#{ED_DIFF_OP_ACTION[@blocks[0].op]}\n")
       end
 
     unless @blocks[0].insert.empty?
