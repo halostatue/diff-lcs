@@ -91,8 +91,10 @@ end
 
 Rake::Task["spec"].actions.uniq! { |a| a.source_location }
 
+# standard:disable Style/HashSyntax
 task :default => :spec unless Rake::Task["default"].prereqs.include?("spec")
 task :test => :spec unless Rake::Task["test"].prereqs.include?("spec")
+# standard:enable Style/HashSyntax
 
 if RUBY_VERSION >= "2.0" && RUBY_ENGINE == "ruby"
   namespace :spec do

@@ -58,11 +58,13 @@ describe "Diff::LCS Issues" do
 
   describe "issue #57" do
     it "should fail with a correct error" do
+      # standard:disable Style/HashSyntax
       expect {
         actual = { :category => "app.rack.request" }
         expected = { :category => "rack.middleware", :title => "Anonymous Middleware" }
         expect(actual).to eq(expected)
       }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+      # standard:enable Style/HashSyntax
     end
   end
 

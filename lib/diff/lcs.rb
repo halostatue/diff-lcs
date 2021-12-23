@@ -576,10 +576,12 @@ class << Diff::LCS
     end
   end
 
+  # standard:disable Style/HashSyntax
   PATCH_MAP = { # :nodoc:
     :patch => { "+" => "+", "-" => "-", "!" => "!", "=" => "=" }.freeze,
     :unpatch => { "+" => "-", "-" => "+", "!" => "!", "=" => "=" }.freeze
   }.freeze
+  # standard:enable Style/HashSyntax
 
   # Applies a +patchset+ to the sequence +src+ according to the +direction+
   # (<tt>:patch</tt> or <tt>:unpatch</tt>), producing a new sequence.

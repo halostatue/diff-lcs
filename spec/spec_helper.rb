@@ -374,5 +374,7 @@ end
 RSpec.configure do |conf|
   conf.include Diff::LCS::SpecHelper
   conf.alias_it_should_behave_like_to :it_has_behavior, "has behavior:"
+  # standard:disable Style/HashSyntax
   conf.filter_run_excluding :broken => true
+  # standard:enable Style/HashSyntax
 end

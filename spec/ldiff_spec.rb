@@ -5,6 +5,7 @@ require "spec_helper"
 RSpec.describe "bin/ldiff" do
   include CaptureSubprocessIO
 
+  # standard:disable Style/HashSyntax
   fixtures = [
     { :name => "output.diff", :left => "aX", :right => "bXaX" },
     { :name => "output.diff.chef", :left => "old-chef", :right => "new-chef" },
@@ -14,6 +15,7 @@ RSpec.describe "bin/ldiff" do
     fixture[:flag] = flag
     fixture
   }
+  # standard:enable Style/HashSyntax
 
   def self.test_ldiff(fixture)
     desc = [

@@ -46,12 +46,14 @@ class Diff::LCS::HTMLDiff
     end
   end
 
+  # standard:disable Style/HashSyntax
   DEFAULT_OPTIONS = {
     :expand_tabs => nil,
     :output => nil,
     :css => nil,
     :title => nil
   }.freeze
+  # standard:enable Style/HashSyntax
 
   # standard:disable Layout/HeredocIndentation
   DEFAULT_CSS = <<-CSS
