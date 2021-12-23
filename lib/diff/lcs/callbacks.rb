@@ -302,7 +302,7 @@ class Diff::LCS::SDiffCallbacks
   # Returns the difference set collected during the diff process.
   attr_reader :diffs
 
-  def initialize #:yields: self
+  def initialize # :yields: self
     @diffs = []
     yield self if block_given?
   end

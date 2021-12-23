@@ -67,7 +67,7 @@ module Diff::LCS # rubocop:disable Style/Documentation
   # identically for key purposes. That is:
   #
   #   O.new('a').eql?(O.new('a')) == true
-  def lcs(other, &block) #:yields: self[i] if there are matched subsequences
+  def lcs(other, &block) # :yields: self[i] if there are matched subsequences
     Diff::LCS.lcs(self, other, &block)
   end
 
@@ -141,7 +141,7 @@ module Diff::LCS # rubocop:disable Style/Documentation
 end
 
 class << Diff::LCS
-  def lcs(seq1, seq2, &block) #:yields: seq1[i] for each matched
+  def lcs(seq1, seq2, &block) # :yields: seq1[i] for each matched
     matches = Diff::LCS::Internals.lcs(seq1, seq2)
     ret = []
     string = seq1.kind_of? String
@@ -197,7 +197,7 @@ class << Diff::LCS
   #       # insert
   #     end
   #   end
-  def sdiff(seq1, seq2, callbacks = nil, &block) #:yields: diff changes
+  def sdiff(seq1, seq2, callbacks = nil, &block) # :yields: diff changes
     diff_traversal(:sdiff, seq1, seq2, callbacks || Diff::LCS::SDiffCallbacks, &block)
   end
 
@@ -282,7 +282,7 @@ class << Diff::LCS
   # <tt>callbacks#discard_b</tt> will be called after the end of the sequence
   # is reached, if +a+ has not yet reached the end of +A+ or +b+ has not yet
   # reached the end of +B+.
-  def traverse_sequences(seq1, seq2, callbacks = Diff::LCS::SequenceCallbacks) #:yields: change events
+  def traverse_sequences(seq1, seq2, callbacks = Diff::LCS::SequenceCallbacks) # :yields: change events
     callbacks ||= Diff::LCS::SequenceCallbacks
     matches = Diff::LCS::Internals.lcs(seq1, seq2)
 
@@ -576,7 +576,7 @@ class << Diff::LCS
     end
   end
 
-  PATCH_MAP = { #:nodoc:
+  PATCH_MAP = { # :nodoc:
     :patch => { "+" => "+", "-" => "-", "!" => "!", "=" => "=" }.freeze,
     :unpatch => { "+" => "-", "-" => "+", "!" => "!", "=" => "=" }.freeze
   }.freeze

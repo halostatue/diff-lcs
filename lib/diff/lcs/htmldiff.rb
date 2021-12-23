@@ -5,11 +5,11 @@ require "cgi"
 # Produce a simple HTML diff view.
 class Diff::LCS::HTMLDiff
   class << self
-    attr_accessor :can_expand_tabs #:nodoc:
+    attr_accessor :can_expand_tabs # :nodoc:
   end
   self.can_expand_tabs = true
 
-  class Callbacks #:nodoc:
+  class Callbacks # :nodoc:
     attr_accessor :output
     attr_accessor :match_class
     attr_accessor :only_a_class

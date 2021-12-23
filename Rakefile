@@ -46,19 +46,19 @@ Hoe.plugin :gemspec2
 Hoe.plugin :git
 
 if RUBY_VERSION < "1.9"
-  class Array #:nodoc:
+  class Array # :nodoc:
     def to_h
       Hash[*flatten(1)]
     end
   end
 
-  class Gem::Specification #:nodoc:
+  class Gem::Specification # :nodoc:
     def metadata=(*); end
 
     def default_value(*); end
   end
 
-  class Object #:nodoc:
+  class Object # :nodoc:
     def caller_locations(*)
       []
     end

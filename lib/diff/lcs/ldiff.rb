@@ -4,7 +4,7 @@ require "optparse"
 require "ostruct"
 require "diff/lcs/hunk"
 
-module Diff::LCS::Ldiff #:nodoc:
+module Diff::LCS::Ldiff # :nodoc:
   # standard:disable Layout/HeredocIndentation
   BANNER = <<-COPYRIGHT
 ldiff #{Diff::LCS::VERSION}
@@ -21,11 +21,11 @@ ldiff #{Diff::LCS::VERSION}
 end
 
 class << Diff::LCS::Ldiff
-  attr_reader :format, :lines #:nodoc:
-  attr_reader :file_old, :file_new #:nodoc:
-  attr_reader :data_old, :data_new #:nodoc:
+  attr_reader :format, :lines # :nodoc:
+  attr_reader :file_old, :file_new # :nodoc:
+  attr_reader :data_old, :data_new # :nodoc:
 
-  def run(args, _input = $stdin, output = $stdout, error = $stderr) #:nodoc:
+  def run(args, _input = $stdin, output = $stdout, error = $stderr) # :nodoc:
     @binary = nil
 
     args.options do |o|
