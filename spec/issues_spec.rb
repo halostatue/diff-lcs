@@ -41,13 +41,13 @@ describe "Diff::LCS Issues" do
     end
 
     describe "array" do
-      it_has_behavior "handles simple diffs", %w(a X), %w(b X a X), [
+      it_has_behavior "handles simple diffs", %w[a X], %w[b X a X], [
         [
           ["+", 0, "b"],
           ["+", 1, "X"]
         ]
       ]
-      it_has_behavior "handles simple diffs", %w(b X a X), %w(a X), [
+      it_has_behavior "handles simple diffs", %w[b X a X], %w[a X], [
         [
           ["-", 0, "b"],
           ["-", 1, "X"]

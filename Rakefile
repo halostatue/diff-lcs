@@ -85,7 +85,7 @@ end
 
 desc "Run all specifications"
 RSpec::Core::RakeTask.new(:spec) do |t|
-  rspec_dirs = %w(spec lib).join(":")
+  rspec_dirs = %w[spec lib].join(":")
   t.rspec_opts = ["-I#{rspec_dirs}"]
 end
 

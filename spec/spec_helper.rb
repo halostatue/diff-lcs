@@ -79,31 +79,31 @@ module Diff::LCS::SpecHelper
   end
 
   def hello_ary
-    %w(h e l l o)
+    %w[h e l l o]
   end
 
   def seq1
-    %w(a b c e h j l m n p)
+    %w[a b c e h j l m n p]
   end
 
   def skipped_seq1
-    %w(a h n p)
+    %w[a h n p]
   end
 
   def seq2
-    %w(b c d e f j k l m r s t)
+    %w[b c d e f j k l m r s t]
   end
 
   def skipped_seq2
-    %w(d f k r s t)
+    %w[d f k r s t]
   end
 
   def word_sequence
-    %w(abcd efgh ijkl mnopqrstuvwxyz)
+    %w[abcd efgh ijkl mnopqrstuvwxyz]
   end
 
   def correct_lcs
-    %w(b c e j l m)
+    %w[b c e j l m]
   end
 
   def correct_forward_diff

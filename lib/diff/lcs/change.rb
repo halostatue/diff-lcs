@@ -10,7 +10,7 @@ class Diff::LCS::Change
   # (no change), '!' (changed), '<' (tail changes from first sequence), or
   # '>' (tail changes from second sequence). The last two ('<>') are only
   # found with Diff::LCS::diff and Diff::LCS::sdiff.
-  VALID_ACTIONS = %w(+ - = ! > <).freeze
+  VALID_ACTIONS = %w[+ - = ! > <].freeze
 
   def self.valid_action?(action)
     VALID_ACTIONS.include? action

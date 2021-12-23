@@ -24,8 +24,8 @@ describe "Diff::LCS.sdiff" do
   end
 
   describe "using %w(abc def yyy xxx ghi jkl) & %w(abc dxf xxx ghi jkl)" do
-    let(:s1) { %w(abc def yyy xxx ghi jkl) }
-    let(:s2) { %w(abc dxf xxx ghi jkl) }
+    let(:s1) { %w[abc def yyy xxx ghi jkl] }
+    let(:s2) { %w[abc dxf xxx ghi jkl] }
     let(:result) {
       [
         ["=", [0, "abc"], [0, "abc"]],
@@ -41,8 +41,8 @@ describe "Diff::LCS.sdiff" do
   end
 
   describe "using %w(a b c d e) & %w(a e)" do
-    let(:s1) { %w(a b c d e) }
-    let(:s2) { %w(a e) }
+    let(:s1) { %w[a b c d e] }
+    let(:s2) { %w[a e] }
     let(:result) {
       [
         ["=", [0, "a"], [0, "a"]],
@@ -57,8 +57,8 @@ describe "Diff::LCS.sdiff" do
   end
 
   describe "using %w(a e) & %w(a b c d e)" do
-    let(:s1) { %w(a e) }
-    let(:s2) { %w(a b c d e) }
+    let(:s1) { %w[a e] }
+    let(:s2) { %w[a b c d e] }
     let(:result) {
       [
         ["=", [0, "a"], [0, "a"]],
@@ -73,8 +73,8 @@ describe "Diff::LCS.sdiff" do
   end
 
   describe "using %w(v x a e) & %w(w y a b c d e)" do
-    let(:s1) { %w(v x a e) }
-    let(:s2) { %w(w y a b c d e) }
+    let(:s1) { %w[v x a e] }
+    let(:s2) { %w[w y a b c d e] }
     let(:result) {
       [
         ["!", [0, "v"], [0, "w"]],
@@ -91,8 +91,8 @@ describe "Diff::LCS.sdiff" do
   end
 
   describe "using %w(x a e) & %w(a b c d e)" do
-    let(:s1) { %w(x a e) }
-    let(:s2) { %w(a b c d e) }
+    let(:s1) { %w[x a e] }
+    let(:s2) { %w[a b c d e] }
     let(:result) {
       [
         ["-", [0, "x"], [0, nil]],
@@ -108,8 +108,8 @@ describe "Diff::LCS.sdiff" do
   end
 
   describe "using %w(a e) & %w(x a b c d e)" do
-    let(:s1) { %w(a e) }
-    let(:s2) { %w(x a b c d e) }
+    let(:s1) { %w[a e] }
+    let(:s2) { %w[x a b c d e] }
     let(:result) {
       [
         ["+", [0, nil], [0, "x"]],
@@ -125,8 +125,8 @@ describe "Diff::LCS.sdiff" do
   end
 
   describe "using %w(a e v) & %w(x a b c d e w x)" do
-    let(:s1) { %w(a e v) }
-    let(:s2) { %w(x a b c d e w x) }
+    let(:s1) { %w[a e v] }
+    let(:s2) { %w[x a b c d e w x] }
     let(:result) {
       [
         ["+", [0, nil], [0, "x"]],
@@ -144,8 +144,8 @@ describe "Diff::LCS.sdiff" do
   end
 
   describe "using %w() & %w(a b c)" do
-    let(:s1) { %w() }
-    let(:s2) { %w(a b c) }
+    let(:s1) { %w[] }
+    let(:s2) { %w[a b c] }
     let(:result) {
       [
         ["+", [0, nil], [0, "a"]],
@@ -158,8 +158,8 @@ describe "Diff::LCS.sdiff" do
   end
 
   describe "using %w(a b c) & %w(1)" do
-    let(:s1) { %w(a b c) }
-    let(:s2) { %w(1) }
+    let(:s1) { %w[a b c] }
+    let(:s2) { %w[1] }
     let(:result) {
       [
         ["!", [0, "a"], [0, "1"]],
@@ -172,8 +172,8 @@ describe "Diff::LCS.sdiff" do
   end
 
   describe "using %w(a b c) & %w(c)" do
-    let(:s1) { %w(a b c) }
-    let(:s2) { %w(c) }
+    let(:s1) { %w[a b c] }
+    let(:s2) { %w[c] }
     let(:result) {
       [
         ["-", [0, "a"], [0, nil]],
@@ -186,7 +186,7 @@ describe "Diff::LCS.sdiff" do
   end
 
   describe "using %w(abcd efgh ijkl mnop) & []" do
-    let(:s1) { %w(abcd efgh ijkl mnop) }
+    let(:s1) { %w[abcd efgh ijkl mnop] }
     let(:s2) { [] }
     let(:result) {
       [
