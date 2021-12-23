@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Diff; end unless defined? Diff # rubocop:disable Style/Documentation
+module Diff; end unless defined? Diff
 
 # == How Diff Works (by Mark-Jason Dominus)
 #
@@ -55,7 +55,7 @@ end
 require "diff/lcs/callbacks"
 require "diff/lcs/internals"
 
-module Diff::LCS # rubocop:disable Style/Documentation
+module Diff::LCS
   # Returns an Array containing the longest common subsequence(s) between
   # +self+ and +other+. See Diff::LCS#lcs.
   #

@@ -67,9 +67,9 @@ class Diff::LCS::Hunk
 
   # Change the "start" and "end" fields to note that context should be added
   # to this hunk.
-  attr_accessor :flag_context # rubocop:disable Layout/EmptyLinesAroundAttributeAccessor
+  attr_accessor :flag_context
   undef :flag_context=
-  def flag_context=(context) # :nodoc: # rubocop:disable Lint/DuplicateMethods
+  def flag_context=(context) # :nodoc: # standard:disable Lint/DuplicateMethods
     return if context.nil? || context.zero?
 
     add_start = context > @start_old ? @start_old : context

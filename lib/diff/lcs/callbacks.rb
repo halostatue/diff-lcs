@@ -2,7 +2,7 @@
 
 require "diff/lcs/change"
 
-module Diff::LCS # rubocop:disable Style/Documentation
+module Diff::LCS
   # This callback object implements the default set of callback events,
   # which only returns the event itself. Note that #finished_a and
   # #finished_b are not implemented -- I haven't yet figured out where they
