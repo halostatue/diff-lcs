@@ -171,7 +171,9 @@ class Diff::LCS::Hunk
     # file -- don't take removed items into account.
     lo, hi, num_added, num_removed = @start_old, @end_old, 0, 0
 
+    # standard:disable Performance/UnfreezeString
     outlist = @data_old[lo..hi].map { |e| String.new("#{encode(" ")}#{e.chomp}") }
+    # standard:enable Performance/UnfreezeString
 
     last_block = blocks[-1]
 
@@ -225,7 +227,9 @@ class Diff::LCS::Hunk
     removes = @blocks.reject { |e| e.remove.empty? }
 
     unless removes.empty?
+      # standard:disable Performance/UnfreezeString
       outlist = @data_old[lo..hi].map { |e| String.new("#{encode("  ")}#{e.chomp}") }
+      # standard:enable Performance/UnfreezeString
 
       last_block = removes[-1]
 
@@ -247,7 +251,9 @@ class Diff::LCS::Hunk
     inserts = @blocks.reject { |e| e.insert.empty? }
 
     unless inserts.empty?
+      # standard:disable Performance/UnfreezeString
       outlist = @data_new[lo..hi].map { |e| String.new("#{encode("  ")}#{e.chomp}") }
+      # standard:enable Performance/UnfreezeString
 
       last_block = inserts[-1]
 
