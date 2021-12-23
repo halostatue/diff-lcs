@@ -250,8 +250,9 @@ class << Diff::LCS
   # advance that arrow and will call <tt>callbacks#discard_a</tt> or
   # <tt>callbacks#discard_b</tt>, depending on which arrow it advanced. If both
   # arrows point to elements that are not part of the longest common
-  # subsequence, then #traverse_sequences will advance one of them and call the
-  # appropriate callback, but it is not specified which it will call.
+  # subsequence, then #traverse_sequences will advance arrow +a+ and call the
+  # appropriate callback, then it will advance arrow +b+ and call the appropriate
+  # callback.
   #
   # The methods for <tt>callbacks#match</tt>, <tt>callbacks#discard_a</tt>, and
   # <tt>callbacks#discard_b</tt> are invoked with an event comprising the
@@ -292,37 +293,36 @@ class << Diff::LCS
     b_size = seq2.size
     ai = bj = 0
 
-    (0...matches.size).each do |i|
-      b_line = matches[i]
-
-      ax = string ? seq1[i, 1] : seq1[i]
-      bx = string ? seq2[bj, 1] : seq2[bj]
-
+    matches.each do |b_line|
       if b_line.nil?
-        unless ax.nil? or (string and ax.empty?)
-          event = Diff::LCS::ContextChange.new('-', i, ax, bj, bx)
+        unless seq1[ai].nil?
+          ax = string ? seq1[ai, 1] : seq1[ai]
+          bx = string ? seq2[bj, 1] : seq2[bj]
+
+          event = Diff::LCS::ContextChange.new('-', ai, ax, bj, bx)
           event = yield event if block_given?
           callbacks.discard_a(event)
         end
       else
+        ax = string ? seq1[ai, 1] : seq1[ai]
+
         loop do
           break unless bj < b_line
 
           bx = string ? seq2[bj, 1] : seq2[bj]
-          event = Diff::LCS::ContextChange.new('+', i, ax, bj, bx)
+          event = Diff::LCS::ContextChange.new('+', ai, ax, bj, bx)
           event = yield event if block_given?
           callbacks.discard_b(event)
           bj += 1
         end
         bx = string ? seq2[bj, 1] : seq2[bj]
-        event = Diff::LCS::ContextChange.new('=', i, ax, bj, bx)
+        event = Diff::LCS::ContextChange.new('=', ai, ax, bj, bx)
         event = yield event if block_given?
         callbacks.match(event)
         bj += 1
       end
-      ai = i
+      ai += 1
     end
-    ai += 1
 
     # The last entry (if any) processed was a match. +ai+ and +bj+ point just
     # past the last matching lines in their sequences.
@@ -380,14 +380,14 @@ class << Diff::LCS
         ai += 1
       end
 
-      next unless bj < b_size
-
-      ax = string ? seq1[ai, 1] : seq1[ai]
-      bx = string ? seq2[bj, 1] : seq2[bj]
-      event = Diff::LCS::ContextChange.new('+', ai, ax, bj, bx)
-      event = yield event if block_given?
-      callbacks.discard_b(event)
-      bj += 1
+      if bj < b_size
+        ax = string ? seq1[ai, 1] : seq1[ai]
+        bx = string ? seq2[bj, 1] : seq2[bj]
+        event = Diff::LCS::ContextChange.new('+', ai, ax, bj, bx)
+        event = yield event if block_given?
+        callbacks.discard_b(event)
+        bj += 1
+      end
     end
   end
 
