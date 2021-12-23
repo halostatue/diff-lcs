@@ -144,7 +144,7 @@ class << Diff::LCS
   def lcs(seq1, seq2, &block) # :yields: seq1[i] for each matched
     matches = Diff::LCS::Internals.lcs(seq1, seq2)
     ret = []
-    string = seq1.kind_of? String
+    string = seq1.is_a? String
     matches.each_index do |i|
       next if matches[i].nil?
 
@@ -287,7 +287,7 @@ class << Diff::LCS
     matches = Diff::LCS::Internals.lcs(seq1, seq2)
 
     run_finished_a = run_finished_b = false
-    string = seq1.kind_of?(String)
+    string = seq1.is_a?(String)
 
     a_size = seq1.size
     b_size = seq2.size
@@ -478,7 +478,7 @@ class << Diff::LCS
     b_size = seq2.size
     ai = bj = mb = 0
     ma = -1
-    string = seq1.kind_of?(String)
+    string = seq1.is_a?(String)
 
     # Process all the lines in the match vector.
     loop do
@@ -629,7 +629,7 @@ class << Diff::LCS
 
     return src.respond_to?(:dup) ? src.dup : src unless has_changes
 
-    string = src.kind_of?(String)
+    string = src.is_a?(String)
     # Start with a new empty type of the source's class
     res = src.class.new
 

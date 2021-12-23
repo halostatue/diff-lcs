@@ -28,7 +28,7 @@ class Diff::LCS::Change
     @action, @position, @element = *args
 
     fail "Invalid Change Action '#{@action}'" unless Diff::LCS::Change.valid_action?(@action)
-    fail "Invalid Position Type" unless @position.kind_of? IntClass
+    fail "Invalid Position Type" unless @position.is_a? IntClass
   end
 
   def inspect(*_args)
@@ -115,8 +115,8 @@ class Diff::LCS::ContextChange < Diff::LCS::Change
     @action, @old_position, @old_element, @new_position, @new_element = *args
 
     fail "Invalid Change Action '#{@action}'" unless Diff::LCS::Change.valid_action?(@action)
-    fail "Invalid (Old) Position Type" unless @old_position.nil? || @old_position.kind_of?(IntClass)
-    fail "Invalid (New) Position Type" unless @new_position.nil? || @new_position.kind_of?(IntClass)
+    fail "Invalid (Old) Position Type" unless @old_position.nil? || @old_position.is_a?(IntClass)
+    fail "Invalid (New) Position Type" unless @new_position.nil? || @new_position.is_a?(IntClass)
   end
 
   def to_a

@@ -201,7 +201,7 @@ module Diff::LCS::SpecHelper
 
   def format_diffs(diffs)
     diffs.map { |e|
-      if e.kind_of?(Array)
+      if e.is_a?(Array)
         e.map { |f| f.to_a.join }.join(", ")
       else
         e.to_a.join
