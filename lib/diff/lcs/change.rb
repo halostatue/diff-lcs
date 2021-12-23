@@ -39,7 +39,7 @@ class Diff::LCS::Change
     [@action, @position, @element]
   end
 
-  alias to_ary to_a
+  alias_method :to_ary, :to_a
 
   def self.from_a(arr)
     arr = arr.flatten(1)
@@ -127,7 +127,7 @@ class Diff::LCS::ContextChange < Diff::LCS::Change
     ]
   end
 
-  alias to_ary to_a
+  alias_method :to_ary, :to_a
 
   def self.from_a(arr)
     Diff::LCS::Change.from_a(arr)

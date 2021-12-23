@@ -101,7 +101,7 @@ module Diff::LCS
   def patch(patchset)
     Diff::LCS.patch(self, patchset)
   end
-  alias unpatch patch
+  alias_method :unpatch, :patch
 
   # Attempts to patch +self+ with the provided +patchset+. A new sequence based
   # on +self+ and the +patchset+ will be created. See Diff::LCS#patch. Does no
@@ -154,7 +154,7 @@ class << Diff::LCS
     end
     ret
   end
-  alias LCS lcs
+  alias_method :LCS, :lcs
 
   # #diff computes the smallest set of additions and deletions necessary to
   # turn the first sequence into the second, and returns a description of these

@@ -102,7 +102,7 @@ class Diff::LCS::Hunk
     @start_new = hunk.start_new
     blocks.unshift(*hunk.blocks)
   end
-  alias unshift merge
+  alias_method :unshift, :merge
 
   # Determines whether there is an overlap between this hunk and the
   # provided hunk. This will be true if the difference between the two hunks
