@@ -272,6 +272,7 @@ describe "Diff::LCS.traverse_balanced" do
   describe "strings %q(abcd efgh ijkl mnopqrstuvwxyz) & %q()" do
     s1 = "abcd efgh ijkl mnopqrstuvwxyz"
     s2 = ""
+    # standard:disable Layout/ExtraSpacing
     result = [
       ["<",  0, 0],
       ["<",  1, 0],
@@ -303,6 +304,7 @@ describe "Diff::LCS.traverse_balanced" do
       ["<", 27, 0],
       ["<", 28, 0]
     ]
+    # standard:enable Layout/ExtraSpacing
 
     it_has_behavior "with a #change callback", s1, s2, result
     it_has_behavior "without a #change callback", s1, s2, result

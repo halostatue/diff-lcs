@@ -88,9 +88,9 @@ h1 { margin-left: 2em; }
   CSS
 
   def initialize(left, right, options = nil)
-    @left     = left
-    @right    = right
-    @options  = options
+    @left = left
+    @right = right
+    @options = options
 
     @options = DEFAULT_OPTIONS.dup if @options.nil?
   end

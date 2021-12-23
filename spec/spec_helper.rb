@@ -32,8 +32,8 @@ if ENV["COVERAGE"]
   end
 end
 
-file   = Pathname.new(__FILE__).expand_path
-path   = file.parent
+file = Pathname.new(__FILE__).expand_path
+path = file.parent
 parent = path.parent
 
 $:.unshift parent.join("lib")
@@ -107,6 +107,7 @@ module Diff::LCS::SpecHelper
   end
 
   def correct_forward_diff
+    # standard:disable Layout/ExtraSpacing
     [
       [
         ["-",  0, "a"]
@@ -129,9 +130,11 @@ module Diff::LCS::SpecHelper
         ["+", 11, "t"]
       ]
     ]
+    # standard:enable Layout/ExtraSpacing
   end
 
   def correct_backward_diff
+    # standard:disable Layout/ExtraSpacing
     [
       [
         ["+",  0, "a"]
@@ -154,9 +157,11 @@ module Diff::LCS::SpecHelper
         ["-", 11, "t"]
       ]
     ]
+    # standard:enable Layout/ExtraSpacing
   end
 
   def correct_forward_sdiff
+    # standard:disable Layout/ExtraSpacing
     [
       ["-", [0, "a"], [0, nil]],
       ["=", [1, "b"], [0, "b"]],
@@ -172,6 +177,7 @@ module Diff::LCS::SpecHelper
       ["!", [9, "p"], [10, "s"]],
       ["+", [10, nil], [11, "t"]]
     ]
+    # standard:enable Layout/ExtraSpacing
   end
 
   def reverse_sdiff(forward_sdiff)

@@ -8,8 +8,8 @@ if String.method_defined?(:encoding)
   describe Diff::LCS::Hunk do
     let(:old_data) { ["Tu a un carté avec {count} itéms".encode("UTF-16LE")] }
     let(:new_data) { ["Tu a un carte avec {count} items".encode("UTF-16LE")] }
-    let(:pieces)   { Diff::LCS.diff old_data, new_data }
-    let(:hunk)     { Diff::LCS::Hunk.new(old_data, new_data, pieces[0], 3, 0) }
+    let(:pieces) { Diff::LCS.diff old_data, new_data }
+    let(:hunk) { Diff::LCS::Hunk.new(old_data, new_data, pieces[0], 3, 0) }
 
     it "produces a unified diff from the two pieces" do
       expected = <<-EXPECTED.gsub(/^\s+/, "").encode("UTF-16LE").chomp

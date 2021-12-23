@@ -54,8 +54,8 @@ class Diff::LCS::Hunk
 
     @start_old = a1 || (b1 - before)
     @start_new = b1 || (a1 + before)
-    @end_old   = a2 || (b2 - after)
-    @end_new   = b2 || (a2 + after)
+    @end_old = a2 || (b2 - after)
+    @end_new = b2 || (a2 + after)
 
     self.flag_context = flag_context
   end
@@ -183,7 +183,7 @@ class Diff::LCS::Hunk
 
     @blocks.each do |block|
       block.remove.each do |item|
-        op     = item.action.to_s # -
+        op = item.action.to_s # -
         offset = item.position - lo + num_added
         outlist[offset][0, 1] = encode(op)
         num_removed += 1
@@ -195,7 +195,7 @@ class Diff::LCS::Hunk
       end
 
       block.insert.each do |item|
-        op     = item.action.to_s # +
+        op = item.action.to_s # +
         offset = item.position - @start_new + num_removed
         outlist[offset, 0] = encode(op) + @data_new[item.position].chomp
         num_added += 1

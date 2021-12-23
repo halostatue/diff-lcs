@@ -63,7 +63,7 @@ class << Diff::LCS::Internals
     b_matches = position_hash(b, b_start..b_finish)
 
     thresh = []
-    links  = []
+    links = []
     string = a.kind_of?(String)
 
     (a_start..a_finish).each do |i|

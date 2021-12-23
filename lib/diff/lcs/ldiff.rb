@@ -34,14 +34,14 @@ class << Diff::LCS::Ldiff
         "Displays a context diff with LINES lines", "of context. Default 3 lines."
       ) do |ctx|
         @format = :context
-        @lines  = ctx || 3
+        @lines = ctx || 3
       end
       o.on(
         "-u", "-U", "--unified [LINES]", Integer,
         "Displays a unified diff with LINES lines", "of context. Default 3 lines."
       ) do |ctx|
         @format = :unified
-        @lines  = ctx || 3
+        @lines = ctx || 3
       end
       o.on("-e", "Creates an 'ed' script to change", "oldfile to newfile.") do |_ctx|
         @format = :ed
@@ -81,7 +81,7 @@ class << Diff::LCS::Ldiff
 
     # Defaults are for old-style diff
     @format ||= :old
-    @lines  ||= 0
+    @lines ||= 0
 
     file_old, file_new = *ARGV
 

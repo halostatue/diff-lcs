@@ -27,6 +27,7 @@ describe "Diff::LCS.sdiff" do
     let(:s1) { %w[abc def yyy xxx ghi jkl] }
     let(:s2) { %w[abc dxf xxx ghi jkl] }
     let(:result) {
+      # standard:disable Layout/ExtraSpacing
       [
         ["=", [0, "abc"], [0, "abc"]],
         ["!", [1, "def"], [1, "dxf"]],
@@ -35,6 +36,7 @@ describe "Diff::LCS.sdiff" do
         ["=", [4, "ghi"], [3, "ghi"]],
         ["=", [5, "jkl"], [4, "jkl"]]
       ]
+      # standard:enable Layout/ExtraSpacing
     }
 
     it_has_behavior "compare sequences correctly"
