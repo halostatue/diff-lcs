@@ -71,10 +71,15 @@ class << Diff::LCS::Internals
       bm = b_matches[ai]
       k = nil
       bm.reverse_each do |j|
-        # Previously, we would update `thresh[k] = j` if `k and (thresh[k] > j) and (thresh[k - 1] < j)`
-        # Otherwise, we would do this. The update appears not to be necessary, so we are trying to
-        # simplify to:
-        k = replace_next_larger(thresh, j)
+        # Although the threshold check is not mandatory for this to work,
+        # it may have an optimization purpose
+        # An attempt to remove it: https://github.com/halostatue/diff-lcs/pull/72
+        # Why it is reintroduced: https://github.com/halostatue/diff-lcs/issues/78
+        if k and (thresh[k] > j) and (thresh[k - 1] < j)
+          thresh[k] = j
+        else
+          k = replace_next_larger(thresh, j, k)
+        end
         links[k] = [k.positive? ? links[k - 1] : nil, i, j] unless k.nil?
       end
     end
