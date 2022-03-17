@@ -1,4 +1,4 @@
-# License 
+# License
 
 This software is available under three licenses: the GNU GPL version 2 (or at
 your option, a later version), the Perl Artistic license, or the MIT license.
@@ -12,7 +12,7 @@ licensing terms.
 * Adapted from Algorithm::Diff (Perl) by Ned Konz and a Smalltalk version by
   Mario I. Wolczko.
 
-## MIT License 
+## MIT License
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -32,8 +32,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-## Perl Artistic License 
+## Perl Artistic License
+
 See the file docs/artistic.txt in the main distribution.
 
-## GNU GPL version 2 
+## GNU GPL version 2
+
 See the file docs/COPYING.txt in the main distribution.
