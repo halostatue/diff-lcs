@@ -13,7 +13,7 @@ class << Diff::LCS
 
     if block
       callbacks.diffs.map do |hunk|
-        if hunk.kind_of? Array
+        if hunk.is_a? Array
           hunk.map { |hunk_block| block[hunk_block] }
         else
           block[hunk]
@@ -45,14 +45,14 @@ class << Diff::LCS::Internals
     vector = []
 
     # Collect any common elements at the beginning...
-    while (a_start <= a_finish) and (b_start <= b_finish) and (a[a_start] == b[b_start])
+    while (a_start <= a_finish) && (b_start <= b_finish) && (a[a_start] == b[b_start])
       vector[a_start] = b_start
       a_start += 1
       b_start += 1
     end
 
     # Now the end...
-    while (a_start <= a_finish) and (b_start <= b_finish) and (a[a_finish] == b[b_finish])
+    while (a_start <= a_finish) && (b_start <= b_finish) && (a[a_finish] == b[b_finish])
       vector[a_finish] = b_finish
       a_finish -= 1
       b_finish -= 1
@@ -63,8 +63,8 @@ class << Diff::LCS::Internals
     b_matches = position_hash(b, b_start..b_finish)
 
     thresh = []
-    links  = []
-    string = a.kind_of?(String)
+    links = []
+    string = a.is_a?(String)
 
     (a_start..a_finish).each do |i|
       ai = string ? a[i, 1] : a[i]
@@ -75,7 +75,7 @@ class << Diff::LCS::Internals
         # it may have an optimization purpose
         # An attempt to remove it: https://github.com/halostatue/diff-lcs/pull/72
         # Why it is reintroduced: https://github.com/halostatue/diff-lcs/issues/78
-        if k and (thresh[k] > j) and (thresh[k - 1] < j)
+        if k && (thresh[k] > j) && (thresh[k - 1] < j)
           thresh[k] = j
         else
           k = replace_next_larger(thresh, j, k)
@@ -100,7 +100,7 @@ class << Diff::LCS::Internals
   # the object form of same) and detection of whether the patchset represents
   # changes to be made.
   def analyze_patchset(patchset, depth = 0)
-    fail 'Patchset too complex' if depth > 1
+    fail "Patchset too complex" if depth > 1
 
     has_changes = false
     new_patchset = []
@@ -145,7 +145,7 @@ class << Diff::LCS::Internals
   # Diff::LCS::Change as its source, as an array will cause the creation
   # of one of the above.
   def intuit_diff_direction(src, patchset, limit = nil)
-    string = src.kind_of?(String)
+    string = src.is_a?(String)
     count = left_match = left_miss = right_match = right_miss = 0
 
     patchset.each do |change|
@@ -157,22 +157,22 @@ class << Diff::LCS::Internals
         re = string ? src[change.new_position, 1] : src[change.new_position]
 
         case change.action
-        when '-' # Remove details from the old string
+        when "-" # Remove details from the old string
           if le == change.old_element
             left_match += 1
           else
             left_miss += 1
           end
-        when '+'
+        when "+"
           if re == change.new_element
             right_match += 1
           else
             right_miss += 1
           end
-        when '='
+        when "="
           left_miss += 1 if le != change.old_element
           right_miss += 1 if re != change.new_element
-        when '!'
+        when "!"
           if le == change.old_element
             left_match += 1
           elsif re == change.new_element
@@ -189,19 +189,19 @@ class << Diff::LCS::Internals
         element = string ? src[change.position, 1] : src[change.position]
 
         case change.action
-        when '-'
+        when "-"
           if element == change.element
             left_match += 1
           else
             left_miss += 1
           end
-        when '+'
+        when "+"
           if element == change.element
             right_match += 1
           else
             right_miss += 1
           end
-        when '='
+        when "="
           if element != change.element
             left_miss += 1
             right_miss += 1
@@ -251,7 +251,7 @@ enumerable as either source or destination value."
   # This operation preserves the sort order.
   def replace_next_larger(enum, value, last_index = nil)
     # Off the end?
-    if enum.empty? or (value > enum[-1])
+    if enum.empty? || (value > enum[-1])
       enum << value
       return enum.size - 1
     end
@@ -296,7 +296,7 @@ enumerable as either source or destination value."
   # positions it occupies in the Enumerable, optionally restricted to the
   # elements specified in the range of indexes specified by +interval+.
   def position_hash(enum, interval)
-    string = enum.kind_of?(String)
+    string = enum.is_a?(String)
     hash = Hash.new { |h, k| h[k] = [] }
     interval.each do |i|
       k = string ? enum[i, 1] : enum[i]

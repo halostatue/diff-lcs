@@ -3,19 +3,23 @@
 # NOTE: This file is present to keep Travis CI happy. Edits to it will not
 # be accepted.
 
-source 'https://rubygems.org/'
+source "https://rubygems.org/"
 
-if RUBY_VERSION < '1.9'
-  gem 'hoe', '~> 3.20'
-  gem 'rake', '< 11'
-  gem 'rdoc', '< 4'
+if RUBY_VERSION < "1.9"
+  gem "hoe", "~> 3.20"
+  gem "rake", "< 11"
+  gem "rdoc", "< 4"
 
-  gem 'ruby-debug'
-elsif RUBY_VERSION >= '2.0'
-  if RUBY_ENGINE == 'ruby'
-    gem 'simplecov', '~> 0.18'
+  gem "ruby-debug"
+end
 
-    gem 'byebug'
+if RUBY_VERSION >= "2.0"
+  gem "standardrb"
+  gem "fasterer"
+
+  if RUBY_ENGINE == "ruby"
+    gem "simplecov", "~> 0.18"
+    gem "byebug"
   end
 end
 

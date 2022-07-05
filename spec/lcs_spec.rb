@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
-describe Diff::LCS::Internals, '.lcs' do
+describe Diff::LCS::Internals, ".lcs" do
   include Diff::LCS::SpecHelper::Matchers
 
-  it 'returns a meaningful LCS array with (seq1, seq2)' do
+  it "returns a meaningful LCS array with (seq1, seq2)" do
     res = Diff::LCS::Internals.lcs(seq1, seq2)
     # The result of the LCS (less the +nil+ values) must be as long as the
     # correct result.
@@ -20,37 +20,37 @@ describe Diff::LCS::Internals, '.lcs' do
     expect(x_seq2).to eq(correct_lcs)
   end
 
-  it 'returns all indexes with (hello, hello)' do
+  it "returns all indexes with (hello, hello)" do
     expect(Diff::LCS::Internals.lcs(hello, hello)).to \
       eq((0...hello.size).to_a)
   end
 
-  it 'returns all indexes with (hello_ary, hello_ary)' do
+  it "returns all indexes with (hello_ary, hello_ary)" do
     expect(Diff::LCS::Internals.lcs(hello_ary, hello_ary)).to \
       eq((0...hello_ary.size).to_a)
   end
 end
 
-describe Diff::LCS, '.LCS' do
+describe Diff::LCS, ".LCS" do
   include Diff::LCS::SpecHelper::Matchers
 
-  it 'returns the correct compacted values from Diff::LCS.LCS' do
+  it "returns the correct compacted values from Diff::LCS.LCS" do
     res = Diff::LCS.LCS(seq1, seq2)
     expect(res).to eq(correct_lcs)
     expect(res.compact).to eq(res)
   end
 
-  it 'is transitive' do
+  it "is transitive" do
     res = Diff::LCS.LCS(seq2, seq1)
     expect(res).to eq(correct_lcs)
     expect(res.compact).to eq(res)
   end
 
-  it 'returns %W(h e l l o) with (hello, hello)' do
-    expect(Diff::LCS.LCS(hello, hello)).to eq(hello.split(//))
+  it "returns %W(h e l l o) with (hello, hello)" do
+    expect(Diff::LCS.LCS(hello, hello)).to eq(hello.chars)
   end
 
-  it 'returns hello_ary with (hello_ary, hello_ary)' do
+  it "returns hello_ary with (hello_ary, hello_ary)" do
     expect(Diff::LCS.LCS(hello_ary, hello_ary)).to eq(hello_ary)
   end
 end

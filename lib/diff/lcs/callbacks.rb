@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'diff/lcs/change'
+require "diff/lcs/change"
 
-module Diff::LCS # rubocop:disable Style/Documentation
+module Diff::LCS
   # This callback object implements the default set of callback events,
   # which only returns the event itself. Note that #finished_a and
   # #finished_b are not implemented -- I haven't yet figured out where they
@@ -50,7 +50,9 @@ module Diff::LCS # rubocop:disable Style/Documentation
   BalancedCallbacks = DefaultCallbacks
 
   def self.callbacks_for(callbacks)
-    callbacks.new rescue callbacks
+    callbacks.new
+  rescue
+    callbacks
   end
 end
 
@@ -107,7 +109,7 @@ class Diff::LCS::DiffCallbacks
   # Returns the difference set collected during the diff process.
   attr_reader :diffs
 
-  def initialize # :yields self:
+  def initialize # :yields: self
     @hunk = []
     @diffs = []
 
@@ -131,11 +133,11 @@ class Diff::LCS::DiffCallbacks
   end
 
   def discard_a(event)
-    @hunk << Diff::LCS::Change.new('-', event.old_position, event.old_element)
+    @hunk << Diff::LCS::Change.new("-", event.old_position, event.old_element)
   end
 
   def discard_b(event)
-    @hunk << Diff::LCS::Change.new('+', event.new_position, event.new_element)
+    @hunk << Diff::LCS::Change.new("+", event.new_position, event.new_element)
   end
 
   def finish_hunk
@@ -302,7 +304,7 @@ class Diff::LCS::SDiffCallbacks
   # Returns the difference set collected during the diff process.
   attr_reader :diffs
 
-  def initialize #:yields self:
+  def initialize # :yields: self
     @diffs = []
     yield self if block_given?
   end

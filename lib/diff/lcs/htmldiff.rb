@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-require 'cgi'
+require "cgi"
 
 # Produce a simple HTML diff view.
 class Diff::LCS::HTMLDiff
   class << self
-    attr_accessor :can_expand_tabs #:nodoc:
+    attr_accessor :can_expand_tabs # :nodoc:
   end
   self.can_expand_tabs = true
 
-  class Callbacks #:nodoc:
+  class Callbacks # :nodoc:
     attr_accessor :output
     attr_accessor :match_class
     attr_accessor :only_a_class
@@ -19,14 +19,14 @@ class Diff::LCS::HTMLDiff
       @output = output
       options ||= {}
 
-      @match_class = options[:match_class] || 'match'
-      @only_a_class = options[:only_a_class] || 'only_a'
-      @only_b_class = options[:only_b_class] || 'only_b'
+      @match_class = options[:match_class] || "match"
+      @only_a_class = options[:only_a_class] || "only_a"
+      @only_b_class = options[:only_b_class] || "only_b"
     end
 
     def htmlize(element, css_class)
-      element = '&nbsp;' if element.empty?
-      %Q(<pre class="#{__send__(css_class)}">#{element}</pre>\n)
+      element = "&nbsp;" if element.empty?
+      %(<pre class="#{__send__(css_class)}">#{element}</pre>\n)
     end
     private :htmlize
 
@@ -46,13 +46,16 @@ class Diff::LCS::HTMLDiff
     end
   end
 
+  # standard:disable Style/HashSyntax
   DEFAULT_OPTIONS = {
     :expand_tabs => nil,
     :output => nil,
     :css => nil,
     :title => nil
   }.freeze
+  # standard:enable Style/HashSyntax
 
+  # standard:disable Layout/HeredocIndentation
   DEFAULT_CSS = <<-CSS
 body { margin: 0; }
 .diff
@@ -86,11 +89,12 @@ pre
 }
 h1 { margin-left: 2em; }
   CSS
+  # standard:enable Layout/HeredocIndentation
 
   def initialize(left, right, options = nil)
-    @left     = left
-    @right    = right
-    @options  = options
+    @left = left
+    @right = right
+    @options = options
 
     @options = DEFAULT_OPTIONS.dup if @options.nil?
   end
@@ -103,7 +107,7 @@ h1 { margin-left: 2em; }
 
     @options[:css] ||= DEFAULT_CSS.dup
 
-    @options[:title] ||= 'diff'
+    @options[:title] ||= "diff"
   end
   private :verify_options
 
@@ -116,13 +120,14 @@ h1 { margin-left: 2em; }
       formatter = Text::Format.new
       formatter.tabstop = @options[:expand_tabs]
 
-      @left.map! do |line| formatter.expand(line.chomp) end
-      @right.map! do |line| formatter.expand(line.chomp) end
+      @left.map! { |line| formatter.expand(line.chomp) }
+      @right.map! { |line| formatter.expand(line.chomp) }
     end
 
-    @left.map! do |line| CGI.escapeHTML(line.chomp) end
-    @right.map! do |line| CGI.escapeHTML(line.chomp) end
+    @left.map! { |line| CGI.escapeHTML(line.chomp) }
+    @right.map! { |line| CGI.escapeHTML(line.chomp) }
 
+    # standard:disable Layout/HeredocIndentation
     @options[:output] << <<-OUTPUT
 <html>
   <head>
@@ -137,14 +142,17 @@ h1 { margin-left: 2em; }
     <span class="only_b">Only in New</span></p>
     <div class="diff">
     OUTPUT
+    # standard:enable Layout/HeredocIndentation
 
     callbacks = Callbacks.new(@options[:output])
     Diff::LCS.traverse_sequences(@left, @right, callbacks)
 
+    # standard:disable Layout/HeredocIndentation
     @options[:output] << <<-OUTPUT
     </div>
   </body>
 </html>
     OUTPUT
+    # standard:enable Layout/HeredocIndentation
   end
 end

@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'diff/lcs/block'
+require "diff/lcs/block"
 
 # A Hunk is a group of Blocks which overlap because of the context surrounding
 # each block. (So if we're not using context, every hunk will contain one
 # block.) Used in the diff program (bin/ldiff).
 class Diff::LCS::Hunk
-  OLD_DIFF_OP_ACTION = { '+' => 'a', '-' => 'd', '!' => 'c' }.freeze #:nodoc:
-  ED_DIFF_OP_ACTION = { '+' => 'a', '-' => 'd', '!' => 'c' }.freeze #:nodoc:
+  OLD_DIFF_OP_ACTION = {"+" => "a", "-" => "d", "!" => "c"}.freeze # :nodoc:
+  ED_DIFF_OP_ACTION = {"+" => "a", "-" => "d", "!" => "c"}.freeze # :nodoc:
 
   private_constant :OLD_DIFF_OP_ACTION, :ED_DIFF_OP_ACTION if respond_to?(:private_constant)
 
@@ -22,7 +22,7 @@ class Diff::LCS::Hunk
     end
 
     if String.method_defined?(:encoding)
-      @preferred_data_encoding = data_old.fetch(0, data_new.fetch(0, '')).encoding
+      @preferred_data_encoding = data_old.fetch(0) { data_new.fetch(0, "") }.encoding
     end
 
     @data_old = data_old
@@ -32,7 +32,6 @@ class Diff::LCS::Hunk
     after += @blocks[0].diff_size
     @file_length_difference = after # The caller must get this manually
     @max_diff_size = @blocks.map { |e| e.diff_size.abs }.max
-
 
     # Save the start & end of each array. If the array doesn't exist (e.g.,
     # we're only adding items in this block), then figure out the line number
@@ -54,8 +53,8 @@ class Diff::LCS::Hunk
 
     @start_old = a1 || (b1 - before)
     @start_new = b1 || (a1 + before)
-    @end_old   = a2 || (b2 - after)
-    @end_new   = b2 || (a2 + after)
+    @end_old = a2 || (b2 - after)
+    @end_new = b2 || (a2 + after)
 
     self.flag_context = flag_context
   end
@@ -67,10 +66,10 @@ class Diff::LCS::Hunk
 
   # Change the "start" and "end" fields to note that context should be added
   # to this hunk.
-  attr_accessor :flag_context # rubocop:disable Layout/EmptyLinesAroundAttributeAccessor
+  attr_accessor :flag_context
   undef :flag_context=
-  def flag_context=(context) #:nodoc: # rubocop:disable Lint/DuplicateMethods
-    return if context.nil? or context.zero?
+  def flag_context=(context) # :nodoc: # standard:disable Lint/DuplicateMethods
+    return if context.nil? || context.zero?
 
     add_start = context > @start_old ? @start_old : context
 
@@ -102,7 +101,7 @@ class Diff::LCS::Hunk
     @start_new = hunk.start_new
     blocks.unshift(*hunk.blocks)
   end
-  alias unshift merge
+  alias_method :unshift, :merge
 
   # Determines whether there is an overlap between this hunk and the
   # provided hunk. This will be true if the difference between the two hunks
@@ -133,24 +132,24 @@ class Diff::LCS::Hunk
   # Note that an old diff can't have any context. Therefore, we know that
   # there's only one block in the hunk.
   def old_diff(_last = false)
-    warn 'Expecting only one block in an old diff hunk!' if @blocks.size > 1
+    warn "Expecting only one block in an old diff hunk!" if @blocks.size > 1
 
     block = @blocks[0]
 
     # Calculate item number range. Old diff range is just like a context
     # diff range, except the ranges are on one line with the action between
     # them.
-    s = encode("#{context_range(:old, ',')}#{OLD_DIFF_OP_ACTION[block.op]}#{context_range(:new, ',')}\n")
+    s = encode("#{context_range(:old, ",")}#{OLD_DIFF_OP_ACTION[block.op]}#{context_range(:new, ",")}\n")
     # If removing anything, just print out all the remove lines in the hunk
     # which is just all the remove lines in the block.
     unless block.remove.empty?
-      @data_old[@start_old..@end_old].each { |e| s << encode('< ') + e.chomp + encode("\n") }
+      @data_old[@start_old..@end_old].each { |e| s << encode("< ") + e.chomp + encode("\n") }
     end
 
-    s << encode("---\n") if block.op == '!'
+    s << encode("---\n") if block.op == "!"
 
     unless block.insert.empty?
-      @data_new[@start_new..@end_new].each { |e| s << encode('> ') + e.chomp + encode("\n") }
+      @data_new[@start_new..@end_new].each { |e| s << encode("> ") + e.chomp + encode("\n") }
     end
 
     s
@@ -172,7 +171,9 @@ class Diff::LCS::Hunk
     # file -- don't take removed items into account.
     lo, hi, num_added, num_removed = @start_old, @end_old, 0, 0
 
-    outlist = @data_old[lo..hi].map { |e| String.new("#{encode(' ')}#{e.chomp}") }
+    # standard:disable Performance/UnfreezeString
+    outlist = @data_old[lo..hi].map { |e| String.new("#{encode(" ")}#{e.chomp}") }
+    # standard:enable Performance/UnfreezeString
 
     last_block = blocks[-1]
 
@@ -183,7 +184,7 @@ class Diff::LCS::Hunk
 
     @blocks.each do |block|
       block.remove.each do |item|
-        op     = item.action.to_s # -
+        op = item.action.to_s # -
         offset = item.position - lo + num_added
         outlist[offset][0, 1] = encode(op)
         num_removed += 1
@@ -195,7 +196,7 @@ class Diff::LCS::Hunk
       end
 
       block.insert.each do |item|
-        op     = item.action.to_s # +
+        op = item.action.to_s # +
         offset = item.position - @start_new + num_removed
         outlist[offset, 0] = encode(op) + @data_new[item.position].chomp
         num_added += 1
@@ -212,8 +213,8 @@ class Diff::LCS::Hunk
 
   def context_diff(last = false)
     s = encode("***************\n")
-    s << encode("*** #{context_range(:old, ',', last)} ****\n")
-    r = context_range(:new, ',', last)
+    s << encode("*** #{context_range(:old, ",", last)} ****\n")
+    r = context_range(:new, ",", last)
 
     if last
       old_missing_newline = missing_last_newline?(@data_old)
@@ -226,7 +227,9 @@ class Diff::LCS::Hunk
     removes = @blocks.reject { |e| e.remove.empty? }
 
     unless removes.empty?
-      outlist = @data_old[lo..hi].map { |e| String.new("#{encode('  ')}#{e.chomp}") }
+      # standard:disable Performance/UnfreezeString
+      outlist = @data_old[lo..hi].map { |e| String.new("#{encode("  ")}#{e.chomp}") }
+      # standard:enable Performance/UnfreezeString
 
       last_block = removes[-1]
 
@@ -248,7 +251,9 @@ class Diff::LCS::Hunk
     inserts = @blocks.reject { |e| e.insert.empty? }
 
     unless inserts.empty?
-      outlist = @data_new[lo..hi].map { |e| String.new("#{encode('  ')}#{e.chomp}") }
+      # standard:disable Performance/UnfreezeString
+      outlist = @data_new[lo..hi].map { |e| String.new("#{encode("  ")}#{e.chomp}") }
+      # standard:enable Performance/UnfreezeString
 
       last_block = inserts[-1]
 
@@ -269,13 +274,13 @@ class Diff::LCS::Hunk
   private :context_diff
 
   def ed_diff(format, _last = false)
-    warn 'Expecting only one block in an old diff hunk!' if @blocks.size > 1
+    warn "Expecting only one block in an old diff hunk!" if @blocks.size > 1
 
     s =
       if format == :reverse_ed
-        encode("#{ED_DIFF_OP_ACTION[@blocks[0].op]}#{context_range(:old, ',')}\n")
+        encode("#{ED_DIFF_OP_ACTION[@blocks[0].op]}#{context_range(:old, ",")}\n")
       else
-        encode("#{context_range(:old, ' ')}#{ED_DIFF_OP_ACTION[@blocks[0].op]}\n")
+        encode("#{context_range(:old, " ")}#{ED_DIFF_OP_ACTION[@blocks[0].op]}\n")
       end
 
     unless @blocks[0].insert.empty?

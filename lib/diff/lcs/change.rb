@@ -10,7 +10,7 @@ class Diff::LCS::Change
   # (no change), '!' (changed), '<' (tail changes from first sequence), or
   # '>' (tail changes from second sequence). The last two ('<>') are only
   # found with Diff::LCS::diff and Diff::LCS::sdiff.
-  VALID_ACTIONS = %w(+ - = ! > <).freeze
+  VALID_ACTIONS = %w[+ - = ! > <].freeze
 
   def self.valid_action?(action)
     VALID_ACTIONS.include? action
@@ -28,7 +28,7 @@ class Diff::LCS::Change
     @action, @position, @element = *args
 
     fail "Invalid Change Action '#{@action}'" unless Diff::LCS::Change.valid_action?(@action)
-    fail 'Invalid Position Type' unless @position.kind_of? IntClass
+    fail "Invalid Position Type" unless @position.is_a? IntClass
   end
 
   def inspect(*_args)
@@ -39,7 +39,7 @@ class Diff::LCS::Change
     [@action, @position, @element]
   end
 
-  alias to_ary to_a
+  alias_method :to_ary, :to_a
 
   def self.from_a(arr)
     arr = arr.flatten(1)
@@ -49,7 +49,7 @@ class Diff::LCS::Change
     when 3
       Diff::LCS::Change.new(*(arr[0...3]))
     else
-      fail 'Invalid change array format provided.'
+      fail "Invalid change array format provided."
     end
   end
 
@@ -70,27 +70,27 @@ class Diff::LCS::Change
   end
 
   def adding?
-    @action == '+'
+    @action == "+"
   end
 
   def deleting?
-    @action == '-'
+    @action == "-"
   end
 
   def unchanged?
-    @action == '='
+    @action == "="
   end
 
   def changed?
-    @action == '!'
+    @action == "!"
   end
 
   def finished_a?
-    @action == '>'
+    @action == ">"
   end
 
   def finished_b?
-    @action == '<'
+    @action == "<"
   end
 end
 
@@ -115,8 +115,8 @@ class Diff::LCS::ContextChange < Diff::LCS::Change
     @action, @old_position, @old_element, @new_position, @new_element = *args
 
     fail "Invalid Change Action '#{@action}'" unless Diff::LCS::Change.valid_action?(@action)
-    fail 'Invalid (Old) Position Type' unless @old_position.nil? or @old_position.kind_of? IntClass
-    fail 'Invalid (New) Position Type' unless @new_position.nil? or @new_position.kind_of? IntClass
+    fail "Invalid (Old) Position Type" unless @old_position.nil? || @old_position.is_a?(IntClass)
+    fail "Invalid (New) Position Type" unless @new_position.nil? || @new_position.is_a?(IntClass)
   end
 
   def to_a
@@ -127,7 +127,7 @@ class Diff::LCS::ContextChange < Diff::LCS::Change
     ]
   end
 
-  alias to_ary to_a
+  alias_method :to_ary, :to_a
 
   def self.from_a(arr)
     Diff::LCS::Change.from_a(arr)
@@ -139,15 +139,15 @@ class Diff::LCS::ContextChange < Diff::LCS::Change
     ea = event.to_a
 
     case ea[0]
-    when '-'
+    when "-"
       ea[2][1] = nil
-    when '<'
-      ea[0] = '-'
+    when "<"
+      ea[0] = "-"
       ea[2][1] = nil
-    when '+'
+    when "+"
       ea[1][1] = nil
-    when '>'
-      ea[0] = '+'
+    when ">"
+      ea[0] = "+"
       ea[1][1] = nil
     end
 

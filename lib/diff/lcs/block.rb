@@ -25,13 +25,13 @@ class Diff::LCS::Block
   def op
     case [@remove.empty?, @insert.empty?]
     when [false, false]
-      '!'
+      "!"
     when [false, true]
-      '-'
+      "-"
     when [true, false]
-      '+'
+      "+"
     else # [true, true]
-      '^'
+      "^"
     end
   end
 end

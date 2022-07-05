@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
-require 'optparse'
-require 'ostruct'
-require 'diff/lcs/hunk'
+require "optparse"
+require "ostruct"
+require "diff/lcs/hunk"
 
-module Diff::LCS::Ldiff #:nodoc:
+module Diff::LCS::Ldiff # :nodoc:
+  # standard:disable Layout/HeredocIndentation
   BANNER = <<-COPYRIGHT
 ldiff #{Diff::LCS::VERSION}
   Copyright 2004-2019 Austin Ziegler
@@ -16,60 +17,61 @@ ldiff #{Diff::LCS::VERSION}
   the terms of the GPL version 2 (or later), the Perl Artistic licence, or the
   MIT licence.
   COPYRIGHT
+  # standard:enable Layout/HeredocIndentation
 end
 
 class << Diff::LCS::Ldiff
-  attr_reader :format, :lines #:nodoc:
-  attr_reader :file_old, :file_new #:nodoc:
-  attr_reader :data_old, :data_new #:nodoc:
+  attr_reader :format, :lines # :nodoc:
+  attr_reader :file_old, :file_new # :nodoc:
+  attr_reader :data_old, :data_new # :nodoc:
 
-  def run(args, _input = $stdin, output = $stdout, error = $stderr) #:nodoc:
+  def run(args, _input = $stdin, output = $stdout, error = $stderr) # :nodoc:
     @binary = nil
 
     args.options do |o|
       o.banner = "Usage: #{File.basename($0)} [options] oldfile newfile"
-      o.separator ''
+      o.separator ""
       o.on(
-        '-c', '-C', '--context [LINES]', Integer,
-        'Displays a context diff with LINES lines', 'of context. Default 3 lines.'
+        "-c", "-C", "--context [LINES]", Integer,
+        "Displays a context diff with LINES lines", "of context. Default 3 lines."
       ) do |ctx|
         @format = :context
-        @lines  = ctx || 3
+        @lines = ctx || 3
       end
       o.on(
-        '-u', '-U', '--unified [LINES]', Integer,
-        'Displays a unified diff with LINES lines', 'of context. Default 3 lines.'
+        "-u", "-U", "--unified [LINES]", Integer,
+        "Displays a unified diff with LINES lines", "of context. Default 3 lines."
       ) do |ctx|
         @format = :unified
-        @lines  = ctx || 3
+        @lines = ctx || 3
       end
-      o.on('-e', 'Creates an \'ed\' script to change', 'oldfile to newfile.') do |_ctx|
+      o.on("-e", "Creates an 'ed' script to change", "oldfile to newfile.") do |_ctx|
         @format = :ed
       end
-      o.on('-f', 'Creates an \'ed\' script to change', 'oldfile to newfile in reverse order.') do |_ctx|
+      o.on("-f", "Creates an 'ed' script to change", "oldfile to newfile in reverse order.") do |_ctx|
         @format = :reverse_ed
       end
       o.on(
-        '-a', '--text',
-        'Treat the files as text and compare them', 'line-by-line, even if they do not seem', 'to be text.'
+        "-a", "--text",
+        "Treat the files as text and compare them", "line-by-line, even if they do not seem", "to be text."
       ) do |_txt|
         @binary = false
       end
-      o.on('--binary', 'Treats the files as binary.') do |_bin|
+      o.on("--binary", "Treats the files as binary.") do |_bin|
         @binary = true
       end
-      o.on('-q', '--brief', 'Report only whether or not the files', 'differ, not the details.') do |_ctx|
+      o.on("-q", "--brief", "Report only whether or not the files", "differ, not the details.") do |_ctx|
         @format = :report
       end
-      o.on_tail('--help', 'Shows this text.') do
+      o.on_tail("--help", "Shows this text.") do
         error << o
         return 0
       end
-      o.on_tail('--version', 'Shows the version of Diff::LCS.') do
+      o.on_tail("--version", "Shows the version of Diff::LCS.") do
         error << Diff::LCS::Ldiff::BANNER
         return 0
       end
-      o.on_tail ''
+      o.on_tail ""
       o.on_tail 'By default, runs produces an "old-style" diff, with output like UNIX diff.'
       o.parse!
     end
@@ -81,17 +83,17 @@ class << Diff::LCS::Ldiff
 
     # Defaults are for old-style diff
     @format ||= :old
-    @lines  ||= 0
+    @lines ||= 0
 
     file_old, file_new = *ARGV
 
     case @format
     when :context
-      char_old = '*' * 3
-      char_new = '-' * 3
+      char_old = "*" * 3
+      char_new = "-" * 3
     when :unified
-      char_old = '-' * 3
-      char_new = '+' * 3
+      char_old = "-" * 3
+      char_new = "+" * 3
     end
 
     # After we've read up to a certain point in each file, the number of
@@ -128,10 +130,10 @@ class << Diff::LCS::Ldiff
       return 1
     end
 
-    if (@format == :unified) or (@format == :context)
-      ft = File.stat(file_old).mtime.localtime.strftime('%Y-%m-%d %H:%M:%S.000000000 %z')
+    if (@format == :unified) || (@format == :context)
+      ft = File.stat(file_old).mtime.localtime.strftime("%Y-%m-%d %H:%M:%S.000000000 %z")
       output << "#{char_old} #{file_old}\t#{ft}\n"
-      ft = File.stat(file_new).mtime.localtime.strftime('%Y-%m-%d %H:%M:%S.000000000 %z')
+      ft = File.stat(file_new).mtime.localtime.strftime("%Y-%m-%d %H:%M:%S.000000000 %z")
       output << "#{char_new} #{file_new}\t#{ft}\n"
     end
 
@@ -150,7 +152,7 @@ class << Diff::LCS::Ldiff
         file_length_difference = hunk.file_length_difference
 
         next unless oldhunk
-        next if @lines.positive? and hunk.merge(oldhunk)
+        next if @lines.positive? && hunk.merge(oldhunk)
 
         output << oldhunk.diff(@format)
         output << "\n" if @format == :unified

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Diff; end unless defined? Diff # rubocop:disable Style/Documentation
+module Diff; end unless defined? Diff
 
 # == How Diff Works (by Mark-Jason Dominus)
 #
@@ -49,13 +49,13 @@ module Diff; end unless defined? Diff # rubocop:disable Style/Documentation
 #          a x b y c z p d q
 #    a b c a x b y c z
 module Diff::LCS
-  VERSION = '1.5.0'
+  VERSION = "1.5.0"
 end
 
-require 'diff/lcs/callbacks'
-require 'diff/lcs/internals'
+require "diff/lcs/callbacks"
+require "diff/lcs/internals"
 
-module Diff::LCS # rubocop:disable Style/Documentation
+module Diff::LCS
   # Returns an Array containing the longest common subsequence(s) between
   # +self+ and +other+. See Diff::LCS#lcs.
   #
@@ -67,7 +67,7 @@ module Diff::LCS # rubocop:disable Style/Documentation
   # identically for key purposes. That is:
   #
   #   O.new('a').eql?(O.new('a')) == true
-  def lcs(other, &block) #:yields self[i] if there are matched subsequences:
+  def lcs(other, &block) # :yields: self[i] if there are matched subsequences
     Diff::LCS.lcs(self, other, &block)
   end
 
@@ -101,7 +101,7 @@ module Diff::LCS # rubocop:disable Style/Documentation
   def patch(patchset)
     Diff::LCS.patch(self, patchset)
   end
-  alias unpatch patch
+  alias_method :unpatch, :patch
 
   # Attempts to patch +self+ with the provided +patchset+. A new sequence based
   # on +self+ and the +patchset+ will be created. See Diff::LCS#patch. Does no
@@ -141,11 +141,11 @@ module Diff::LCS # rubocop:disable Style/Documentation
 end
 
 class << Diff::LCS
-  def lcs(seq1, seq2, &block) #:yields seq1[i] for each matched:
+  def lcs(seq1, seq2, &block) # :yields: seq1[i] for each matched
     matches = Diff::LCS::Internals.lcs(seq1, seq2)
     ret = []
-    string = seq1.kind_of? String
-    matches.each_with_index do |_e, i|
+    string = seq1.is_a? String
+    matches.each_index do |i|
       next if matches[i].nil?
 
       v = string ? seq1[i, 1] : seq1[i]
@@ -154,7 +154,7 @@ class << Diff::LCS
     end
     ret
   end
-  alias LCS lcs
+  alias_method :LCS, :lcs
 
   # #diff computes the smallest set of additions and deletions necessary to
   # turn the first sequence into the second, and returns a description of these
@@ -165,7 +165,7 @@ class << Diff::LCS
   # Class argument is provided for +callbacks+, #diff will attempt to
   # initialise it. If the +callbacks+ object (possibly initialised) responds to
   # #finish, it will be called.
-  def diff(seq1, seq2, callbacks = nil, &block) # :yields diff changes:
+  def diff(seq1, seq2, callbacks = nil, &block) # :yields: diff changes
     diff_traversal(:diff, seq1, seq2, callbacks || Diff::LCS::DiffCallbacks, &block)
   end
 
@@ -197,7 +197,7 @@ class << Diff::LCS
   #       # insert
   #     end
   #   end
-  def sdiff(seq1, seq2, callbacks = nil, &block) #:yields diff changes:
+  def sdiff(seq1, seq2, callbacks = nil, &block) # :yields: diff changes
     diff_traversal(:sdiff, seq1, seq2, callbacks || Diff::LCS::SDiffCallbacks, &block)
   end
 
@@ -282,12 +282,12 @@ class << Diff::LCS
   # <tt>callbacks#discard_b</tt> will be called after the end of the sequence
   # is reached, if +a+ has not yet reached the end of +A+ or +b+ has not yet
   # reached the end of +B+.
-  def traverse_sequences(seq1, seq2, callbacks = Diff::LCS::SequenceCallbacks) #:yields change events:
+  def traverse_sequences(seq1, seq2, callbacks = Diff::LCS::SequenceCallbacks) # :yields: change events
     callbacks ||= Diff::LCS::SequenceCallbacks
     matches = Diff::LCS::Internals.lcs(seq1, seq2)
 
     run_finished_a = run_finished_b = false
-    string = seq1.kind_of?(String)
+    string = seq1.is_a?(String)
 
     a_size = seq1.size
     b_size = seq2.size
@@ -299,7 +299,7 @@ class << Diff::LCS
           ax = string ? seq1[ai, 1] : seq1[ai]
           bx = string ? seq2[bj, 1] : seq2[bj]
 
-          event = Diff::LCS::ContextChange.new('-', ai, ax, bj, bx)
+          event = Diff::LCS::ContextChange.new("-", ai, ax, bj, bx)
           event = yield event if block_given?
           callbacks.discard_a(event)
         end
@@ -310,13 +310,13 @@ class << Diff::LCS
           break unless bj < b_line
 
           bx = string ? seq2[bj, 1] : seq2[bj]
-          event = Diff::LCS::ContextChange.new('+', ai, ax, bj, bx)
+          event = Diff::LCS::ContextChange.new("+", ai, ax, bj, bx)
           event = yield event if block_given?
           callbacks.discard_b(event)
           bj += 1
         end
         bx = string ? seq2[bj, 1] : seq2[bj]
-        event = Diff::LCS::ContextChange.new('=', ai, ax, bj, bx)
+        event = Diff::LCS::ContextChange.new("=", ai, ax, bj, bx)
         event = yield event if block_given?
         callbacks.match(event)
         bj += 1
@@ -326,13 +326,13 @@ class << Diff::LCS
 
     # The last entry (if any) processed was a match. +ai+ and +bj+ point just
     # past the last matching lines in their sequences.
-    while (ai < a_size) or (bj < b_size)
+    while (ai < a_size) || (bj < b_size)
       # last A?
-      if ai == a_size and bj < b_size
-        if callbacks.respond_to?(:finished_a) and !run_finished_a
+      if ai == a_size && bj < b_size
+        if callbacks.respond_to?(:finished_a) && !run_finished_a
           ax = string ? seq1[-1, 1] : seq1[-1]
           bx = string ? seq2[bj, 1] : seq2[bj]
-          event = Diff::LCS::ContextChange.new('>', (a_size - 1), ax, bj, bx)
+          event = Diff::LCS::ContextChange.new(">", (a_size - 1), ax, bj, bx)
           event = yield event if block_given?
           callbacks.finished_a(event)
           run_finished_a = true
@@ -340,7 +340,7 @@ class << Diff::LCS
           ax = string ? seq1[ai, 1] : seq1[ai]
           loop do
             bx = string ? seq2[bj, 1] : seq2[bj]
-            event = Diff::LCS::ContextChange.new('+', ai, ax, bj, bx)
+            event = Diff::LCS::ContextChange.new("+", ai, ax, bj, bx)
             event = yield event if block_given?
             callbacks.discard_b(event)
             bj += 1
@@ -350,11 +350,11 @@ class << Diff::LCS
       end
 
       # last B?
-      if bj == b_size and ai < a_size
-        if callbacks.respond_to?(:finished_b) and !run_finished_b
+      if bj == b_size && ai < a_size
+        if callbacks.respond_to?(:finished_b) && !run_finished_b
           ax = string ? seq1[ai, 1] : seq1[ai]
           bx = string ? seq2[-1, 1] : seq2[-1]
-          event = Diff::LCS::ContextChange.new('<', ai, ax, (b_size - 1), bx)
+          event = Diff::LCS::ContextChange.new("<", ai, ax, (b_size - 1), bx)
           event = yield event if block_given?
           callbacks.finished_b(event)
           run_finished_b = true
@@ -362,7 +362,7 @@ class << Diff::LCS
           bx = string ? seq2[bj, 1] : seq2[bj]
           loop do
             ax = string ? seq1[ai, 1] : seq1[ai]
-            event = Diff::LCS::ContextChange.new('-', ai, ax, bj, bx)
+            event = Diff::LCS::ContextChange.new("-", ai, ax, bj, bx)
             event = yield event if block_given?
             callbacks.discard_a(event)
             ai += 1
@@ -374,7 +374,7 @@ class << Diff::LCS
       if ai < a_size
         ax = string ? seq1[ai, 1] : seq1[ai]
         bx = string ? seq2[bj, 1] : seq2[bj]
-        event = Diff::LCS::ContextChange.new('-', ai, ax, bj, bx)
+        event = Diff::LCS::ContextChange.new("-", ai, ax, bj, bx)
         event = yield event if block_given?
         callbacks.discard_a(event)
         ai += 1
@@ -383,7 +383,7 @@ class << Diff::LCS
       if bj < b_size
         ax = string ? seq1[ai, 1] : seq1[ai]
         bx = string ? seq2[bj, 1] : seq2[bj]
-        event = Diff::LCS::ContextChange.new('+', ai, ax, bj, bx)
+        event = Diff::LCS::ContextChange.new("+", ai, ax, bj, bx)
         event = yield event if block_given?
         callbacks.discard_b(event)
         bj += 1
@@ -478,14 +478,14 @@ class << Diff::LCS
     b_size = seq2.size
     ai = bj = mb = 0
     ma = -1
-    string = seq1.kind_of?(String)
+    string = seq1.is_a?(String)
 
     # Process all the lines in the match vector.
     loop do
       # Find next match indices +ma+ and +mb+
       loop do
         ma += 1
-        break unless ma < matches.size and matches[ma].nil?
+        break unless ma < matches.size && matches[ma].nil?
       end
 
       break if ma >= matches.size # end of matches?
@@ -493,36 +493,36 @@ class << Diff::LCS
       mb = matches[ma]
 
       # Change(seq2)
-      while (ai < ma) or (bj < mb)
+      while (ai < ma) || (bj < mb)
         ax = string ? seq1[ai, 1] : seq1[ai]
         bx = string ? seq2[bj, 1] : seq2[bj]
 
         case [(ai < ma), (bj < mb)]
         when [true, true]
           if callbacks.respond_to?(:change)
-            event = Diff::LCS::ContextChange.new('!', ai, ax, bj, bx)
+            event = Diff::LCS::ContextChange.new("!", ai, ax, bj, bx)
             event = yield event if block_given?
             callbacks.change(event)
             ai += 1
           else
-            event = Diff::LCS::ContextChange.new('-', ai, ax, bj, bx)
+            event = Diff::LCS::ContextChange.new("-", ai, ax, bj, bx)
             event = yield event if block_given?
             callbacks.discard_a(event)
             ai += 1
             ax = string ? seq1[ai, 1] : seq1[ai]
-            event = Diff::LCS::ContextChange.new('+', ai, ax, bj, bx)
+            event = Diff::LCS::ContextChange.new("+", ai, ax, bj, bx)
             event = yield event if block_given?
             callbacks.discard_b(event)
           end
 
           bj += 1
         when [true, false]
-          event = Diff::LCS::ContextChange.new('-', ai, ax, bj, bx)
+          event = Diff::LCS::ContextChange.new("-", ai, ax, bj, bx)
           event = yield event if block_given?
           callbacks.discard_a(event)
           ai += 1
         when [false, true]
-          event = Diff::LCS::ContextChange.new('+', ai, ax, bj, bx)
+          event = Diff::LCS::ContextChange.new("+", ai, ax, bj, bx)
           event = yield event if block_given?
           callbacks.discard_b(event)
           bj += 1
@@ -532,43 +532,43 @@ class << Diff::LCS
       # Match
       ax = string ? seq1[ai, 1] : seq1[ai]
       bx = string ? seq2[bj, 1] : seq2[bj]
-      event = Diff::LCS::ContextChange.new('=', ai, ax, bj, bx)
+      event = Diff::LCS::ContextChange.new("=", ai, ax, bj, bx)
       event = yield event if block_given?
       callbacks.match(event)
       ai += 1
       bj += 1
     end
 
-    while (ai < a_size) or (bj < b_size)
+    while (ai < a_size) || (bj < b_size)
       ax = string ? seq1[ai, 1] : seq1[ai]
       bx = string ? seq2[bj, 1] : seq2[bj]
 
       case [(ai < a_size), (bj < b_size)]
       when [true, true]
         if callbacks.respond_to?(:change)
-          event = Diff::LCS::ContextChange.new('!', ai, ax, bj, bx)
+          event = Diff::LCS::ContextChange.new("!", ai, ax, bj, bx)
           event = yield event if block_given?
           callbacks.change(event)
           ai += 1
         else
-          event = Diff::LCS::ContextChange.new('-', ai, ax, bj, bx)
+          event = Diff::LCS::ContextChange.new("-", ai, ax, bj, bx)
           event = yield event if block_given?
           callbacks.discard_a(event)
           ai += 1
           ax = string ? seq1[ai, 1] : seq1[ai]
-          event = Diff::LCS::ContextChange.new('+', ai, ax, bj, bx)
+          event = Diff::LCS::ContextChange.new("+", ai, ax, bj, bx)
           event = yield event if block_given?
           callbacks.discard_b(event)
         end
 
         bj += 1
       when [true, false]
-        event = Diff::LCS::ContextChange.new('-', ai, ax, bj, bx)
+        event = Diff::LCS::ContextChange.new("-", ai, ax, bj, bx)
         event = yield event if block_given?
         callbacks.discard_a(event)
         ai += 1
       when [false, true]
-        event = Diff::LCS::ContextChange.new('+', ai, ax, bj, bx)
+        event = Diff::LCS::ContextChange.new("+", ai, ax, bj, bx)
         event = yield event if block_given?
         callbacks.discard_b(event)
         bj += 1
@@ -576,10 +576,12 @@ class << Diff::LCS
     end
   end
 
-  PATCH_MAP = { #:nodoc:
-    :patch => { '+' => '+', '-' => '-', '!' => '!', '=' => '=' }.freeze,
-    :unpatch => { '+' => '-', '-' => '+', '!' => '!', '=' => '=' }.freeze
+  # standard:disable Style/HashSyntax
+  PATCH_MAP = { # :nodoc:
+    :patch => {"+" => "+", "-" => "-", "!" => "!", "=" => "="}.freeze,
+    :unpatch => {"+" => "-", "-" => "+", "!" => "!", "=" => "="}.freeze
   }.freeze
+  # standard:enable Style/HashSyntax
 
   # Applies a +patchset+ to the sequence +src+ according to the +direction+
   # (<tt>:patch</tt> or <tt>:unpatch</tt>), producing a new sequence.
@@ -627,7 +629,7 @@ class << Diff::LCS
 
     return src.respond_to?(:dup) ? src.dup : src unless has_changes
 
-    string = src.kind_of?(String)
+    string = src.is_a?(String)
     # Start with a new empty type of the source's class
     res = src.class.new
 
@@ -655,14 +657,14 @@ class << Diff::LCS
         end
 
         case action
-        when '-' # Remove details from the old string
+        when "-" # Remove details from the old string
           while ai < op
             res << (string ? src[ai, 1] : src[ai])
             ai += 1
             bj += 1
           end
           ai += 1
-        when '+'
+        when "+"
           while bj < np
             res << (string ? src[ai, 1] : src[ai])
             ai += 1
@@ -671,7 +673,7 @@ class << Diff::LCS
 
           res << el
           bj += 1
-        when '='
+        when "="
           # This only appears in sdiff output with the SDiff callback.
           # Therefore, we only need to worry about dealing with a single
           # element.
@@ -679,7 +681,7 @@ class << Diff::LCS
 
           ai += 1
           bj += 1
-        when '!'
+        when "!"
           while ai < op
             res << (string ? src[ai, 1] : src[ai])
             ai += 1
@@ -693,14 +695,14 @@ class << Diff::LCS
         end
       when Diff::LCS::Change
         case action
-        when '-'
+        when "-"
           while ai < change.position
             res << (string ? src[ai, 1] : src[ai])
             ai += 1
             bj += 1
           end
           ai += 1
-        when '+'
+        when "+"
           while bj < change.position
             res << (string ? src[ai, 1] : src[ai])
             ai += 1
@@ -736,4 +738,4 @@ class << Diff::LCS
   end
 end
 
-require 'diff/lcs/backports'
+require "diff/lcs/backports"
