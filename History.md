@@ -4,6 +4,8 @@
 
 - Updated the CI configuration, resolving [#82][].
 
+- Switched to standard ruby formatting.
+
 ## 1.5.0 / 2021-12-23
 
 - Updated the CI configuration and monkey-patch Hoe.
