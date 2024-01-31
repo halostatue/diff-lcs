@@ -71,7 +71,7 @@ class Diff::LCS::Hunk
   def flag_context=(context) # :nodoc: # standard:disable Lint/DuplicateMethods
     return if context.nil? || context.zero?
 
-    add_start = context > @start_old ? @start_old : context
+    add_start = (context > @start_old) ? @start_old : context
 
     @start_old -= add_start
     @start_new -= add_start
@@ -306,7 +306,7 @@ class Diff::LCS::Hunk
     e -= 1 if last
     e = 1 if e.zero?
 
-    s < e ? "#{s}#{op}#{e}" : e.to_s
+    (s < e) ? "#{s}#{op}#{e}" : e.to_s
   end
   private :context_range
 
@@ -323,8 +323,8 @@ class Diff::LCS::Hunk
 
     length = e - s + (last ? 0 : 1)
 
-    first = length < 2 ? e : s # "strange, but correct"
-    length <= 1 ? first.to_s : "#{first},#{length}"
+    first = (length < 2) ? e : s # "strange, but correct"
+    (length <= 1) ? first.to_s : "#{first},#{length}"
   end
   private :unified_range
 

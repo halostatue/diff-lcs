@@ -100,8 +100,8 @@ class << Diff::LCS::Ldiff
     # items we've read from each file will differ by FLD (could be 0).
     file_length_difference = 0
 
-    data_old = IO.read(file_old)
-    data_new = IO.read(file_new)
+    data_old = File.read(file_old)
+    data_new = File.read(file_new)
 
     # Test binary status
     if @binary.nil?
