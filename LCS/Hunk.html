@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class LCS::Hunk - diff-lcs-1.5.0 Documentation</title>
+<title>class LCS::Hunk - diff-lcs-1.5.1 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -41,7 +41,7 @@
     <div id="search-field-wrapper">
       <input id="search-field" role="combobox" aria-label="Search"
              aria-autocomplete="list" aria-controls="search-results"
-             type="text" name="search" placeholder="Search" spellcheck="false"
+             type="text" name="search" placeholder="Search (/) for a class, method, ..." spellcheck="false"
              title="Type to search, Up and Down to navigate, Enter to load">
     </div>
 
@@ -91,7 +91,7 @@
 
   <section class="description">
     
-<p>A <a href="Hunk.html"><code>Hunk</code></a> is a group of Blocks which overlap because of the context surrounding each block. (So if we&#39;re not using context, every hunk will contain one block.) Used in the diff program (bin/ldiff).</p>
+<p>A <a href="Hunk.html"><code>Hunk</code></a> is a group of Blocks which overlap because of the context surrounding each block. (So if we’re not using context, every hunk will contain one block.) Used in the diff program (bin/ldiff).</p>
 
   </section>
 
@@ -183,10 +183,12 @@
        </header>
 
       <div id="method-c-new" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(data_old, data_new, piece, flag_context, file_length_difference)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(data_old, data_new, piece, flag_context, file_length_difference)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -203,7 +205,7 @@
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-constant">String</span>.<span class="ruby-identifier">method_defined?</span>(<span class="ruby-value">:encoding</span>)
-    <span class="ruby-ivar">@preferred_data_encoding</span> = <span class="ruby-identifier">data_old</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">0</span>, <span class="ruby-identifier">data_new</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">0</span>, <span class="ruby-string">&#39;&#39;</span>)).<span class="ruby-identifier">encoding</span>
+    <span class="ruby-ivar">@preferred_data_encoding</span> = <span class="ruby-identifier">data_old</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">0</span>) { <span class="ruby-identifier">data_new</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">0</span>, <span class="ruby-string">&quot;&quot;</span>) }.<span class="ruby-identifier">encoding</span>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-ivar">@data_old</span> = <span class="ruby-identifier">data_old</span>
@@ -213,7 +215,6 @@
   <span class="ruby-identifier">after</span> <span class="ruby-operator">+=</span> <span class="ruby-ivar">@blocks</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">diff_size</span>
   <span class="ruby-ivar">@file_length_difference</span> = <span class="ruby-identifier">after</span> <span class="ruby-comment"># The caller must get this manually</span>
   <span class="ruby-ivar">@max_diff_size</span> = <span class="ruby-ivar">@blocks</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">diff_size</span>.<span class="ruby-identifier">abs</span> }.<span class="ruby-identifier">max</span>
-
 
   <span class="ruby-comment"># Save the start &amp; end of each array. If the array doesn&#39;t exist (e.g.,</span>
   <span class="ruby-comment"># we&#39;re only adding items in this block), then figure out the line number</span>
@@ -235,8 +236,8 @@
 
   <span class="ruby-ivar">@start_old</span> = <span class="ruby-identifier">a1</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">b1</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">before</span>)
   <span class="ruby-ivar">@start_new</span> = <span class="ruby-identifier">b1</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">a1</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">before</span>)
-  <span class="ruby-ivar">@end_old</span>   = <span class="ruby-identifier">a2</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">b2</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">after</span>)
-  <span class="ruby-ivar">@end_new</span>   = <span class="ruby-identifier">b2</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">a2</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">after</span>)
+  <span class="ruby-ivar">@end_old</span> = <span class="ruby-identifier">a2</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">b2</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">after</span>)
+  <span class="ruby-ivar">@end_new</span> = <span class="ruby-identifier">b2</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">a2</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">after</span>)
 
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">flag_context</span> = <span class="ruby-identifier">flag_context</span>
 <span class="ruby-keyword">end</span></pre>
@@ -254,17 +255,19 @@
        </header>
 
       <div id="method-i-diff" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">diff</span><span
-            class="method-args">(format, last = false)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">diff</span><span
+              class="method-args">(format, last = false)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
           <p>Returns a diff string based on a format.</p>
 
           <div class="method-source-code" id="diff-source">
-            <pre><span class="ruby-comment"># File lib/diff/lcs/hunk.rb, line 116</span>
+            <pre><span class="ruby-comment"># File lib/diff/lcs/hunk.rb, line 115</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">diff</span>(<span class="ruby-identifier">format</span>, <span class="ruby-identifier">last</span> = <span class="ruby-keyword">false</span>)
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">format</span>
   <span class="ruby-keyword">when</span> <span class="ruby-value">:old</span>
@@ -288,17 +291,19 @@
       </div>
 
       <div id="method-i-merge" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">merge</span><span
-            class="method-args">(hunk)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">merge</span><span
+              class="method-args">(hunk)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
           <p>Merges this hunk and the provided hunk together if they overlap. Returns a truthy value so that if there is no overlap, you can know the merge was skipped.</p>
 
           <div class="method-source-code" id="merge-source">
-            <pre><span class="ruby-comment"># File lib/diff/lcs/hunk.rb, line 98</span>
+            <pre><span class="ruby-comment"># File lib/diff/lcs/hunk.rb, line 97</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">merge</span>(<span class="ruby-identifier">hunk</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">overlaps?</span>(<span class="ruby-identifier">hunk</span>)
 
@@ -316,17 +321,19 @@
       </div>
 
       <div id="method-i-missing_last_newline-3F" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">missing_last_newline?</span><span
-            class="method-args">(data)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">missing_last_newline?</span><span
+              class="method-args">(data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
           
 
           <div class="method-source-code" id="missing_last_newline-3F-source">
-            <pre><span class="ruby-comment"># File lib/diff/lcs/hunk.rb, line 326</span>
+            <pre><span class="ruby-comment"># File lib/diff/lcs/hunk.rb, line 331</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">missing_last_newline?</span>(<span class="ruby-identifier">data</span>)
   <span class="ruby-identifier">newline</span> = <span class="ruby-identifier">encode</span>(<span class="ruby-string">&quot;\n&quot;</span>)
 
@@ -345,17 +352,19 @@
       </div>
 
       <div id="method-i-overlaps-3F" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">overlaps?</span><span
-            class="method-args">(hunk)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">overlaps?</span><span
+              class="method-args">(hunk)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
           <p>Determines whether there is an overlap between this hunk and the provided hunk. This will be true if the difference between the two hunks start or end positions is within one position of each other.</p>
 
           <div class="method-source-code" id="overlaps-3F-source">
-            <pre><span class="ruby-comment"># File lib/diff/lcs/hunk.rb, line 110</span>
+            <pre><span class="ruby-comment"># File lib/diff/lcs/hunk.rb, line 109</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">overlaps?</span>(<span class="ruby-identifier">hunk</span>)
   <span class="ruby-identifier">hunk</span> <span class="ruby-keyword">and</span> (((<span class="ruby-ivar">@start_old</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">hunk</span>.<span class="ruby-identifier">end_old</span>) <span class="ruby-operator">&lt;=</span> <span class="ruby-value">1</span>) <span class="ruby-keyword">or</span>
             ((<span class="ruby-ivar">@start_new</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">hunk</span>.<span class="ruby-identifier">end_new</span>) <span class="ruby-operator">&lt;=</span> <span class="ruby-value">1</span>))
@@ -367,9 +376,11 @@
       </div>
 
       <div id="method-i-unshift" class="method-detail method-alias">
-        <div class="method-heading">
-          <span class="method-name">unshift</span><span
-            class="method-args">(hunk)</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">unshift</span><span
+              class="method-args">(hunk)</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -391,7 +402,7 @@
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.3.3.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.6.2.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

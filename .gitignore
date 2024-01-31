@@ -1,3 +1,5 @@
 research/
 .byebug_history
 Gemfile.lock
+!js/*.js.gz
+doc/

@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>diff-lcs-1.5.0 Documentation</title>
+<title>diff-lcs-1.5.1 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
@@ -42,7 +42,7 @@
     <div id="search-field-wrapper">
       <input id="search-field" role="combobox" aria-label="Search"
              aria-autocomplete="list" aria-controls="search-results"
-             type="text" name="search" placeholder="Search" spellcheck="false"
+             type="text" name="search" placeholder="Search (/) for a class, method, ..." spellcheck="false"
              title="Type to search, Up and Down to navigate, Enter to load">
     </div>
 
@@ -66,8 +66,11 @@
     <li><a href="./License_md.html">License</a>
     <li><a href="./Manifest_txt.html">Manifest</a>
     <li><a href="./README_rdoc.html">README</a>
-    <li><a href="./docs/COPYING_txt.html">COPYING</a>
-    <li><a href="./docs/artistic_txt.html">artistic</a>
+    <li><details><summary>docs</summary>
+    <ul class="link-list">
+      <li><a href="./docs/COPYING_txt.html">COPYING</a>
+      <li><a href="./docs/artistic_txt.html">artistic</a>
+    </ul></details>
   </ul>
 </div>
 
@@ -75,26 +78,38 @@
   <h3>Class and Module Index</h3>
 
   <ul class="link-list">
-    <li><a href="./Array.html">Array</a>
-    <li><a href="./Diff.html">Diff</a>
-    <li><a href="./Diff/LCS/Internals.html">Diff::LCS::Internals</a>
-    <li><a href="./Diff/LCS/Ldiff.html">Diff::LCS::Ldiff</a>
-    <li><a href="./Fixnum.html">Fixnum</a>
-    <li><a href="./LCS.html">LCS</a>
-    <li><a href="./LCS.html">LCS</a>
-    <li><a href="./LCS/DefaultCallbacks.html">LCS::BalancedCallbacks</a>
-    <li><a href="./LCS/Block.html">LCS::Block</a>
-    <li><a href="./LCS/Change.html">LCS::Change</a>
-    <li><a href="./LCS/ContextChange.html">LCS::ContextChange</a>
-    <li><a href="./LCS/ContextDiffCallbacks.html">LCS::ContextDiffCallbacks</a>
-    <li><a href="./LCS/DefaultCallbacks.html">LCS::DefaultCallbacks</a>
-    <li><a href="./LCS/DiffCallbacks.html">LCS::DiffCallbacks</a>
-    <li><a href="./LCS/HTMLDiff.html">LCS::HTMLDiff</a>
-    <li><a href="./LCS/Hunk.html">LCS::Hunk</a>
-    <li><a href="./LCS/SDiffCallbacks.html">LCS::SDiffCallbacks</a>
-    <li><a href="./LCS/DefaultCallbacks.html">LCS::SequenceCallbacks</a>
-    <li><a href="./String.html">String</a>
-  </ul>
+  <li><code><a href="./Array.html">Array</a></code>
+  <li><code><a href="./Diff.html">Diff</a></code>
+  <li><code><a href="./Fixnum.html">Fixnum</a></code>
+  <li><details><summary><code><a href="./LCS.html">LCS</a></code></summary>
+  <ul class="link-list">
+  <li><code><a href="./LCS/DefaultCallbacks.html">BalancedCallbacks</a></code>
+  <li><code><a href="./LCS/Block.html">Block</a></code>
+  <li><code><a href="./LCS/Change.html">Change</a></code>
+  <li><code><a href="./LCS/ContextChange.html">ContextChange</a></code>
+  <li><code><a href="./LCS/ContextDiffCallbacks.html">ContextDiffCallbacks</a></code>
+  <li><code><a href="./LCS/DefaultCallbacks.html">DefaultCallbacks</a></code>
+  <li><code><a href="./LCS/DiffCallbacks.html">DiffCallbacks</a></code>
+  <li><code><a href="./LCS/HTMLDiff.html">HTMLDiff</a></code>
+  <li><code><a href="./LCS/Hunk.html">Hunk</a></code>
+  <li><code><a href="./LCS/SDiffCallbacks.html">SDiffCallbacks</a></code>
+  <li><code><a href="./LCS/DefaultCallbacks.html">SequenceCallbacks</a></code>
+  </ul></details>
+  <li><details><summary><code><a href="./LCS.html">LCS</a></code></summary>
+  <ul class="link-list">
+  <li><code><a href="./LCS/DefaultCallbacks.html">BalancedCallbacks</a></code>
+  <li><code><a href="./LCS/Block.html">Block</a></code>
+  <li><code><a href="./LCS/Change.html">Change</a></code>
+  <li><code><a href="./LCS/ContextChange.html">ContextChange</a></code>
+  <li><code><a href="./LCS/ContextDiffCallbacks.html">ContextDiffCallbacks</a></code>
+  <li><code><a href="./LCS/DefaultCallbacks.html">DefaultCallbacks</a></code>
+  <li><code><a href="./LCS/DiffCallbacks.html">DiffCallbacks</a></code>
+  <li><code><a href="./LCS/HTMLDiff.html">HTMLDiff</a></code>
+  <li><code><a href="./LCS/Hunk.html">Hunk</a></code>
+  <li><code><a href="./LCS/SDiffCallbacks.html">SDiffCallbacks</a></code>
+  <li><code><a href="./LCS/DefaultCallbacks.html">SequenceCallbacks</a></code>
+  </ul></details>
+  <li><code><a href="./String.html">String</a></code>
 </div>
 
   </div>
@@ -118,7 +133,7 @@
 <p><a href="http://rubydoc.info/github/halostatue/diff-lcs">rubydoc.info/github/halostatue/diff-lcs</a></p>
 </dd><dt>continuous integration 
 <dd>
-<p><a href="https://github.com/halostatue/diff-lcs/actions"><img src="https://github.com/halostatue/diff-lcs/workflows/CI/badge.svg" /></a></p>
+<p><a href="https://github.com/halostatue/diff-lcs/actions">&lt;img src=“https://github.com/halostatue/diff-lcs/workflows/CI/badge.svg” /&gt;</a></p>
 </dd></dl>
 
 <h2 id="label-Description">Description<span><a href="#label-Description">&para;</a> <a href="#top">&uarr;</a></span></h2>
@@ -149,7 +164,7 @@
 <span class="ruby-identifier">seq1</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-identifier">unpatch!</span>(<span class="ruby-identifier">seq2</span>, <span class="ruby-identifier">sdiff</span>)
 </pre>
 
-<p>Objects can be extended with Diff::LCS:</p>
+<p>Objects can be extended with <a href="LCS.html"><code>Diff::LCS</code></a>:</p>
 
 <pre class="ruby"><span class="ruby-identifier">seq1</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>)
 <span class="ruby-identifier">lcs</span> = <span class="ruby-identifier">seq1</span>.<span class="ruby-identifier">lcs</span>(<span class="ruby-identifier">seq2</span>)
@@ -163,13 +178,13 @@
 <span class="ruby-identifier">seq1</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">seq2</span>.<span class="ruby-identifier">unpatch!</span>(<span class="ruby-identifier">sdiff</span>)
 </pre>
 
-<p>By requiring &#39;diff/lcs/array&#39; or &#39;diff/lcs/string&#39;, <a href="Array.html"><code>Array</code></a> or <a href="String.html"><code>String</code></a> will be extended for use this way.</p>
+<p>By requiring ‘diff/lcs/array’ or ‘diff/lcs/string’, <a href="Array.html"><code>Array</code></a> or <a href="String.html"><code>String</code></a> will be extended for use this way.</p>
 
 <p>Note that <a href="LCS.html"><code>Diff::LCS</code></a> requires a sequenced enumerable container, which means that the order of enumeration is both predictable and consistent for the same set of data. While it is theoretically possible to generate a diff for an unordered hash, it will only be meaningful if the enumeration of the hashes is consistent. In general, this will mean that containers that behave like <a href="String.html"><code>String</code></a> or <a href="Array.html"><code>Array</code></a> will perform best.</p>
 
 <h2 id="label-History"><a href="History_md.html">History</a><span><a href="#label-History">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p><a href="LCS.html"><code>Diff::LCS</code></a> is a port of Perl&#39;s Algorithm::Diff that uses the McIlroy-Hunt longest common subsequence (<a href="LCS.html"><code>LCS</code></a>) algorithm to compute intelligent differences between two sequenced enumerable containers. The implementation is based on Mario I. Wolczko&#39;s <a href="ftp://st.cs.uiuc.edu/pub/Smalltalk/MANCHESTER/manchester/4.0/diff.st">Smalltalk version 1.2</a> (1993) and Ned Konz&#39;s Perl version <a href="http://search.cpan.org/~nedkonz/Algorithm-Diff-1.15/">Algorithm::Diff 1.15</a>. <a href="LCS.html#method-i-sdiff"><code>Diff::LCS#sdiff</code></a> and <a href="LCS.html#method-i-traverse_balanced"><code>Diff::LCS#traverse_balanced</code></a> were originally written for the Perl version by Mike Schilli.</p>
+<p><a href="LCS.html"><code>Diff::LCS</code></a> is a port of Perl’s Algorithm::Diff that uses the McIlroy-Hunt longest common subsequence (<a href="LCS.html"><code>LCS</code></a>) algorithm to compute intelligent differences between two sequenced enumerable containers. The implementation is based on Mario I. Wolczko’s <a href="ftp://st.cs.uiuc.edu/pub/Smalltalk/MANCHESTER/manchester/4.0/diff.st">Smalltalk version 1.2</a> (1993) and Ned Konz’s Perl version <a href="http://search.cpan.org/~nedkonz/Algorithm-Diff-1.15/">Algorithm::Diff 1.15</a>. <a href="LCS.html#method-i-sdiff"><code>Diff::LCS#sdiff</code></a> and <a href="LCS.html#method-i-traverse_balanced"><code>Diff::LCS#traverse_balanced</code></a> were originally written for the Perl version by Mike Schilli.</p>
 
 <p>The algorithm is described in <em>A Fast Algorithm for Computing Longest Common Subsequences</em>, CACM, vol.20, no.5, pp.350-353, May 1977, with a few minor improvements to improve the speed. A simplified description of the algorithm, originally written for the Perl version, was written by Mark-Jason Dominus.</p>
 
@@ -178,7 +193,7 @@
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.3.3.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.6.2.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

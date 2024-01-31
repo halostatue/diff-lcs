@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>module Diff::LCS::Internals - diff-lcs-1.5.0 Documentation</title>
+<title>module Diff::LCS::Internals - diff-lcs-1.5.1 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -41,7 +41,7 @@
     <div id="search-field-wrapper">
       <input id="search-field" role="combobox" aria-label="Search"
              aria-autocomplete="list" aria-controls="search-results"
-             type="text" name="search" placeholder="Search" spellcheck="false"
+             type="text" name="search" placeholder="Search (/) for a class, method, ..." spellcheck="false"
              title="Type to search, Up and Down to navigate, Enter to load">
     </div>
 
@@ -96,10 +96,12 @@
        </header>
 
       <div id="method-c-analyze_patchset" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">analyze_patchset</span><span
-            class="method-args">(patchset, depth = 0)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">analyze_patchset</span><span
+              class="method-args">(patchset, depth = 0)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -108,7 +110,7 @@
           <div class="method-source-code" id="analyze_patchset-source">
             <pre><span class="ruby-comment"># File lib/diff/lcs/internals.rb, line 102</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">analyze_patchset</span>(<span class="ruby-identifier">patchset</span>, <span class="ruby-identifier">depth</span> = <span class="ruby-value">0</span>)
-  <span class="ruby-identifier">fail</span> <span class="ruby-string">&#39;Patchset too complex&#39;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">depth</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-identifier">fail</span> <span class="ruby-string">&quot;Patchset too complex&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">depth</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
 
   <span class="ruby-identifier">has_changes</span> = <span class="ruby-keyword">false</span>
   <span class="ruby-identifier">new_patchset</span> = []
@@ -151,10 +153,12 @@
       </div>
 
       <div id="method-c-intuit_diff_direction" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">intuit_diff_direction</span><span
-            class="method-args">(src, patchset, limit = nil)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">intuit_diff_direction</span><span
+              class="method-args">(src, patchset, limit = nil)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -165,7 +169,7 @@
           <div class="method-source-code" id="intuit_diff_direction-source">
             <pre><span class="ruby-comment"># File lib/diff/lcs/internals.rb, line 147</span>
   <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">intuit_diff_direction</span>(<span class="ruby-identifier">src</span>, <span class="ruby-identifier">patchset</span>, <span class="ruby-identifier">limit</span> = <span class="ruby-keyword">nil</span>)
-    <span class="ruby-identifier">string</span> = <span class="ruby-identifier">src</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">String</span>)
+    <span class="ruby-identifier">string</span> = <span class="ruby-identifier">src</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">String</span>)
     <span class="ruby-identifier">count</span> = <span class="ruby-identifier">left_match</span> = <span class="ruby-identifier">left_miss</span> = <span class="ruby-identifier">right_match</span> = <span class="ruby-identifier">right_miss</span> = <span class="ruby-value">0</span>
 
     <span class="ruby-identifier">patchset</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">change</span><span class="ruby-operator">|</span>
@@ -177,22 +181,22 @@
         <span class="ruby-identifier">re</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">change</span>.<span class="ruby-identifier">new_position</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">change</span>.<span class="ruby-identifier">new_position</span>]
 
         <span class="ruby-keyword">case</span> <span class="ruby-identifier">change</span>.<span class="ruby-identifier">action</span>
-        <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;-&#39;</span> <span class="ruby-comment"># Remove details from the old string</span>
+        <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;-&quot;</span> <span class="ruby-comment"># Remove details from the old string</span>
           <span class="ruby-keyword">if</span> <span class="ruby-identifier">le</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">change</span>.<span class="ruby-identifier">old_element</span>
             <span class="ruby-identifier">left_match</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
           <span class="ruby-keyword">else</span>
             <span class="ruby-identifier">left_miss</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
           <span class="ruby-keyword">end</span>
-        <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;+&#39;</span>
+        <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;+&quot;</span>
           <span class="ruby-keyword">if</span> <span class="ruby-identifier">re</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">change</span>.<span class="ruby-identifier">new_element</span>
             <span class="ruby-identifier">right_match</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
           <span class="ruby-keyword">else</span>
             <span class="ruby-identifier">right_miss</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
           <span class="ruby-keyword">end</span>
-        <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;=&#39;</span>
+        <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;=&quot;</span>
           <span class="ruby-identifier">left_miss</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">le</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">change</span>.<span class="ruby-identifier">old_element</span>
           <span class="ruby-identifier">right_miss</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">re</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">change</span>.<span class="ruby-identifier">new_element</span>
-        <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;!&#39;</span>
+        <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;!&quot;</span>
           <span class="ruby-keyword">if</span> <span class="ruby-identifier">le</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">change</span>.<span class="ruby-identifier">old_element</span>
             <span class="ruby-identifier">left_match</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
           <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">re</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">change</span>.<span class="ruby-identifier">new_element</span>
@@ -209,19 +213,19 @@
         <span class="ruby-identifier">element</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">change</span>.<span class="ruby-identifier">position</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">change</span>.<span class="ruby-identifier">position</span>]
 
         <span class="ruby-keyword">case</span> <span class="ruby-identifier">change</span>.<span class="ruby-identifier">action</span>
-        <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;-&#39;</span>
+        <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;-&quot;</span>
           <span class="ruby-keyword">if</span> <span class="ruby-identifier">element</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">change</span>.<span class="ruby-identifier">element</span>
             <span class="ruby-identifier">left_match</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
           <span class="ruby-keyword">else</span>
             <span class="ruby-identifier">left_miss</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
           <span class="ruby-keyword">end</span>
-        <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;+&#39;</span>
+        <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;+&quot;</span>
           <span class="ruby-keyword">if</span> <span class="ruby-identifier">element</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">change</span>.<span class="ruby-identifier">element</span>
             <span class="ruby-identifier">right_match</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
           <span class="ruby-keyword">else</span>
             <span class="ruby-identifier">right_miss</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
           <span class="ruby-keyword">end</span>
-        <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;=&#39;</span>
+        <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;=&quot;</span>
           <span class="ruby-keyword">if</span> <span class="ruby-identifier">element</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">change</span>.<span class="ruby-identifier">element</span>
             <span class="ruby-identifier">left_miss</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
             <span class="ruby-identifier">right_miss</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
@@ -267,10 +271,12 @@ enumerable as either source or destination value.&quot;</span>
       </div>
 
       <div id="method-c-lcs" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">lcs</span><span
-            class="method-args">(a, b)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">lcs</span><span
+              class="method-args">(a, b)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -291,14 +297,14 @@ enumerable as either source or destination value.&quot;</span>
   <span class="ruby-identifier">vector</span> = []
 
   <span class="ruby-comment"># Collect any common elements at the beginning...</span>
-  <span class="ruby-keyword">while</span> (<span class="ruby-identifier">a_start</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">a_finish</span>) <span class="ruby-keyword">and</span> (<span class="ruby-identifier">b_start</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">b_finish</span>) <span class="ruby-keyword">and</span> (<span class="ruby-identifier">a</span>[<span class="ruby-identifier">a_start</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">b</span>[<span class="ruby-identifier">b_start</span>])
+  <span class="ruby-keyword">while</span> (<span class="ruby-identifier">a_start</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">a_finish</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">b_start</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">b_finish</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">a</span>[<span class="ruby-identifier">a_start</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">b</span>[<span class="ruby-identifier">b_start</span>])
     <span class="ruby-identifier">vector</span>[<span class="ruby-identifier">a_start</span>] = <span class="ruby-identifier">b_start</span>
     <span class="ruby-identifier">a_start</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">b_start</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-comment"># Now the end...</span>
-  <span class="ruby-keyword">while</span> (<span class="ruby-identifier">a_start</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">a_finish</span>) <span class="ruby-keyword">and</span> (<span class="ruby-identifier">b_start</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">b_finish</span>) <span class="ruby-keyword">and</span> (<span class="ruby-identifier">a</span>[<span class="ruby-identifier">a_finish</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">b</span>[<span class="ruby-identifier">b_finish</span>])
+  <span class="ruby-keyword">while</span> (<span class="ruby-identifier">a_start</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">a_finish</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">b_start</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">b_finish</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">a</span>[<span class="ruby-identifier">a_finish</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">b</span>[<span class="ruby-identifier">b_finish</span>])
     <span class="ruby-identifier">vector</span>[<span class="ruby-identifier">a_finish</span>] = <span class="ruby-identifier">b_finish</span>
     <span class="ruby-identifier">a_finish</span> <span class="ruby-operator">-=</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">b_finish</span> <span class="ruby-operator">-=</span> <span class="ruby-value">1</span>
@@ -309,8 +315,8 @@ enumerable as either source or destination value.&quot;</span>
   <span class="ruby-identifier">b_matches</span> = <span class="ruby-identifier">position_hash</span>(<span class="ruby-identifier">b</span>, <span class="ruby-identifier">b_start</span><span class="ruby-operator">..</span><span class="ruby-identifier">b_finish</span>)
 
   <span class="ruby-identifier">thresh</span> = []
-  <span class="ruby-identifier">links</span>  = []
-  <span class="ruby-identifier">string</span> = <span class="ruby-identifier">a</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">String</span>)
+  <span class="ruby-identifier">links</span> = []
+  <span class="ruby-identifier">string</span> = <span class="ruby-identifier">a</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">String</span>)
 
   (<span class="ruby-identifier">a_start</span><span class="ruby-operator">..</span><span class="ruby-identifier">a_finish</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">ai</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">a</span>[<span class="ruby-identifier">i</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">a</span>[<span class="ruby-identifier">i</span>]
@@ -321,7 +327,7 @@ enumerable as either source or destination value.&quot;</span>
       <span class="ruby-comment"># it may have an optimization purpose</span>
       <span class="ruby-comment"># An attempt to remove it: https://github.com/halostatue/diff-lcs/pull/72</span>
       <span class="ruby-comment"># Why it is reintroduced: https://github.com/halostatue/diff-lcs/issues/78</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">k</span> <span class="ruby-keyword">and</span> (<span class="ruby-identifier">thresh</span>[<span class="ruby-identifier">k</span>] <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">j</span>) <span class="ruby-keyword">and</span> (<span class="ruby-identifier">thresh</span>[<span class="ruby-identifier">k</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>] <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">j</span>)
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">k</span> <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">thresh</span>[<span class="ruby-identifier">k</span>] <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">j</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">thresh</span>[<span class="ruby-identifier">k</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>] <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">j</span>)
         <span class="ruby-identifier">thresh</span>[<span class="ruby-identifier">k</span>] = <span class="ruby-identifier">j</span>
       <span class="ruby-keyword">else</span>
         <span class="ruby-identifier">k</span> = <span class="ruby-identifier">replace_next_larger</span>(<span class="ruby-identifier">thresh</span>, <span class="ruby-identifier">j</span>, <span class="ruby-identifier">k</span>)
@@ -354,7 +360,7 @@ enumerable as either source or destination value.&quot;</span>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.3.3.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.6.2.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

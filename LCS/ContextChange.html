@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class LCS::ContextChange - diff-lcs-1.5.0 Documentation</title>
+<title>class LCS::ContextChange - diff-lcs-1.5.1 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -41,7 +41,7 @@
     <div id="search-field-wrapper">
       <input id="search-field" role="combobox" aria-label="Search"
              aria-autocomplete="list" aria-controls="search-results"
-             type="text" name="search" placeholder="Search" spellcheck="false"
+             type="text" name="search" placeholder="Search (/) for a class, method, ..." spellcheck="false"
              title="Type to search, Up and Down to navigate, Enter to load">
     </div>
 
@@ -154,10 +154,12 @@
        </header>
 
       <div id="method-c-from_a" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">from_a</span><span
-            class="method-args">(arr)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">from_a</span><span
+              class="method-args">(arr)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -175,10 +177,12 @@
       </div>
 
       <div id="method-c-new" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(*args)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(*args)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -190,8 +194,8 @@
   <span class="ruby-ivar">@action</span>, <span class="ruby-ivar">@old_position</span>, <span class="ruby-ivar">@old_element</span>, <span class="ruby-ivar">@new_position</span>, <span class="ruby-ivar">@new_element</span> = <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>
 
   <span class="ruby-identifier">fail</span> <span class="ruby-node">&quot;Invalid Change Action &#39;#{@action}&#39;&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">Change</span>.<span class="ruby-identifier">valid_action?</span>(<span class="ruby-ivar">@action</span>)
-  <span class="ruby-identifier">fail</span> <span class="ruby-string">&#39;Invalid (Old) Position Type&#39;</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@old_position</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">or</span> <span class="ruby-ivar">@old_position</span>.<span class="ruby-identifier">kind_of?</span> <span class="ruby-constant">IntClass</span>
-  <span class="ruby-identifier">fail</span> <span class="ruby-string">&#39;Invalid (New) Position Type&#39;</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@new_position</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">or</span> <span class="ruby-ivar">@new_position</span>.<span class="ruby-identifier">kind_of?</span> <span class="ruby-constant">IntClass</span>
+  <span class="ruby-identifier">fail</span> <span class="ruby-string">&quot;Invalid (Old) Position Type&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@old_position</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@old_position</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">IntClass</span>)
+  <span class="ruby-identifier">fail</span> <span class="ruby-string">&quot;Invalid (New) Position Type&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@new_position</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@new_position</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">IntClass</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
         </div>
@@ -200,14 +204,16 @@
       </div>
 
       <div id="method-c-simplify" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">simplify</span><span
-            class="method-args">(event)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">simplify</span><span
+              class="method-args">(event)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
-          <p>Simplifies a context change for use in some diff callbacks. &#39;&lt;&#39; actions are converted to &#39;-&#39; and &#39;&gt;&#39; actions are converted to &#39;+&#39;.</p>
+          <p>Simplifies a context change for use in some diff callbacks. ‘&lt;’ actions are converted to ‘-’ and ‘&gt;’ actions are converted to ‘+’.</p>
 
           <div class="method-source-code" id="simplify-source">
             <pre><span class="ruby-comment"># File lib/diff/lcs/change.rb, line 138</span>
@@ -215,15 +221,15 @@
   <span class="ruby-identifier">ea</span> = <span class="ruby-identifier">event</span>.<span class="ruby-identifier">to_a</span>
 
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">ea</span>[<span class="ruby-value">0</span>]
-  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;-&#39;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;-&quot;</span>
     <span class="ruby-identifier">ea</span>[<span class="ruby-value">2</span>][<span class="ruby-value">1</span>] = <span class="ruby-keyword">nil</span>
-  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;&lt;&#39;</span>
-    <span class="ruby-identifier">ea</span>[<span class="ruby-value">0</span>] = <span class="ruby-string">&#39;-&#39;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;&lt;&quot;</span>
+    <span class="ruby-identifier">ea</span>[<span class="ruby-value">0</span>] = <span class="ruby-string">&quot;-&quot;</span>
     <span class="ruby-identifier">ea</span>[<span class="ruby-value">2</span>][<span class="ruby-value">1</span>] = <span class="ruby-keyword">nil</span>
-  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;+&#39;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;+&quot;</span>
     <span class="ruby-identifier">ea</span>[<span class="ruby-value">1</span>][<span class="ruby-value">1</span>] = <span class="ruby-keyword">nil</span>
-  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;&gt;&#39;</span>
-    <span class="ruby-identifier">ea</span>[<span class="ruby-value">0</span>] = <span class="ruby-string">&#39;+&#39;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;&gt;&quot;</span>
+    <span class="ruby-identifier">ea</span>[<span class="ruby-value">0</span>] = <span class="ruby-string">&quot;+&quot;</span>
     <span class="ruby-identifier">ea</span>[<span class="ruby-value">1</span>][<span class="ruby-value">1</span>] = <span class="ruby-keyword">nil</span>
   <span class="ruby-keyword">end</span>
 
@@ -243,10 +249,12 @@
        </header>
 
       <div id="method-i-3C-3D-3E" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">&lt;=&gt;</span><span
-            class="method-args">(other)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">&lt;=&gt;</span><span
+              class="method-args">(other)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -269,10 +277,12 @@
       </div>
 
       <div id="method-i-3D-3D" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">==</span><span
-            class="method-args">(other)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">==</span><span
+              class="method-args">(other)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -295,10 +305,12 @@
       </div>
 
       <div id="method-i-to_a" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">to_a</span><span
-            class="method-args">()</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">to_a</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -323,9 +335,11 @@
       </div>
 
       <div id="method-i-to_ary" class="method-detail method-alias">
-        <div class="method-heading">
-          <span class="method-name">to_ary</span><span
-            class="method-args">()</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">to_ary</span><span
+              class="method-args">()</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -347,7 +361,7 @@
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.3.3.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.6.2.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

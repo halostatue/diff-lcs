@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class LCS::HTMLDiff - diff-lcs-1.5.0 Documentation</title>
+<title>class LCS::HTMLDiff - diff-lcs-1.5.1 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -41,7 +41,7 @@
     <div id="search-field-wrapper">
       <input id="search-field" role="combobox" aria-label="Search"
              aria-autocomplete="list" aria-controls="search-results"
-             type="text" name="search" placeholder="Search" spellcheck="false"
+             type="text" name="search" placeholder="Search (/) for a class, method, ..." spellcheck="false"
              title="Type to search, Up and Down to navigate, Enter to load">
     </div>
 
@@ -100,9 +100,9 @@
       </header>
       <dl>
         <dt id="DEFAULT_CSS">DEFAULT_CSS
-        <dd>
+        <dd><p>standard:disable Layout/HeredocIndentation</p>
         <dt id="DEFAULT_OPTIONS">DEFAULT_OPTIONS
-        <dd>
+        <dd><p>standard:disable Style/HashSyntax</p>
       </dl>
     </section>
 
@@ -130,21 +130,23 @@
        </header>
 
       <div id="method-c-new" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(left, right, options = nil)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(left, right, options = nil)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
           
 
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/diff/lcs/htmldiff.rb, line 90</span>
+            <pre><span class="ruby-comment"># File lib/diff/lcs/htmldiff.rb, line 94</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">left</span>, <span class="ruby-identifier">right</span>, <span class="ruby-identifier">options</span> = <span class="ruby-keyword">nil</span>)
-  <span class="ruby-ivar">@left</span>     = <span class="ruby-identifier">left</span>
-  <span class="ruby-ivar">@right</span>    = <span class="ruby-identifier">right</span>
-  <span class="ruby-ivar">@options</span>  = <span class="ruby-identifier">options</span>
+  <span class="ruby-ivar">@left</span> = <span class="ruby-identifier">left</span>
+  <span class="ruby-ivar">@right</span> = <span class="ruby-identifier">right</span>
+  <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>
 
   <span class="ruby-ivar">@options</span> = <span class="ruby-constant">DEFAULT_OPTIONS</span>.<span class="ruby-identifier">dup</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">nil?</span>
 <span class="ruby-keyword">end</span></pre>
@@ -162,17 +164,19 @@
        </header>
 
       <div id="method-i-run" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">run</span><span
-            class="method-args">()</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">run</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
           
 
           <div class="method-source-code" id="run-source">
-            <pre><span class="ruby-comment"># File lib/diff/lcs/htmldiff.rb, line 112</span>
+            <pre><span class="ruby-comment"># File lib/diff/lcs/htmldiff.rb, line 116</span>
   <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">run</span>
     <span class="ruby-identifier">verify_options</span>
 
@@ -180,13 +184,14 @@
       <span class="ruby-identifier">formatter</span> = <span class="ruby-constant">Text</span><span class="ruby-operator">::</span><span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>
       <span class="ruby-identifier">formatter</span>.<span class="ruby-identifier">tabstop</span> = <span class="ruby-ivar">@options</span>[<span class="ruby-value">:expand_tabs</span>]
 
-      <span class="ruby-ivar">@left</span>.<span class="ruby-identifier">map!</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span> <span class="ruby-identifier">formatter</span>.<span class="ruby-identifier">expand</span>(<span class="ruby-identifier">line</span>.<span class="ruby-identifier">chomp</span>) <span class="ruby-keyword">end</span>
-      <span class="ruby-ivar">@right</span>.<span class="ruby-identifier">map!</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span> <span class="ruby-identifier">formatter</span>.<span class="ruby-identifier">expand</span>(<span class="ruby-identifier">line</span>.<span class="ruby-identifier">chomp</span>) <span class="ruby-keyword">end</span>
+      <span class="ruby-ivar">@left</span>.<span class="ruby-identifier">map!</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span> <span class="ruby-identifier">formatter</span>.<span class="ruby-identifier">expand</span>(<span class="ruby-identifier">line</span>.<span class="ruby-identifier">chomp</span>) }
+      <span class="ruby-ivar">@right</span>.<span class="ruby-identifier">map!</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span> <span class="ruby-identifier">formatter</span>.<span class="ruby-identifier">expand</span>(<span class="ruby-identifier">line</span>.<span class="ruby-identifier">chomp</span>) }
     <span class="ruby-keyword">end</span>
 
-    <span class="ruby-ivar">@left</span>.<span class="ruby-identifier">map!</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span> <span class="ruby-constant">CGI</span>.<span class="ruby-identifier">escapeHTML</span>(<span class="ruby-identifier">line</span>.<span class="ruby-identifier">chomp</span>) <span class="ruby-keyword">end</span>
-    <span class="ruby-ivar">@right</span>.<span class="ruby-identifier">map!</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span> <span class="ruby-constant">CGI</span>.<span class="ruby-identifier">escapeHTML</span>(<span class="ruby-identifier">line</span>.<span class="ruby-identifier">chomp</span>) <span class="ruby-keyword">end</span>
+    <span class="ruby-ivar">@left</span>.<span class="ruby-identifier">map!</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span> <span class="ruby-constant">CGI</span>.<span class="ruby-identifier">escapeHTML</span>(<span class="ruby-identifier">line</span>.<span class="ruby-identifier">chomp</span>) }
+    <span class="ruby-ivar">@right</span>.<span class="ruby-identifier">map!</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span> <span class="ruby-constant">CGI</span>.<span class="ruby-identifier">escapeHTML</span>(<span class="ruby-identifier">line</span>.<span class="ruby-identifier">chomp</span>) }
 
+    <span class="ruby-comment"># standard:disable Layout/HeredocIndentation</span>
     <span class="ruby-ivar">@options</span>[<span class="ruby-value">:output</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">&lt;&lt;-OUTPUT</span>
 <span class="ruby-value">&lt;html&gt;
   &lt;head&gt;
@@ -201,15 +206,18 @@
     &lt;span class=&quot;only_b&quot;&gt;Only in New&lt;/span&gt;&lt;/p&gt;
     &lt;div class=&quot;diff&quot;&gt;
 </span><span class="ruby-identifier">    OUTPUT</span>
+    <span class="ruby-comment"># standard:enable Layout/HeredocIndentation</span>
 
     <span class="ruby-identifier">callbacks</span> = <span class="ruby-constant">Callbacks</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@options</span>[<span class="ruby-value">:output</span>])
     <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-identifier">traverse_sequences</span>(<span class="ruby-ivar">@left</span>, <span class="ruby-ivar">@right</span>, <span class="ruby-identifier">callbacks</span>)
 
+    <span class="ruby-comment"># standard:disable Layout/HeredocIndentation</span>
     <span class="ruby-ivar">@options</span>[<span class="ruby-value">:output</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">&lt;&lt;-OUTPUT</span>
 <span class="ruby-value">    &lt;/div&gt;
   &lt;/body&gt;
 &lt;/html&gt;
 </span><span class="ruby-identifier">    OUTPUT</span>
+    <span class="ruby-comment"># standard:enable Layout/HeredocIndentation</span>
   <span class="ruby-keyword">end</span></pre>
           </div>
         </div>
@@ -225,7 +233,7 @@
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.3.3.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.6.2.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

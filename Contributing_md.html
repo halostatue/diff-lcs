@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>Contributing - diff-lcs-1.5.0 Documentation</title>
+<title>Contributing - diff-lcs-1.5.1 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
@@ -41,7 +41,7 @@
     <div id="search-field-wrapper">
       <input id="search-field" role="combobox" aria-label="Search"
              aria-autocomplete="list" aria-controls="search-results"
-             type="text" name="search" placeholder="Search" spellcheck="false"
+             type="text" name="search" placeholder="Search (/) for a class, method, ..." spellcheck="false"
              title="Type to search, Up and Down to navigate, Enter to load">
     </div>
 
@@ -57,11 +57,22 @@
 <div class="nav-section">
   <h3>Table of Contents</h3>
 
+
+
   <ul class="link-list" role="directory">
-    <li><a href="#label-Contributing">Contributing</a>
-    <li><a href="#label-Test+Dependencies">Test Dependencies</a>
-    <li><a href="#label-Workflow">Workflow</a>
-    <li><a href="#label-Contributors">Contributors</a>
+              <li>
+            <details open>
+              <summary>      <a href="#label-Contributing">Contributing</a>
+</summary>
+              <ul class="link-list" role="directory">
+                          <li>      <a href="#label-Test+Dependencies">Test Dependencies</a>
+          <li>      <a href="#label-Workflow">Workflow</a>
+          <li>      <a href="#label-Contributors">Contributors</a>
+
+              </ul>
+            </details>
+          </li>
+
   </ul>
 </div>
 
@@ -78,8 +89,11 @@
     <li><a href="./License_md.html">License</a>
     <li><a href="./Manifest_txt.html">Manifest</a>
     <li><a href="./README_rdoc.html">README</a>
-    <li><a href="./docs/COPYING_txt.html">COPYING</a>
-    <li><a href="./docs/artistic_txt.html">artistic</a>
+    <li><details><summary>docs</summary>
+    <ul class="link-list">
+      <li><a href="./docs/COPYING_txt.html">COPYING</a>
+      <li><a href="./docs/artistic_txt.html">artistic</a>
+    </ul></details>
   </ul>
 </div>
 
@@ -92,15 +106,15 @@
 
 <p>I value any contribution to <a href="LCS.html"><code>Diff::LCS</code></a> you can provide: a bug report, a feature request, or code contributions. Code contributions to <a href="LCS.html"><code>Diff::LCS</code></a> are especially &lt;del&gt;welcome&lt;/del&gt;encouraged. Because <a href="LCS.html"><code>Diff::LCS</code></a> is a complex codebase, there are a few guidelines:</p>
 <ul><li>
-<p>Code changes <em>will not</em> be accepted without tests. The test suite is  written with [RSpec][].</p>
+<p>Code changes <em>will not</em> be accepted without tests. The test suite is written with [RSpec][].</p>
 </li><li>
 <p>Match my coding style.</p>
 </li><li>
-<p>Use a thoughtfully-named topic branch that contains your change. Rebase  your commits into logical chunks as necessary.</p>
+<p>Use a thoughtfully-named topic branch that contains your change. Rebase your commits into logical chunks as necessary.</p>
 </li><li>
 <p>Use <a href="http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html">quality commit messages</a>.</p>
 </li><li>
-<p>Do not change the version number; when your patch is accepted and a release  is made, the version will be updated at that point.</p>
+<p>Do not change the version number; when your patch is accepted and a release is made, the version will be updated at that point.</p>
 </li><li>
 <p>Submit a GitHub pull request with your changes.</p>
 </li><li>
@@ -135,7 +149,7 @@
 
 <h3 id="label-Workflow">Workflow<span><a href="#label-Workflow">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Here&#39;s the most direct way to get your work merged into the project:</p>
+<p>Here’s the most direct way to get your work merged into the project:</p>
 <ul><li>
 <p>Fork the project.</p>
 </li><li>
@@ -151,7 +165,7 @@
 </li><li>
 <p>Push the branch up (<code>git push origin my_awesome_feature</code>).</p>
 </li><li>
-<p>Create a pull request against halostatue/diff-lcs and describe what your  change does and the why you think it should be merged.</p>
+<p>Create a pull request against halostatue/diff-lcs and describe what your change does and the why you think it should be merged.</p>
 </li></ul>
 
 <h3 id="label-Contributors">Contributors<span><a href="#label-Contributors">&para;</a> <a href="#top">&uarr;</a></span></h3>
@@ -159,7 +173,7 @@
 <p>Austin Ziegler created <a href="LCS.html"><code>Diff::LCS</code></a>.</p>
 </li></ul>
 
-<p>Thanks to everyone else who has contributed code or bug reports to Diff::LCS:</p>
+<p>Thanks to everyone else who has contributed code or bug reports to <a href="LCS.html"><code>Diff::LCS</code></a>:</p>
 <ul><li>
 <p>@ginriki</p>
 </li><li>
@@ -195,6 +209,8 @@
 </li><li>
 <p>Jun Aruga</p>
 </li><li>
+<p>Justin Steele</p>
+</li><li>
 <p>Kenichi Kamiya</p>
 </li><li>
 <p>Kensuke Nagae</p>
@@ -216,6 +232,8 @@
 <p>Paul Kunysch</p>
 </li><li>
 <p>Pete Higgins</p>
+</li><li>
+<p>Peter Goldstein</p>
 </li><li>
 <p>Peter Wagenet</p>
 </li><li>
@@ -240,7 +258,7 @@
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.3.3.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.6.2.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

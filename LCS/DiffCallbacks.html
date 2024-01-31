@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class LCS::DiffCallbacks - diff-lcs-1.5.0 Documentation</title>
+<title>class LCS::DiffCallbacks - diff-lcs-1.5.1 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -41,7 +41,7 @@
     <div id="search-field-wrapper">
       <input id="search-field" role="combobox" aria-label="Search"
              aria-autocomplete="list" aria-controls="search-results"
-             type="text" name="search" placeholder="Search" spellcheck="false"
+             type="text" name="search" placeholder="Search (/) for a class, method, ..." spellcheck="false"
              title="Type to search, Up and Down to navigate, Enter to load">
     </div>
 
@@ -57,9 +57,12 @@
 <div class="nav-section">
   <h3>Table of Contents</h3>
 
+
+
   <ul class="link-list" role="directory">
-    <li><a href="#class-LCS::DiffCallbacks-label-Use">Use</a>
-    <li><a href="#class-LCS::DiffCallbacks-label-Simplified+Array+Format">Simplified Array Format</a>
+              <li>      <a href="#class-LCS::DiffCallbacks-label-Use">Use</a>
+          <li>      <a href="#class-LCS::DiffCallbacks-label-Simplified+Array+Format">Simplified Array Format</a>
+
   </ul>
 </div>
 
@@ -171,18 +174,20 @@
        </header>
 
       <div id="method-c-new" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">() { |self| ... }</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">() { |self| ... }</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
           
 
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/diff/lcs/callbacks.rb, line 110</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-comment"># :yields self:</span>
+            <pre><span class="ruby-comment"># File lib/diff/lcs/callbacks.rb, line 112</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-comment"># :yields: self</span>
   <span class="ruby-ivar">@hunk</span> = []
   <span class="ruby-ivar">@diffs</span> = []
 
@@ -208,19 +213,21 @@
        </header>
 
       <div id="method-i-discard_a" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">discard_a</span><span
-            class="method-args">(event)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">discard_a</span><span
+              class="method-args">(event)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
           
 
           <div class="method-source-code" id="discard_a-source">
-            <pre><span class="ruby-comment"># File lib/diff/lcs/callbacks.rb, line 133</span>
+            <pre><span class="ruby-comment"># File lib/diff/lcs/callbacks.rb, line 135</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">discard_a</span>(<span class="ruby-identifier">event</span>)
-  <span class="ruby-ivar">@hunk</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">Change</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;-&#39;</span>, <span class="ruby-identifier">event</span>.<span class="ruby-identifier">old_position</span>, <span class="ruby-identifier">event</span>.<span class="ruby-identifier">old_element</span>)
+  <span class="ruby-ivar">@hunk</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">Change</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;-&quot;</span>, <span class="ruby-identifier">event</span>.<span class="ruby-identifier">old_position</span>, <span class="ruby-identifier">event</span>.<span class="ruby-identifier">old_element</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
         </div>
@@ -229,19 +236,21 @@
       </div>
 
       <div id="method-i-discard_b" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">discard_b</span><span
-            class="method-args">(event)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">discard_b</span><span
+              class="method-args">(event)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
           
 
           <div class="method-source-code" id="discard_b-source">
-            <pre><span class="ruby-comment"># File lib/diff/lcs/callbacks.rb, line 137</span>
+            <pre><span class="ruby-comment"># File lib/diff/lcs/callbacks.rb, line 139</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">discard_b</span>(<span class="ruby-identifier">event</span>)
-  <span class="ruby-ivar">@hunk</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">Change</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;+&#39;</span>, <span class="ruby-identifier">event</span>.<span class="ruby-identifier">new_position</span>, <span class="ruby-identifier">event</span>.<span class="ruby-identifier">new_element</span>)
+  <span class="ruby-ivar">@hunk</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">Change</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;+&quot;</span>, <span class="ruby-identifier">event</span>.<span class="ruby-identifier">new_position</span>, <span class="ruby-identifier">event</span>.<span class="ruby-identifier">new_element</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
         </div>
@@ -250,17 +259,19 @@
       </div>
 
       <div id="method-i-finish" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">finish</span><span
-            class="method-args">()</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">finish</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
           <p>Finalizes the diff process. If an unprocessed hunk still exists, then it is appended to the diff list.</p>
 
           <div class="method-source-code" id="finish-source">
-            <pre><span class="ruby-comment"># File lib/diff/lcs/callbacks.rb, line 125</span>
+            <pre><span class="ruby-comment"># File lib/diff/lcs/callbacks.rb, line 127</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">finish</span>
   <span class="ruby-identifier">finish_hunk</span>
 <span class="ruby-keyword">end</span></pre>
@@ -271,17 +282,19 @@
       </div>
 
       <div id="method-i-match" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">match</span><span
-            class="method-args">(_event)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">match</span><span
+              class="method-args">(_event)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
           
 
           <div class="method-source-code" id="match-source">
-            <pre><span class="ruby-comment"># File lib/diff/lcs/callbacks.rb, line 129</span>
+            <pre><span class="ruby-comment"># File lib/diff/lcs/callbacks.rb, line 131</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">match</span>(<span class="ruby-identifier">_event</span>)
   <span class="ruby-identifier">finish_hunk</span>
 <span class="ruby-keyword">end</span></pre>
@@ -299,7 +312,7 @@
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.3.3.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.6.2.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

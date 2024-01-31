@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class LCS::Change - diff-lcs-1.5.0 Documentation</title>
+<title>class LCS::Change - diff-lcs-1.5.1 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -41,7 +41,7 @@
     <div id="search-field-wrapper">
       <input id="search-field" role="combobox" aria-label="Search"
              aria-autocomplete="list" aria-controls="search-results"
-             type="text" name="search" placeholder="Search" spellcheck="false"
+             type="text" name="search" placeholder="Search (/) for a class, method, ..." spellcheck="false"
              title="Type to search, Up and Down to navigate, Enter to load">
     </div>
 
@@ -122,7 +122,7 @@
         <dt id="IntClass">IntClass
         <dd>
         <dt id="VALID_ACTIONS">VALID_ACTIONS
-        <dd><p>The only actions valid for changes are &#39;+&#39; (add), &#39;-&#39; (delete), &#39;=&#39; (no change), &#39;!&#39; (changed), &#39;&lt;&#39; (tail changes from first sequence), or &#39;&gt;&#39; (tail changes from second sequence). The last two (&#39;&lt;&gt;&#39;) are only found with <a href="../LCS.html#method-c-diff"><code>Diff::LCS::diff</code></a> and <a href="../LCS.html#method-c-sdiff"><code>Diff::LCS::sdiff</code></a>.</p>
+        <dd><p>The only actions valid for changes are ‘+’ (add), ‘-’ (delete), ‘=’ (no change), ‘!’ (changed), ‘&lt;’ (tail changes from first sequence), or ‘&gt;’ (tail changes from second sequence). The last two (‘&lt;&gt;’) are only found with <a href="../LCS.html#method-c-diff"><code>Diff::LCS::diff</code></a> and <a href="../LCS.html#method-c-sdiff"><code>Diff::LCS::sdiff</code></a>.</p>
       </dl>
     </section>
 
@@ -170,10 +170,12 @@
        </header>
 
       <div id="method-c-from_a" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">from_a</span><span
-            class="method-args">(arr)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">from_a</span><span
+              class="method-args">(arr)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -189,7 +191,7 @@
   <span class="ruby-keyword">when</span> <span class="ruby-value">3</span>
     <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">Change</span>.<span class="ruby-identifier">new</span>(<span class="ruby-operator">*</span>(<span class="ruby-identifier">arr</span>[<span class="ruby-value">0</span><span class="ruby-operator">...</span><span class="ruby-value">3</span>]))
   <span class="ruby-keyword">else</span>
-    <span class="ruby-identifier">fail</span> <span class="ruby-string">&#39;Invalid change array format provided.&#39;</span>
+    <span class="ruby-identifier">fail</span> <span class="ruby-string">&quot;Invalid change array format provided.&quot;</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -199,10 +201,12 @@
       </div>
 
       <div id="method-c-new" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(*args)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(*args)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -214,7 +218,7 @@
   <span class="ruby-ivar">@action</span>, <span class="ruby-ivar">@position</span>, <span class="ruby-ivar">@element</span> = <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>
 
   <span class="ruby-identifier">fail</span> <span class="ruby-node">&quot;Invalid Change Action &#39;#{@action}&#39;&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">Change</span>.<span class="ruby-identifier">valid_action?</span>(<span class="ruby-ivar">@action</span>)
-  <span class="ruby-identifier">fail</span> <span class="ruby-string">&#39;Invalid Position Type&#39;</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@position</span>.<span class="ruby-identifier">kind_of?</span> <span class="ruby-constant">IntClass</span>
+  <span class="ruby-identifier">fail</span> <span class="ruby-string">&quot;Invalid Position Type&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@position</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">IntClass</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
         </div>
@@ -223,10 +227,12 @@
       </div>
 
       <div id="method-c-valid_action-3F" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">valid_action?</span><span
-            class="method-args">(action)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">valid_action?</span><span
+              class="method-args">(action)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -251,10 +257,12 @@
        </header>
 
       <div id="method-i-3C-3D-3E" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">&lt;=&gt;</span><span
-            class="method-args">(other)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">&lt;=&gt;</span><span
+              class="method-args">(other)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -275,10 +283,12 @@
       </div>
 
       <div id="method-i-3D-3D" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">==</span><span
-            class="method-args">(other)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">==</span><span
+              class="method-args">(other)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -299,10 +309,12 @@
       </div>
 
       <div id="method-i-adding-3F" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">adding?</span><span
-            class="method-args">()</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">adding?</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -311,7 +323,7 @@
           <div class="method-source-code" id="adding-3F-source">
             <pre><span class="ruby-comment"># File lib/diff/lcs/change.rb, line 72</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">adding?</span>
-  <span class="ruby-ivar">@action</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;+&#39;</span>
+  <span class="ruby-ivar">@action</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;+&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
         </div>
@@ -320,10 +332,12 @@
       </div>
 
       <div id="method-i-changed-3F" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">changed?</span><span
-            class="method-args">()</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">changed?</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -332,7 +346,7 @@
           <div class="method-source-code" id="changed-3F-source">
             <pre><span class="ruby-comment"># File lib/diff/lcs/change.rb, line 84</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">changed?</span>
-  <span class="ruby-ivar">@action</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;!&#39;</span>
+  <span class="ruby-ivar">@action</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;!&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
         </div>
@@ -341,10 +355,12 @@
       </div>
 
       <div id="method-i-deleting-3F" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">deleting?</span><span
-            class="method-args">()</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">deleting?</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -353,7 +369,7 @@
           <div class="method-source-code" id="deleting-3F-source">
             <pre><span class="ruby-comment"># File lib/diff/lcs/change.rb, line 76</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">deleting?</span>
-  <span class="ruby-ivar">@action</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;-&#39;</span>
+  <span class="ruby-ivar">@action</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;-&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
         </div>
@@ -362,10 +378,12 @@
       </div>
 
       <div id="method-i-finished_a-3F" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">finished_a?</span><span
-            class="method-args">()</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">finished_a?</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -374,7 +392,7 @@
           <div class="method-source-code" id="finished_a-3F-source">
             <pre><span class="ruby-comment"># File lib/diff/lcs/change.rb, line 88</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">finished_a?</span>
-  <span class="ruby-ivar">@action</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;&gt;&#39;</span>
+  <span class="ruby-ivar">@action</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;&gt;&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
         </div>
@@ -383,10 +401,12 @@
       </div>
 
       <div id="method-i-finished_b-3F" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">finished_b?</span><span
-            class="method-args">()</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">finished_b?</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -395,7 +415,7 @@
           <div class="method-source-code" id="finished_b-3F-source">
             <pre><span class="ruby-comment"># File lib/diff/lcs/change.rb, line 92</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">finished_b?</span>
-  <span class="ruby-ivar">@action</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;&lt;&#39;</span>
+  <span class="ruby-ivar">@action</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;&lt;&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
         </div>
@@ -404,10 +424,12 @@
       </div>
 
       <div id="method-i-inspect" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">inspect</span><span
-            class="method-args">(*_args)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">inspect</span><span
+              class="method-args">(*_args)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -425,10 +447,12 @@
       </div>
 
       <div id="method-i-to_a" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">to_a</span><span
-            class="method-args">()</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">to_a</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -449,9 +473,11 @@
       </div>
 
       <div id="method-i-to_ary" class="method-detail method-alias">
-        <div class="method-heading">
-          <span class="method-name">to_ary</span><span
-            class="method-args">()</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">to_ary</span><span
+              class="method-args">()</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -466,10 +492,12 @@
       </div>
 
       <div id="method-i-unchanged-3F" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">unchanged?</span><span
-            class="method-args">()</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">unchanged?</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -478,7 +506,7 @@
           <div class="method-source-code" id="unchanged-3F-source">
             <pre><span class="ruby-comment"># File lib/diff/lcs/change.rb, line 80</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">unchanged?</span>
-  <span class="ruby-ivar">@action</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;=&#39;</span>
+  <span class="ruby-ivar">@action</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;=&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
         </div>
@@ -494,7 +522,7 @@
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.3.3.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.6.2.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 
