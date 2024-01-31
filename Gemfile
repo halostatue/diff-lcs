@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-# NOTE: This file is present to keep Travis CI happy. Edits to it will not
-# be accepted.
-
 source "https://rubygems.org/"
 
 if RUBY_VERSION < "1.9"
@@ -14,13 +11,15 @@ if RUBY_VERSION < "1.9"
 end
 
 if RUBY_VERSION >= "2.0"
-  gem "standardrb"
-  gem "fasterer"
-
   if RUBY_ENGINE == "ruby"
     gem "simplecov", "~> 0.18"
     gem "byebug"
   end
+end
+
+if RUBY_VERSION >= "3.0"
+  gem "standardrb"
+  gem "fasterer"
 end
 
 gemspec

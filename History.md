@@ -1,10 +1,27 @@
 # History
 
-## NEXT / YYYY-MM-DD
+## 1.5.1 / 2024-01-31
 
-- Updated the CI configuration, resolving [#82][].
+- Peter Goldstein updated CI configuration to add Ruby 3.1 and Masato Nakamura
+  added Ruby 3.2 and 3.3. [#82][], [#89][]
 
-- Switched to standard ruby formatting.
+- Updated the CI configuration, resolving [#82][] to add Ruby 3.1. Masato
+
+- Switched to [standard ruby][] formatting.
+
+- Justin Steele converted the licence file to Markdown. [#84][]
+
+- Updated the gem SPDX identifier for GPL 2.0 or later, resolving [#86][] by Vit
+  Ondruch.
+
+- Resolve a potential security issue with `ldiff` in its use of `IO.read`
+  instead of `File.read`. [#91][]
+
+- Added MFA authentication requirement for release to RubyGems. [#90][]
+
+- Added dependabot management for actions and gems. [#90][]
+
+- Updated CodeQL coniguration. [#90][]
 
 ## 1.5.0 / 2021-12-23
 
@@ -356,12 +373,6 @@
 
 - Initial release based mostly on Perl's Algorithm::Diff.
 
-[rubinius/rubinius#2268]: https://github.com/rubinius/rubinius/issues/2268
-[rspec/rspec-expectations#239]: https://github.com/rspec/rspec-expectations/issues/239
-[rspec/rspec-expectations#238]: https://github.com/rspec/rspec-expectations/issues/238
-[rspec/rspec-expectations#219]: https://github.com/rspec/rspec-expectations/issues/219
-[rspec/rspec-expectations@3d6fc82c]: https://github.com/rspec/rspec-expectations/commit/3d6fc82c
-[rspec/rspec-expectations#200]: https://github.com/rspec/rspec-expectations/pull/200
 [#1]: https://github.com/halostatue/diff-lcs/issues/1
 [#2]: https://github.com/halostatue/diff-lcs/issues/2
 [#3]: https://github.com/halostatue/diff-lcs/issues/3
@@ -405,3 +416,16 @@
 [#75]: https://github.com/halostatue/diff-lcs/issues/75
 [#79]: https://github.com/halostatue/diff-lcs/issues/79
 [#80]: https://github.com/halostatue/diff-lcs/issues/80
+[#82]: https://github.com/halostatue/diff-lcs/pull/82
+[#84]: https://github.com/halostatue/diff-lcs/pull/84
+[#86]: https://github.com/halostatue/diff-lcs/pull/86
+[#89]: https://github.com/halostatue/diff-lcs/pull/89
+[#90]: https://github.com/halostatue/diff-lcs/pull/90
+[#91]: https://github.com/halostatue/diff-lcs/issues/91
+[rspec/rspec-expectations#200]: https://github.com/rspec/rspec-expectations/pull/200
+[rspec/rspec-expectations#219]: https://github.com/rspec/rspec-expectations/issues/219
+[rspec/rspec-expectations#238]: https://github.com/rspec/rspec-expectations/issues/238
+[rspec/rspec-expectations#239]: https://github.com/rspec/rspec-expectations/issues/239
+[rspec/rspec-expectations@3d6fc82c]: https://github.com/rspec/rspec-expectations/commit/3d6fc82c
+[rubinius/rubinius#2268]: https://github.com/rubinius/rubinius/issues/2268
+[standard ruby]: https://github.com/standardrb/standard

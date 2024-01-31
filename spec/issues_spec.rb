@@ -109,7 +109,7 @@ describe "Diff::LCS Issues" do
       Diff::LCS.diff(old_lines, new_lines).each do |piece|
         hunk = Diff::LCS::Hunk.new(old_lines, new_lines, piece, 3, file_length_difference)
         file_length_difference = hunk.file_length_difference
-        maybe_contiguous_hunks = (previous_hunk.nil? || hunk.merge(previous_hunk))
+        maybe_contiguous_hunks = previous_hunk.nil? || hunk.merge(previous_hunk)
 
         output << "#{previous_hunk.diff(:unified)}\n" unless maybe_contiguous_hunks
 

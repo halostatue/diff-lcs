@@ -94,6 +94,7 @@ Thanks to everyone else who has contributed code or bug reports to Diff::LCS:
 - Josep (@apuratepp)
 - Josh Bronson
 - Jun Aruga
+- Justin Steele
 - Kenichi Kamiya
 - Kensuke Nagae
 - Kevin Ansfield
@@ -105,6 +106,7 @@ Thanks to everyone else who has contributed code or bug reports to Diff::LCS:
 - Oleg Orlov
 - Paul Kunysch
 - Pete Higgins
+- Peter Goldstein
 - Peter Wagenet
 - Philippe Lafoucrière
 - Ryan Lovelett
