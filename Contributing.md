@@ -100,6 +100,7 @@ Thanks to everyone else who has contributed code or bug reports to Diff::LCS:
 - Kevin Ansfield
 - Koichi Ito
 - Mark Friedgan
+- Masato Nakamura
 - Michael Granger
 - Myron Marston
 - Nicolas Leger
