@@ -76,7 +76,10 @@ _spec = Hoe.spec "diff-lcs" do
   self.readme_file = "README.rdoc"
   self.licenses = ["MIT", "Artistic-2.0", "GPL-2.0-or-later"]
 
-  spec_extras[:metadata] = ->(val) { val["rubygems_mfa_required"] = "true" }
+  spec_extras[:metadata] = ->(val) do
+     val["rubygems_mfa_required"] = "true"
+     val["changelog_uri"] = "https://github.com/halostatue/diff-lcs/blob/main/History.md"
+  end
 
   extra_dev_deps << ["hoe", ">= 3.0", "< 5"]
   extra_dev_deps << ["hoe-doofus", "~> 1.0"]
