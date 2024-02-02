@@ -6,10 +6,10 @@ Gem::Specification.new do |s|
   s.version = "1.5.1".freeze
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
-  s.metadata = { "bug_tracker_uri" => "https://github.com/halostatue/diff-lcs/issues", "homepage_uri" => "https://github.com/halostatue/diff-lcs", "rubygems_mfa_required" => "true", "source_code_uri" => "https://github.com/halostatue/diff-lcs" } if s.respond_to? :metadata=
+  s.metadata = { "bug_tracker_uri" => "https://github.com/halostatue/diff-lcs/issues", "changelog_uri" => "https://github.com/halostatue/diff-lcs/blob/main/History.md", "homepage_uri" => "https://github.com/halostatue/diff-lcs", "rubygems_mfa_required" => "true", "source_code_uri" => "https://github.com/halostatue/diff-lcs" } if s.respond_to? :metadata=
   s.require_paths = ["lib".freeze]
   s.authors = ["Austin Ziegler".freeze]
-  s.date = "2024-01-31"
+  s.date = "2024-02-02"
   s.description = "Diff::LCS computes the difference between two Enumerable sequences using the\nMcIlroy-Hunt longest common subsequence (LCS) algorithm. It includes utilities\nto create a simple HTML diff output format and a standard diff-like tool.\n\nThis is release 1.4.3, providing a simple extension that allows for\nDiff::LCS::Change objects to be treated implicitly as arrays and fixes a\nnumber of formatting issues.\n\nRuby versions below 2.5 are soft-deprecated, which means that older versions\nare no longer part of the CI test suite. If any changes have been introduced\nthat break those versions, bug reports and patches will be accepted, but it\nwill be up to the reporter to verify any fixes prior to release. The next\nmajor release will completely break compatibility.".freeze
   s.email = ["halostatue@gmail.com".freeze]
   s.executables = ["htmldiff".freeze, "ldiff".freeze]
