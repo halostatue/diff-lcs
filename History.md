@@ -1,5 +1,9 @@
 # History
 
+## NEXT / YYYY-MM-DD
+
+- Mark Young added a Changelog link to the RubyGems metadata. [#92][]
+
 ## 1.5.1 / 2024-01-31
 
 - Peter Goldstein updated CI configuration to add Ruby 3.1 and Masato Nakamura
@@ -422,6 +426,7 @@
 [#89]: https://github.com/halostatue/diff-lcs/pull/89
 [#90]: https://github.com/halostatue/diff-lcs/pull/90
 [#91]: https://github.com/halostatue/diff-lcs/issues/91
+[#92]: https://github.com/halostatue/diff-lcs/pull/92
 [rspec/rspec-expectations#200]: https://github.com/rspec/rspec-expectations/pull/200
 [rspec/rspec-expectations#219]: https://github.com/rspec/rspec-expectations/issues/219
 [rspec/rspec-expectations#238]: https://github.com/rspec/rspec-expectations/issues/238
