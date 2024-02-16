@@ -41,7 +41,7 @@ will permit you to do:
 $ bundle install
 ```
 
-to get the development dependencies. If you aleady have `hoe` installed, you
+to get the development dependencies. If you already have `hoe` installed, you
 can accomplish the same thing with:
 
 ```sh
@@ -106,6 +106,7 @@ Thanks to everyone else who has contributed code or bug reports to Diff::LCS:
 - Myron Marston
 - Nicolas Leger
 - Oleg Orlov
+- Patrick Linnane
 - Paul Kunysch
 - Pete Higgins
 - Peter Goldstein
