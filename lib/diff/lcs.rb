@@ -256,7 +256,7 @@ class << Diff::LCS
   #
   # The methods for <tt>callbacks#match</tt>, <tt>callbacks#discard_a</tt>, and
   # <tt>callbacks#discard_b</tt> are invoked with an event comprising the
-  # action ("=", "+", or "-", respectively), the indicies +i+ and +j+, and the
+  # action ("=", "+", or "-", respectively), the indexes +i+ and +j+, and the
   # elements <tt>A[i]</tt> and <tt>B[j]</tt>. Return values are discarded by
   # #traverse_sequences.
   #
@@ -465,7 +465,7 @@ class << Diff::LCS
   # The methods for <tt>callbacks#match</tt>, <tt>callbacks#discard_a</tt>,
   # <tt>callbacks#discard_b</tt>, and <tt>callbacks#change</tt> are invoked
   # with an event comprising the action ("=", "+", "-", or "!", respectively),
-  # the indicies +i+ and +j+, and the elements <tt>A[i]</tt> and <tt>B[j]</tt>.
+  # the indexes +i+ and +j+, and the elements <tt>A[i]</tt> and <tt>B[j]</tt>.
   # Return values are discarded by #traverse_balanced.
   #
   # === Context
@@ -482,7 +482,7 @@ class << Diff::LCS
 
     # Process all the lines in the match vector.
     loop do
-      # Find next match indices +ma+ and +mb+
+      # Find next match indexes +ma+ and +mb+
       loop do
         ma += 1
         break unless ma < matches.size && matches[ma].nil?
