@@ -74,7 +74,7 @@ _spec = Hoe.spec "diff-lcs" do
 
   self.history_file = "History.md"
   self.readme_file = "README.rdoc"
-  self.licenses = ["MIT", "Artistic-2.0", "GPL-2.0-or-later"]
+  self.licenses = ["MIT", "Artistic-1.0-Perl", "GPL-2.0-or-later"]
 
   spec_extras[:metadata] = ->(val) do
     val["rubygems_mfa_required"] = "true"
