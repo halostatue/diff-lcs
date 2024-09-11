@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.metadata = { "bug_tracker_uri" => "https://github.com/halostatue/diff-lcs/issues", "changelog_uri" => "https://github.com/halostatue/diff-lcs/blob/main/History.md", "homepage_uri" => "https://github.com/halostatue/diff-lcs", "rubygems_mfa_required" => "true", "source_code_uri" => "https://github.com/halostatue/diff-lcs" } if s.respond_to? :metadata=
   s.require_paths = ["lib".freeze]
   s.authors = ["Austin Ziegler".freeze]
-  s.date = "2024-02-02"
+  s.date = "2024-08-22"
   s.description = "Diff::LCS computes the difference between two Enumerable sequences using the\nMcIlroy-Hunt longest common subsequence (LCS) algorithm. It includes utilities\nto create a simple HTML diff output format and a standard diff-like tool.\n\nThis is release 1.4.3, providing a simple extension that allows for\nDiff::LCS::Change objects to be treated implicitly as arrays and fixes a\nnumber of formatting issues.\n\nRuby versions below 2.5 are soft-deprecated, which means that older versions\nare no longer part of the CI test suite. If any changes have been introduced\nthat break those versions, bug reports and patches will be accepted, but it\nwill be up to the reporter to verify any fixes prior to release. The next\nmajor release will completely break compatibility.".freeze
   s.email = ["halostatue@gmail.com".freeze]
   s.executables = ["htmldiff".freeze, "ldiff".freeze]
@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT".freeze, "Artistic-1.0-Perl".freeze, "GPL-2.0-or-later".freeze]
   s.rdoc_options = ["--main".freeze, "README.rdoc".freeze]
   s.required_ruby_version = Gem::Requirement.new(">= 1.8".freeze)
-  s.rubygems_version = "3.5.3".freeze
+  s.rubygems_version = "3.5.17".freeze
   s.summary = "Diff::LCS computes the difference between two Enumerable sequences using the McIlroy-Hunt longest common subsequence (LCS) algorithm".freeze
 
   s.specification_version = 4
@@ -32,4 +32,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency(%q<rspec>.freeze, [">= 2.0".freeze, "< 4".freeze])
   s.add_development_dependency(%q<rake>.freeze, [">= 10.0".freeze, "< 14".freeze])
   s.add_development_dependency(%q<rdoc>.freeze, [">= 6.3.1".freeze, "< 7".freeze])
+  s.add_development_dependency(%q<simplecov>.freeze, ["~> 0.21".freeze])
 end

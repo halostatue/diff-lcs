@@ -1,49 +1,14 @@
-# frozen_string_literal: true
-
 require "rubygems"
 require "rspec"
 require "rspec/core/rake_task"
 require "hoe"
+require "rake/clean"
 
-# This is required until https://github.com/seattlerb/hoe/issues/112 is fixed
-class Hoe
-  def with_config
-    config = Hoe::DEFAULT_CONFIG
-
-    rc = File.expand_path("~/.hoerc")
-    homeconfig = load_config(rc)
-    config = config.merge(homeconfig)
-
-    localconfig = load_config(File.expand_path(File.join(Dir.pwd, ".hoerc")))
-    config = config.merge(localconfig)
-
-    yield config, rc
-  end
-
-  def load_config(name)
-    File.exist?(name) ? safe_load_yaml(name) : {}
-  end
-
-  def safe_load_yaml(name)
-    return safe_load_yaml_file(name) if YAML.respond_to?(:safe_load_file)
-
-    data = IO.binread(name)
-    YAML.safe_load(data, permitted_classes: [Regexp])
-  rescue
-    YAML.safe_load(data, [Regexp])
-  end
-
-  def safe_load_yaml_file(name)
-    YAML.safe_load_file(name, permitted_classes: [Regexp])
-  rescue
-    YAML.safe_load_file(name, [Regexp])
-  end
-end
-
-Hoe.plugin :bundler
+Hoe.plugin :cov
 Hoe.plugin :doofus
 Hoe.plugin :gemspec2
-Hoe.plugin :git
+Hoe.plugin :git2
+Hoe.plugin :rubygems
 
 if RUBY_VERSION < "1.9"
   class Array # :nodoc:
@@ -70,16 +35,16 @@ end
 _spec = Hoe.spec "diff-lcs" do
   developer("Austin Ziegler", "halostatue@gmail.com")
 
-  require_ruby_version ">= 1.8"
-
   self.history_file = "History.md"
   self.readme_file = "README.rdoc"
   self.licenses = ["MIT", "Artistic-1.0-Perl", "GPL-2.0-or-later"]
 
-  spec_extras[:metadata] = ->(val) do
+  require_ruby_version ">= 1.8"
+
+  spec_extras[:metadata] = ->(val) {
     val["rubygems_mfa_required"] = "true"
     val["changelog_uri"] = "https://github.com/halostatue/diff-lcs/blob/main/History.md"
-  end
+  }
 
   extra_dev_deps << ["hoe", ">= 3.0", "< 5"]
   extra_dev_deps << ["hoe-doofus", "~> 1.0"]
