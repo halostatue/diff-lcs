@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "optparse"
-require "ostruct"
 require "diff/lcs/hunk"
 
 module Diff::LCS::Ldiff # :nodoc:
