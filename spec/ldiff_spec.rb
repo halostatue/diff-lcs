@@ -7,9 +7,9 @@ RSpec.describe "bin/ldiff" do
 
   # standard:disable Style/HashSyntax
   fixtures = [
-    {:name => "output.diff", :left => "aX", :right => "bXaX"},
-    {:name => "output.diff.chef", :left => "old-chef", :right => "new-chef"},
-    {:name => "output.diff.chef2", :left => "old-chef2", :right => "new-chef2"}
+    {:name => "output.diff", :left => "aX", :right => "bXaX", :diff => 1},
+    {:name => "output.diff.chef", :left => "old-chef", :right => "new-chef", :diff => 1},
+    {:name => "output.diff.chef2", :left => "old-chef2", :right => "new-chef2", :diff => 1}
   ].product([nil, "-e", "-f", "-c", "-u"]).map { |(fixture, flag)|
     fixture = fixture.dup
     fixture[:flag] = flag
@@ -28,7 +28,9 @@ RSpec.describe "bin/ldiff" do
     ].join(" ")
 
     it desc do
-      expect(run_ldiff(fixture)).to eq(read_fixture(fixture))
+      ldiff_output, ldiff_status = run_ldiff(fixture)
+      expect(ldiff_status).to eq(fixture[:diff])
+      expect(ldiff_output).to eq(read_fixture(fixture))
     end
   end
 
@@ -83,7 +85,6 @@ RSpec.describe "bin/ldiff" do
     end
 
     expect(stderr).to be_empty if RUBY_VERSION >= "1.9"
-    expect(stdout).not_to be_empty
-    clean_data(stdout, flag)
+    [clean_data(stdout, flag), $?.exitstatus]
   end
 end
