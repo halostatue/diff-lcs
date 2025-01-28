@@ -17,14 +17,20 @@ ldiff #{Diff::LCS::VERSION}
   MIT licence.
   COPYRIGHT
   # standard:enable Layout/HeredocIndentation
-end
 
-class << Diff::LCS::Ldiff
-  attr_reader :format, :lines # :nodoc:
-  attr_reader :file_old, :file_new # :nodoc:
-  attr_reader :data_old, :data_new # :nodoc:
+  InputInfo = Struct.new(:filename, :data, :stat) do
+    def initialize(filename)
+      super(filename, ::File.read(filename), ::File.stat(filename))
+    end
+  end
 
-  def run(args, _input = $stdin, output = $stdout, error = $stderr) # :nodoc:
+  class << self
+    attr_reader :format, :lines # :nodoc:
+    attr_reader :file_old, :file_new # :nodoc:
+    attr_reader :data_old, :data_new # :nodoc:
+  end
+
+  def self.run(args, _input = $stdin, output = $stdout, error = $stderr) # :nodoc:
     @binary = nil
 
     args.options do |o|
@@ -85,8 +91,18 @@ class << Diff::LCS::Ldiff
     @lines ||= 0
 
     file_old, file_new = *ARGV
+    diff?(
+      InputInfo.new(file_old),
+      InputInfo.new(file_new),
+      @format,
+      output,
+      binary: @binary,
+      lines: @lines
+    ) ? 1 : 0
+  end
 
-    case @format
+  def self.diff?(info_old, info_new, format, output, binary: nil, lines: 0)
+    case format
     when :context
       char_old = "*" * 3
       char_new = "-" * 3
@@ -99,40 +115,34 @@ class << Diff::LCS::Ldiff
     # items we've read from each file will differ by FLD (could be 0).
     file_length_difference = 0
 
-    data_old = File.read(file_old)
-    data_new = File.read(file_new)
-
     # Test binary status
     if @binary.nil?
-      old_bin = data_old[0, 4096].include?("\0")
-      new_bin = data_new[0, 4096].include?("\0")
+      old_bin = info_old.data[0, 4096].include?("\0")
+      new_bin = info_new.data[0, 4096].include?("\0")
       @binary = old_bin || new_bin
     end
 
-    unless @binary
-      data_old = data_old.lines.to_a
-      data_new = data_new.lines.to_a
-    end
-
     # diff yields lots of pieces, each of which is basically a Block object
-    if @binary
-      diffs = (data_old == data_new)
+    if binary
+      diffs = (info_old.data == info_new.data)
     else
+      data_old = info_old.data.lines.to_a
+      data_new = info_new.data.lines.to_a
       diffs = Diff::LCS.diff(data_old, data_new)
       diffs = nil if diffs.empty?
     end
 
-    return 0 unless diffs
+    return false unless diffs
 
-    case @format
+    case format
     when :report
-      output << "Files #{file_old} and #{file_new} differ\n"
-      return 1
+      output << "Files #{info_old.filename} and #{info_new.filename} differ\n"
+      return true
     when :unified, :context
-      ft = File.stat(file_old).mtime.localtime.strftime("%Y-%m-%d %H:%M:%S.000000000 %z")
-      output << "#{char_old} #{file_old}\t#{ft}\n"
-      ft = File.stat(file_new).mtime.localtime.strftime("%Y-%m-%d %H:%M:%S.000000000 %z")
-      output << "#{char_new} #{file_new}\t#{ft}\n"
+      ft = info_old.stat.mtime.localtime.strftime("%Y-%m-%d %H:%M:%S.000000000 %z")
+      output << "#{char_old} #{info_old.filename}\t#{ft}\n"
+      ft = info_new.stat.mtime.localtime.strftime("%Y-%m-%d %H:%M:%S.000000000 %z")
+      output << "#{char_new} #{info_new.filename}\t#{ft}\n"
     when :ed
       real_output = output
       output = []
@@ -143,26 +153,26 @@ class << Diff::LCS::Ldiff
     oldhunk = hunk = nil
     diffs.each do |piece|
       begin # rubocop:disable Style/RedundantBegin
-        hunk = Diff::LCS::Hunk.new(data_old, data_new, piece, @lines, file_length_difference)
+        hunk = Diff::LCS::Hunk.new(data_old, data_new, piece, lines, file_length_difference)
         file_length_difference = hunk.file_length_difference
 
         next unless oldhunk
-        next if @lines.positive? && hunk.merge(oldhunk)
+        next if lines.positive? && hunk.merge(oldhunk)
 
-        output << oldhunk.diff(@format)
-        output << "\n" if @format == :unified
+        output << oldhunk.diff(format)
+        output << "\n" if format == :unified
       ensure
         oldhunk = hunk
       end
     end
 
-    last = oldhunk.diff(@format, true)
+    last = oldhunk.diff(format, true)
     last << "\n" if last.respond_to?(:end_with?) && !last.end_with?("\n")
 
     output << last
 
-    output.reverse_each { |e| real_output << e.diff(:ed_finish) } if @format == :ed
+    output.reverse_each { |e| real_output << e.diff(:ed_finish) } if format == :ed
 
-    1
+    true
   end
 end
