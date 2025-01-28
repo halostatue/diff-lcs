@@ -116,23 +116,28 @@ ldiff #{Diff::LCS::VERSION}
     file_length_difference = 0
 
     # Test binary status
-    if @binary.nil?
+    if binary.nil?
       old_bin = info_old.data[0, 4096].include?("\0")
       new_bin = info_new.data[0, 4096].include?("\0")
-      @binary = old_bin || new_bin
+      binary = old_bin || new_bin
     end
 
     # diff yields lots of pieces, each of which is basically a Block object
     if binary
-      diffs = (info_old.data == info_new.data)
+      has_diffs = (info_old.data != info_new.data)
+      if format != :report
+        if has_diffs
+          output << "Binary files #{info_old.filename} and #{info_new.filename} differ\n"
+          return true
+        end
+        return false
+      end
     else
       data_old = info_old.data.lines.to_a
       data_new = info_new.data.lines.to_a
       diffs = Diff::LCS.diff(data_old, data_new)
-      diffs = nil if diffs.empty?
+      return false if diffs.empty?
     end
-
-    return false unless diffs
 
     case format
     when :report
