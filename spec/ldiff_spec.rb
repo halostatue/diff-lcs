@@ -8,6 +8,8 @@ RSpec.describe "bin/ldiff" do
   # standard:disable Style/HashSyntax
   fixtures = [
     {:name => "output.diff", :left => "aX", :right => "bXaX", :diff => 1},
+    {:name => "output.diff.bin1", :left => "file1.bin", :right => "file1.bin", :diff => 0},
+    {:name => "output.diff.bin2", :left => "file1.bin", :right => "file2.bin", :diff => 1},
     {:name => "output.diff.chef", :left => "old-chef", :right => "new-chef", :diff => 1},
     {:name => "output.diff.chef2", :left => "old-chef2", :right => "new-chef2", :diff => 1}
   ].product([nil, "-e", "-f", "-c", "-u"]).map { |(fixture, flag)|
