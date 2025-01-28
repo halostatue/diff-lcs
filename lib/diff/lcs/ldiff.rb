@@ -124,27 +124,23 @@ class << Diff::LCS::Ldiff
 
     return 0 unless diffs
 
-    if @format == :report
+    case @format
+    when :report
       output << "Files #{file_old} and #{file_new} differ\n"
       return 1
-    end
-
-    if (@format == :unified) || (@format == :context)
+    when :unified, :context
       ft = File.stat(file_old).mtime.localtime.strftime("%Y-%m-%d %H:%M:%S.000000000 %z")
       output << "#{char_old} #{file_old}\t#{ft}\n"
       ft = File.stat(file_new).mtime.localtime.strftime("%Y-%m-%d %H:%M:%S.000000000 %z")
       output << "#{char_new} #{file_new}\t#{ft}\n"
+    when :ed
+      real_output = output
+      output = []
     end
 
     # Loop over hunks. If a hunk overlaps with the last hunk, join them.
     # Otherwise, print out the old one.
     oldhunk = hunk = nil
-
-    if @format == :ed
-      real_output = output
-      output = []
-    end
-
     diffs.each do |piece|
       begin # rubocop:disable Style/RedundantBegin
         hunk = Diff::LCS::Hunk.new(data_old, data_new, piece, @lines, file_length_difference)
