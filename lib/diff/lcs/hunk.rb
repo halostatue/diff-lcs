@@ -331,8 +331,10 @@ class Diff::LCS::Hunk
   def unified_range(mode)
     case mode
     when :old
+      return "0,0" if @old_empty
       s, e = (@start_old + 1), (@end_old + 1)
     when :new
+      return "0,0" if @new_empty
       s, e = (@start_new + 1), (@end_new + 1)
     end
 

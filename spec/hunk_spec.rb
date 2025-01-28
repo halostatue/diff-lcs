@@ -72,7 +72,7 @@ if String.method_defined?(:encoding)
 
       it "produces a unified diff" do
         expected = <<-EXPECTED.gsub(/^\s+/, "").encode("UTF-16LE").chomp
-          @@ -1 +1,2 @@
+          @@ -0,0 +1 @@
           +Tu a un carte avec {count} items
         EXPECTED
 
