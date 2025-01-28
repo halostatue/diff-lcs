@@ -104,9 +104,9 @@ class << Diff::LCS::Ldiff
 
     # Test binary status
     if @binary.nil?
-      old_txt = data_old[0, 4096].scan(/\0/).empty?
-      new_txt = data_new[0, 4096].scan(/\0/).empty?
-      @binary = !old_txt || !new_txt
+      old_bin = data_old[0, 4096].include?("\0")
+      new_bin = data_new[0, 4096].include?("\0")
+      @binary = old_bin || new_bin
     end
 
     unless @binary
