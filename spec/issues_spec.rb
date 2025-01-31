@@ -68,38 +68,6 @@ describe "Diff::LCS Issues" do
     end
   end
 
-  describe "issue #60" do
-    it "should produce unified output with correct context" do
-      # standard:disable Layout/HeredocIndentation
-      old_data = <<-DATA_OLD.strip.split("\n").map(&:chomp)
-{
-  "name": "x",
-  "description": "hi"
-}
-      DATA_OLD
-
-      new_data = <<-DATA_NEW.strip.split("\n").map(&:chomp)
-{
-  "name": "x",
-  "description": "lo"
-}
-      DATA_NEW
-
-      diff = ::Diff::LCS.diff(old_data, new_data)
-      hunk = ::Diff::LCS::Hunk.new(old_data, new_data, diff.first, 3, 0)
-
-      expect(hunk.diff(:unified)).to eq(<<-EXPECTED.chomp)
-@@ -1,5 +1,5 @@
- {
-   "name": "x",
--  "description": "hi"
-+  "description": "lo"
- }
-      EXPECTED
-      # standard:enable Layout/HeredocIndentation
-    end
-  end
-
   describe "issue #65" do
     def diff_lines(old_lines, new_lines)
       file_length_difference = 0
@@ -154,6 +122,38 @@ describe "Diff::LCS Issues" do
 +recipe[q::new]
 +recipe[r::new]
       EODIFF
+      # standard:enable Layout/HeredocIndentation
+    end
+  end
+
+  describe "issue #107 (replaces issue #60)" do
+    it "should produce unified output with correct context" do
+      # standard:disable Layout/HeredocIndentation
+      old_data = <<-DATA_OLD.strip.split("\n").map(&:chomp)
+{
+  "name": "x",
+  "description": "hi"
+}
+      DATA_OLD
+
+      new_data = <<-DATA_NEW.strip.split("\n").map(&:chomp)
+{
+  "name": "x",
+  "description": "lo"
+}
+      DATA_NEW
+
+      diff = ::Diff::LCS.diff(old_data, new_data)
+      hunk = ::Diff::LCS::Hunk.new(old_data, new_data, diff.first, 3, 0)
+
+      expect(hunk.diff(:unified)).to eq(<<-EXPECTED.chomp)
+@@ -1,4 +1,4 @@
+ {
+   "name": "x",
+-  "description": "hi"
++  "description": "lo"
+ }
+      EXPECTED
       # standard:enable Layout/HeredocIndentation
     end
   end
