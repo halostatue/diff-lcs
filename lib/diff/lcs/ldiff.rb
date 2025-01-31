@@ -56,12 +56,6 @@ ldiff #{Diff::LCS::VERSION}
         @format = :unified
         @lines = ctx || 3
       end
-      o.on("-e", "Creates an 'ed' script to change", "oldfile to newfile.") do |_ctx|
-        @format = :ed
-      end
-      o.on("-f", "Creates an 'ed' script to change", "oldfile to newfile in reverse order.") do |_ctx|
-        @format = :reverse_ed
-      end
       o.on(
         "-a", "--text",
         "Treat the files as text and compare them", "line-by-line, even if they do not seem", "to be text."
@@ -155,7 +149,6 @@ ldiff #{Diff::LCS::VERSION}
       ft = info_new.stat.mtime.localtime.strftime("%Y-%m-%d %H:%M:%S.000000000 %z")
       output << "#{char_new} #{info_new.filename}\t#{ft}\n"
     when :ed
-      real_output = output
       output = []
     end
 
@@ -182,8 +175,6 @@ ldiff #{Diff::LCS::VERSION}
 
     output << last
 
-    output.reverse_each { |e| real_output << e.diff(:ed_finish, e == output[0]) } if format == :ed
-
-    true
+    1
   end
 end
