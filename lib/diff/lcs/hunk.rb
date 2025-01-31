@@ -7,9 +7,8 @@ require "diff/lcs/block"
 # block.) Used in the diff program (bin/ldiff).
 class Diff::LCS::Hunk
   OLD_DIFF_OP_ACTION = {"+" => "a", "-" => "d", "!" => "c"}.freeze # :nodoc:
-  ED_DIFF_OP_ACTION = {"+" => "a", "-" => "d", "!" => "c"}.freeze # :nodoc:
 
-  private_constant :OLD_DIFF_OP_ACTION, :ED_DIFF_OP_ACTION if respond_to?(:private_constant)
+  private_constant :OLD_DIFF_OP_ACTION if respond_to?(:private_constant)
 
   # Create a hunk using references to both the old and new data, as well as the
   # piece of data.
@@ -120,10 +119,6 @@ class Diff::LCS::Hunk
       unified_diff(last)
     when :context
       context_diff(last)
-    when :ed
-      self
-    when :reverse_ed, :ed_finish
-      ed_diff(format, last)
     else
       fail "Unknown diff format #{format}."
     end
@@ -281,36 +276,6 @@ class Diff::LCS::Hunk
   end
   private :context_diff
 
-  def ed_diff(format, last)
-    warn "Expecting only one block in an old diff hunk!" if @blocks.size > 1
-    if last
-      # ed script doesn't support well incomplete lines
-      warn "<old_file>: No newline at end of file\n" if !@old_empty && missing_last_newline?(@data_old)
-      warn "<new_file>: No newline at end of file\n" if !@new_empty && missing_last_newline?(@data_new)
-
-      if @blocks[0].op == "!"
-        return +"" if @blocks[0].changes[0].element == @blocks[0].changes[1].element + "\n"
-        return +"" if @blocks[0].changes[0].element + "\n" == @blocks[0].changes[1].element
-      end
-    end
-
-    s =
-      if format == :reverse_ed
-        encode("#{ED_DIFF_OP_ACTION[@blocks[0].op]}#{context_range(:old, " ")}\n")
-      else
-        encode("#{context_range(:old, ",")}#{ED_DIFF_OP_ACTION[@blocks[0].op]}\n")
-      end
-
-    unless @blocks[0].insert.empty?
-      @data_new[@start_new..@end_new].each do |e|
-        s << e.chomp + encode("\n")
-      end
-      s << encode(".\n")
-    end
-    s
-  end
-  private :ed_diff
-
   # Generate a range of item numbers to print. Only print 1 number if the
   # range has only one item in it. Otherwise, it's 'start,end'
   def context_range(mode, op)
@@ -356,22 +321,12 @@ class Diff::LCS::Hunk
     end
   end
 
-  if String.method_defined?(:encoding)
-    def encode(literal, target_encoding = @preferred_data_encoding)
-      literal.encode target_encoding
-    end
+  def encode(literal, target_encoding = @preferred_data_encoding)
+    literal.encode target_encoding
+  end
 
-    def encode_as(string, *args)
-      args.map { |arg| arg.encode(string.encoding) }
-    end
-  else
-    def encode(literal, _target_encoding = nil)
-      literal
-    end
-
-    def encode_as(_string, *args)
-      args
-    end
+  def encode_as(string, *args)
+    args.map { |arg| arg.encode(string.encoding) }
   end
 
   private :encode
