@@ -8,6 +8,8 @@ RSpec.describe "bin/ldiff" do
   # standard:disable Style/HashSyntax
   fixtures = [
     {:name => "diff", :left => "aX", :right => "bXaX", :diff => 1},
+    {:name => "diff.missing_new_line1", :left => "four_lines", :right => "four_lines_with_missing_new_line", :diff => 1},
+    {:name => "diff.missing_new_line2", :left => "four_lines_with_missing_new_line", :right => "four_lines", :diff => 1},
     {:name => "diff.bin1", :left => "file1.bin", :right => "file1.bin", :diff => 0},
     {:name => "diff.bin2", :left => "file1.bin", :right => "file2.bin", :diff => 1},
     {:name => "diff.chef", :left => "old-chef", :right => "new-chef", :diff => 1},
