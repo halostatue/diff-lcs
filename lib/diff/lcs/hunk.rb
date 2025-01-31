@@ -27,6 +27,8 @@ class Diff::LCS::Hunk
 
     @data_old = data_old
     @data_new = data_new
+    @old_empty = data_old.empty? || (data_old.size == 1 && data_old[0].empty?)
+    @new_empty = data_new.empty? || (data_new.size == 1 && data_new[0].empty?)
 
     before = after = file_length_difference
     after += @blocks[0].diff_size
@@ -131,10 +133,15 @@ class Diff::LCS::Hunk
 
   # Note that an old diff can't have any context. Therefore, we know that
   # there's only one block in the hunk.
-  def old_diff(_last = false)
+  def old_diff(last = false)
     warn "Expecting only one block in an old diff hunk!" if @blocks.size > 1
 
     block = @blocks[0]
+
+    if last
+      old_missing_newline = !@old_empty && missing_last_newline?(@data_old)
+      new_missing_newline = !@new_empty && missing_last_newline?(@data_new)
+    end
 
     # Calculate item number range. Old diff range is just like a context
     # diff range, except the ranges are on one line with the action between
@@ -146,11 +153,14 @@ class Diff::LCS::Hunk
       @data_old[@start_old..@end_old].each { |e| s << encode("< ") + e.chomp + encode("\n") }
     end
 
+    s << encode("\\ No newline at end of file\n") if old_missing_newline && !new_missing_newline
     s << encode("---\n") if block.op == "!"
 
     unless block.insert.empty?
       @data_new[@start_new..@end_new].each { |e| s << encode("> ") + e.chomp + encode("\n") }
     end
+
+    s << encode("\\ No newline at end of file\n") if new_missing_newline && !old_missing_newline
 
     s
   end
@@ -178,8 +188,8 @@ class Diff::LCS::Hunk
     last_block = blocks[-1]
 
     if last
-      old_missing_newline = missing_last_newline?(@data_old)
-      new_missing_newline = missing_last_newline?(@data_new)
+      old_missing_newline = !@old_empty && missing_last_newline?(@data_old)
+      new_missing_newline = !@new_empty && missing_last_newline?(@data_new)
     end
 
     @blocks.each do |block|
@@ -273,8 +283,18 @@ class Diff::LCS::Hunk
   end
   private :context_diff
 
-  def ed_diff(format, _last = false)
+  def ed_diff(format, last)
     warn "Expecting only one block in an old diff hunk!" if @blocks.size > 1
+    if last
+      # ed script doesn't support well incomplete lines
+      warn "<old_file>: No newline at end of file\n" if !@old_empty && missing_last_newline?(@data_old)
+      warn "<new_file>: No newline at end of file\n" if !@new_empty && missing_last_newline?(@data_new)
+
+      if @blocks[0].op == "!"
+        return +"" if @blocks[0].changes[0].element == @blocks[0].changes[1].element + "\n"
+        return +"" if @blocks[0].changes[0].element + "\n" == @blocks[0].changes[1].element
+      end
+    end
 
     s =
       if format == :reverse_ed
