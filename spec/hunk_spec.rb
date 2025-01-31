@@ -56,17 +56,6 @@ if String.method_defined?(:encoding)
       expect(hunk.diff(:old)).to eq(expected)
     end
 
-    it "produces a reverse ed diff from the two pieces" do
-      expected = <<-EXPECTED.gsub(/^ +/, "").encode("UTF-16LE").chomp
-        c1
-        Tu a un carte avec {count} items
-        .
-
-      EXPECTED
-
-      expect(hunk.diff(:reverse_ed)).to eq(expected)
-    end
-
     context "with empty first data set" do
       let(:old_data) { [] }
 

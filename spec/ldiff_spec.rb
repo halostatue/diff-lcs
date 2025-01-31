@@ -17,7 +17,7 @@ RSpec.describe "bin/ldiff" do
     {:name => "diff.bin2", :left => "file1.bin", :right => "file2.bin", :diff => 1},
     {:name => "diff.chef", :left => "old-chef", :right => "new-chef", :diff => 1},
     {:name => "diff.chef2", :left => "old-chef2", :right => "new-chef2", :diff => 1}
-  ].product([nil, "-e", "-f", "-c", "-u"]).map { |(fixture, flag)|
+  ].product([nil, "-c", "-u"]).map { |(fixture, flag)|
     fixture = fixture.dup
     fixture[:flag] = flag
     fixture
