@@ -81,13 +81,11 @@ class Diff::LCS::Hunk
     old_size = @data_old.size
 
     add_end =
-      if (@end_old + context) > old_size
-        old_size - @end_old
+      if (@end_old + context) >= old_size
+        old_size - @end_old - 1
       else
         context
       end
-
-    add_end = @max_diff_size if add_end >= old_size
 
     @end_old += add_end
     @end_new += add_end
@@ -168,7 +166,7 @@ class Diff::LCS::Hunk
 
   def unified_diff(last = false)
     # Calculate item number range.
-    s = encode("@@ -#{unified_range(:old, last)} +#{unified_range(:new, last)} @@\n")
+    s = encode("@@ -#{unified_range(:old)} +#{unified_range(:new)} @@\n")
 
     # Outlist starts containing the hunk of the old file. Removing an item
     # just means putting a '-' in front of it. Inserting an item requires
@@ -223,8 +221,8 @@ class Diff::LCS::Hunk
 
   def context_diff(last = false)
     s = encode("***************\n")
-    s << encode("*** #{context_range(:old, ",", last)} ****\n")
-    r = context_range(:new, ",", last)
+    s << encode("*** #{context_range(:old, ",")} ****\n")
+    r = context_range(:new, ",")
 
     if last
       old_missing_newline = missing_last_newline?(@data_old)
@@ -315,16 +313,13 @@ class Diff::LCS::Hunk
 
   # Generate a range of item numbers to print. Only print 1 number if the
   # range has only one item in it. Otherwise, it's 'start,end'
-  def context_range(mode, op, last = false)
+  def context_range(mode, op)
     case mode
     when :old
       s, e = (@start_old + 1), (@end_old + 1)
     when :new
       s, e = (@start_new + 1), (@end_new + 1)
     end
-
-    e -= 1 if last
-    e = 1 if e.zero?
 
     (s < e) ? "#{s}#{op}#{e}" : e.to_s
   end
@@ -333,7 +328,7 @@ class Diff::LCS::Hunk
   # Generate a range of item numbers to print for unified diff. Print number
   # where block starts, followed by number of lines in the block
   # (don't print number of lines if it's 1)
-  def unified_range(mode, last)
+  def unified_range(mode)
     case mode
     when :old
       s, e = (@start_old + 1), (@end_old + 1)
@@ -341,10 +336,9 @@ class Diff::LCS::Hunk
       s, e = (@start_new + 1), (@end_new + 1)
     end
 
-    length = e - s + (last ? 0 : 1)
+    length = e - s + 1
 
-    first = (length < 2) ? e : s # "strange, but correct"
-    (length <= 1) ? first.to_s : "#{first},#{length}"
+    (length <= 1) ? e.to_s : "#{s},#{length}"
   end
   private :unified_range
 
