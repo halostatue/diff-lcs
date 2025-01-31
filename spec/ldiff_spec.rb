@@ -7,11 +7,11 @@ RSpec.describe "bin/ldiff" do
 
   # standard:disable Style/HashSyntax
   fixtures = [
-    {:name => "output.diff", :left => "aX", :right => "bXaX", :diff => 1},
-    {:name => "output.diff.bin1", :left => "file1.bin", :right => "file1.bin", :diff => 0},
-    {:name => "output.diff.bin2", :left => "file1.bin", :right => "file2.bin", :diff => 1},
-    {:name => "output.diff.chef", :left => "old-chef", :right => "new-chef", :diff => 1},
-    {:name => "output.diff.chef2", :left => "old-chef2", :right => "new-chef2", :diff => 1}
+    {:name => "diff", :left => "aX", :right => "bXaX", :diff => 1},
+    {:name => "diff.bin1", :left => "file1.bin", :right => "file1.bin", :diff => 0},
+    {:name => "diff.bin2", :left => "file1.bin", :right => "file2.bin", :diff => 1},
+    {:name => "diff.chef", :left => "old-chef", :right => "new-chef", :diff => 1},
+    {:name => "diff.chef2", :left => "old-chef2", :right => "new-chef2", :diff => 1}
   ].product([nil, "-e", "-f", "-c", "-u"]).map { |(fixture, flag)|
     fixture = fixture.dup
     fixture[:flag] = flag
@@ -26,13 +26,14 @@ RSpec.describe "bin/ldiff" do
       "spec/fixtures/#{fixture[:right]}",
       "#",
       "=>",
-      "spec/fixtures/ldiff/#{fixture[:name]}#{fixture[:flag]}"
+      "spec/fixtures/ldiff/output.#{fixture[:name]}#{fixture[:flag]}"
     ].join(" ")
 
     it desc do
-      ldiff_output, ldiff_status = run_ldiff(fixture)
-      expect(ldiff_status).to eq(fixture[:diff])
-      expect(ldiff_output).to eq(read_fixture(fixture))
+      stdout, stderr, status = run_ldiff(fixture)
+      expect(status).to eq(fixture[:diff])
+      expect(stderr).to eq(read_fixture(fixture, mode: "error", allow_missing: true))
+      expect(stdout).to eq(read_fixture(fixture, mode: "output", allow_missing: false))
     end
   end
 
@@ -40,10 +41,13 @@ RSpec.describe "bin/ldiff" do
     test_ldiff(fixture)
   end
 
-  def read_fixture(options)
+  def read_fixture(options, mode: "output", allow_missing: false)
     fixture = options.fetch(:name)
     flag = options.fetch(:flag)
-    name = "spec/fixtures/ldiff/#{fixture}#{flag}"
+    name = "spec/fixtures/ldiff/#{mode}.#{fixture}#{flag}"
+
+    return "" if !::File.exist?(name) && allow_missing
+
     data = IO.__send__(IO.respond_to?(:binread) ? :binread : :read, name)
     clean_data(data, flag)
   end
@@ -86,7 +90,6 @@ RSpec.describe "bin/ldiff" do
       system("ruby -Ilib bin/ldiff #{flag} spec/fixtures/#{left} spec/fixtures/#{right}")
     end
 
-    expect(stderr).to be_empty if RUBY_VERSION >= "1.9"
-    [clean_data(stdout, flag), $?.exitstatus]
+    [clean_data(stdout, flag), stderr, $?.exitstatus]
   end
 end
