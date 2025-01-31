@@ -296,9 +296,9 @@ class Diff::LCS::Hunk
 
     s =
       if format == :reverse_ed
-        encode("#{ED_DIFF_OP_ACTION[@blocks[0].op]}#{context_range(:old, ",")}\n")
+        encode("#{ED_DIFF_OP_ACTION[@blocks[0].op]}#{context_range(:old, " ")}\n")
       else
-        encode("#{context_range(:old, " ")}#{ED_DIFF_OP_ACTION[@blocks[0].op]}\n")
+        encode("#{context_range(:old, ",")}#{ED_DIFF_OP_ACTION[@blocks[0].op]}\n")
       end
 
     unless @blocks[0].insert.empty?
