@@ -5,7 +5,9 @@ require "cgi"
 # Produce a simple HTML diff view.
 class Diff::LCS::HTMLDiff
   class << self
+    # standard:disable ThreadSafety/ClassAndModuleAttributes
     attr_accessor :can_expand_tabs # :nodoc:
+    # standard:enable ThreadSafety/ClassAndModuleAttributes
   end
   self.can_expand_tabs = true
 
