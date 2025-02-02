@@ -22,7 +22,7 @@ class Diff::LCS::Hunk
     end
 
     if String.method_defined?(:encoding)
-      @preferred_data_encoding = data_old.fetch(0) { data_new.fetch(0, "") }.encoding
+      @preferred_data_encoding = data_old.fetch(0) { data_new.fetch(0) { "" } }.encoding
     end
 
     @data_old = data_old

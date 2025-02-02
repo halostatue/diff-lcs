@@ -421,7 +421,7 @@ class << Diff::LCS
   #                                 occurred.
   #
   # #traverse_balanced might be a bit slower than #traverse_sequences,
-  # noticable only while processing huge amounts of data.
+  # noticeable only while processing huge amounts of data.
   #
   # == Algorithm
   #

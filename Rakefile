@@ -35,15 +35,15 @@ end
 _spec = Hoe.spec "diff-lcs" do
   developer("Austin Ziegler", "halostatue@gmail.com")
 
-  self.history_file = "History.md"
-  self.readme_file = "README.rdoc"
+  self.history_file = "CHANGELOG.md"
+  self.readme_file = "README.md"
   self.licenses = ["MIT", "Artistic-1.0-Perl", "GPL-2.0-or-later"]
 
   require_ruby_version ">= 1.8"
 
   spec_extras[:metadata] = ->(val) {
     val["rubygems_mfa_required"] = "true"
-    val["changelog_uri"] = "https://github.com/halostatue/diff-lcs/blob/main/History.md"
+    val["changelog_uri"] = "https://github.com/halostatue/diff-lcs/blob/main/CHANGELOG.md"
   }
 
   extra_dev_deps << ["hoe", ">= 3.0", "< 5"]
