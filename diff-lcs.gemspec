@@ -1,15 +1,15 @@
 # -*- encoding: utf-8 -*-
-# stub: diff-lcs 1.5.1 ruby lib
+# stub: diff-lcs 1.6.0 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "diff-lcs".freeze
-  s.version = "1.5.1".freeze
+  s.version = "1.6.0".freeze
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.metadata = { "changelog_uri" => "https://github.com/halostatue/diff-lcs/blob/main/CHANGELOG.md", "rubygems_mfa_required" => "true" } if s.respond_to? :metadata=
   s.require_paths = ["lib".freeze]
   s.authors = ["Austin Ziegler".freeze]
-  s.date = "2025-02-02"
+  s.date = "2025-02-13"
   s.description = "Diff::LCS computes the difference between two Enumerable sequences using the\nMcIlroy-Hunt longest common subsequence (LCS) algorithm. It includes utilities\nto create a simple HTML diff output format and a standard diff-like tool.\n\nThis is release 1.4.3, providing a simple extension that allows for\nDiff::LCS::Change objects to be treated implicitly as arrays and fixes a number\nof formatting issues.\n\nRuby versions below 2.5 are soft-deprecated, which means that older versions are\nno longer part of the CI test suite. If any changes have been introduced that\nbreak those versions, bug reports and patches will be accepted, but it will be\nup to the reporter to verify any fixes prior to release. The next major release\nwill completely break compatibility.".freeze
   s.email = ["halostatue@gmail.com".freeze]
   s.executables = ["htmldiff".freeze, "ldiff".freeze]

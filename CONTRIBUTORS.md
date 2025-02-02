@@ -1,6 +1,6 @@
 # Contributors
 
-- Austin Ziegler created diff-lcs.
+- Austin Ziegler (@halostatue) created diff-lcs.
 
 Thanks to everyone else who has contributed to diff-lcs over the years:
 
@@ -11,6 +11,7 @@ Thanks to everyone else who has contributed to diff-lcs over the years:
 - Akinori Musha
 - Artem Ignatyev
 - Brandon Fish
+- Baptiste Courtois (@annih)
 - Camille Drapier
 - Cédric Boutillier
 - Gregg Kellogg

@@ -1,11 +1,30 @@
 # Changelog
 
-## NEXT / 2025-MM-DD
+## 1.6.0 / 2025-02-13
+
+- Baptiste Courtois (@annih) has done significant work on making `bin/ldiff`
+  work better, contributing a number of issues and pull requests. These include:
+
+  - Separation of command parsing from diff-generation in `Diff::LCS::Ldiff`
+    code extraction making it easier to use separately from the `bin/ldiff`
+    command in [#103][pull-103]. This partially resolves [#46][issue-46].
+
+  - Improvement of binary and empty file detection and tests in [#104][pull-104]
+    and [#105][pull-105]. This resolves issues [#100][issue-100],
+    [#102][issue-102].
+
+  - Various ldiff fixes for output [#101][pull-101] resolves issues
+    [#106][issue-106] (ldiff ed scripts are inverted), [#107][issue-107] (ldiff
+    hunk ranges are incorrect; regression or incorrect fix for [#60][issue-60]),
+    and [#95][issue-95].
 
 - Patrick Linnane fixed various minor typos. [#93][pull-93]
 
 - Mark Young added a Changelog link to the RubyGems metadata. [#92][pull-92]
   This has been modified to incorporate it into the README.
+
+- Updated the documentation on `Diff::LCS#lcs` to be clearer about the
+  requirements for object equality comparison. This resolves [#70][issue-70].
 
 - Governance:
 
@@ -55,7 +74,7 @@
     That is, `LCS(s2, s1)` should produce a sequence that is transitive with
     `LCS(s1, s2)` on traversal, and applying the diff computed from those
     results would result in equivalent changes that could be played forward or
-    backward as appropriate. [#71][pull-], [#75][pull-75]
+    backward as appropriate. [#71][pull-71], [#75][pull-75]
 
   - The above fix resulted in a changed order of the longest common subsequence
     when callbacks were applied. After analysis, it was determined that the
@@ -413,13 +432,20 @@
 [issue-38]: https://github.com/halostatue/diff-lcs/issues/38
 [issue-43]: https://github.com/halostatue/diff-lcs/issues/43
 [issue-44]: https://github.com/halostatue/diff-lcs/issues/44
+[issue-46]: https://github.com/halostatue/diff-lcs/issues/46
 [issue-48]: https://github.com/halostatue/diff-lcs/issues/48
 [issue-53]: https://github.com/halostatue/diff-lcs/issues/53
 [issue-57]: https://github.com/halostatue/diff-lcs/issues/57
 [issue-60]: https://github.com/halostatue/diff-lcs/issues/60
 [issue-63]: https://github.com/halostatue/diff-lcs/issues/63
 [issue-65]: https://github.com/halostatue/diff-lcs/issues/65
+[issue-70]: https://github.com/halostatue/diff-lcs/issues/70
 [issue-91]: https://github.com/halostatue/diff-lcs/issues/91
+[issue-95]: https://github.com/halostatue/diff-lcs/issues/95
+[issue-100]: https://github.com/halostatue/diff-lcs/issues/100
+[issue-102]: https://github.com/halostatue/diff-lcs/issues/102
+[issue-106]: https://github.com/halostatue/diff-lcs/issues/106
+[issue-107]: https://github.com/halostatue/diff-lcs/issues/107
 [pull-08]: https://github.com/halostatue/diff-lcs/pull/8
 [pull-09]: https://github.com/halostatue/diff-lcs/pull/9
 [pull-10]: https://github.com/halostatue/diff-lcs/pull/10
@@ -451,6 +477,10 @@
 [pull-90]: https://github.com/halostatue/diff-lcs/pull/90
 [pull-92]: https://github.com/halostatue/diff-lcs/pull/92
 [pull-93]: https://github.com/halostatue/diff-lcs/pull/93
+[pull-101]: https://github.com/halostatue/diff-lcs/pull/101
+[pull-103]: https://github.com/halostatue/diff-lcs/pull/103
+[pull-104]: https://github.com/halostatue/diff-lcs/pull/104
+[pull-105]: https://github.com/halostatue/diff-lcs/pull/105
 [rspec-expectations#200]: https://github.com/rspec/rspec-expectations/pull/200
 [rspec-expectations#219]: https://github.com/rspec/rspec-expectations/issues/219
 [rspec-expectations#238]: https://github.com/rspec/rspec-expectations/issues/238

@@ -49,7 +49,7 @@ module Diff; end unless defined? Diff
 #          a x b y c z p d q
 #    a b c a x b y c z
 module Diff::LCS
-  VERSION = "1.5.1"
+  VERSION = "1.6.0"
 end
 
 require "diff/lcs/callbacks"
