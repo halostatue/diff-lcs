@@ -44,12 +44,6 @@ class << Diff::LCS::Ldiff
         @format = :unified
         @lines = ctx || 3
       end
-      o.on("-e", "Creates an 'ed' script to change", "oldfile to newfile.") do |_ctx|
-        @format = :ed
-      end
-      o.on("-f", "Creates an 'ed' script to change", "oldfile to newfile in reverse order.") do |_ctx|
-        @format = :reverse_ed
-      end
       o.on(
         "-a", "--text",
         "Treat the files as text and compare them", "line-by-line, even if they do not seem", "to be text."
@@ -140,11 +134,6 @@ class << Diff::LCS::Ldiff
     # Otherwise, print out the old one.
     oldhunk = hunk = nil
 
-    if @format == :ed
-      real_output = output
-      output = []
-    end
-
     diffs.each do |piece|
       begin # rubocop:disable Style/RedundantBegin
         hunk = Diff::LCS::Hunk.new(data_old, data_new, piece, @lines, file_length_difference)
@@ -164,8 +153,6 @@ class << Diff::LCS::Ldiff
     last << "\n" if last.respond_to?(:end_with?) && !last.end_with?("\n")
 
     output << last
-
-    output.reverse_each { |e| real_output << e.diff(:ed_finish) } if @format == :ed
 
     1
   end
