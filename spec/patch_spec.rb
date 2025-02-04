@@ -181,7 +181,7 @@ describe "Diff::LCS.patch" do
   # above.
   describe "fix bug 891: patchsets do not contain the last equal part" do
     before :each do
-      @s1 = %w[a b c d   e f g h i j k] # rubocop:disable Layout/SpaceInsideArrayPercentLiteral
+      @s1 = %w[a b c d   e f g h i j k] # standard:disable Layout/SpaceInsideArrayPercentLiteral
       @s2 = %w[a b c d D e f g h i j k]
     end
 
