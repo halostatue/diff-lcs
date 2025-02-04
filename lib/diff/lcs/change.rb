@@ -4,7 +4,7 @@
 # addition of an element from either the old or the new sequenced
 # enumerable.
 class Diff::LCS::Change
-  IntClass = 1.class # Fixnum is deprecated in Ruby 2.4 # rubocop:disable Naming/ConstantName
+  IntClass = 1.class # Fixnum is deprecated in Ruby 2.4 # standard:disable Naming/ConstantName
 
   # The only actions valid for changes are '+' (add), '-' (delete), '='
   # (no change), '!' (changed), '<' (tail changes from first sequence), or

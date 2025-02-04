@@ -157,7 +157,7 @@ ldiff #{Diff::LCS::VERSION}
     # Otherwise, print out the old one.
     oldhunk = hunk = nil
     diffs.each do |piece|
-      begin # rubocop:disable Style/RedundantBegin
+      begin
         hunk = Diff::LCS::Hunk.new(data_old, data_new, piece, lines, file_length_difference)
         file_length_difference = hunk.file_length_difference
 
