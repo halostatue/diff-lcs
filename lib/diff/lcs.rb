@@ -62,11 +62,12 @@ module Diff::LCS
   #   lcs = seq1.lcs(seq2)
   #
   # A note when using objects: Diff::LCS only works properly when each object
-  # can be used as a key in a Hash, which typically means that the objects must
-  # implement Object#eql? in a way that two identical values compare
-  # identically for key purposes. That is:
+  # can be used as a key in a Hash. This means that those objects must implement
+  # the methods +#hash+ and +#eql?+ such that two objects containing identical values
+  # compare identically for key purposes. That is:
   #
-  #   O.new('a').eql?(O.new('a')) == true
+  #   O.new('a').eql?(O.new('a')) == true &&
+  #   O.new('a').hash == O.new('a').hash
   def lcs(other, &block) # :yields: self[i] if there are matched subsequences
     Diff::LCS.lcs(self, other, &block)
   end
