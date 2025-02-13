@@ -3,6 +3,8 @@ name: Reviewdog
 on:
   pull_request:
 
+permissions: {}
+
 jobs:
   typos:
     if: ${{ github.event.action != 'closed' }}
