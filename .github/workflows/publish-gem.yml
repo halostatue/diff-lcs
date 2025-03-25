@@ -1,0 +1,73 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - lib/diff/lcs/version.rb
+
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+    paths:
+      - lib/diff/lcs/version.rb
+
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  release:
+    if: github.repository == 'halostatue/diff-lcs' && (github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.merged))
+
+    runs-on: ubuntu-latest
+    environment: release
+
+    env:
+      rubygems_release_gem: true
+
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - name: Harden the runner
+        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            fulcio.sigstore.dev:443
+            github.com:443
+            index.rubygems.org:443
+            objects.githubusercontent.com:443
+            rekor.sigstore.dev:443
+            rubygems.org:443
+            tuf-repo-cdn.sigstore.dev:443
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: true
+
+      - id: rubygems
+        run: |
+          ruby -e \
+            'print "version=", Gem::Specification.load(ARGV[0]).rubygems_version, "\n"' \
+            diff-lcs.gemspec >>"${GITHUB_OUTPUT}"
+
+      - uses: ruby/setup-ruby@1a615958ad9d422dd932dc1d5823942ee002799f # v1.227.0
+        with:
+          bundler-cache: false
+          ruby-version: ruby
+
+      - name: Install dependencies
+        run: |
+          gem update --system="${RUBYGEMS_VERSION}"
+          bundle install --jobs 4 --retry 3
+        env:
+          RUBYGEMS_VERSION: ${{ steps.rubygems.outputs.version }}
+
+      - uses: rubygems/release-gem@a25424ba2ba8b387abc8ef40807c2c85b96cbe32 # v1.1.1

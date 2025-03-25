@@ -4,11 +4,13 @@ require "rspec/core/rake_task"
 require "hoe"
 require "rake/clean"
 
-Hoe.plugin :cov
-Hoe.plugin :doofus
-Hoe.plugin :gemspec2
-Hoe.plugin :git2
+Hoe.plugin :halostatue
 Hoe.plugin :rubygems
+
+Hoe.plugins.delete :debug
+Hoe.plugins.delete :newb
+Hoe.plugins.delete :publish
+Hoe.plugins.delete :signing
 
 if RUBY_VERSION < "1.9"
   class Array # :nodoc:
@@ -35,21 +37,21 @@ end
 _spec = Hoe.spec "diff-lcs" do
   developer("Austin Ziegler", "halostatue@gmail.com")
 
+  # self.trusted_release = ENV["rubygems_release_gem"] == "true"
+
+  require_ruby_version ">= 1.8"
+
   self.history_file = "CHANGELOG.md"
   self.readme_file = "README.md"
   self.licenses = ["MIT", "Artistic-1.0-Perl", "GPL-2.0-or-later"]
 
-  require_ruby_version ">= 1.8"
-
   spec_extras[:metadata] = ->(val) {
     val["rubygems_mfa_required"] = "true"
-    val["changelog_uri"] = "https://github.com/halostatue/diff-lcs/blob/main/CHANGELOG.md"
+    # val["changelog_uri"] = "https://github.com/halostatue/diff-lcs/blob/main/CHANGELOG.md"
   }
 
-  extra_dev_deps << ["hoe", ">= 3.0", "< 5"]
-  extra_dev_deps << ["hoe-doofus", "~> 1.0"]
-  extra_dev_deps << ["hoe-gemspec2", "~> 1.1"]
-  extra_dev_deps << ["hoe-git2", "~> 1.7"]
+  extra_dev_deps << ["hoe", "~> 4.0"]
+  extra_dev_deps << ["hoe-halostatue", "~> 2.0"]
   extra_dev_deps << ["hoe-rubygems", "~> 1.0"]
   extra_dev_deps << ["rspec", ">= 2.0", "< 4"]
   extra_dev_deps << ["rake", ">= 10.0", "< 14"]
@@ -69,11 +71,11 @@ task :default => :spec unless Rake::Task["default"].prereqs.include?("spec")
 task :test => :spec unless Rake::Task["test"].prereqs.include?("spec")
 # standard:enable Style/HashSyntax
 
-if RUBY_VERSION >= "2.0" && RUBY_ENGINE == "ruby"
+if RUBY_VERSION >= "3.0" && RUBY_ENGINE == "ruby"
   namespace :spec do
     desc "Runs test coverage. Only works Ruby 2.0+ and assumes 'simplecov' is installed."
     task :coverage do
-      ENV["COVERAGE"] = "yes"
+      ENV["COVERAGE"] = "true"
       Rake::Task["spec"].execute
     end
   end
