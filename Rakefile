@@ -37,7 +37,7 @@ end
 _spec = Hoe.spec "diff-lcs" do
   developer("Austin Ziegler", "halostatue@gmail.com")
 
-  # self.trusted_release = ENV["rubygems_release_gem"] == "true"
+  self.trusted_release = ENV["rubygems_release_gem"] == "true"
 
   require_ruby_version ">= 1.8"
 
@@ -47,7 +47,6 @@ _spec = Hoe.spec "diff-lcs" do
 
   spec_extras[:metadata] = ->(val) {
     val["rubygems_mfa_required"] = "true"
-    # val["changelog_uri"] = "https://github.com/halostatue/diff-lcs/blob/main/CHANGELOG.md"
   }
 
   extra_dev_deps << ["hoe", "~> 4.0"]
