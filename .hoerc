@@ -1,6 +1,6 @@
 ---
 exclude: !ruby/regexp '/
-  \.gemspec$
+    \.gemspec$
   | \.tmp$
   | \.swp$
   | ^\.(?:
@@ -23,15 +23,15 @@ exclude: !ruby/regexp '/
       | standard.*
       | travis
       | unused
-      )\.yml
+    )\.yml$
     | (?:
         typos
-      )\.toml
-    )$
+    )\.toml$
+  )
   | ^\.(?:
       bundle
-    | github
     | git
+    | github
     | hg
     | idea
     | svn
@@ -43,7 +43,7 @@ exclude: !ruby/regexp '/
   | Vagrantfile$
   | ^(?:
         support
-      | types
+      | research
       | vendor
   )\/
   /x'

@@ -3,12 +3,19 @@
 
 source "https://rubygems.org/"
 
-gem "debug", platforms: [:mri_31]
+if ENV["DEV"]
+  gem "debug", platforms: [:mri]
+end
 
-if RUBY_VERSION.start_with?("3.")
-  gem "standard"
-  gem "standard-thread_safety"
-  gem "fasterer"
+if ENV["COVERAGE"]
+  gem "simplecov", require: false, platforms: [:mri_34]
+  gem "simplecov-lcov", require: false, platforms: [:mri_34]
+end
+
+if ENV["MAINTENANCE"]
+  gem "standard", require: false, platforms: [:mri_34]
+  gem "standard-thread_safety", require: false, platforms: [:mri_34]
+  gem "fasterer", require: false, platforms: [:mri_34]
 end
 
 gemspec

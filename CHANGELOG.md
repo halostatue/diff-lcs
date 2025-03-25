@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.6.1 / 2025-03-25
+
+- Performed further work on `Diff::LCS::Ldiff` improvements ([#46][issue-46])
+  and resolve several thread safety issues cleanly by making it a class.
+  [#129][pull-129]
+
+- Restructure the project to be more consistent with the rest of the projects
+  that I manage.
+
+- Increased GitHub action security.
+
+- Added [trusted publishing][tp] for fully automated releases.
+
 ## 1.6.0 / 2025-02-13
 
 - Baptiste Courtois (@annih) has done significant work on making `bin/ldiff`
@@ -481,6 +494,7 @@
 [pull-103]: https://github.com/halostatue/diff-lcs/pull/103
 [pull-104]: https://github.com/halostatue/diff-lcs/pull/104
 [pull-105]: https://github.com/halostatue/diff-lcs/pull/105
+[pull-129]: https://github.com/halostatue/diff-lcs/pull/129
 [rspec-expectations#200]: https://github.com/rspec/rspec-expectations/pull/200
 [rspec-expectations#219]: https://github.com/rspec/rspec-expectations/issues/219
 [rspec-expectations#238]: https://github.com/rspec/rspec-expectations/issues/238
@@ -489,3 +503,4 @@
 [rubinius#2268]: https://github.com/rubinius/rubinius/issues/2268
 [standard ruby]: https://github.com/standardrb/standard
 [tidelift]: https://tidelift.com/security
+[tp]: https://guides.rubygems.org/trusted-publishing/

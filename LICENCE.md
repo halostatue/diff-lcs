@@ -1,4 +1,4 @@
-# License
+# Licence
 
 This software is available under three licenses: the GNU GPL version 2 (or at
 your option, a later version), the Perl Artistic license, or the MIT license.
