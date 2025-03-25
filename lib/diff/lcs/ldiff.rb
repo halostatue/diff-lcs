@@ -3,11 +3,11 @@
 require "optparse"
 require "diff/lcs/hunk"
 
-module Diff::LCS::Ldiff # :nodoc:
+class Diff::LCS::Ldiff # :nodoc:
   # standard:disable Layout/HeredocIndentation
   BANNER = <<-COPYRIGHT
 ldiff #{Diff::LCS::VERSION}
-  Copyright 2004-2019 Austin Ziegler
+  Copyright 2004-2025 Austin Ziegler
 
   Part of Diff::LCS.
   https://github.com/halostatue/diff-lcs
@@ -24,15 +24,21 @@ ldiff #{Diff::LCS::VERSION}
     end
   end
 
-  class << self
-    attr_reader :format, :lines # :nodoc:
-    attr_reader :file_old, :file_new # :nodoc:
-    attr_reader :data_old, :data_new # :nodoc:
+  attr_reader :format, :lines # :nodoc:
+  attr_reader :file_old, :file_new # :nodoc:
+  attr_reader :data_old, :data_new # :nodoc:
+
+  def self.run(args, input = $stdin, output = $stdout, error = $stderr) # :nodoc:
+    new.run(args, input, output, error)
   end
 
-  def self.run(args, _input = $stdin, output = $stdout, error = $stderr) # :nodoc:
+  def initialize
     @binary = nil
+    @format = :old
+    @lines = 0
+  end
 
+  def run(args, _input = $stdin, output = $stdout, error = $stderr) # :nodoc:
     args.options do |o|
       o.banner = "Usage: #{File.basename($0)} [options] oldfile newfile"
       o.separator ""
@@ -101,7 +107,7 @@ ldiff #{Diff::LCS::VERSION}
     ) ? 1 : 0
   end
 
-  def self.diff?(info_old, info_new, format, output, binary: nil, lines: 0)
+  def diff?(info_old, info_new, format, output, binary: nil, lines: 0)
     case format
     when :context
       char_old = "*" * 3
