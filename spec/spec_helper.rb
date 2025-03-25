@@ -250,100 +250,107 @@ module Diff::LCS::SpecHelper
     new_result
   end
 
-  def simple_callback
-    callbacks = Object.new
-    class << callbacks
-      attr_reader :matched_a
-      attr_reader :matched_b
-      attr_reader :discards_a
-      attr_reader :discards_b
-      attr_reader :done_a
-      attr_reader :done_b
-
-      def reset
-        @matched_a = []
-        @matched_b = []
-        @discards_a = []
-        @discards_b = []
-        @done_a = []
-        @done_b = []
-      end
-
-      def match(event)
-        @matched_a << event.old_element
-        @matched_b << event.new_element
-      end
-
-      def discard_b(event)
-        @discards_b << event.new_element
-      end
-
-      def discard_a(event)
-        @discards_a << event.old_element
-      end
-
-      def finished_a(event)
-        @done_a << [
-          event.old_element, event.old_position,
-          event.new_element, event.new_position
-        ]
-      end
-
-      def finished_b(event)
-        @done_b << [
-          event.old_element, event.old_position,
-          event.new_element, event.new_position
-        ]
-      end
+  class SimpleCallback
+    def initialize
+      reset
     end
-    callbacks.reset
-    callbacks
+
+    attr_reader :matched_a
+    attr_reader :matched_b
+    attr_reader :discards_a
+    attr_reader :discards_b
+    attr_reader :done_a
+    attr_reader :done_b
+
+    def reset
+      @matched_a = []
+      @matched_b = []
+      @discards_a = []
+      @discards_b = []
+      @done_a = []
+      @done_b = []
+      self
+    end
+
+    def match(event)
+      @matched_a << event.old_element
+      @matched_b << event.new_element
+    end
+
+    def discard_b(event)
+      @discards_b << event.new_element
+    end
+
+    def discard_a(event)
+      @discards_a << event.old_element
+    end
+
+    def finished_a(event)
+      @done_a << [
+        event.old_element, event.old_position,
+        event.new_element, event.new_position
+      ]
+    end
+
+    def finished_b(event)
+      @done_b << [
+        event.old_element, event.old_position,
+        event.new_element, event.new_position
+      ]
+    end
+  end
+
+  def simple_callback
+    SimpleCallback.new
+  end
+
+  class SimpleCallbackNoFinishers < SimpleCallback
+    undef :finished_a
+    undef :finished_b
   end
 
   def simple_callback_no_finishers
-    simple = simple_callback
-    class << simple
-      undef :finished_a
-      undef :finished_b
+    SimpleCallbackNoFinishers.new
+  end
+
+  class BalancedCallback
+    def initialize
+      reset
     end
-    simple
+
+    attr_reader :result
+
+    def reset
+      @result = []
+    end
+
+    def match(event)
+      @result << ["=", event.old_position, event.new_position]
+    end
+
+    def discard_a(event)
+      @result << ["<", event.old_position, event.new_position]
+    end
+
+    def discard_b(event)
+      @result << [">", event.old_position, event.new_position]
+    end
+
+    def change(event)
+      @result << ["!", event.old_position, event.new_position]
+    end
   end
 
   def balanced_callback
-    cb = Object.new
-    class << cb
-      attr_reader :result
+    BalancedCallback.new
+  end
 
-      def reset
-        @result = []
-      end
-
-      def match(event)
-        @result << ["=", event.old_position, event.new_position]
-      end
-
-      def discard_a(event)
-        @result << ["<", event.old_position, event.new_position]
-      end
-
-      def discard_b(event)
-        @result << [">", event.old_position, event.new_position]
-      end
-
-      def change(event)
-        @result << ["!", event.old_position, event.new_position]
-      end
-    end
-    cb.reset
-    cb
+  class BalancedCallbackNoChange < BalancedCallback
+    undef :change
   end
 
   def balanced_callback_no_change
-    balanced = balanced_callback
-    class << balanced
-      undef :change
-    end
-    balanced
+    BalancedCallbackNoChange.new
   end
 
   module Matchers
