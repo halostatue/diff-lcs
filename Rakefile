@@ -4,13 +4,17 @@ require "rspec/core/rake_task"
 require "hoe"
 require "rake/clean"
 
+MAINTENANCE = ENV["MAINTENANCE"] == "true"
+BUILD_DOCS = MAINTENANCE || ENV["DOCS"] == "true"
+TRUSTED_RELEASE = ENV["rubygems_release_gem"] == "true"
+
 Hoe.plugin :halostatue
 Hoe.plugin :rubygems
 
 Hoe.plugins.delete :debug
 Hoe.plugins.delete :newb
-Hoe.plugins.delete :publish
 Hoe.plugins.delete :signing
+Hoe.plugins.delete :publish unless BUILD_DOCS
 
 if RUBY_VERSION < "1.9"
   class Array # :nodoc:
@@ -37,7 +41,7 @@ end
 _spec = Hoe.spec "diff-lcs" do
   developer("Austin Ziegler", "halostatue@gmail.com")
 
-  self.trusted_release = ENV["rubygems_release_gem"] == "true"
+  self.trusted_release = TRUSTED_RELEASE
 
   require_ruby_version ">= 1.8"
 
@@ -57,10 +61,23 @@ _spec = Hoe.spec "diff-lcs" do
   extra_dev_deps << ["rdoc", ">= 6.3.1", "< 7"]
 end
 
+if BUILD_DOCS
+  rake_tasks = Rake.application.instance_variable_get('@tasks')
+  tasks = ['publish_docs', 'publish_on_announce', 'debug_email', 'post_blog', 'announce']
+  tasks.each do |task|
+    rake_tasks.delete(task)
+  end
+end
+
 desc "Run all specifications"
 RSpec::Core::RakeTask.new(:spec) do |t|
   rspec_dirs = %w[spec lib].join(":")
   t.rspec_opts = ["-I#{rspec_dirs}"]
+end
+
+task :version do
+  require 'diff/lcs/version'
+  puts Diff::LCS::VERSION
 end
 
 Rake::Task["spec"].actions.uniq! { |a| a.source_location }
@@ -80,9 +97,10 @@ if RUBY_VERSION >= "3.0" && RUBY_ENGINE == "ruby"
   end
 end
 
-task :ruby18 do
-  # standard:disable Layout/HeredocIndentation
-  puts <<-MESSAGE
+if MAINTENANCE
+  task :ruby18 do
+    # standard:disable Layout/HeredocIndentation
+    puts <<-MESSAGE
 You are starting a barebones Ruby 1.8 docker environment. You will need to
 do the following:
 
@@ -93,7 +111,8 @@ do the following:
 
 Don't forget to restore your Gemfile.lock after testing.
 
-  MESSAGE
-  # standard:enable Layout/HeredocIndentation
-  sh "docker run -it --rm -v #{Dir.pwd}:/root/diff-lcs bellbind/docker-ruby18-rails2 bash -l"
+    MESSAGE
+    # standard:enable Layout/HeredocIndentation
+    sh "docker run -it --rm -v #{Dir.pwd}:/root/diff-lcs bellbind/docker-ruby18-rails2 bash -l"
+  end
 end

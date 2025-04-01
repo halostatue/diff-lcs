@@ -16,7 +16,7 @@ Diff::LCS computes the difference between two Enumerable sequences using the
 McIlroy-Hunt longest common subsequence (LCS) algorithm. It includes utilities
 to create a simple HTML diff output format and a standard diff-like tool.
 
-This is release 1.4.3, providing a simple extension that allows for
+This is release 1.6.1, providing a simple extension that allows for
 Diff::LCS::Change objects to be treated implicitly as arrays and fixes a number
 of formatting issues.
 
