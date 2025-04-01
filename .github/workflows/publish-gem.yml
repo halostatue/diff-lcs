@@ -35,7 +35,7 @@ jobs:
 
     steps:
       - name: Harden the runner
-        uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -58,7 +58,7 @@ jobs:
             'print "version=", Gem::Specification.load(ARGV[0]).rubygems_version, "\n"' \
             diff-lcs.gemspec >>"${GITHUB_OUTPUT}"
 
-      - uses: ruby/setup-ruby@e5ac7b085f6e63d49c8973eb0c6e04d876b881f1 # v1.230.0
+      - uses: ruby/setup-ruby@ca041f971d66735f3e5ff1e21cc13e2d51e7e535 # v1.233.0
         with:
           bundler-cache: false
           ruby-version: ruby
@@ -70,4 +70,31 @@ jobs:
         env:
           RUBYGEMS_VERSION: ${{ steps.rubygems.outputs.version }}
 
+      - name: Get gem version
+        run: |
+          echo gem_version="$(rake version)" >>"${GITHUB_OUTPUT}"
+
+      - name: Ensure that gemspec is up-to-date
+        run: |
+          rake gemspec
+
+          if ! git diff >/dev/null 2>/dev/null; then
+            git commit -m "chore: Automatically update gemspec for ${gem_version} for release"
+            git push origin main
+          fi
+
       - uses: rubygems/release-gem@a25424ba2ba8b387abc8ef40807c2c85b96cbe32 # v1.1.1
+
+      - name: Update documentation
+        run: |
+          rake docs
+          git checkout gh-pages
+
+          find . -mindepth 1 -maxdepth 1 \
+            \( ! -name '.git' -a ! -name '.gitignore' -a ! -name 'doc' \) \
+            -exec rm -rf {} +
+
+          cp -r doc/* .
+          git add .
+          git commit -m "Update documentation for ${gem_version}"
+          git push origin gh-pages
