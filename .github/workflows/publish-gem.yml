@@ -70,4 +70,31 @@ jobs:
         env:
           RUBYGEMS_VERSION: ${{ steps.rubygems.outputs.version }}
 
+      - name: Get gem version
+        run: |
+          echo gem_version="$(rake version)" >>"${GITHUB_OUTPUT}"
+
+      - name: Ensure that gemspec is up-to-date
+        run: |
+          rake gemspec
+
+          if ! git diff >/dev/null 2>/dev/null; then
+            git commit -m "chore: Automatically update gemspec for ${gem_version} for release"
+            git push origin main
+          fi
+
       - uses: rubygems/release-gem@a25424ba2ba8b387abc8ef40807c2c85b96cbe32 # v1.1.1
+
+      - name: Update documentation
+        run: |
+          rake docs
+          git checkout gh-pages
+
+          find . -mindepth 1 -maxdepth 1 \
+            \( ! -name '.git' -a ! -name '.gitignore' -a ! -name 'doc' \) \
+            -exec rm -rf {} +
+
+          cp -r doc/* .
+          git add .
+          git commit -m "Update documentation for ${gem_version}"
+          git push origin gh-pages
