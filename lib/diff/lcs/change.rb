@@ -45,9 +45,9 @@ class Diff::LCS::Change
     arr = arr.flatten(1)
     case arr.size
     when 5
-      Diff::LCS::ContextChange.new(*(arr[0...5]))
+      Diff::LCS::ContextChange.new(*arr[0...5])
     when 3
-      Diff::LCS::Change.new(*(arr[0...3]))
+      Diff::LCS::Change.new(*arr[0...3])
     else
       fail "Invalid change array format provided."
     end

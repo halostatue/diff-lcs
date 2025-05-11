@@ -62,8 +62,8 @@ _spec = Hoe.spec "diff-lcs" do
 end
 
 if BUILD_DOCS
-  rake_tasks = Rake.application.instance_variable_get('@tasks')
-  tasks = ['publish_docs', 'publish_on_announce', 'debug_email', 'post_blog', 'announce']
+  rake_tasks = Rake.application.instance_variable_get(:@tasks)
+  tasks = ["publish_docs", "publish_on_announce", "debug_email", "post_blog", "announce"]
   tasks.each do |task|
     rake_tasks.delete(task)
   end
@@ -76,7 +76,7 @@ RSpec::Core::RakeTask.new(:spec) do |t|
 end
 
 task :version do
-  require 'diff/lcs/version'
+  require "diff/lcs/version"
   puts Diff::LCS::VERSION
 end
 
@@ -98,18 +98,15 @@ if RUBY_VERSION >= "3.0" && RUBY_ENGINE == "ruby"
 end
 
 if MAINTENANCE
-  task :ruby18 do
+  task ruby18: :package do
+    require "diff/lcs/version"
     # standard:disable Layout/HeredocIndentation
     puts <<-MESSAGE
-You are starting a barebones Ruby 1.8 docker environment. You will need to
-do the following:
+You are starting a barebones Ruby 1.8 docker environment for testing.
+A snapshot package has been built, so install it with:
 
-- mv Gemfile.lock{,.v2}
-- gem install bundler --version 1.17.2 --no-ri --no-rdoc
-- ruby -S bundle
-- rake
-
-Don't forget to restore your Gemfile.lock after testing.
+    cd diff-lcs
+    gem install pkg/diff-lcs-#{Diff::LCS::VERSION}
 
     MESSAGE
     # standard:enable Layout/HeredocIndentation

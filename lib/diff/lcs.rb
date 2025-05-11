@@ -333,7 +333,7 @@ class << Diff::LCS
         if callbacks.respond_to?(:finished_a) && !run_finished_a
           ax = string ? seq1[-1, 1] : seq1[-1]
           bx = string ? seq2[bj, 1] : seq2[bj]
-          event = Diff::LCS::ContextChange.new(">", (a_size - 1), ax, bj, bx)
+          event = Diff::LCS::ContextChange.new(">", a_size - 1, ax, bj, bx)
           event = yield event if block_given?
           callbacks.finished_a(event)
           run_finished_a = true
@@ -355,7 +355,7 @@ class << Diff::LCS
         if callbacks.respond_to?(:finished_b) && !run_finished_b
           ax = string ? seq1[ai, 1] : seq1[ai]
           bx = string ? seq2[-1, 1] : seq2[-1]
-          event = Diff::LCS::ContextChange.new("<", ai, ax, (b_size - 1), bx)
+          event = Diff::LCS::ContextChange.new("<", ai, ax, b_size - 1, bx)
           event = yield event if block_given?
           callbacks.finished_b(event)
           run_finished_b = true
