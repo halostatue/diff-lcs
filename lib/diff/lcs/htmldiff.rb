@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "cgi"
+require "erb"
 
 # Produce a simple HTML diff view.
 class Diff::LCS::HTMLDiff
@@ -126,8 +126,8 @@ h1 { margin-left: 2em; }
       @right.map! { |line| formatter.expand(line.chomp) }
     end
 
-    @left.map! { |line| CGI.escapeHTML(line.chomp) }
-    @right.map! { |line| CGI.escapeHTML(line.chomp) }
+    @left.map! { |line| ERB::Util.html_escape(line.chomp) }
+    @right.map! { |line| ERB::Util.html_escape(line.chomp) }
 
     # standard:disable Layout/HeredocIndentation
     @options[:output] << <<-OUTPUT
