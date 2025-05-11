@@ -5,5 +5,9 @@ unless 0.respond_to?(:positive?)
     def positive?
       self > 0
     end
+
+    def negative?
+      self < 0
+    end
   end
 end

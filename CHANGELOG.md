@@ -1,8 +1,14 @@
 # Changelog
 
-## NEXT / 2025-MM-DD
+## 1.6.2 / 2025-05-12
 
 - Handle upcoming changes to the `cgi` gem in Ruby 3.5 ([#147][pull-147])
+
+- Fix issues found with `htmldiff` in Ruby 1.8 (which is used approximately
+  never, since the code change which broke Ruby 1.8 was made 6 years ago).
+  [#148][pull-148]
+
+- Fixed some standardrb formatting and configuration issues.
 
 ## 1.6.1 / 2025-03-25
 
@@ -500,6 +506,7 @@
 [pull-105]: https://github.com/halostatue/diff-lcs/pull/105
 [pull-129]: https://github.com/halostatue/diff-lcs/pull/129
 [pull-147]: https://github.com/halostatue/diff-lcs/pull/147
+[pull-148]: https://github.com/halostatue/diff-lcs/pull/148
 [rspec-expectations#200]: https://github.com/rspec/rspec-expectations/pull/200
 [rspec-expectations#219]: https://github.com/rspec/rspec-expectations/issues/219
 [rspec-expectations#238]: https://github.com/rspec/rspec-expectations/issues/238

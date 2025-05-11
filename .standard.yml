@@ -6,8 +6,10 @@ ignore:
   - '*.gemspec'
   - research/**/*
   - pkg/**/*
+  - Gemfile:
+      - Style/HashSyntax
   - Rakefile:
       - Layout/HeredocIndentation
 
 plugins:
-  - standard-thread_safety
+  - rubocop-thread_safety
