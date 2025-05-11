@@ -14,6 +14,7 @@ Thanks to everyone else who has contributed to diff-lcs over the years:
 - Baptiste Courtois (@annih)
 - Camille Drapier
 - Cédric Boutillier
+- @earlopain
 - Gregg Kellogg
 - Jagdeep Singh
 - Jason Gladish
