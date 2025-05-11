@@ -1,5 +1,9 @@
 # Changelog
 
+## NEXT / 2025-MM-DD
+
+- Handle upcoming changes to the `cgi` gem in Ruby 3.5 ([#147][pull-147])
+
 ## 1.6.1 / 2025-03-25
 
 - Performed further work on `Diff::LCS::Ldiff` improvements ([#46][issue-46])
@@ -495,6 +499,7 @@
 [pull-104]: https://github.com/halostatue/diff-lcs/pull/104
 [pull-105]: https://github.com/halostatue/diff-lcs/pull/105
 [pull-129]: https://github.com/halostatue/diff-lcs/pull/129
+[pull-147]: https://github.com/halostatue/diff-lcs/pull/147
 [rspec-expectations#200]: https://github.com/rspec/rspec-expectations/pull/200
 [rspec-expectations#219]: https://github.com/rspec/rspec-expectations/issues/219
 [rspec-expectations#238]: https://github.com/rspec/rspec-expectations/issues/238
