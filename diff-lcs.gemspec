@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
-# stub: diff-lcs 1.6.1 ruby lib
+# stub: diff-lcs 1.6.2 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "diff-lcs".freeze
-  s.version = "1.6.1".freeze
+  s.version = "1.6.2".freeze
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.metadata = { "bug_tracker_uri" => "https://github.com/halostatue/diff-lcs/issues", "changelog_uri" => "https://github.com/halostatue/diff-lcs/blob/main/CHANGELOG.md", "homepage_uri" => "https://github.com/halostatue/diff-lcs", "rubygems_mfa_required" => "true", "source_code_uri" => "https://github.com/halostatue/diff-lcs" } if s.respond_to? :metadata=
