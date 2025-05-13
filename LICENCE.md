@@ -1,6 +1,7 @@
 # Licence
 
-This software is available under three licenses: the GNU GPL version 2 (or at
+This software is available under three licenses, so you can pick which one
+you prefer to use for the _entire_ library: the GNU GPL version 2 (or at 
 your option, a later version), the Perl Artistic license, or the MIT license.
 Note that my preference for licensing is the MIT license, but Algorithm::Diff
 was dually originally licensed with the Perl Artistic and the GNU GPL ("the same
