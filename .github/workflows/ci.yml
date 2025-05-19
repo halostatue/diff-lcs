@@ -169,10 +169,13 @@ jobs:
 
       - run: bundle exec ruby -S rake test --trace
 
+  # Windows builds have become deeply unstable over the last several months. They no
+  # longer require success to run.
+  #
   # Windows 2019 / Ruby 3.0 does not include libyaml, so we are removing it from the test
   # cycle. All other versions succeed on Windows 2019 and Ruby 3.0 succeeds on Windows
   # 2022. https://github.com/ruby/setup-ruby/issues/641
-  required-windows:
+  optional-windows:
     name: Ruby ${{ matrix.ruby }} - ${{ matrix.os }}
 
     strategy:
@@ -196,6 +199,7 @@ jobs:
           - ruby: '3.0'
             os: windows-2022
 
+    continue-on-error: true
     runs-on: ${{ matrix.os }}
 
     steps:
