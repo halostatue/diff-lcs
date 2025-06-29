@@ -21,6 +21,8 @@ permissions: {}
 
 jobs:
   release:
+    name: Publish Gem Version with Trusted Publishing
+
     if: github.repository == 'halostatue/diff-lcs' && (github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.merged))
 
     runs-on: ubuntu-latest
@@ -85,16 +87,12 @@ jobs:
 
       - uses: rubygems/release-gem@a25424ba2ba8b387abc8ef40807c2c85b96cbe32 # v1.1.1
 
-      - name: Update documentation
+      - name: Show the status if release failed
+        if: failure()
         run: |
-          rake docs
-          git checkout gh-pages
+          git status
+          git diff
 
-          find . -mindepth 1 -maxdepth 1 \
-            \( ! -name '.git' -a ! -name '.gitignore' -a ! -name 'doc' \) \
-            -exec rm -rf {} +
-
-          cp -r doc/* .
-          git add .
-          git commit -m "Update documentation for ${gem_version}"
-          git push origin gh-pages
+  publish_docs:
+    needs: release
+    uses: ./.github/workflows/publish-docs.yml
