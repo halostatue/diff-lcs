@@ -10,8 +10,6 @@ Rakefile
 SECURITY.md
 bin/htmldiff
 bin/ldiff
-docs/COPYING.txt
-docs/artistic.txt
 lib/diff-lcs.rb
 lib/diff/lcs.rb
 lib/diff/lcs/array.rb
@@ -25,7 +23,9 @@ lib/diff/lcs/internals.rb
 lib/diff/lcs/ldiff.rb
 lib/diff/lcs/string.rb
 lib/diff/lcs/version.rb
-mise.toml
+licenses/COPYING.txt
+licenses/artistic.txt
+licenses/dco.txt
 spec/change_spec.rb
 spec/diff_spec.rb
 spec/fixtures/123_x

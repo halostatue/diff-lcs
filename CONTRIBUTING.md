@@ -1,40 +1,54 @@
 # Contributing
 
-Contribution to diff-lcs is encouraged in any form: a bug report, a feature
-request, or code contributions. There are a few DOs and DON'Ts for
-contributions.
+Contribution to diff-lcs is encouraged: bug reports, feature requests, or code
+contributions. There are a few DOs and DON'Ts that should be followed.
 
-- DO:
+## DO
 
-  - Keep the coding style that already exists for any updated Ruby code (support
-    or otherwise). I use [Standard Ruby][standardrb] for linting and formatting.
+- Keep the coding style that already exists for any updated Ruby code (support
+  or otherwise). I use [Standard Ruby][standardrb] for linting and formatting.
 
-  - Use thoughtfully-named topic branches for contributions. Rebase your commits
-    into logical chunks as necessary.
+- Use thoughtfully-named topic branches for contributions. Rebase your commits
+  into logical chunks as necessary.
 
-  - Use [quality commit messages][qcm].
+- Use [quality commit messages][qcm].
 
-  - Add your name or GitHub handle to `CONTRIBUTORS.md` and a record in the
-    `CHANGELOG.md` as a separate commit from your main change. (Follow the style
-    in the `CHANGELOG.md` and provide a link to your PR.)
+- Add your name or GitHub handle to `CONTRIBUTORS.md` and a record in the
+  `CHANGELOG.md` as a separate commit from your main change. (Follow the style
+  in the `CHANGELOG.md` and provide a link to your PR.)
 
-  - Add or update tests as appropriate for your change. The test suite is
-    written in [RSpec][rspec].
+- Add or update tests as appropriate for your change. The test suite is written
+  in [RSpec][rspec].
 
-  - Add or update documentation as appropriate for your change. The
-    documentation is RDoc; diff-lcs does not use extensions that may be present
-    in alternative documentation generators.
+- Add or update documentation as appropriate for your change. The documentation
+  is RDoc; diff-lcs does not use extensions that may be present in alternative
+  documentation generators.
 
-- DO NOT:
+## DO NOT
 
-  - Modify `VERSION` in `lib/diff/lcs/version.rb`. When your patch is accepted
-    and a release is made, the version will be updated at that point.
+- Modify `VERSION` in `lib/diff/lcs/version.rb`. When your patch is accepted and
+  a release is made, the version will be updated at that point.
 
-  - Modify `diff-lcs.gemspec`; it is a generated file. (You _may_ use
-    `rake gemspec` to regenerate it if your change involves metadata related to
-    gem itself).
+- Modify `diff-lcs.gemspec`; it is a generated file. (You _may_ use
+  `rake gemspec` to regenerate it if your change involves metadata related to
+  gem itself).
 
-  - Modify the `Gemfile`.
+- Modify the `Gemfile`.
+
+## LLM-Generated Contribution Policy
+
+diff-lcs is a library with complex interactions and subtle decisions (some of
+them possibly even wrong). It is extremely important that any issues or pull
+requests be well understood by the submitter and that, especially for pull
+requests, the developer can attest to the [Developer Certificate of Origin][dco]
+for each pull request (see [LICENCE](LICENCE.md)).
+
+If LLM assistance is used in writing pull requests, this must be documented in
+the commit message and pull request. If there is evidence of LLM assistance
+without such declaration, the pull request **will be declined**.
+
+Any contribution (bug, feature request, or pull request) that uses unreviewed
+LLM output will be rejected.
 
 ## Test Dependencies
 
@@ -64,8 +78,8 @@ Here's the most direct way to get your work merged into the project:
 - Create a pull request against halostatue/diff-lcs and describe what your
   change does and the why you think it should be merged.
 
+[dco]: licences/dco.txt
 [hoe]: https://github.com/seattlerb/hoe
 [qcm]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
-[release-gem]: https://github.com/rubygems/release-gem
 [rspec]: http://rspec.info/documentation/
 [standardrb]: https://github.com/standardrb/standard

@@ -5,7 +5,7 @@ require "pathname"
 
 require "psych" if RUBY_VERSION >= "1.9"
 
-if ENV["COVERAGE"]
+if ENV["COVERAGE"] == "true"
   require "simplecov"
   require "simplecov-lcov"
 

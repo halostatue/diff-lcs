@@ -1,0 +1,68 @@
+name: Publish docs
+
+on:
+  workflow_dispatch:
+
+  workflow_call:
+
+permissions: {}
+
+jobs:
+  publish_docs:
+    name: Publish docs from main
+    runs-on: ubuntu-latest
+    environment: release
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Harden the runner
+        uses: step-security/harden-runner@002fdce3c6a235733a90a27c80493a3241e56863 # v2.12.1
+        with:
+          disable-sudo: true
+          egress-policy: audit
+          # allowed-endpoints: >
+          #   fulcio.sigstore.dev:443
+          #   github.com:443
+          #   index.rubygems.org:443
+          #   objects.githubusercontent.com:443
+          #   rekor.sigstore.dev:443
+          #   rubygems.org:443
+          #   tuf-repo-cdn.sigstore.dev:443
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - id: rubygems
+        run: |
+          ruby -e \
+            'print "version=", Gem::Specification.load(ARGV[0]).rubygems_version, "\n"' \
+            color.gemspec >>"${GITHUB_OUTPUT}"
+
+      - uses: ruby/setup-ruby@a4effe49ee8ee5b8b5091268c473a4628afb5651 # v1.245.0
+        with:
+          bundler-cache: false
+          ruby-version: ruby
+
+      - name: Install dependencies
+        run: |
+          gem update --system="${RUBYGEMS_VERSION}"
+          bundle install --jobs 4 --retry 3
+        env:
+          RUBYGEMS_VERSION: ${{ steps.rubygems.outputs.version }}
+
+      - name: Build documentation
+        run: |
+          rake docs
+
+      - name: Upload documentation artifact
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
+        with:
+          path: doc
+
+      - name: Deploy documentation
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
