@@ -14,7 +14,7 @@ class Diff::LCS::Hunk
   # piece of data.
   def initialize(data_old, data_new, piece, flag_context, file_length_difference)
     # At first, a hunk will have just one Block in it
-    @blocks = [Diff::LCS::Block.new(piece)]
+    @blocks = [Diff::LCS::Block.from_chunk(piece)]
 
     if @blocks[0].remove.empty? && @blocks[0].insert.empty?
       fail "Cannot build a hunk from #{piece.inspect}; has no add or remove actions"

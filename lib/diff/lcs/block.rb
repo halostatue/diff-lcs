@@ -1,37 +1,42 @@
 # frozen_string_literal: true
 
-# A block is an operation removing, adding, or changing a group of items.
-# Basically, this is just a list of changes, where each change adds or
-# deletes a single item. Used by bin/ldiff.
+Diff::LCS::Block = Data.define(:changes, :insert, :remove) # :nodoc:
+
+# A block is an operation removing, adding, or changing a group of items, a list of
+# changes, where each change adds or deletes a single item.
+#
+# Used by bin/ldiff.
 class Diff::LCS::Block
-  attr_reader :changes, :insert, :remove
+  def self.from_chunk(chunk)
+    changes, insert, remove = [], [], []
 
-  def initialize(chunk)
-    @changes = []
-    @insert = []
-    @remove = []
-
-    chunk.each do |item|
-      @changes << item
-      @remove << item if item.deleting?
-      @insert << item if item.adding?
+    chunk.each do
+      changes << _1
+      remove << _1 if _1.deleting?
+      insert << _1 if _1.adding?
     end
+
+    new(changes: changes.freeze, remove: remove.freeze, insert: insert.freeze)
   end
 
-  def diff_size
-    @insert.size - @remove.size
+  class << self
+    private :new, :[]
   end
+
+  private :with
+
+  def diff_size = insert.size - remove.size
 
   def op
-    case [@remove.empty?, @insert.empty?]
-    when [false, false]
-      "!"
-    when [false, true]
-      "-"
-    when [true, false]
-      "+"
-    else # [true, true]
-      "^"
+    case [remove, insert]
+    # Unchanged
+    in [[], []] then "^"
+    # Delete
+    in [_, []] then "-"
+    # Insert
+    in [[], _] then "+"
+    # Conflict
+    in [_, _] then "!"
     end
   end
 end
