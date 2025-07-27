@@ -738,5 +738,3 @@ class << Diff::LCS
     patch(src, patchset, :patch)
   end
 end
-
-require "diff/lcs/backports"
