@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.0.0.dev.0 / 2025-MM-DD
+
+*_Unreleased_
+
+- diff-lcs 2 supports Ruby 3.2 or higher only.
+- The `htmldiff` binary and the supporting code have been removed without
+  replacement. (They may return in an `example/` directory.)
+
 ## 1.6.2 / 2025-05-12
 
 - Handle upcoming changes to the `cgi` gem in Ruby 3.5 ([#147][pull-147])

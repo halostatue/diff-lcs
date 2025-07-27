@@ -1,4 +1,3 @@
-.rspec
 CHANGELOG.md
 CODE_OF_CONDUCT.md
 CONTRIBUTING.md
@@ -8,7 +7,6 @@ Manifest.txt
 README.md
 Rakefile
 SECURITY.md
-bin/htmldiff
 bin/ldiff
 lib/diff-lcs.rb
 lib/diff/lcs.rb
@@ -17,7 +15,6 @@ lib/diff/lcs/backports.rb
 lib/diff/lcs/block.rb
 lib/diff/lcs/callbacks.rb
 lib/diff/lcs/change.rb
-lib/diff/lcs/htmldiff.rb
 lib/diff/lcs/hunk.rb
 lib/diff/lcs/internals.rb
 lib/diff/lcs/ldiff.rb
