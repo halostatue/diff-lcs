@@ -115,7 +115,7 @@ class << Diff::LCS::Internals
 
     patchset.each do |hunk|
       case hunk
-      when Diff::LCS::Change
+      when Diff::LCS::Change, Diff::LCS::ContextChange
         has_changes ||= !hunk.unchanged?
         new_patchset << hunk
       when Array
