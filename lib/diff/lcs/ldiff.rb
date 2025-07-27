@@ -163,18 +163,16 @@ ldiff #{Diff::LCS::VERSION}
     # Otherwise, print out the old one.
     oldhunk = hunk = nil
     diffs.each do |piece|
-      begin
-        hunk = Diff::LCS::Hunk.new(data_old, data_new, piece, lines, file_length_difference)
-        file_length_difference = hunk.file_length_difference
+      hunk = Diff::LCS::Hunk.new(data_old, data_new, piece, lines, file_length_difference)
+      file_length_difference = hunk.file_length_difference
 
-        next unless oldhunk
-        next if lines.positive? && hunk.merge(oldhunk)
+      next unless oldhunk
+      next if lines.positive? && hunk.merge(oldhunk)
 
-        output << oldhunk.diff(format)
-        output << "\n" if format == :unified
-      ensure
-        oldhunk = hunk
-      end
+      output << oldhunk.diff(format)
+      output << "\n" if format == :unified
+    ensure
+      oldhunk = hunk
     end
 
     last = oldhunk.diff(format, true)
