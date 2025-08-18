@@ -23,4 +23,4 @@ jobs:
             api.github.com:443
             github.com:443
 
-      - uses: KineticCafe/actions-dco@41ccac559c7150e0e9ffea00785fd173c473e2ee # v1.3.5
+      - uses: KineticCafe/actions-dco@fb284c903a7673a3d4b0bdd104479a6f0d46dae7 # v1.3.6
