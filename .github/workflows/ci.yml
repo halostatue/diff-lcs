@@ -37,7 +37,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@0481980f17b760ef6bca5e8c55809102a0af1e5a # v1.263.0
+      - uses: ruby/setup-ruby@ab177d40ee5483edb974554986f56b33477e21d0 # v1.265.0
         with:
           ruby-version: '3.4'
           rubygems: latest
@@ -76,7 +76,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@0481980f17b760ef6bca5e8c55809102a0af1e5a # v1.263.0
+      - uses: ruby/setup-ruby@ab177d40ee5483edb974554986f56b33477e21d0 # v1.265.0
         with:
           ruby-version: '3.4'
           rubygems: latest
@@ -131,7 +131,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@0481980f17b760ef6bca5e8c55809102a0af1e5a # v1.263.0
+      - uses: ruby/setup-ruby@ab177d40ee5483edb974554986f56b33477e21d0 # v1.265.0
         with:
           ruby-version: ${{ matrix.ruby }}
           rubygems: latest
@@ -150,9 +150,9 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - macos-13
           - macos-14
           - macos-15
+          - macos-26
         ruby:
           - '2.6'
           - '2.7'
@@ -180,7 +180,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@0481980f17b760ef6bca5e8c55809102a0af1e5a # v1.263.0
+      - uses: ruby/setup-ruby@ab177d40ee5483edb974554986f56b33477e21d0 # v1.265.0
         with:
           ruby-version: ${{ matrix.ruby }}
           rubygems: latest
@@ -232,7 +232,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@0481980f17b760ef6bca5e8c55809102a0af1e5a # v1.263.0
+      - uses: ruby/setup-ruby@ab177d40ee5483edb974554986f56b33477e21d0 # v1.265.0
         with:
           ruby-version: ${{ matrix.ruby }}
           rubygems: latest
@@ -278,7 +278,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@0481980f17b760ef6bca5e8c55809102a0af1e5a # v1.263.0
+      - uses: ruby/setup-ruby@ab177d40ee5483edb974554986f56b33477e21d0 # v1.265.0
         with:
           ruby-version: ${{ matrix.ruby }}
           rubygems: latest
@@ -324,7 +324,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@0481980f17b760ef6bca5e8c55809102a0af1e5a # v1.263.0
+      - uses: ruby/setup-ruby@ab177d40ee5483edb974554986f56b33477e21d0 # v1.265.0
         with:
           ruby-version: ${{ matrix.ruby }}
           rubygems: latest

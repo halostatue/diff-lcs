@@ -4,13 +4,25 @@ updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: weekly
+      interval: monthly
     commit-message:
       prefix: 'deps'
+    groups:
+      actions:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
 
   - package-ecosystem: bundler
     directory: /
     schedule:
-      interval: weekly
+      interval: monthly
     commit-message:
       prefix: 'deps'
+    groups:
+      bundler:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
