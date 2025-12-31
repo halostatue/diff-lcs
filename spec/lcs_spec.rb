@@ -31,26 +31,26 @@ describe Diff::LCS::Internals, ".lcs" do
   end
 end
 
-describe Diff::LCS, ".LCS" do
+describe Diff::LCS, ".lcs" do
   include Diff::LCS::SpecHelper::Matchers
 
-  it "returns the correct compacted values from Diff::LCS.LCS" do
-    res = Diff::LCS.LCS(seq1, seq2)
+  it "returns the correct compacted values from Diff::LCS.lcs" do
+    res = Diff::LCS.lcs(seq1, seq2)
     expect(res).to eq(correct_lcs)
     expect(res.compact).to eq(res)
   end
 
   it "is transitive" do
-    res = Diff::LCS.LCS(seq2, seq1)
+    res = Diff::LCS.lcs(seq2, seq1)
     expect(res).to eq(correct_lcs)
     expect(res.compact).to eq(res)
   end
 
   it "returns %W(h e l l o) with (hello, hello)" do
-    expect(Diff::LCS.LCS(hello, hello)).to eq(hello.chars)
+    expect(Diff::LCS.lcs(hello, hello)).to eq(hello.chars)
   end
 
   it "returns hello_ary with (hello_ary, hello_ary)" do
-    expect(Diff::LCS.LCS(hello_ary, hello_ary)).to eq(hello_ary)
+    expect(Diff::LCS.lcs(hello_ary, hello_ary)).to eq(hello_ary)
   end
 end
