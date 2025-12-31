@@ -37,19 +37,14 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@d354de180d0c9e813cfddfcbdc079945d4be589b # v1.275.0
+      - uses: ruby/setup-ruby@8a836efbcebe5de0fe86b48a775b7a31b5c70c93 # v1.277.0
         with:
           ruby-version: '3.4'
           rubygems: latest
           bundler: 2
-          bundler-cache: false
+          bundler-cache: true
 
-      - name: Run standardrb
-        run: |
-          bundle install --jobs 4 --retry 3
-          bundle exec standardrb
-        env:
-          MAINTENANCE: true
+      - run: bundle exec standardrb
 
   coverage:
     name: Generate Coverage Report
@@ -76,18 +71,14 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@d354de180d0c9e813cfddfcbdc079945d4be589b # v1.275.0
+      - uses: ruby/setup-ruby@8a836efbcebe5de0fe86b48a775b7a31b5c70c93 # v1.277.0
         with:
           ruby-version: '3.4'
           rubygems: latest
           bundler: 2
-          bundler-cache: false
+          bundler-cache: true
 
-      - run: |
-          bundle install --jobs 4 --retry 3
-          bundle exec ruby -S rake coverage --trace
-        env:
-          COVERAGE: true
+      - run: bundle exec ruby -S rake coverage --trace
 
       - uses: coverallsapp/github-action@648a8eb78e6d50909eff900e4ec85cab4524a45b #v2.3.6
 
@@ -104,12 +95,10 @@ jobs:
           - ubuntu-22.04
           - ubuntu-24.04
         ruby:
-          - '2.6'
-          - '2.7'
-          - '3.1'
           - '3.2'
           - '3.3'
           - '3.4'
+          - '4.0'
           - truffleruby
 
     runs-on: ${{ matrix.os }}
@@ -131,7 +120,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@d354de180d0c9e813cfddfcbdc079945d4be589b # v1.275.0
+      - uses: ruby/setup-ruby@8a836efbcebe5de0fe86b48a775b7a31b5c70c93 # v1.277.0
         with:
           ruby-version: ${{ matrix.ruby }}
           rubygems: latest
@@ -154,12 +143,10 @@ jobs:
           - macos-15
           - macos-26
         ruby:
-          - '2.6'
-          - '2.7'
-          - '3.1'
           - '3.2'
           - '3.3'
           - '3.4'
+          - '4.0'
 
     runs-on: ${{ matrix.os }}
 
@@ -180,7 +167,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@d354de180d0c9e813cfddfcbdc079945d4be589b # v1.275.0
+      - uses: ruby/setup-ruby@8a836efbcebe5de0fe86b48a775b7a31b5c70c93 # v1.277.0
         with:
           ruby-version: ${{ matrix.ruby }}
           rubygems: latest
@@ -202,13 +189,10 @@ jobs:
           - windows-2022
           - windows-2025
         ruby:
-          - '2.6'
-          - '2.7'
-          - '3.0'
-          - '3.1'
           - '3.2'
           - '3.3'
           - '3.4'
+          - '4.0'
           - mingw
           - mswin
           - ucrt
@@ -232,7 +216,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@d354de180d0c9e813cfddfcbdc079945d4be589b # v1.275.0
+      - uses: ruby/setup-ruby@8a836efbcebe5de0fe86b48a775b7a31b5c70c93 # v1.277.0
         with:
           ruby-version: ${{ matrix.ruby }}
           rubygems: latest
@@ -278,7 +262,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@d354de180d0c9e813cfddfcbdc079945d4be589b # v1.275.0
+      - uses: ruby/setup-ruby@8a836efbcebe5de0fe86b48a775b7a31b5c70c93 # v1.277.0
         with:
           ruby-version: ${{ matrix.ruby }}
           rubygems: latest
@@ -324,7 +308,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@d354de180d0c9e813cfddfcbdc079945d4be589b # v1.275.0
+      - uses: ruby/setup-ruby@8a836efbcebe5de0fe86b48a775b7a31b5c70c93 # v1.277.0
         with:
           ruby-version: ${{ matrix.ruby }}
           rubygems: latest

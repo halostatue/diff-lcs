@@ -7,41 +7,39 @@ agents.
 
 ## Supported Versions
 
-Security reports are accepted for the most recent major release and the previous
-version for a limited time after the initial major release version. After a
-major release, the previous version will receive full support for six months and
-security support for an additional six months (for a total of twelve months).
+Security reports are accepted for the most recent major release, with a limited
+window of support after the initial major release.
 
-Because diff-lcs 1.x supports a wide range of Ruby versions that are themselves
-end of life, security reports will only be accepted when they can be
-demonstrated on Ruby 3.2 or higher.
+- Bug reports will be accepted up to three months after release.
+- Security reports will be accepted up to six months after release.
 
-> [!information]
+All issues raised must be demonstrated on the minimum supported Ruby version.
+
+> [!important]
 >
-> There will be a diff-lcs 2.0 released in 2025 which narrows support to modern
-> versions of Ruby only.
+> Because diff-lcs 1 has been the only version for over twenty years, security
+> reports will be accepted for one year after the release of diff-lcs 2.
 >
-> | Release Date | Support Ends | Security Support Ends |
-> | ------------ | ------------ | --------------------- |
-> | 2025         | +6 months    | +12 months            |
->
-> If the 2.0.0 release happens on 2025-08-01, regular support for diff-lcs 1.x
-> will end on 2026-01-31 and security support for diff-lcs 1.x will end on
-> 2026-07-31.
+> | Version | Release Date | Support Ends | Security Support Ends |
+> | ------- | ------------ | ------------ | --------------------- |
+> | 1.x     | 2010         | 2026-04-30   | 2027-01-31            |
+> | 2.x     | 2026-01-31   | -            | -                     |
 
 ## Reporting a Vulnerability
 
-By preference, use the [Tidelift security contact][tidelift]. Tidelift will
-coordinate the fix and disclosure.
+Report vulnerabilities via the [Tidelift security contact][tidelift]. Tidelift
+will coordinate the fix and disclosure.
 
-Alternatively, Send an email to [diff-lcs@halostatue.ca][email] with the text
-`Diff::LCS` in the subject. Emails sent to this address should be encrypted
-using [age][age] with the following public key:
+Alternatively, create a [private vulnerability report][advisory] with GitHub or
+send an email to [security@ruby.halostatue.ca][email] with the text `diff-lcs`
+in the subject. Emails sent to this address should be encrypted using [age][age]
+with the following public key:
 
 ```
 age1fc6ngxmn02m62fej5cl30lrvwmxn4k3q2atqu53aatekmnqfwumqj4g93w
 ```
 
-[tidelift]: https://tidelift.com/security
-[email]: mailto:diff-lcs@halostatue.ca
+[advisory]: https://github.com/halostatue/diff-lcs/security/advisories/new
 [age]: https://github.com/FiloSottile/age
+[email]: mailto:security@ruby.halostatue.ca
+[tidelift]: https://tidelift.com/security

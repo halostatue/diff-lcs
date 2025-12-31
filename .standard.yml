@@ -1,15 +1,11 @@
 ---
 parallel: true
-ruby_version: 2.0
+ruby_version: 3.2
 
 ignore:
   - '*.gemspec'
   - research/**/*
   - pkg/**/*
-  - Gemfile:
-      - Style/HashSyntax
-  - Rakefile:
-      - Layout/HeredocIndentation
 
 plugins:
   - rubocop-thread_safety

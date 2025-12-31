@@ -5,24 +5,22 @@ require "pathname"
 
 require "psych" if RUBY_VERSION >= "1.9"
 
-if ENV["COVERAGE"] == "true"
-  require "simplecov"
-  require "simplecov-lcov"
+require "simplecov"
+require "simplecov-lcov"
 
-  SimpleCov::Formatter::LcovFormatter.config do |config|
-    config.report_with_single_file = true
-    config.lcov_file_name = "lcov.info"
-  end
+SimpleCov::Formatter::LcovFormatter.config do |config|
+  config.report_with_single_file = true
+  config.lcov_file_name = "lcov.info"
+end
 
-  SimpleCov.start "test_frameworks" do
-    enable_coverage :branch
-    primary_coverage :branch
-    formatter SimpleCov::Formatter::MultiFormatter.new([
-      SimpleCov::Formatter::HTMLFormatter,
-      SimpleCov::Formatter::LcovFormatter,
-      SimpleCov::Formatter::SimpleFormatter
-    ])
-  end
+SimpleCov.start "test_frameworks" do
+  enable_coverage :branch
+  primary_coverage :branch
+  formatter SimpleCov::Formatter::MultiFormatter.new([
+    SimpleCov::Formatter::HTMLFormatter,
+    SimpleCov::Formatter::LcovFormatter,
+    SimpleCov::Formatter::SimpleFormatter
+  ])
 end
 
 file = Pathname.new(__FILE__).expand_path

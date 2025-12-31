@@ -1,5 +1,40 @@
 # Changelog
 
+## 2.0.0.beta.1 / 2025-12-31
+
+This release has significant **breaking changes**.
+
+- diff-lcs 2 supports Ruby 3.2 or higher. This allowed:
+
+  - readability improvements (endless methods, pattern matching);
+
+  - support for immutable Data classes (`Diff::LCS::Block`, `Diff::LCS::Change`,
+    and `Diff::LCS::ContextChange`);
+
+  - removal of compatibility shims;
+
+  - reduction in conditional tests in loops, especially for String character
+    extraction (compare `string ? seq[i, 1] : seq[i]` to `seq[i]`); and
+
+  - optimizations to string and relying on standard encoding support present
+    since Ruby 2.1.
+
+  The primary API (methods and class methods on `Diff::LCS`) has not changed,
+  with one exception noted below. Internal APIs (including `Diff::LCS::Block`,
+  `Diff::LCS::Change`, `Diff::LCS::ContextChange`, and `Diff::LCS::Hunk`) have
+  changed for compatibility.
+
+- The `htmldiff` binary and supporting code have been removed without
+  replacement.
+
+- `ldiff` no longer supports `ed`-script output (`ed` and `reverse_ed` formats).
+  As Baptiste Courtois says in [#108][pull-108], the "implementation was broken
+  for a while and no-one reported it."
+
+- The method `Diff::LCS.LCS` has been removed as an alias for `Diff::LCS.lcs`.
+  Most callers are using `Diff::LCS.lcs` and modern Ruby did-you-mean support
+  should assist with this update.
+
 ## 1.6.2 / 2025-05-12
 
 - Handle upcoming changes to the `cgi` gem in Ruby 3.5 ([#147][pull-147])
@@ -504,6 +539,7 @@
 [pull-103]: https://github.com/halostatue/diff-lcs/pull/103
 [pull-104]: https://github.com/halostatue/diff-lcs/pull/104
 [pull-105]: https://github.com/halostatue/diff-lcs/pull/105
+[pull-108]: https://github.com/halostatue/diff-lcs/pull/108
 [pull-129]: https://github.com/halostatue/diff-lcs/pull/129
 [pull-147]: https://github.com/halostatue/diff-lcs/pull/147
 [pull-148]: https://github.com/halostatue/diff-lcs/pull/148
