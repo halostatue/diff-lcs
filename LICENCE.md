@@ -11,7 +11,7 @@ GNU GPL ("the same terms as Perl itself") and given that the Ruby implementation
 originally hewed pretty closely to the Perl version, I must maintain the
 additional licensing terms.
 
-- Copyright 2004-2025 Austin Ziegler and contributors.
+- Copyright 2004-2026 Austin Ziegler and contributors.
 - Adapted from Algorithm::Diff (Perl) by Ned Konz and a Smalltalk version by
   Mario I. Wolczko.
 

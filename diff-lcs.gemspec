@@ -1,15 +1,15 @@
 # -*- encoding: utf-8 -*-
-# stub: diff-lcs 2.0.0.dev.0 ruby lib
+# stub: diff-lcs 2.0.0.beta.1 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "diff-lcs".freeze
-  s.version = "2.0.0.dev.0".freeze
+  s.version = "2.0.0.beta.1".freeze
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.metadata = { "bug_tracker_uri" => "https://github.com/halostatue/diff-lcs/issues", "changelog_uri" => "https://github.com/halostatue/diff-lcs/blob/main/CHANGELOG.md", "homepage_uri" => "https://github.com/halostatue/diff-lcs", "rubygems_mfa_required" => "true", "source_code_uri" => "https://github.com/halostatue/diff-lcs" } if s.respond_to? :metadata=
   s.require_paths = ["lib".freeze]
   s.authors = ["Austin Ziegler".freeze]
-  s.date = "2025-07-27"
+  s.date = "2025-12-31"
   s.description = "Diff::LCS computes the difference between two Enumerable sequences using the McIlroy-Hunt longest common subsequence (LCS) algorithm. It includes utilities to create a simple HTML diff output format and a standard diff-like tool.  This is release 1.6.1, providing a simple extension that allows for Diff::LCS::Change objects to be treated implicitly as arrays and fixes a number of formatting issues.  Ruby versions below 2.5 are soft-deprecated, which means that older versions are no longer part of the CI test suite. If any changes have been introduced that break those versions, bug reports and patches will be accepted, but it will be up to the reporter to verify any fixes prior to release. The next major release will completely break compatibility.".freeze
   s.email = ["halostatue@gmail.com".freeze]
   s.executables = ["ldiff".freeze]
@@ -18,16 +18,20 @@ Gem::Specification.new do |s|
   s.homepage = "https://github.com/halostatue/diff-lcs".freeze
   s.licenses = ["MIT".freeze, "Artistic-1.0-Perl".freeze, "GPL-2.0-or-later".freeze]
   s.rdoc_options = ["--main".freeze, "README.md".freeze]
-  s.required_ruby_version = Gem::Requirement.new("~> 3.2".freeze)
-  s.rubygems_version = "3.7.1".freeze
+  s.required_ruby_version = Gem::Requirement.new([">= 3.2.0".freeze, "< 5".freeze])
+  s.rubygems_version = "3.6.9".freeze
   s.summary = "Diff::LCS computes the difference between two Enumerable sequences using the McIlroy-Hunt longest common subsequence (LCS) algorithm".freeze
 
   s.specification_version = 4
 
   s.add_development_dependency(%q<hoe>.freeze, ["~> 4.0".freeze])
   s.add_development_dependency(%q<hoe-halostatue>.freeze, ["~> 2.1".freeze, ">= 2.1.1".freeze])
-  s.add_development_dependency(%q<hoe-git>.freeze, ["~> 1.6".freeze])
   s.add_development_dependency(%q<rspec>.freeze, [">= 2.0".freeze, "< 4".freeze])
   s.add_development_dependency(%q<rake>.freeze, [">= 10.0".freeze, "< 14".freeze])
   s.add_development_dependency(%q<rdoc>.freeze, [">= 6.3.1".freeze, "< 7".freeze])
+  s.add_development_dependency(%q<simplecov>.freeze, ["~> 0.9".freeze])
+  s.add_development_dependency(%q<simplecov-lcov>.freeze, ["~> 0.9".freeze])
+  s.add_development_dependency(%q<standard>.freeze, ["~> 1.50".freeze])
+  s.add_development_dependency(%q<standard-thread_safety>.freeze, ["~> 1.0".freeze])
+  s.add_development_dependency(%q<fasterer>.freeze, ["~> 0.11".freeze])
 end
