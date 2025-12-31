@@ -7,6 +7,8 @@ updates:
       interval: monthly
     commit-message:
       prefix: 'deps'
+    cooldown:
+      default-days: 7
     groups:
       actions:
         applies-to: version-updates
@@ -20,6 +22,8 @@ updates:
       interval: monthly
     commit-message:
       prefix: 'deps'
+    cooldown:
+      default-days: 7
     groups:
       bundler:
         applies-to: version-updates
