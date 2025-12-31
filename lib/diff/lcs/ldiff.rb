@@ -4,19 +4,17 @@ require "optparse"
 require "diff/lcs/hunk"
 
 class Diff::LCS::Ldiff # :nodoc:
-  # standard:disable Layout/HeredocIndentation
-  BANNER = <<-COPYRIGHT
-ldiff #{Diff::LCS::VERSION}
-  Copyright 2004-2025 Austin Ziegler
+  BANNER = <<~COPYRIGHT
+    ldiff #{Diff::LCS::VERSION}
+      Copyright 2004-2025 Austin Ziegler
 
-  Part of Diff::LCS.
-  https://github.com/halostatue/diff-lcs
+    Part of Diff::LCS.
+    https://github.com/halostatue/diff-lcs
 
-  This program is free software. It may be redistributed and/or modified under
-  the terms of the GPL version 2 (or later), the Perl Artistic licence, or the
-  MIT licence.
+    This program is free software. It may be redistributed and/or modified under
+    the terms of the GPL version 2 (or later), the Perl Artistic licence, or the
+    MIT licence.
   COPYRIGHT
-  # standard:enable Layout/HeredocIndentation
 
   InputInfo = Struct.new(:filename, :data, :stat) do
     def initialize(filename)
@@ -111,8 +109,8 @@ ldiff #{Diff::LCS::VERSION}
       char_new = "+" * 3
     end
 
-    # After we've read up to a certain point in each file, the number of
-    # items we've read from each file will differ by FLD (could be 0).
+    # After we've read up to a certain point in each file, the number of items we've read
+    # from each file will differ by FLD (could be 0).
     file_length_difference = 0
 
     # Test binary status
@@ -152,22 +150,20 @@ ldiff #{Diff::LCS::VERSION}
       output = []
     end
 
-    # Loop over hunks. If a hunk overlaps with the last hunk, join them.
-    # Otherwise, print out the old one.
+    # Loop over hunks. If a hunk overlaps with the last hunk, join them. Otherwise, print
+    # out the old one.
     oldhunk = hunk = nil
     diffs.each do |piece|
-      begin
-        hunk = Diff::LCS::Hunk.new(data_old, data_new, piece, lines, file_length_difference)
-        file_length_difference = hunk.file_length_difference
+      hunk = Diff::LCS::Hunk.new(data_old, data_new, piece, lines, file_length_difference)
+      file_length_difference = hunk.file_length_difference
 
-        next unless oldhunk
-        next if lines.positive? && hunk.merge(oldhunk)
+      next unless oldhunk
+      next if lines.positive? && hunk.merge(oldhunk)
 
-        output << oldhunk.diff(format)
-        output << "\n" if format == :unified
-      ensure
-        oldhunk = hunk
-      end
+      output << oldhunk.diff(format)
+      output << "\n" if format == :unified
+    ensure
+      oldhunk = hunk
     end
 
     last = oldhunk.diff(format, true)
