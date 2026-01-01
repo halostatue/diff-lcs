@@ -4,7 +4,7 @@
 - changelog :: https://github.com/halostatue/diff-lcs/blob/main/CHANGELOG.md
 - code :: https://github.com/halostatue/diff-lcs
 - bugs :: https://github.com/halostatue/diff-lcs/issues
-- rdoc :: http://rubydoc.info/github/halostatue/diff-lcs
+- rdoc :: https://rubydoc.info/github/halostatue/diff-lcs
 
 <a href="https://github.com/halostatue/diff-lcs/actions">
   <img src="https://github.com/halostatue/diff-lcs/workflows/CI/badge.svg" />
@@ -89,4 +89,4 @@ improvements to improve the speed. A simplified description of the algorithm,
 originally written for the Perl version, was written by Mark-Jason Dominus.
 
 [smalltalk]: ftp://st.cs.uiuc.edu/pub/Smalltalk/MANCHESTER/manchester/4.0/diff.st
-[perl]: http://search.cpan.org/~nedkonz/Algorithm-Diff-1.15/
+[perl]: https://search.cpan.org/~nedkonz/Algorithm-Diff-1.15/

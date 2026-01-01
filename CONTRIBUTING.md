@@ -115,8 +115,8 @@ required metadata trailers are:
 [dco]: licences/dco.txt
 [hoe]: https://github.com/seattlerb/hoe
 [issues]: https://github.com/halostatue/diff-lcs/issues
-[rspec]: http://rspec.info/documentation/
+[rspec]: https://rspec.info/documentation/
 [standardrb]: https://github.com/standardrb/standard
-[tpope-qcm]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
+[tpope-qcm]: https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
 [trailers1]: https://git-scm.com/docs/git-interpret-trailers
 [trailers2]: https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---trailerlttokengtltvaluegt
