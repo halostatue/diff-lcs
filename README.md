@@ -1,14 +1,12 @@
 # Diff::LCS
 
-- home :: https://github.com/halostatue/diff-lcs
-- changelog :: https://github.com/halostatue/diff-lcs/blob/main/CHANGELOG.md
-- code :: https://github.com/halostatue/diff-lcs
-- bugs :: https://github.com/halostatue/diff-lcs/issues
-- rdoc :: https://rubydoc.info/github/halostatue/diff-lcs
+[![RubyGems Version][shield-gems]][rubygems] ![Coveralls][shield-coveralls]
+[![Build Status][shield-ci]][ci-workflow]
 
-<a href="https://github.com/halostatue/diff-lcs/actions">
-  <img src="https://github.com/halostatue/diff-lcs/workflows/CI/badge.svg" />
-</a>
+- code :: <https://github.com/halostatue/diff-lcs>
+- issues :: <https://github.com/halostatue/diff-lcs/issues>
+- docs :: <https://halostatue.github.io/diff-lcs/>
+- changelog :: <https://github.com/halostatue/diff-lcs/blob/main/CHANGELOG.md>
 
 ## Description
 
@@ -88,5 +86,11 @@ Subsequences</em>, CACM, vol.20, no.5, pp.350-353, May 1977, with a few minor
 improvements to improve the speed. A simplified description of the algorithm,
 originally written for the Perl version, was written by Mark-Jason Dominus.
 
-[smalltalk]: ftp://st.cs.uiuc.edu/pub/Smalltalk/MANCHESTER/manchester/4.0/diff.st
+[ci-workflow]: https://github.com/halostatue/diff-lcs/actions/workflows/ci.yml
+[coveralls]: https://coveralls.io/github/halostatue/diff-lcs?branch=main
 [perl]: https://search.cpan.org/~nedkonz/Algorithm-Diff-1.15/
+[rubygems]: https://rubygems.org/gems/diff-lcs
+[shield-ci]: https://img.shields.io/github/actions/workflow/status/halostatue/diff-lcs/ci.yml?style=for-the-badge "Build Status"
+[shield-coveralls]: https://img.shields.io/coverallsCoverage/github/halostatue/diff-lcs?style=for-the-badge
+[shield-gems]: https://img.shields.io/gem/v/diff-lcs?style=for-the-badge "Version"
+[smalltalk]: ftp://st.cs.uiuc.edu/pub/Smalltalk/MANCHESTER/manchester/4.0/diff.st
