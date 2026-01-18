@@ -10,7 +10,7 @@ class Diff::LCS::Change
   # (changed), '<' (tail changes from first sequence), or '>' (tail changes from second
   # sequence). The last two ('<>') are only found with Diff::LCS::diff and
   # Diff::LCS::sdiff.
-  VALID_ACTIONS = %w[+ - = ! > <].freeze
+  VALID_ACTIONS = %w[= - + ! > <].freeze
 
   def self.valid_action?(action) = VALID_ACTIONS.include?(action)
 
@@ -37,6 +37,9 @@ class Diff::LCS::Change
 
   def to_a = [action, position, element]
   alias_method :to_ary, :to_a
+  alias_method :deconstruct, :to_a
+
+  def deconstruct_keys(_) = {action:, position:, element:}
 
   def self.from_a(arr)
     case arr
@@ -59,8 +62,8 @@ class Diff::LCS::Change
   end
 
   def <=>(other)
-    r = action <=> other.action
-    r = position <=> other.position if r.zero?
+    r = position <=> other.position
+    r = VALID_ACTIONS.index(action) <=> VALID_ACTIONS.index(other.action) if r.zero?
     r = element <=> other.element if r.zero?
     r
   end
@@ -111,28 +114,27 @@ class Diff::LCS::ContextChange
 
   def to_a = [action, [old_position, old_element], [new_position, new_element]]
   alias_method :to_ary, :to_a
+  alias_method :deconstruct, :to_a
+
+  def deconstruct_keys(_) = {action:, old_position:, old_element:, new_position:, new_element:}
 
   def self.from_a(arr) = Diff::LCS::Change.from_a(arr)
 
   # Simplifies a context change for use in some diff callbacks. '<' actions are converted
   # to '-' and '>' actions are converted to '+'.
   def self.simplify(event)
-    ea = event.to_a
-
-    case ea[0]
+    case event.action
     when "-"
-      ea[2][1] = nil
+      event.with(new_element: nil)
     when "<"
-      ea[0] = "-"
-      ea[2][1] = nil
+      event.with(action: "-", new_element: nil)
     when "+"
-      ea[1][1] = nil
+      event.with(old_element: nil)
     when ">"
-      ea[0] = "+"
-      ea[1][1] = nil
+      event.with(action: "+", old_element: nil)
+    else
+      event
     end
-
-    from_a(ea)
   end
 
   def ==(other)
@@ -145,9 +147,12 @@ class Diff::LCS::ContextChange
   end
 
   def <=>(other)
-    r = action <=> other.action
-    r = old_position <=> other.old_position if r.zero?
+    r = old_position <=> other.old_position
     r = new_position <=> other.new_position if r.zero?
+    if r.zero?
+      r = Diff::LCS::Change::VALID_ACTIONS.index(action) <=>
+        Diff::LCS::Change::VALID_ACTIONS.index(other.action)
+    end
     r = old_element <=> other.old_element if r.zero?
     r = new_element <=> other.new_element if r.zero?
     r
