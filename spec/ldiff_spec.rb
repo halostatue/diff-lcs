@@ -27,11 +27,11 @@ RSpec.describe "bin/ldiff" do
   def self.test_ldiff(fixture)
     desc = [
       fixture[:flag],
-      "spec/fixtures/#{fixture[:left]}",
-      "spec/fixtures/#{fixture[:right]}",
+      "test/fixtures/#{fixture[:left]}",
+      "test/fixtures/#{fixture[:right]}",
       "#",
       "=>",
-      "spec/fixtures/ldiff/output.#{fixture[:name]}#{fixture[:flag]}"
+      "test/fixtures/ldiff/output.#{fixture[:name]}#{fixture[:flag]}"
     ].join(" ")
 
     it desc do
@@ -49,7 +49,7 @@ RSpec.describe "bin/ldiff" do
   def read_fixture(options, mode: "output", allow_missing: false)
     fixture = options.fetch(:name)
     flag = options.fetch(:flag)
-    name = "spec/fixtures/ldiff/#{mode}.#{fixture}#{flag}"
+    name = "test/fixtures/ldiff/#{mode}.#{fixture}#{flag}"
 
     return "" if !::File.exist?(name) && allow_missing
 
@@ -74,7 +74,7 @@ RSpec.describe "bin/ldiff" do
         ^
         [-+*]{3}
         \s*
-        spec/fixtures/(\S+)
+        test/fixtures/(\S+)
         \s*
         \d{4}-\d\d-\d\d
         \s*
@@ -82,7 +82,7 @@ RSpec.describe "bin/ldiff" do
         \s*
         (?:[-+]\d{4}|Z)
       }x,
-      '*** spec/fixtures/\1	0000-00-00 :00 =>:00 =>00.000000000 -0000'
+      '*** test/fixtures/\1	0000-00-00 :00 =>:00 =>00.000000000 -0000'
     )
   end
 
@@ -92,7 +92,7 @@ RSpec.describe "bin/ldiff" do
     right = options.fetch(:right)
 
     stdout, stderr = capture_subprocess_io do
-      system("ruby -Ilib bin/ldiff #{flag} spec/fixtures/#{left} spec/fixtures/#{right}")
+      system("ruby -Ilib bin/ldiff #{flag} test/fixtures/#{left} test/fixtures/#{right}")
     end
 
     [clean_data(stdout, flag), stderr, $?.exitstatus]

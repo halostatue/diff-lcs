@@ -35,6 +35,14 @@ This release has significant **breaking changes**.
   Most callers are using `Diff::LCS.lcs` and modern Ruby did-you-mean support
   should assist with this update.
 
+- `Diff::LCS::Change` objects implemented the comparison operator (`<=>`)
+  incorrectly. Comparisons are now done so that the `position` is compared
+  first, then the `action` (by index of `VALID_ACTIONS`), and finally the
+  element. `Diff::LCS::ContextChange` works similarly, comparing the old and new
+  positions prior to comparing the actions by index.
+
+  The order of `VALID_ACTIONS` was changed for the index order to make sense.
+
 ## 1.6.2 / 2025-05-12
 
 - Handle upcoming changes to the `cgi` gem in Ruby 3.5 ([#147][pull-147])

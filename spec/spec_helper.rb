@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
+$LOAD_PATH.unshift File.expand_path(__dir__, "../lib")
+
 require "rubygems"
-require "pathname"
-
-require "psych" if RUBY_VERSION >= "1.9"
-
 require "simplecov"
 require "simplecov-lcov"
+
+require "diff/lcs"
 
 SimpleCov::Formatter::LcovFormatter.config do |config|
   config.report_with_single_file = true
@@ -22,12 +22,6 @@ SimpleCov.start "test_frameworks" do
     SimpleCov::Formatter::SimpleFormatter
   ])
 end
-
-file = Pathname.new(__FILE__).expand_path
-path = file.parent
-parent = path.parent
-
-$:.unshift parent.join("lib")
 
 module CaptureSubprocessIO
   def _synchronize
@@ -61,8 +55,6 @@ module CaptureSubprocessIO
   end
   private :_capture_subprocess_io
 end
-
-require "diff-lcs"
 
 module Diff::LCS::SpecHelper
   def hello

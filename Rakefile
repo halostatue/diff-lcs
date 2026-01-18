@@ -4,14 +4,15 @@ require "rspec/core/rake_task"
 require "hoe"
 require "rake/clean"
 require "rdoc/task"
+require "minitest/test_task"
 
 Hoe.plugin :halostatue
-Hoe.plugin :rubygems
 
 Hoe.plugins.delete :debug
 Hoe.plugins.delete :newb
 Hoe.plugins.delete :publish
 Hoe.plugins.delete :signing
+Hoe.plugins.delete :test
 
 hoe = Hoe.spec "diff-lcs" do
   developer("Austin Ziegler", "halostatue@gmail.com")
@@ -29,8 +30,12 @@ hoe = Hoe.spec "diff-lcs" do
   extra_dev_deps << ["hoe", "~> 4.0"]
   extra_dev_deps << ["hoe-halostatue", "~> 2.1", ">= 2.1.1"]
   extra_dev_deps << ["rspec", ">= 2.0", "< 4"]
+  extra_dev_deps << ["minitest", "~> 6.0"]
+  extra_dev_deps << ["minitest-autotest", "~> 1.0"]
+  extra_dev_deps << ["minitest-focus", "~> 1.1"]
   extra_dev_deps << ["rake", ">= 10.0", "< 14"]
-  extra_dev_deps << ["rdoc", ">= 6.3.1", "< 7"]
+  extra_dev_deps << ["rantly", "~> 3.0"]
+  extra_dev_deps << ["rdoc", ">= 6.0", "< 8"]
   extra_dev_deps << ["simplecov", "~> 0.9"]
   extra_dev_deps << ["simplecov-lcov", "~> 0.9"]
   extra_dev_deps << ["standard", "~> 1.50"]
@@ -38,24 +43,52 @@ hoe = Hoe.spec "diff-lcs" do
   extra_dev_deps << ["fasterer", "~> 0.11"]
 end
 
+task :nocover do
+  require "fileutils"
+  FileUtils.rm_rf("./coverage")
+end
+
+# To be replaced with an integration test that uses rspec on a different suite
 desc "Run all specifications"
 RSpec::Core::RakeTask.new(:spec) do |t|
   rspec_dirs = %w[spec lib].join(":")
   t.rspec_opts = ["-I#{rspec_dirs}"]
 end
 
-namespace :spec do
-  desc "Runs test coverage. Only works Ruby 2.0+ and assumes 'simplecov' is installed."
-  task :coverage do
-    Rake::Task["spec"].execute
-  end
-end
+task spec: :nocover
 
-task coverage: "spec:coverage"
+task default: :spec
+
 Rake::Task["spec"].actions.uniq! { |a| a.source_location }
 
-task default: :spec unless Rake::Task["default"].prereqs.include?("spec")
-task test: :spec unless Rake::Task["test"].prereqs.include?("spec")
+Minitest::TestTask.create :test
+Minitest::TestTask.create :coverage do |t|
+  formatters = <<-RUBY.split($/).join(" ")
+    SimpleCov::Formatter::MultiFormatter.new([
+      SimpleCov::Formatter::HTMLFormatter,
+      SimpleCov::Formatter::LcovFormatter,
+      SimpleCov::Formatter::SimpleFormatter
+    ])
+  RUBY
+  t.test_prelude = <<-RUBY.split($/).join("; ")
+  require "simplecov"
+  require "simplecov-lcov"
+
+  SimpleCov::Formatter::LcovFormatter.config do |config|
+    config.report_with_single_file = true
+    config.lcov_file_name = "lcov.info"
+  end
+
+  SimpleCov.start "test_frameworks" do
+    enable_coverage :branch
+    primary_coverage :branch
+    formatter #{formatters}
+  end
+  RUBY
+end
+
+task test: :nocover
+task default: :test
 
 task :version do
   require "diff/lcs/version"
@@ -64,7 +97,6 @@ end
 
 RDoc::Task.new do |config|
   config.title = "diff-lcs"
-  # config.main = "lib/diff/lcs.rb"
   config.main = "README.md"
   config.rdoc_dir = "doc"
   config.rdoc_files = hoe.spec.require_paths - ["Manifest.txt"] + hoe.spec.extra_rdoc_files

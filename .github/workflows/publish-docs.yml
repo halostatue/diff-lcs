@@ -38,7 +38,7 @@ jobs:
             'print "version=", Gem::Specification.load(ARGV[0]).rubygems_version, "\n"' \
             diff-lcs.gemspec >>"${GITHUB_OUTPUT}"
 
-      - uses: ruby/setup-ruby@8a836efbcebe5de0fe86b48a775b7a31b5c70c93 # v1.277.0
+      - uses: ruby/setup-ruby@675dd7ba1b06c8786a1480d89c384f5620a42647 # v1.281.0
         with:
           bundler-cache: false
           ruby-version: ruby
