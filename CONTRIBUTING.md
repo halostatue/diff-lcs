@@ -13,7 +13,11 @@ diff-lcs is governed under the [Contributor Covenant Code of Conduct][cccoc].
 I have several guidelines to contributing code through pull requests:
 
 - All code changes require tests. In most cases, this will be added or updated
-  unit tests. I use [RSpec][rspec].
+  unit tests. I use [Minitest][minitest].
+
+  - There are integration tests with RSpec which must not be broken, accessible
+    through `rake integration`. This requires a non-bundled RSpec,
+    `gem install rspec`.
 
 - I use code formatters, static analysis tools, and linting to ensure consistent
   styles and formatting. There should be no warning output from test run
@@ -115,6 +119,7 @@ required metadata trailers are:
 [dco]: licences/dco.txt
 [hoe]: https://github.com/seattlerb/hoe
 [issues]: https://github.com/halostatue/diff-lcs/issues
+[minitest]: https://github.com/seattlerb/minitest
 [rspec]: https://rspec.info/documentation/
 [standardrb]: https://github.com/standardrb/standard
 [tpope-qcm]: https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html

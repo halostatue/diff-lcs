@@ -31,8 +31,9 @@ class TestChange < Minitest::Test
   end
 
   def test_spaceship_reflexive
-    c = change("=", 5, "x")
-    assert_equal 0, c <=> c
+    c1 = change("=", 5, "x")
+    c2 = change("=", 5, "x")
+    assert_equal 0, c1 <=> c2
   end
 
   def test_spaceship_position_precedence
@@ -169,8 +170,9 @@ class TestContextChange < Minitest::Test
   end
 
   def test_spaceship_reflexive
-    c = change("=", 5, "x", 10, "y")
-    assert_equal 0, c <=> c
+    c1 = change("=", 5, "x", 10, "y")
+    c2 = change("=", 5, "x", 10, "y")
+    assert_equal 0, c1 <=> c2
   end
 
   def test_spaceship_position_precedence

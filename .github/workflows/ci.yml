@@ -37,7 +37,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@675dd7ba1b06c8786a1480d89c384f5620a42647 # v1.281.0
+      - uses: ruby/setup-ruby@708024e6c902387ab41de36e1669e43b5ee7085e # v1.283.0
         with:
           ruby-version: '3.4'
           rubygems: latest
@@ -71,7 +71,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@675dd7ba1b06c8786a1480d89c384f5620a42647 # v1.281.0
+      - uses: ruby/setup-ruby@708024e6c902387ab41de36e1669e43b5ee7085e # v1.283.0
         with:
           ruby-version: '3.4'
           rubygems: latest
@@ -120,7 +120,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@675dd7ba1b06c8786a1480d89c384f5620a42647 # v1.281.0
+      - uses: ruby/setup-ruby@708024e6c902387ab41de36e1669e43b5ee7085e # v1.283.0
         with:
           ruby-version: ${{ matrix.ruby }}
           rubygems: latest
@@ -128,6 +128,11 @@ jobs:
           bundler-cache: true
 
       - run: bundle exec ruby -S rake test --trace
+
+      - name: Verify RSpec compatibility
+        run: |
+          gem install rspec
+          integration/runner rake integration
 
   required-macos:
     name: Ruby ${{ matrix.ruby }} - ${{ matrix.os }}
@@ -167,7 +172,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@675dd7ba1b06c8786a1480d89c384f5620a42647 # v1.281.0
+      - uses: ruby/setup-ruby@708024e6c902387ab41de36e1669e43b5ee7085e # v1.283.0
         with:
           ruby-version: ${{ matrix.ruby }}
           rubygems: latest
@@ -175,6 +180,13 @@ jobs:
           bundler-cache: true
 
       - run: bundle exec ruby -S rake test --trace
+
+      - name: Verify RSpec compatibility
+        env:
+          GEM_PATH: vendor/bundle
+        run: |
+          gem install rspec
+          integration/runner rake integration
 
   optional-windows:
     name: Ruby ${{ matrix.ruby }} - ${{ matrix.os }}
@@ -216,7 +228,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@675dd7ba1b06c8786a1480d89c384f5620a42647 # v1.281.0
+      - uses: ruby/setup-ruby@708024e6c902387ab41de36e1669e43b5ee7085e # v1.283.0
         with:
           ruby-version: ${{ matrix.ruby }}
           rubygems: latest
@@ -224,6 +236,13 @@ jobs:
           bundler-cache: true
 
       - run: bundle exec ruby -S rake test --trace
+
+      - name: Verify RSpec compatibility
+        env:
+          GEM_PATH: vendor/bundle
+        run: |
+          gem install rspec
+          integration/runner rake integration
 
   jruby-optional:
     name: JRuby ${{ matrix.ruby }} - ${{ matrix.os }}
@@ -262,7 +281,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@675dd7ba1b06c8786a1480d89c384f5620a42647 # v1.281.0
+      - uses: ruby/setup-ruby@708024e6c902387ab41de36e1669e43b5ee7085e # v1.283.0
         with:
           ruby-version: ${{ matrix.ruby }}
           rubygems: latest
@@ -270,6 +289,13 @@ jobs:
           bundler-cache: true
 
       - run: bundle exec ruby -S rake test --trace
+
+      - name: Verify RSpec compatibility
+        env:
+          GEM_PATH: vendor/bundle
+        run: |
+          gem install rspec
+          integration/runner rake integration
 
   ruby-head-optional:
     name: Ruby ${{ matrix.ruby }} - ${{ matrix.os }} (optional)
@@ -308,7 +334,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@675dd7ba1b06c8786a1480d89c384f5620a42647 # v1.281.0
+      - uses: ruby/setup-ruby@708024e6c902387ab41de36e1669e43b5ee7085e # v1.283.0
         with:
           ruby-version: ${{ matrix.ruby }}
           rubygems: latest
@@ -316,3 +342,10 @@ jobs:
           bundler-cache: true
 
       - run: bundle exec ruby -S rake test --trace
+
+      - name: Verify RSpec compatibility
+        env:
+          GEM_PATH: vendor/bundle
+        run: |
+          gem install rspec
+          integration/runner rake integration

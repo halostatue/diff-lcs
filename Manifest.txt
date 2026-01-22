@@ -8,6 +8,12 @@ README.md
 Rakefile
 SECURITY.md
 bin/ldiff
+integration/compare/array_diff_spec.rb
+integration/compare/hash_diff_spec.rb
+integration/compare/string_diff_spec.rb
+integration/rspec_differ_spec.rb
+integration/rspec_expectations_spec.rb
+integration/runner
 lib/diff-lcs.rb
 lib/diff/lcs.rb
 lib/diff/lcs/array.rb
@@ -103,6 +109,7 @@ test/fixtures/new-chef
 test/fixtures/new-chef2
 test/fixtures/old-chef
 test/fixtures/old-chef2
+test/test_block.rb
 test/test_change.rb
 test/test_diff.rb
 test/test_helper.rb

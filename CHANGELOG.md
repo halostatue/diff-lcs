@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.0.beta.1 / 2025-12-31
+## 2.0.0.beta.2 / 2025-01-22
 
 This release has significant **breaking changes**.
 
@@ -43,6 +43,19 @@ This release has significant **breaking changes**.
 
   The order of `VALID_ACTIONS` was changed for the index order to make sense.
 
+- `ldiff` now implements `-` as a filename option for standard input. This is
+  used for integration testing with RSpec like this:
+
+  ```console
+  rspec -Ilib -rdiff/lcs integration/failure/array_diff_spec.rb 2>&1 |
+    ruby -Ilib bin/ldiff -U integration/golden/array_diff.txt -
+  ```
+
+- diff-lcs no longer uses RSpec as its test suite, but instead uses Minitest.
+  The conversion to Minitest and the new RSpec integration tests
+  (`rake integration`) were written with the assistance of [Kiro][kiro] and
+  verified manually, with portions changed as required.
+
 ## 1.6.2 / 2025-05-12
 
 - Handle upcoming changes to the `cgi` gem in Ruby 3.5 ([#147][pull-147])
@@ -68,8 +81,9 @@ This release has significant **breaking changes**.
 
 ## 1.6.0 / 2025-02-13
 
-- Baptiste Courtois (@annih) has done significant work on making `bin/ldiff`
-  work better, contributing a number of issues and pull requests. These include:
+- Baptiste Courtois ([@annih][gh-user-annih]) has done significant work on
+  making `bin/ldiff` work better, contributing a number of issues and pull
+  requests. These include:
 
   - Separation of command parsing from diff-generation in `Diff::LCS::Ldiff`
     code extraction making it easier to use separately from the `bin/ldiff`
@@ -428,8 +442,8 @@ This release has significant **breaking changes**.
 
 ## 1.1.1 / 2004-09-25
 
-- Fixed bug #891 (Set returned from patch command does not contain last equal
-  part).
+- Fixed bug [#891][gh-issue-891] (Set returned from patch command does not
+  contain last equal part).
 
 - Fixed a problem with callback initialisation code (it assumed that all
   callbacks passed as classes can be initialised; now, it rescues NoMethodError
@@ -560,3 +574,6 @@ This release has significant **breaking changes**.
 [standard ruby]: https://github.com/standardrb/standard
 [tidelift]: https://tidelift.com/security
 [tp]: https://guides.rubygems.org/trusted-publishing/
+[kiro]: https://kiro.dev
+[gh-user-annih]: https://github.com/annih
+[gh-issue-891]: https://github.com/halostatue/diff-lcs/issues/891
