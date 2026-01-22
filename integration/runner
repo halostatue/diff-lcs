@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+require "rbconfig"
+require "rubygems"
+
+if ENV["CI"]
+  vendor_dir = Dir.glob(File.join(Dir.pwd, "vendor", "bundle", "{ruby,jruby,truffleruby}", "*")).max
+  unless vendor_dir && Dir.exist?(vendor_dir)
+    fail "vendor bundle not found; expected vendor/bundle/ruby/*"
+  end
+
+  # Prefer vendored gems, fall back to system gem dir
+  ENV["GEM_HOME"] = vendor_dir
+  ENV["GEM_PATH"] = "#{vendor_dir}:#{Gem.default_dir}"
+
+  # Ensure Gem.path is updated for the running process (affects Gem.lookup)
+  Gem.use_paths(ENV["GEM_HOME"], ENV["GEM_PATH"].split(":"))
+end
+
+exec RbConfig.ruby, "-S", *ARGV

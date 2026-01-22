@@ -16,9 +16,14 @@ class Diff::LCS::Ldiff # :nodoc:
     MIT licence.
   COPYRIGHT
 
-  InputInfo = Struct.new(:filename, :data, :stat) do
+  InputInfo = Struct.new(:filename, :data, :mtime) do
     def initialize(filename)
-      super(filename, ::File.read(filename), ::File.stat(filename))
+      if filename == "-"
+        super("<stdin>", $stdin.read, Time.now)
+        return
+      end
+
+      super(filename, ::File.read(filename), ::File.stat(filename).mtime)
     end
   end
 
@@ -142,9 +147,9 @@ class Diff::LCS::Ldiff # :nodoc:
       output << "Files #{info_old.filename} and #{info_new.filename} differ\n"
       return true
     when :unified, :context
-      ft = info_old.stat.mtime.localtime.strftime("%Y-%m-%d %H:%M:%S.000000000 %z")
+      ft = info_old.mtime.localtime.strftime("%Y-%m-%d %H:%M:%S.000000000 %z")
       output << "#{char_old} #{info_old.filename}\t#{ft}\n"
-      ft = info_new.stat.mtime.localtime.strftime("%Y-%m-%d %H:%M:%S.000000000 %z")
+      ft = info_new.mtime.localtime.strftime("%Y-%m-%d %H:%M:%S.000000000 %z")
       output << "#{char_new} #{info_new.filename}\t#{ft}\n"
     when :ed
       output = []
