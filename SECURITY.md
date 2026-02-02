@@ -22,8 +22,8 @@ All issues raised must be demonstrated on the minimum supported Ruby version.
 >
 > | Version | Release Date | Support Ends | Security Support Ends |
 > | ------- | ------------ | ------------ | --------------------- |
-> | 1.x     | 2010         | 2026-04-30   | 2027-01-31            |
-> | 2.x     | 2026-01-31   | -            | -                     |
+> | 1.x     | 2010         | 2026-05-01   | 2027-02-01            |
+> | 2.x     | 2026-02-01   | -            | -                     |
 
 ## Reporting a Vulnerability
 

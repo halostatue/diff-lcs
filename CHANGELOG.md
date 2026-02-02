@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.0.beta.2 / 2025-01-22
+## 2.0.0 / 2026-02-01
 
 This release has significant **breaking changes**.
 
@@ -55,6 +55,8 @@ This release has significant **breaking changes**.
   The conversion to Minitest and the new RSpec integration tests
   (`rake integration`) were written with the assistance of [Kiro][kiro] and
   verified manually, with portions changed as required.
+
+- The code of conduct was updated to the Contributor Covenant 3.0.
 
 ## 1.6.2 / 2025-05-12
 

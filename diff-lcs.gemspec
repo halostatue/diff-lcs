@@ -1,16 +1,16 @@
 # -*- encoding: utf-8 -*-
-# stub: diff-lcs 2.0.0.beta.2 ruby lib
+# stub: diff-lcs 2.0.0 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "diff-lcs".freeze
-  s.version = "2.0.0.beta.2".freeze
+  s.version = "2.0.0".freeze
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.metadata = { "bug_tracker_uri" => "https://github.com/halostatue/diff-lcs/issues", "changelog_uri" => "https://github.com/halostatue/diff-lcs/blob/main/CHANGELOG.md", "documentation_uri" => "https://halostatue.github.io/diff-lcs/", "rubygems_mfa_required" => "true", "source_code_uri" => "https://github.com/halostatue/diff-lcs" } if s.respond_to? :metadata=
   s.require_paths = ["lib".freeze]
   s.authors = ["Austin Ziegler".freeze]
   s.date = "1980-01-02"
-  s.description = "Diff::LCS computes the difference between two Enumerable sequences using the McIlroy-Hunt longest common subsequence (LCS) algorithm. It includes utilities to create a simple HTML diff output format and a standard diff-like tool.  This is release 1.6.1, providing a simple extension that allows for Diff::LCS::Change objects to be treated implicitly as arrays and fixes a number of formatting issues.  Ruby versions below 2.5 are soft-deprecated, which means that older versions are no longer part of the CI test suite. If any changes have been introduced that break those versions, bug reports and patches will be accepted, but it will be up to the reporter to verify any fixes prior to release. The next major release will completely break compatibility.".freeze
+  s.description = "Diff::LCS computes the difference between two Enumerable sequences using the McIlroy-Hunt longest common subsequence (LCS) algorithm. It includes utilities to create a simple HTML diff output format and a standard diff-like tool.  This is release 2.0, which has significant breaking changes (removal of deprecations and workarounds) and requires at least Ruby 3.2 or higher. See full details in the `CHANGELOG`, but users of diff-lcs should not notice any significant changes to the APIs.  ==== To Install: ".freeze
   s.email = ["halostatue@gmail.com".freeze]
   s.executables = ["ldiff".freeze]
   s.extra_rdoc_files = ["CHANGELOG.md".freeze, "CODE_OF_CONDUCT.md".freeze, "CONTRIBUTING.md".freeze, "CONTRIBUTORS.md".freeze, "LICENCE.md".freeze, "Manifest.txt".freeze, "README.md".freeze, "SECURITY.md".freeze, "licenses/COPYING.txt".freeze, "licenses/artistic.txt".freeze, "licenses/dco.txt".freeze]
