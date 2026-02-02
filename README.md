@@ -14,15 +14,23 @@ Diff::LCS computes the difference between two Enumerable sequences using the
 McIlroy-Hunt longest common subsequence (LCS) algorithm. It includes utilities
 to create a simple HTML diff output format and a standard diff-like tool.
 
-This is release 1.6.1, providing a simple extension that allows for
-Diff::LCS::Change objects to be treated implicitly as arrays and fixes a number
-of formatting issues.
+This is release 2.0, which has significant breaking changes (removal of
+deprecations and workarounds) and requires at least Ruby 3.2 or higher. See full
+details in the `CHANGELOG`, but users of diff-lcs should not notice any
+significant changes to the APIs.
 
-Ruby versions below 2.5 are soft-deprecated, which means that older versions are
-no longer part of the CI test suite. If any changes have been introduced that
-break those versions, bug reports and patches will be accepted, but it will be
-up to the reporter to verify any fixes prior to release. The next major release
-will completely break compatibility.
+### Performance and Compatibility
+
+I have not run any benchmarks, but the use of immutable Data classes and the
+removal of a number of inner loop conditionals related to encoding and String
+handling (which have been unnecessary since at least Ruby 2.1 but kept for
+strict compatibility) should allow better optimization by modern Ruby
+implementations.
+
+If you are using RSpec for your test suite, you are unlikely to be able to use
+Diff::LCS 2.0 because of the minimum Ruby version unless the developers of RSpec
+loosen their version constraints. I cannot control this and have raised
+[rspec/rspec#290][rspec-issue-290].
 
 ## Synopsis
 
@@ -89,6 +97,7 @@ originally written for the Perl version, was written by Mark-Jason Dominus.
 [ci-workflow]: https://github.com/halostatue/diff-lcs/actions/workflows/ci.yml
 [coveralls]: https://coveralls.io/github/halostatue/diff-lcs?branch=main
 [perl]: https://search.cpan.org/~nedkonz/Algorithm-Diff-1.15/
+[rspec-issue-290]: https://github.com/rspec/rspec/issues/290
 [rubygems]: https://rubygems.org/gems/diff-lcs
 [shield-ci]: https://img.shields.io/github/actions/workflow/status/halostatue/diff-lcs/ci.yml?style=for-the-badge "Build Status"
 [shield-coveralls]: https://img.shields.io/coverallsCoverage/github/halostatue/diff-lcs?style=for-the-badge
