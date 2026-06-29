@@ -129,6 +129,11 @@ module Diff::LCS::TestHelper
     new_result
   end
 
+  def assert_raises_with_message(klass, message, &block)
+    exception = assert_raises klass, &block
+    assert_match message, exception.message
+  end
+
   def assert_nil_or_match_values(ee, ii, s1, s2)
     assert(ee.nil? || s1[ii] == s2[ee])
   end

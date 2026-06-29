@@ -1,7 +1,8 @@
 # Diff::LCS
 
-[![RubyGems Version][shield-gems]][rubygems] ![Coveralls][shield-coveralls]
-[![Build Status][shield-ci]][ci-workflow]
+[![RubyGems Version](https://img.shields.io/gem/v/diff-lcs?style=for-the-badge "Version")](https://rubygems.org/gems/diff-lcs)
+[![Coveralls](https://img.shields.io/coverallsCoverage/github/halostatue/diff-lcs?style=for-the-badge)](https://coveralls.io/github/halostatue/diff-lcs?branch=main)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/halostatue/diff-lcs/ci.yml?style=for-the-badge "Build Status")](https://github.com/halostatue/diff-lcs/actions/workflows/ci.yml)
 
 - code :: <https://github.com/halostatue/diff-lcs>
 - issues :: <https://github.com/halostatue/diff-lcs/issues>
@@ -101,5 +102,4 @@ originally written for the Perl version, was written by Mark-Jason Dominus.
 [rubygems]: https://rubygems.org/gems/diff-lcs
 [shield-ci]: https://img.shields.io/github/actions/workflow/status/halostatue/diff-lcs/ci.yml?style=for-the-badge "Build Status"
 [shield-coveralls]: https://img.shields.io/coverallsCoverage/github/halostatue/diff-lcs?style=for-the-badge
-[shield-gems]: https://img.shields.io/gem/v/diff-lcs?style=for-the-badge "Version"
 [smalltalk]: ftp://st.cs.uiuc.edu/pub/Smalltalk/MANCHESTER/manchester/4.0/diff.st
