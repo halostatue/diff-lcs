@@ -25,9 +25,9 @@ lib/diff/lcs/internals.rb
 lib/diff/lcs/ldiff.rb
 lib/diff/lcs/string.rb
 lib/diff/lcs/version.rb
-licenses/COPYING.txt
-licenses/artistic.txt
-licenses/dco.txt
+licences/COPYING.txt
+licences/artistic.txt
+licences/dco.txt
 spec/change_spec.rb
 spec/diff_spec.rb
 spec/hunk_spec.rb
