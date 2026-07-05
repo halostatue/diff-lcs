@@ -2,3 +2,10 @@ rules:
   artipacked:
     ignore:
       - publish-gem.yml:58 # publish-gem adds and pushes a tag.
+  adhoc-packages:
+    ignore:
+      - ci.yml:134 # This is required because rspec is no longer a dependency.
+      - ci.yml:188 # This is required because rspec is no longer a dependency.
+      - ci.yml:244 # This is required because rspec is no longer a dependency.
+      - ci.yml:297 # This is required because rspec is no longer a dependency.
+      - ci.yml:350 # This is required because rspec is no longer a dependency.
