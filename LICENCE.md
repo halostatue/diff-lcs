@@ -1,11 +1,14 @@
 # Licence
 
-- SPDX-License-Identifier: [MIT][mit] OR [GPL-2.0-or-later][gpl2-or-later] OR
-  [Artistic-1.0-Perl][artistic-perl]
+<!-- SPDX-License-Identifier: MIT or GPL-2.0-or-later or Artistic-1.0-Perl -->
 
-This software is available under three disjunctive licences: the GNU GPL version
-2 (or at your option, a later version), the Perl Artistic license, or the MIT
-license. Note that my preference for licensing is the MIT license, but
+This software is available under three disjunctive licences:
+
+- the [GNU GPL version 2 (or at your option, a later version)][gpl2-or-later]
+- the [Perl Artistic license 1.0][artistic-perl]
+- the [MIT][mit]
+
+Note that my preference for licensing is the MIT license, but
 Algorithm::Diff was dually originally licensed with the Perl Artistic and the
 GNU GPL ("the same terms as Perl itself") and given that the Ruby implementation
 originally hewed pretty closely to the Perl version, I must maintain the
@@ -38,7 +41,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 See [licences/artistic.txt](licences/artistic.txt) in the main distribution.
 
-## GNU GPL version 2
+## GNU General Public License v2.0 or later
 
 See the file [licences/COPYING.txt](licences/COPYING.txt) in the main
 distribution.
