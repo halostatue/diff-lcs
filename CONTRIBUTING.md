@@ -15,29 +15,29 @@ I have several guidelines to contributing code through pull requests:
 - All code changes require tests. In most cases, this will be added or updated
   unit tests. I use [Minitest][minitest].
 
-  - There are integration tests with RSpec which must not be broken, accessible
-    through `rake integration`. This requires a non-bundled RSpec,
+  - There are integration tests with RSpec which must not be broken,
+    accessible through `rake integration`. This requires a non-bundled RSpec,
     `gem install rspec`.
 
-- I use code formatters, static analysis tools, and linting to ensure consistent
-  styles and formatting. There should be no warning output from test run
-  processes. I use [Standard Ruby][standardrb].
+- I use code formatters, static analysis tools, and linting to ensure
+  consistent styles and formatting. There should be no warning output from
+  test run processes. I use [Standard Ruby][standardrb].
 
-- Proposed changes should be on a thoughtfully-named topic branch and organized
-  into logical commit chunks as appropriate.
+- Proposed changes should be on a thoughtfully-named topic branch and
+  organized into logical commit chunks as appropriate.
 
 - Use [Conventional Commits][conventional] with my
   [conventions](#commit-conventions).
 
-- Versions must not be updated in pull requests unless otherwise directed. This
-  means that you must not:
+- Versions must not be updated in pull requests unless otherwise directed.
+  This means that you must not:
 
   - Modify `VERSION` in `lib/diff/lcs/version.rb`. When your patch is accepted
     and a release is made, the version will be updated at that point.
 
   - Modify `diff-lcs.gemspec`; it is a generated file. (You _may_ use
-    `rake gemspec` to regenerate it if your change involves metadata related to
-    gem itself).
+    `rake gemspec` to regenerate it if your change involves metadata related
+    to gem itself).
 
   - Modify the `Gemfile`.
 
@@ -52,7 +52,8 @@ I have several guidelines to contributing code through pull requests:
   `CHANGELOG.md` as a separate commit from your main change. (Follow the style
   in the `CHANGELOG.md` and provide a link to your PR.)
 
-- Include your DCO sign-off in each commit message (see [LICENCE](LICENCE.md)).
+- Include your DCO sign-off in each commit message (see
+  [LICENCE](LICENCE.md)).
 
 ## AI Contribution Policy
 
@@ -62,17 +63,17 @@ sort be well understood by the submitter and that the developer can attest to
 the [Developer Certificate of Origin][dco] for each pull request (see
 [LICENCE](LICENCE.md)).
 
-Any contribution (bug, feature request, or pull request) that uses undeclared AI
-output will be rejected.
+Any contribution (bug, feature request, or pull request) that uses undeclared
+AI output will be rejected.
 
 ## Test Dependencies
 
-diff-lcs uses Ryan Davis's [Hoe][Hoe] to manage the release process, and it adds
-a number of rake tasks. You will mostly be interested in `rake`, which runs
-tests in the same way that `rake spec` does.
+diff-lcs uses Ryan Davis's [Hoe][Hoe] to manage the release process, and it
+adds a number of rake tasks. You will mostly be interested in `rake`, which
+runs tests in the same way that `rake spec` does.
 
-To assist with the installation of the development dependencies for diff-lcs, I
-have provided a Gemfile pointing to the (generated) `diff-lcs.gemspec` file.
+To assist with the installation of the development dependencies for diff-lcs,
+I have provided a Gemfile pointing to the (generated) `diff-lcs.gemspec` file.
 This will permit you to use `bundle install` to install the dependencies.
 
 You can run tests with code coverage analysis by running `rake spec:coverage`.
@@ -100,18 +101,18 @@ required metadata trailers are:
 - `Breaking-Change`: if the change is a breaking change. **Do not** use the
   shorthand form (`feat!(scope)`) or `BREAKING CHANGE`.
 
-- `Signed-off-by`: this is required for all developers except me, as outlined in
-  the [Licence](./LICENCE.md#developer-certificate-of-origin).
+- `Signed-off-by`: this is required for all developers except me, as outlined
+  in the [Licence](./LICENCE.md#developer-certificate-of-origin).
 
 - `Fixes` or `Resolves`: If a change fixes one or more open [issues][issues],
   that issue must be included in the `Fixes` or `Resolves` trailer. Multiple
   issues should be listed comma separated in the same trailer:
-  `Fixes: #1, #5, #7`, but _may_ appear in separate trailers. While both `Fixes`
-  and `Resolves` are synonyms, only _one_ should be used in a given commit or
-  pull request.
+  `Fixes: #1, #5, #7`, but _may_ appear in separate trailers. While both
+  `Fixes` and `Resolves` are synonyms, only _one_ should be used in a given
+  commit or pull request.
 
-- `Related to`: If a change does not fix an issue, those issue references should
-  be included in this trailer.
+- `Related to`: If a change does not fix an issue, those issue references
+  should be included in this trailer.
 
 [cbeams]: https://cbea.ms/git-commit/
 [cccoc]: ./CODE_OF_CONDUCT.md
