@@ -3,6 +3,7 @@
 [![RubyGems Version](https://img.shields.io/gem/v/diff-lcs?style=for-the-badge "Version")](https://rubygems.org/gems/diff-lcs)
 [![Coveralls](https://img.shields.io/coverallsCoverage/github/halostatue/diff-lcs?style=for-the-badge)](https://coveralls.io/github/halostatue/diff-lcs?branch=main)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/halostatue/diff-lcs/ci.yml?style=for-the-badge "Build Status")](https://github.com/halostatue/diff-lcs/actions/workflows/ci.yml)
+[![MIT or Artistic-1.0-Perls or GPL-2.0-or-later](https://img.shields.io/badge/licence-MIT_or_Artistic--1.0--Perl_or_GPL--2.0--or--later-blue?style=for-the-badge "MIT or Artistic-1.0-Perls or GPL-2.0-or-later")](https://github.com/halostatue/diff-lcs/blob/main/LICENCE.md)
 
 - code :: <https://github.com/halostatue/diff-lcs>
 - issues :: <https://github.com/halostatue/diff-lcs/issues>
@@ -16,8 +17,8 @@ McIlroy-Hunt longest common subsequence (LCS) algorithm. It includes utilities
 to create a simple HTML diff output format and a standard diff-like tool.
 
 This is release 2.0, which has significant breaking changes (removal of
-deprecations and workarounds) and requires at least Ruby 3.2 or higher. See full
-details in the `CHANGELOG`, but users of diff-lcs should not notice any
+deprecations and workarounds) and requires at least Ruby 3.2 or higher. See
+full details in the `CHANGELOG`, but users of diff-lcs should not notice any
 significant changes to the APIs.
 
 ### Performance and Compatibility
@@ -29,14 +30,15 @@ strict compatibility) should allow better optimization by modern Ruby
 implementations.
 
 If you are using RSpec for your test suite, you are unlikely to be able to use
-Diff::LCS 2.0 because of the minimum Ruby version unless the developers of RSpec
-loosen their version constraints. I cannot control this and have raised
+Diff::LCS 2.0 because of the minimum Ruby version unless the developers of
+RSpec loosen their version constraints. I cannot control this and have raised
 [rspec/rspec#290][rspec-issue-290].
 
 ## Synopsis
 
-Using this module is quite simple. By default, Diff::LCS does not extend objects
-with the Diff::LCS interface, but will be called as if it were a function:
+Using this module is quite simple. By default, Diff::LCS does not extend
+objects with the Diff::LCS interface, but will be called as if it were a
+function:
 
 ```ruby
 require 'diff/lcs'
@@ -73,27 +75,28 @@ seq1 == seq2.unpatch!(sdiff)
 By requiring 'diff/lcs/array' or 'diff/lcs/string', Array or String will be
 extended for use this way.
 
-Note that Diff::LCS requires a sequenced enumerable container, which means that
-the order of enumeration is both predictable and consistent for the same set of
-data. While it is theoretically possible to generate a diff for an unordered
-hash, it will only be meaningful if the enumeration of the hashes is consistent.
-In general, this will mean that containers that behave like String or Array will
-perform best.
+Note that Diff::LCS requires a sequenced enumerable container, which means
+that the order of enumeration is both predictable and consistent for the same
+set of data. While it is theoretically possible to generate a diff for an
+unordered hash, it will only be meaningful if the enumeration of the hashes is
+consistent. In general, this will mean that containers that behave like String
+or Array will perform best.
 
 ## History
 
-Diff::LCS is a port of Perl's Algorithm::Diff that uses the McIlroy-Hunt longest
-common subsequence (LCS) algorithm to compute intelligent differences between
-two sequenced enumerable containers. The implementation is based on Mario I.
-Wolczko's [Smalltalk version 1.2][smalltalk] (1993) and Ned Konz's Perl version
-[Algorithm::Diff 1.15][perl]. `Diff::LCS#sdiff` and
+Diff::LCS is a port of Perl's Algorithm::Diff that uses the McIlroy-Hunt
+longest common subsequence (LCS) algorithm to compute intelligent differences
+between two sequenced enumerable containers. The implementation is based on
+Mario I. Wolczko's [Smalltalk version 1.2][smalltalk] (1993) and Ned Konz's
+Perl version [Algorithm::Diff 1.15][perl]. `Diff::LCS#sdiff` and
 `Diff::LCS#traverse_balanced` were originally written for the Perl version by
 Mike Schilli.
 
-The algorithm is described in <em>A Fast Algorithm for Computing Longest Common
-Subsequences</em>, CACM, vol.20, no.5, pp.350-353, May 1977, with a few minor
-improvements to improve the speed. A simplified description of the algorithm,
-originally written for the Perl version, was written by Mark-Jason Dominus.
+The algorithm is described in <em>A Fast Algorithm for Computing Longest
+Common Subsequences</em>, CACM, vol.20, no.5, pp.350-353, May 1977, with a few
+minor improvements to improve the speed. A simplified description of the
+algorithm, originally written for the Perl version, was written by Mark-Jason
+Dominus.
 
 [ci-workflow]: https://github.com/halostatue/diff-lcs/actions/workflows/ci.yml
 [coveralls]: https://coveralls.io/github/halostatue/diff-lcs?branch=main

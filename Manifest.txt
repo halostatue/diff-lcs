@@ -26,6 +26,7 @@ lib/diff/lcs/ldiff.rb
 lib/diff/lcs/string.rb
 lib/diff/lcs/version.rb
 licences/COPYING.txt
+licences/MIT.txt
 licences/artistic.txt
 licences/dco.txt
 spec/change_spec.rb

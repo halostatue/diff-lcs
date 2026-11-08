@@ -2,13 +2,13 @@
 
 ## LLM-Generated Security Report Policy
 
-Absolutely no security reports will be accepted that have been generated solely by LLM
-agents. There must be a human that confirms the issue.
+Absolutely no security reports will be accepted that have been generated
+solely by LLM agents. There must be a human that confirms the issue.
 
 ## Supported Versions
 
-Security reports are accepted for the most recent major release, with a limited
-window of support after the initial major release.
+Security reports are accepted for the most recent major release, with a
+limited window of support after the initial major release.
 
 - Bug reports will be accepted up to three months after release.
 - Security reports will be accepted up to six months after release.
