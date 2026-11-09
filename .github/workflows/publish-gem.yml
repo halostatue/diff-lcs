@@ -29,7 +29,7 @@ jobs:
 
     if: github.repository == 'halostatue/diff-lcs' && (github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.merged))
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     environment: release
 
     env:

@@ -12,7 +12,7 @@ concurrency:
 jobs:
   check-dco:
     name: Check DCO
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
 
     permissions:
       contents: read

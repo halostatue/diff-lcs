@@ -15,7 +15,7 @@ concurrency:
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
 
     permissions:
       contents: read
@@ -48,7 +48,7 @@ jobs:
 
   coverage:
     name: Generate Coverage Report
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
 
     permissions:
       contents: read
@@ -146,7 +146,7 @@ jobs:
         os:
           - macos-15
           - macos-26
-          - macos-27
+          - xcode-27
         ruby:
           - '3.2'
           - '3.3'
