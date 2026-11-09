@@ -8,6 +8,13 @@
 - Clarified the licence for diff-lcs, based on [#221][pull-221] by James
   Thompson. [#231][pull-231]
 
+- Clément Joubert ([@czj][gh-user-czj]) sped up and reduced allocations in
+  `diff`, `sdiff` and `lcs` without affecting output. The LCS core skips
+  redundant threshold updates and the links they allocated, and strings are
+  split into code points once instead of allocating on every access.
+  `diff` and `sdiff` build their default results without traversal events.
+  [#230][pull-230]
+
 ## 2.0.0 / 2026-02-01
 
 This release has significant **breaking changes**.
@@ -581,6 +588,7 @@ This release has significant **breaking changes**.
 [pull-147]: https://github.com/halostatue/diff-lcs/pull/147
 [pull-148]: https://github.com/halostatue/diff-lcs/pull/148
 [pull-221]: https://github.com/halostatue/diff-lcs/pull/221
+[pull-230]: https://github.com/halostatue/diff-lcs/pull/230
 [pull-231]: https://github.com/halostatue/diff-lcs/pull/231
 [pull-234]: https://github.com/halostatue/diff-lcs/pull/234
 [rspec-expectations#200]: https://github.com/rspec/rspec-expectations/pull/200
@@ -594,4 +602,5 @@ This release has significant **breaking changes**.
 [tp]: https://guides.rubygems.org/trusted-publishing/
 [kiro]: https://kiro.dev
 [gh-user-annih]: https://github.com/annih
+[gh-user-czj]: https://github.com/czj
 [gh-issue-891]: https://github.com/halostatue/diff-lcs/issues/891

@@ -9,19 +9,27 @@ class << Diff::LCS
   private :callbacks_for
 
   def diff_traversal(method, seq1, seq2, callbacks, &block)
-    callbacks = callbacks_for(callbacks)
+    diffs =
+      if method == :sdiff && Diff::LCS::SDiffCallbacks.equal?(callbacks)
+        Diff::LCS::Internals.sdiff_changes(seq1, seq2)
+      elsif method == :diff && Diff::LCS::DiffCallbacks.equal?(callbacks)
+        Diff::LCS::Internals.diff_hunks(seq1, seq2)
+      else
+        callbacks = callbacks_for(callbacks)
 
-    case method
-    when :diff
-      traverse_sequences(seq1, seq2, callbacks)
-    when :sdiff
-      traverse_balanced(seq1, seq2, callbacks)
-    end
+        case method
+        when :diff
+          traverse_sequences(seq1, seq2, callbacks)
+        when :sdiff
+          traverse_balanced(seq1, seq2, callbacks)
+        end
 
-    callbacks.finish if callbacks.respond_to? :finish
+        callbacks.finish if callbacks.respond_to? :finish
+        callbacks.diffs
+      end
 
     if block
-      callbacks.diffs.map do |hunk|
+      diffs.map do |hunk|
         if hunk.is_a? Array
           hunk.map { block.call(_1) }
         else
@@ -29,7 +37,7 @@ class << Diff::LCS
         end
       end
     else
-      callbacks.diffs
+      diffs
     end
   end
   private :diff_traversal
@@ -46,6 +54,8 @@ module Diff::LCS::Internals # :nodoc:
   # end
   # ```
   def self.lcs(a, b)
+    a = indexable(a)
+    b = indexable(b)
     a_start = b_start = 0
     a_finish = a.size - 1
     b_finish = b.size - 1
@@ -72,22 +82,69 @@ module Diff::LCS::Internals # :nodoc:
     thresh = []
     links = []
 
-    (a_start..a_finish).each do |i|
-      ai = a[i]
-      bm = b_matches[ai]
-      k = nil
-      bm.reverse_each do |j|
-        # Although the threshold check is not mandatory for this to work, it may have an
-        # optimization purpose.
-        # An attempt to remove it: https://github.com/halostatue/diff-lcs/pull/72
-        # Why it is reintroduced: https://github.com/halostatue/diff-lcs/issues/78
-        if k && (thresh[k] > j) && (thresh[k - 1] < j)
-          thresh[k] = j
+    i = a_start
+    while i <= a_finish
+      bm = b_matches[a[i]]
+
+      # Positions are visited in descending order, so each lands in a threshold slot no
+      # higher than the previous one: `limit` bounds the search.
+      limit = thresh.size - 1
+      m = bm.size - 1
+
+      while m >= 0
+        j = bm[m]
+
+        if thresh.empty? || (j > thresh[-1])
+          k = thresh.size
         else
-          k = replace_next_larger(thresh, j, k)
+          # Find the first threshold not below `j`, galloping down from `limit`: positions
+          # sharing an element tend to land in neighbouring slots. `j` replaces a larger
+          # threshold; an equal one means `j` extends no subsequence.
+          high = limit
+          step = 1
+          low = high - step
+          while (low >= 0) && (thresh[low] >= j)
+            high = low
+            step *= 2
+            low = high - step
+          end
+          low = low.negative? ? 0 : low + 1
+
+          while low < high
+            mid = (low + high) / 2
+            if thresh[mid] < j
+              low = mid + 1
+            else
+              high = mid
+            end
+          end
+
+          if thresh[low] == j
+            k = nil
+            limit = low
+          else
+            k = low
+          end
         end
-        links[k] = [k.positive? ? links[k - 1] : nil, i, j] unless k.nil?
+
+        if k
+          # The next positions down to the smallest one above the previous threshold all
+          # land in this slot, each replacing the last: only that smallest one counts.
+          lower = k.positive? ? thresh[k - 1] : -1
+          if m.positive? && (bm[m - 1] > lower)
+            m = bm.bsearch_index { _1 > lower }
+            j = bm[m]
+          end
+
+          thresh[k] = j
+          links[k] = [k.positive? ? links[k - 1] : nil, i, j]
+          limit = k
+        end
+
+        m -= 1
       end
+
+      i += 1
     end
 
     unless thresh.empty?
@@ -99,6 +156,105 @@ module Diff::LCS::Internals # :nodoc:
     end
 
     vector
+  end
+
+  # Indexing a String allocates a new String on each access; its characters are read once
+  # instead. Not for subclasses, whose `[]` may return more than a plain String
+  # (`ActiveSupport::SafeBuffer` keeps slices HTML-safe).
+  def self.indexable(seq) = seq.instance_of?(String) ? seq.chars : seq
+
+  # Returns what `traverse_balanced` reports to `Diff::LCS::SDiffCallbacks`, built straight
+  # from the LCS without an event to simplify per element. `TestDefaultCallbacksShortcut`
+  # holds the two paths equal.
+  def self.sdiff_changes(seq1, seq2)
+    seq1 = indexable(seq1)
+    seq2 = indexable(seq2)
+    matches = lcs(seq1, seq2)
+    changes = []
+    a_i = b_j = m_a = 0
+
+    loop do
+      m_a += 1 while (m_a < matches.size) && matches[m_a].nil?
+
+      # Past the last match, the ends of both sequences act as one.
+      last = m_a >= matches.size
+      m_b = last ? seq2.size : matches[m_a]
+      m_a = seq1.size if last
+
+      while (a_i < m_a) || (b_j < m_b)
+        if (a_i < m_a) && (b_j < m_b)
+          changes << Diff::LCS::ContextChange.new("!", a_i, seq1[a_i], b_j, seq2[b_j])
+          a_i += 1
+          b_j += 1
+        elsif a_i < m_a
+          changes << Diff::LCS::ContextChange.new("-", a_i, seq1[a_i], b_j, nil)
+          a_i += 1
+        else
+          changes << Diff::LCS::ContextChange.new("+", a_i, nil, b_j, seq2[b_j])
+          b_j += 1
+        end
+      end
+
+      break if last
+
+      changes << Diff::LCS::ContextChange.new("=", a_i, seq1[a_i], b_j, seq2[b_j])
+      a_i += 1
+      b_j += 1
+      m_a += 1
+    end
+
+    changes
+  end
+
+  # Returns what `traverse_sequences` reports to `Diff::LCS::DiffCallbacks`, built straight
+  # from the LCS without an event per element. `TestDefaultCallbacksShortcut` holds the two
+  # paths equal.
+  def self.diff_hunks(seq1, seq2)
+    seq1 = indexable(seq1)
+    seq2 = indexable(seq2)
+    matches = lcs(seq1, seq2)
+    a_size = seq1.size
+    b_size = seq2.size
+    hunks = []
+    hunk = []
+    a_i = b_j = 0
+
+    matches.each do |b_line|
+      if b_line.nil?
+        hunk << Diff::LCS::Change.new("-", a_i, seq1[a_i]) unless seq1[a_i].nil?
+      else
+        while b_j < b_line
+          hunk << Diff::LCS::Change.new("+", b_j, seq2[b_j])
+          b_j += 1
+        end
+
+        unless hunk.empty?
+          hunks << hunk
+          hunk = []
+        end
+        b_j += 1
+      end
+
+      a_i += 1
+    end
+
+    # Not a copy of the tail loop of `traverse_sequences` but what it comes down to for
+    # `DiffCallbacks`, which has neither `finished_a` nor `finished_b`: one discard of `a`
+    # then one of `b` until both run out. A change to that loop must be carried over here.
+    while (a_i < a_size) || (b_j < b_size)
+      if a_i < a_size
+        hunk << Diff::LCS::Change.new("-", a_i, seq1[a_i])
+        a_i += 1
+      end
+
+      if b_j < b_size
+        hunk << Diff::LCS::Change.new("+", b_j, seq2[b_j])
+        b_j += 1
+      end
+    end
+
+    hunks << hunk unless hunk.empty?
+    hunks
   end
 
   # This method will analyze the provided patchset to provide a single-pass normalization
@@ -244,43 +400,6 @@ module Diff::LCS::Internals # :nodoc:
   end
 
   class << self
-    # Find the place at which `value` would normally be inserted into the Enumerable. If
-    # that place is already occupied by `value`, do nothing and return `nil`. If the place
-    # does not exist (i.e., it is off the end of the Enumerable), add it to the end.
-    # Otherwise, replace the element at that point with `value`. It is assumed that the
-    # Enumerable's values are numeric.
-    #
-    # This operation preserves the sort order.
-    def replace_next_larger(enum, value, last_index = nil)
-      # Off the end?
-      if enum.empty? || (value > enum[-1])
-        enum << value
-        return enum.size - 1
-      end
-
-      # Binary search for the insertion point
-      last_index ||= enum.size - 1
-      first_index = 0
-      while first_index <= last_index
-        i = (first_index + last_index) >> 1
-
-        found = enum[i]
-
-        return nil if value == found
-
-        if value > found
-          first_index = i + 1
-        else
-          last_index = i - 1
-        end
-      end
-
-      # The insertion point is in first_index; overwrite the next larger value.
-      enum[first_index] = value
-      first_index
-    end
-    private :replace_next_larger
-
     # If `vector` maps the matching elements of another collection onto this Enumerable,
     # compute the inverse of `vector` that maps this Enumerable onto the collection.
     # (Currently unused.)
