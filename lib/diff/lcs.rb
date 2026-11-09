@@ -138,6 +138,8 @@ module Diff::LCS
   # > O.new('a').eql?(O.new('a')) == true && O.new('a').hash == O.new('a').hash
   # > ```
   def self.lcs(seq1, seq2, &block) # :yields: seq1[i] for each matched
+    seq1 = Diff::LCS::Internals.indexable(seq1)
+    seq2 = Diff::LCS::Internals.indexable(seq2)
     matches = Diff::LCS::Internals.lcs(seq1, seq2)
     [].tap { |result|
       matches.each_index do
@@ -267,6 +269,8 @@ module Diff::LCS
   # will be called after the end of the sequence is reached, if `a` has not yet reached
   # the end of `A` or `b` has not yet reached the end of `B`.
   def self.traverse_sequences(seq1, seq2, callbacks = nil) # :yields: change events
+    seq1 = Diff::LCS::Internals.indexable(seq1)
+    seq2 = Diff::LCS::Internals.indexable(seq2)
     callbacks ||= Diff::LCS::SequenceCallbacks
     matches = Diff::LCS::Internals.lcs(seq1, seq2)
 
@@ -448,7 +452,10 @@ module Diff::LCS
   # Note that `i` and `j` may not be the same index position, even if `a` and `b` are
   # considered to be pointing to matching or changed elements.
   def self.traverse_balanced(seq1, seq2, callbacks = Diff::LCS::BalancedCallbacks)
+    seq1 = Diff::LCS::Internals.indexable(seq1)
+    seq2 = Diff::LCS::Internals.indexable(seq2)
     matches = Diff::LCS::Internals.lcs(seq1, seq2)
+    change_callback = callbacks.respond_to?(:change)
     a_size = seq1.size
     b_size = seq2.size
     a_i = b_j = m_b = 0
@@ -471,9 +478,8 @@ module Diff::LCS
         a_x = seq1[a_i]
         b_x = seq2[b_j]
 
-        case [(a_i < m_a), (b_j < m_b)]
-        when [true, true]
-          if callbacks.respond_to?(:change)
+        if (a_i < m_a) && (b_j < m_b)
+          if change_callback
             event = Diff::LCS::ContextChange.new("!", a_i, a_x, b_j, b_x)
             event = yield event if block_given?
             callbacks.change(event)
@@ -490,12 +496,12 @@ module Diff::LCS
           end
 
           b_j += 1
-        when [true, false]
+        elsif a_i < m_a
           event = Diff::LCS::ContextChange.new("-", a_i, a_x, b_j, b_x)
           event = yield event if block_given?
           callbacks.discard_a(event)
           a_i += 1
-        when [false, true]
+        else
           event = Diff::LCS::ContextChange.new("+", a_i, a_x, b_j, b_x)
           event = yield event if block_given?
           callbacks.discard_b(event)
@@ -517,9 +523,8 @@ module Diff::LCS
       a_x = seq1[a_i]
       b_x = seq2[b_j]
 
-      case [(a_i < a_size), (b_j < b_size)]
-      when [true, true]
-        if callbacks.respond_to?(:change)
+      if (a_i < a_size) && (b_j < b_size)
+        if change_callback
           event = Diff::LCS::ContextChange.new("!", a_i, a_x, b_j, b_x)
           event = yield event if block_given?
           callbacks.change(event)
@@ -536,12 +541,12 @@ module Diff::LCS
         end
 
         b_j += 1
-      when [true, false]
+      elsif a_i < a_size
         event = Diff::LCS::ContextChange.new("-", a_i, a_x, b_j, b_x)
         event = yield event if block_given?
         callbacks.discard_a(event)
         a_i += 1
-      when [false, true]
+      else
         event = Diff::LCS::ContextChange.new("+", a_i, a_x, b_j, b_x)
         event = yield event if block_given?
         callbacks.discard_b(event)

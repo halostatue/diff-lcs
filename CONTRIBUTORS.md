@@ -10,6 +10,7 @@ Thanks to everyone else who has contributed to diff-lcs over the years:
 - Brandon Fish
 - Camille Drapier
 - Cédric Boutillier
+- Clément Joubert ([@czj][gh-user-czj])
 - Gregg Kellogg
 - Jagdeep Singh
 - James Thompson ([@thompson-tomo][gh-user-thompson-tomo])
@@ -51,6 +52,7 @@ Thanks to everyone else who has contributed to diff-lcs over the years:
 
 [gh-user-annih]: https://github.com/annih
 [gh-user-apuratepp]: https://github.com/apuratepp
+[gh-user-czj]: https://github.com/czj
 [gh-user-earlopain]: https://github.com/earlopain
 [gh-user-ginriki]: https://github.com/ginriki
 [gh-user-halostatue]: https://github.com/halostatue
