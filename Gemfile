@@ -5,6 +5,9 @@
 
 source "https://rubygems.org/"
 
-gem "debug", platforms: [:mri] if ENV["DEV"]
+if ENV["DEV"]
+  gem "debug", platforms: [:mri]
+  gem "benchmark-ips"
+end
 
 gemspec
