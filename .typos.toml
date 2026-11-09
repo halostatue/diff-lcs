@@ -1,3 +1,6 @@
+[files]
+extend-exclude = ["test/test_unicode_forms.rb"]
+
 [default]
 extend-ignore-re = ["Ned Konz"]
 

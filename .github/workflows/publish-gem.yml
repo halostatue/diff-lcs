@@ -104,4 +104,4 @@ jobs:
       contents: read
       pages: write    # Publish documentation
       id-token: write # Authenticate for gem publishing
-    uses: ./.github/workflows/publish-docs.yml
+    uses: $/.github/workflows/publish-docs.yml

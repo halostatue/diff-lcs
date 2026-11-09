@@ -1,9 +1,12 @@
 # Changelog
 
-## 2.1.0 / 2026-11-DD
+## NEXT / 2026-11-DD
+
+- Added a guard test suite showing that Unicode NFC and NFD forms compare
+  differently. [#234][pull-234]
 
 - Clarified the licence for diff-lcs, based on [#221][pull-221] by James
-  Thompson.
+  Thompson. [#231][pull-231]
 
 ## 2.0.0 / 2026-02-01
 
@@ -578,6 +581,8 @@ This release has significant **breaking changes**.
 [pull-147]: https://github.com/halostatue/diff-lcs/pull/147
 [pull-148]: https://github.com/halostatue/diff-lcs/pull/148
 [pull-221]: https://github.com/halostatue/diff-lcs/pull/221
+[pull-231]: https://github.com/halostatue/diff-lcs/pull/231
+[pull-234]: https://github.com/halostatue/diff-lcs/pull/234
 [rspec-expectations#200]: https://github.com/rspec/rspec-expectations/pull/200
 [rspec-expectations#219]: https://github.com/rspec/rspec-expectations/issues/219
 [rspec-expectations#238]: https://github.com/rspec/rspec-expectations/issues/238
