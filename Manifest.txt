@@ -110,6 +110,9 @@ test/fixtures/ldiff/output.diff.missing_new_line2-c
 test/fixtures/ldiff/output.diff.missing_new_line2-e
 test/fixtures/ldiff/output.diff.missing_new_line2-f
 test/fixtures/ldiff/output.diff.missing_new_line2-u
+test/fixtures/ldiff/output.diff.same
+test/fixtures/ldiff/output.diff.same-c
+test/fixtures/ldiff/output.diff.same-u
 test/fixtures/new-chef
 test/fixtures/new-chef2
 test/fixtures/new-hunks
