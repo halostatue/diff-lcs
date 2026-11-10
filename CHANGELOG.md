@@ -2,6 +2,15 @@
 
 ## NEXT / 2026-11-DD
 
+- Clément Joubert ([@czj][gh-user-czj]) moved the hunk merging and output of
+  `Diff::LCS::Ldiff` to `Diff::LCS::Hunk`, so that it can be used without
+  `bin/ldiff`: `Diff::LCS::Hunk.from_diff` returns the merged hunks for two
+  sequences of lines and `Diff::LCS::Hunk.diff` returns the diff in the old,
+  unified, or context format, with 3 lines of context by default.
+  `Diff::LCS::Hunk#diff(:old)` now writes each change of a hunk on its own, so
+  it is also correct for hunks with context. `ldiff` output is unchanged.
+  [#46][issue-46], [#242][pull-242]
+
 - Clément Joubert ([@czj][gh-user-czj]) fixed `ldiff -c` output with more than
   one hunk: when a hunk ended with lines from the new file, the separator of
   the next hunk was written on the same line as the last line. [#241][pull-241]
@@ -617,6 +626,7 @@ This release has significant **breaking changes**.
 [pull-234]: https://github.com/halostatue/diff-lcs/pull/234
 [pull-235]: https://github.com/halostatue/diff-lcs/pull/235
 [pull-241]: https://github.com/halostatue/diff-lcs/pull/241
+[pull-242]: https://github.com/halostatue/diff-lcs/pull/242
 [rspec-expectations#200]: https://github.com/rspec/rspec-expectations/pull/200
 [rspec-expectations#219]: https://github.com/rspec/rspec-expectations/issues/219
 [rspec-expectations#238]: https://github.com/rspec/rspec-expectations/issues/238
