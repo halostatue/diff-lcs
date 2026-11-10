@@ -20,6 +20,7 @@ lib/diff/lcs/array.rb
 lib/diff/lcs/block.rb
 lib/diff/lcs/callbacks.rb
 lib/diff/lcs/change.rb
+lib/diff/lcs/frozen_value.rb
 lib/diff/lcs/hunk.rb
 lib/diff/lcs/internals.rb
 lib/diff/lcs/ldiff.rb
@@ -113,6 +114,7 @@ test/fixtures/old-chef2
 test/test_block.rb
 test/test_change.rb
 test/test_diff.rb
+test/test_frozen_value.rb
 test/test_helper.rb
 test/test_hunk.rb
 test/test_issues.rb
