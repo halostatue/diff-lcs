@@ -215,20 +215,24 @@ class TestContextChange < Minitest::Test
   end
 
   def test_simplify
-    simplify("-", 5, "old", 10, "new") => {action:, new_element:}
-    assert_equal action, "-"
-    assert_nil new_element
+    assert_equal change("-", 5, "old", 10, nil), simplify("-", 5, "old", 10, "new")
+    assert_equal change("-", 5, "old", 10, nil), simplify("<", 5, "old", 10, "new")
+    assert_equal change("+", 5, nil, 10, "new"), simplify("+", 5, "old", 10, "new")
+    assert_equal change("+", 5, nil, 10, "new"), simplify(">", 5, "old", 10, "new")
+  end
 
-    simplify("<", 5, "old", 10, "new") => {action:, new_element:}
-    assert_equal action, "-"
-    assert_nil new_element
+  def test_simplify_returns_unchanged_and_changed_events_as_they_are
+    %w[= !].each do |action|
+      event = change(action, 5, "old", 10, "new")
 
-    simplify("+", 5, "old", 10, "new") => {action:, old_element:}
-    assert_equal action, "+"
-    assert_nil old_element
+      assert_same event, Diff::LCS::ContextChange.simplify(event)
+    end
+  end
 
-    simplify(">", 5, "old", 10, "new") => {action:, old_element:}
-    assert_equal action, "+"
-    assert_nil old_element
+  def test_simplify_keeps_the_class_of_the_event
+    subclass = Class.new(Diff::LCS::ContextChange)
+
+    assert_instance_of subclass, Diff::LCS::ContextChange.simplify(subclass.new("<", 5, "old", 10, "new"))
+    assert_instance_of subclass, Diff::LCS::ContextChange.simplify(subclass.new(">", 5, "old", 10, "new"))
   end
 end
