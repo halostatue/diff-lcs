@@ -94,6 +94,9 @@ test/fixtures/ldiff/output.diff.four_lines.vs.empty-c
 test/fixtures/ldiff/output.diff.four_lines.vs.empty-e
 test/fixtures/ldiff/output.diff.four_lines.vs.empty-f
 test/fixtures/ldiff/output.diff.four_lines.vs.empty-u
+test/fixtures/ldiff/output.diff.hunks
+test/fixtures/ldiff/output.diff.hunks-c
+test/fixtures/ldiff/output.diff.hunks-u
 test/fixtures/ldiff/output.diff.issue95_trailing_context
 test/fixtures/ldiff/output.diff.issue95_trailing_context-c
 test/fixtures/ldiff/output.diff.issue95_trailing_context-e
@@ -111,8 +114,10 @@ test/fixtures/ldiff/output.diff.missing_new_line2-f
 test/fixtures/ldiff/output.diff.missing_new_line2-u
 test/fixtures/new-chef
 test/fixtures/new-chef2
+test/fixtures/new-hunks
 test/fixtures/old-chef
 test/fixtures/old-chef2
+test/fixtures/old-hunks
 test/test_block.rb
 test/test_change.rb
 test/test_diff.rb

@@ -16,7 +16,8 @@ RSpec.describe "bin/ldiff" do
     {:name => "diff.bin1", :left => "file1.bin", :right => "file1.bin", :diff => 0, :flags => ["-q"]},
     {:name => "diff.bin2", :left => "file1.bin", :right => "file2.bin", :diff => 1, :flags => ["-q"]},
     {:name => "diff.chef", :left => "old-chef", :right => "new-chef", :diff => 1},
-    {:name => "diff.chef2", :left => "old-chef2", :right => "new-chef2", :diff => 1}
+    {:name => "diff.chef2", :left => "old-chef2", :right => "new-chef2", :diff => 1},
+    {:name => "diff.hunks", :left => "old-hunks", :right => "new-hunks", :diff => 1}
   ].flat_map { |fixture|
     [nil, "-c", "-u", *fixture[:flags]].map { |flag|
       fixture.except(:flags).merge(flag: flag)
