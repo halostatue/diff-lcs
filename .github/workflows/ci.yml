@@ -205,7 +205,6 @@ jobs:
           - '3.3'
           - '3.4'
           - '4.0'
-          - mingw
           - mswin
           - ucrt
 
