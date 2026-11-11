@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require "diff/lcs/ldiff"
 
 class TestLdiff < Minitest::Test
   FIXTURES = [
@@ -33,7 +34,61 @@ class TestLdiff < Minitest::Test
     end
   end
 
+  def test_run_reads_file_names_from_args
+    status, output, error = run_in_process(%w[test/fixtures/aX test/fixtures/bXaX])
+
+    assert_equal 1, status
+    assert_equal "", error
+    assert_equal read_fixture({name: "diff", flag: nil}), output
+  end
+
+  def test_run_parses_options_from_args
+    status, output, error = run_in_process(%w[-u test/fixtures/aX test/fixtures/bXaX])
+
+    assert_equal 1, status
+    assert_equal "", error
+    assert_equal read_fixture({name: "diff", flag: "-u"}), clean_data(output, "-u")
+  end
+
+  def test_run_leaves_args_untouched
+    status, _output, error = run_in_process(%w[-u test/fixtures/aX test/fixtures/bXaX].freeze)
+
+    assert_equal 1, status
+    assert_equal "", error
+  end
+
+  def test_run_reads_dash_from_input
+    input = StringIO.new(::File.read("test/fixtures/aX"))
+    status, output, error = run_in_process(%w[- test/fixtures/bXaX], input: input)
+
+    assert_equal 1, status
+    assert_equal "", error
+    assert_equal read_fixture({name: "diff", flag: nil}), output
+  end
+
+  def test_run_reports_usage_for_missing_file_names
+    status, _output, error = run_in_process(%w[test/fixtures/aX])
+
+    assert_equal 127, status
+    assert_match(/\AUsage: #{Regexp.escape(File.basename($0))} \[options\] oldfile newfile$/, error)
+  end
+
+  def test_run_warns_about_invalid_options
+    status, output, error = run_in_process(%w[--bogus test/fixtures/aX test/fixtures/bXaX])
+
+    assert_equal 1, status
+    assert_equal "#{OptionParser.new.program_name}: invalid option: --bogus\n", error
+    assert_equal read_fixture({name: "diff", flag: nil}), output
+  end
+
   private
+
+  def run_in_process(args, input: StringIO.new)
+    output = StringIO.new
+    error = StringIO.new
+    status = Diff::LCS::Ldiff.run(args, input, output, error)
+    [status, output.string, error.string]
+  end
 
   def read_fixture(options, mode: "output", allow_missing: false)
     fixture = options.fetch(:name)
