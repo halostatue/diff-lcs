@@ -2,6 +2,11 @@
 
 ## NEXT / 2026-11-DD
 
+- Clément Joubert ([@czj][gh-user-czj]) fixed `Diff::LCS::Ldiff.run` reading
+  the file names from `ARGV` instead of its `args`, and `-` from `$stdin`
+  instead of its `input`, so it can be called with any array and input.
+  [#236][issue-236]
+
 - Added a guard test suite showing that Unicode NFC and NFD forms compare
   differently. [#234][pull-234]
 
@@ -548,6 +553,7 @@ This release has significant **breaking changes**.
 [issue-102]: https://github.com/halostatue/diff-lcs/issues/102
 [issue-106]: https://github.com/halostatue/diff-lcs/issues/106
 [issue-107]: https://github.com/halostatue/diff-lcs/issues/107
+[issue-236]: https://github.com/halostatue/diff-lcs/issues/236
 [pull-08]: https://github.com/halostatue/diff-lcs/pull/8
 [pull-09]: https://github.com/halostatue/diff-lcs/pull/9
 [pull-10]: https://github.com/halostatue/diff-lcs/pull/10
