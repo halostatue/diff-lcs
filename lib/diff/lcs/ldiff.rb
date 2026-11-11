@@ -17,9 +17,9 @@ class Diff::LCS::Ldiff # :nodoc:
   COPYRIGHT
 
   InputInfo = Struct.new(:filename, :data, :mtime) do
-    def initialize(filename)
+    def initialize(filename, input = $stdin)
       if filename == "-"
-        super("<stdin>", $stdin.read, Time.now)
+        super("<stdin>", input.read, Time.now)
         return
       end
 
@@ -41,8 +41,8 @@ class Diff::LCS::Ldiff # :nodoc:
     @lines = 0
   end
 
-  def run(args, _input = $stdin, output = $stdout, error = $stderr) # :nodoc:
-    args.options do |o|
+  def run(args, input = $stdin, output = $stdout, error = $stderr) # :nodoc:
+    parser = OptionParser.new do |o|
       o.banner = "Usage: #{File.basename($0)} [options] oldfile newfile"
       o.separator ""
       o.on(
@@ -81,11 +81,18 @@ class Diff::LCS::Ldiff # :nodoc:
       end
       o.on_tail ""
       o.on_tail 'By default, runs produces an "old-style" diff, with output like UNIX diff.'
-      o.parse!
+    end
+    # parse! on a copy rather than parse: after an invalid option, the copy
+    # still holds the arguments left to read, as ARGV did before.
+    args = args.dup
+    begin
+      parser.parse!(args)
+    rescue OptionParser::ParseError => e
+      error << "#{parser.program_name}: #{e.message}\n"
     end
 
     unless args.size == 2
-      error << args.options
+      error << parser
       return 127
     end
 
@@ -93,10 +100,10 @@ class Diff::LCS::Ldiff # :nodoc:
     @format ||= :old
     @lines ||= 0
 
-    file_old, file_new = *ARGV
+    file_old, file_new = *args
     diff?(
-      InputInfo.new(file_old),
-      InputInfo.new(file_new),
+      InputInfo.new(file_old, input),
+      InputInfo.new(file_new, input),
       @format,
       output,
       binary: @binary,
