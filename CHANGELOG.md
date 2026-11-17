@@ -25,6 +25,9 @@
   longer be built positionally, and a `Marshal` or YAML dump made with 2.0.x
   no longer loads. [#235][pull-235]
 
+- Clément Joubert ([@czj][gh-user-czj]) fixed `ldiff -q` reporting two
+  identical binary files as different. [#237][issue-237]
+
 ## 2.0.0 / 2026-02-01
 
 This release has significant **breaking changes**.
@@ -558,6 +561,7 @@ This release has significant **breaking changes**.
 [issue-102]: https://github.com/halostatue/diff-lcs/issues/102
 [issue-106]: https://github.com/halostatue/diff-lcs/issues/106
 [issue-107]: https://github.com/halostatue/diff-lcs/issues/107
+[issue-237]: https://github.com/halostatue/diff-lcs/issues/237
 [pull-08]: https://github.com/halostatue/diff-lcs/pull/8
 [pull-09]: https://github.com/halostatue/diff-lcs/pull/9
 [pull-10]: https://github.com/halostatue/diff-lcs/pull/10

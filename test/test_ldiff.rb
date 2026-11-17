@@ -10,14 +10,14 @@ class TestLdiff < Minitest::Test
     {name: "diff.issue95_trailing_context", left: "123_x", right: "456_x", diff: 1},
     {name: "diff.four_lines.vs.empty", left: "four_lines", right: "empty", diff: 1},
     {name: "diff.empty.vs.four_lines", left: "empty", right: "four_lines", diff: 1},
-    {name: "diff.bin1", left: "file1.bin", right: "file1.bin", diff: 0},
-    {name: "diff.bin2", left: "file1.bin", right: "file2.bin", diff: 1},
+    {name: "diff.bin1", left: "file1.bin", right: "file1.bin", diff: 0, flags: ["-q"]},
+    {name: "diff.bin2", left: "file1.bin", right: "file2.bin", diff: 1, flags: ["-q"]},
     {name: "diff.chef", left: "old-chef", right: "new-chef", diff: 1},
     {name: "diff.chef2", left: "old-chef2", right: "new-chef2", diff: 1}
-  ].product([nil, "-c", "-u"]).map { |(fixture, flag)|
-    fixture = fixture.dup
-    fixture[:flag] = flag
-    fixture
+  ].flat_map { |fixture|
+    [nil, "-c", "-u", *fixture[:flags]].map { |flag|
+      fixture.except(:flags).merge(flag: flag)
+    }
   }
 
   FIXTURES.each do |fixture|
