@@ -134,13 +134,11 @@ class Diff::LCS::Ldiff # :nodoc:
 
     # diff yields lots of pieces, each of which is basically a Block object
     if binary
-      has_diffs = (info_old.data != info_new.data)
+      return false if info_old.data == info_new.data
+
       if format != :report
-        if has_diffs
-          output << "Binary files #{info_old.filename} and #{info_new.filename} differ\n"
-          return true
-        end
-        return false
+        output << "Binary files #{info_old.filename} and #{info_new.filename} differ\n"
+        return true
       end
     else
       data_old = info_old.data.lines.to_a
