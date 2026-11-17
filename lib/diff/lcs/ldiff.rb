@@ -114,10 +114,6 @@ class Diff::LCS::Ldiff # :nodoc:
       char_new = "+" * 3
     end
 
-    # After we've read up to a certain point in each file, the number of items we've read
-    # from each file will differ by FLD (could be 0).
-    file_length_difference = 0
-
     # Test binary status
     if binary.nil?
       old_bin = info_old.data[0, 4096].include?("\0")
@@ -125,7 +121,6 @@ class Diff::LCS::Ldiff # :nodoc:
       binary = old_bin || new_bin
     end
 
-    # diff yields lots of pieces, each of which is basically a Block object
     if binary
       has_diffs = (info_old.data != info_new.data)
       if format != :report
@@ -138,8 +133,7 @@ class Diff::LCS::Ldiff # :nodoc:
     else
       data_old = info_old.data.lines.to_a
       data_new = info_new.data.lines.to_a
-      diffs = Diff::LCS.diff(data_old, data_new)
-      return false if diffs.empty?
+      return false if data_old == data_new
     end
 
     case format
@@ -151,31 +145,10 @@ class Diff::LCS::Ldiff # :nodoc:
       output << "#{char_old} #{info_old.filename}\t#{ft}\n"
       ft = info_new.mtime.localtime.strftime("%Y-%m-%d %H:%M:%S.000000000 %z")
       output << "#{char_new} #{info_new.filename}\t#{ft}\n"
-    when :ed
-      output = []
     end
 
-    # Loop over hunks. If a hunk overlaps with the last hunk, join them. Otherwise, print
-    # out the old one.
-    oldhunk = hunk = nil
-    diffs.each do |piece|
-      hunk = Diff::LCS::Hunk.new(data_old, data_new, piece, lines, file_length_difference)
-      file_length_difference = hunk.file_length_difference
+    output << Diff::LCS::Hunk.diff(data_old, data_new, format, lines)
 
-      next unless oldhunk
-      next if lines.positive? && hunk.merge(oldhunk)
-
-      output << oldhunk.diff(format)
-      output << "\n" if format == :unified
-    ensure
-      oldhunk = hunk
-    end
-
-    last = oldhunk.diff(format, true)
-    last << "\n" unless last.is_a?(Diff::LCS::Hunk) || last.empty? || last.end_with?("\n")
-
-    output << last
-
-    1
+    true
   end
 end
