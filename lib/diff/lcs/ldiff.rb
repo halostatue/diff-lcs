@@ -165,8 +165,10 @@ class Diff::LCS::Ldiff # :nodoc:
       next unless oldhunk
       next if lines.positive? && hunk.merge(oldhunk)
 
-      output << oldhunk.diff(format)
-      output << "\n" if format == :unified
+      text = oldhunk.diff(format)
+      text << "\n" unless text.end_with?("\n")
+
+      output << text
     ensure
       oldhunk = hunk
     end

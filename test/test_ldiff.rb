@@ -13,7 +13,8 @@ class TestLdiff < Minitest::Test
     {name: "diff.bin1", left: "file1.bin", right: "file1.bin", diff: 0},
     {name: "diff.bin2", left: "file1.bin", right: "file2.bin", diff: 1},
     {name: "diff.chef", left: "old-chef", right: "new-chef", diff: 1},
-    {name: "diff.chef2", left: "old-chef2", right: "new-chef2", diff: 1}
+    {name: "diff.chef2", left: "old-chef2", right: "new-chef2", diff: 1},
+    {name: "diff.hunks", left: "old-hunks", right: "new-hunks", diff: 1}
   ].product([nil, "-c", "-u"]).map { |(fixture, flag)|
     fixture = fixture.dup
     fixture[:flag] = flag
