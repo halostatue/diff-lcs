@@ -69,11 +69,13 @@ test/fixtures/ldiff/output.diff.bin1
 test/fixtures/ldiff/output.diff.bin1-c
 test/fixtures/ldiff/output.diff.bin1-e
 test/fixtures/ldiff/output.diff.bin1-f
+test/fixtures/ldiff/output.diff.bin1-q
 test/fixtures/ldiff/output.diff.bin1-u
 test/fixtures/ldiff/output.diff.bin2
 test/fixtures/ldiff/output.diff.bin2-c
 test/fixtures/ldiff/output.diff.bin2-e
 test/fixtures/ldiff/output.diff.bin2-f
+test/fixtures/ldiff/output.diff.bin2-q
 test/fixtures/ldiff/output.diff.bin2-u
 test/fixtures/ldiff/output.diff.chef
 test/fixtures/ldiff/output.diff.chef-c
